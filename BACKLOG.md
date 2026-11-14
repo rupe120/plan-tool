@@ -368,7 +368,7 @@ competes for the next session?"
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #216 (`quality-bench-01`), #391, #523, #524 · Deferred without the label: `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
+| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Deferred without the label: `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
 
@@ -1976,7 +1976,7 @@ working straight down the tiers.
 
 **#192 — Conceptual findings carry a machine-readable step id**
 
-- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
+- **Labels:** Route `direct` · Readiness `ready` · Tier `architect`
 - **What:** every conceptual finding (`plan-correctness` / `plan-completeness`)
   is saved with `step_id = None`; all eight findings in the reviewed sample
   carry that value. The step is named only in prose ("Step 9 (`slug`)"). Have the audit prompt attribute
@@ -3260,7 +3260,9 @@ working straight down the tiers.
 
 **#167 — Make plain English the default writing style for every generated plan-detail file**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced`
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
+- **Escalate to plan if:** the rubric change needs more than prompt text under
+  `plan_tool/prompts/`.
 - **What:** Change the `plan-tool detail` prompts so every generated per-step
   detail file is understandable in plain English on a first read. The change is
   a prompt-rubric delta: compare the rubric below with what
@@ -3729,7 +3731,7 @@ working straight down the tiers.
   over-work reduction (shipped) and #110 (`claim-vs-delivery` FP rate), though all
   three touch the same self-consistency detectors.
 - **Effort:** small (the decision); the model that follows is a separate
-  `plan-tool` item. **Approach:** decision first (`direct` write-up), then
+  `plan-tool` item. **Approach (when unparked):** decision first (`direct` write-up), then
   `plan-tool` if a model change is chosen.
 - **Dependencies:** none — #100 shipped the detector. No misfire on a real plan is cited; the five-round review's tradeoffs are accepted.
 - **Origin:** 2026-07-09 — five-round high-effort workflow review of the
@@ -3937,7 +3939,7 @@ working straight down the tiers.
   `plan-tool` item.
 - **Effort:** small (the decision + write-up); the build that follows is the
   separate MINOR.
-- **Approach:** decision first (`direct` write-up), then `plan-tool` to build
+- **Approach (when unparked):** decision first (`direct` write-up), then `plan-tool` to build
   the chosen shape.
 - **Dependencies:** none.
 - **Origin:** 2026-06-22 — draining the bug backlog surfaced the
@@ -4420,11 +4422,11 @@ working straight down the tiers.
 
 **#432 — `render_candidate_question_prompt` still reads its template with a bare, unguarded `read_text()`**
 
-- **Labels:** Route `direct` · Readiness `ready` · Tier `beginner`
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **Start here:** `plan_tool/roadmap_candidate_review.py` (`render_candidate_question_prompt`, the two `read_text` sites) and `tests/test_roadmap_candidate_review.py`.
 - **Precedent:** `plan_tool/roadmap_candidate_run.py:1106` (`render_candidate_delta_prompt` reads its template through `read_roadmap_text` with a local `unreadable_template` closure); `read_roadmap_text` is already imported at line 21 of that module.
 - **Settled decisions to respect:** raise `CandidateReviewError` (this module's convention), not `CandidateProposalError`; no new named per-module wrapper function (flagged and removed in pass 7, P7.1); leave the caller's `except OSError` handling alone.
-- **Done when:** a missing or unreadable `roadmap-candidate-questions.md` raises `CandidateReviewError` naming the file at both read sites, pinned by a test; the focused tests are green.
+- **Done when:** a missing or unreadable `roadmap-candidate-questions.md` raises `CandidateReviewError` naming the file at both read sites, the entry states the result status a missing template yields (`refused`, which the caller maps `CandidateReviewError` to, or `failed`, which it maps `OSError` to), and a test pins both; the focused tests are green.
 - **Reviewer:** unassigned
 - **What:** `roadmap_candidate_review.render_candidate_question_prompt` (two
   call sites, lines ~768 and ~797) reads `roadmap-candidate-questions.md` via
@@ -4836,7 +4838,7 @@ working straight down the tiers.
 
 **#89 — Extend `--commit` to `reconcile-code` / `reconcile-plan` (orphaned saved reports)**
 
-- **Labels:** Route `plan` · Readiness `blocked-on` the BUG_BACKLOG.md `--commit` staging entry · Tier `experienced`
+- **Labels:** Route `plan` · Readiness `ready` (sequence after the BUG_BACKLOG.md entry on `--commit` staging the whole tree; see Dependencies) · Tier `experienced`
 - **Principle:** `untriaged` — commit hygiene; it may bear on `survive-interruption`, which the entry does not say.
 - **What:** `--commit` is accepted by four surfaces — `run` (per-step green
   commits), `detail`, `completeness-audit`, and `manifest sweep`/archive.
@@ -5786,6 +5788,9 @@ working straight down the tiers.
 
 **#302 — Pin `on_nonsuccess` notification with a table-driven test over every arm of the rate-limit loop**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`.
+- **Unpark when:** a deliberate recovery-loop hardening pass is scheduled, or a
+  new recovery arm is added to the loop.
 - **What:** `run_with_rate_limit_recovery` reaches `on_nonsuccess` through one
   local helper, `_notify_nonsuccess`, called from each exit arm. Add one
   table-driven test that asserts the callback count and both retry booleans for
@@ -5822,9 +5827,6 @@ working straight down the tiers.
   complete as new recovery exits are added.
 - **Origin:** 2026-08-20, `plan-quota-recovery` whole-feature review round 5,
   finding 4; narrowed 2026-11-14 from a loop restructure to the test.
-- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`.
-- **Unpark when:** a deliberate recovery-loop hardening pass is scheduled, or a
-  new recovery arm is added to the loop.
 - **Status:** parked since 2026-08-20; no live bug.
 
 **#303 — Compare saved audit history only with provenance-backed admission**
