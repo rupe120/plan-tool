@@ -18,7 +18,7 @@ working tree with `git add -A`…" (moved from BACKLOG #209). No Jira key.
 
 ## Problem statement
 
-Five commit sites stage the whole tree, and a sixth already scopes:
+Two helpers stage the whole tree, and two others already limit their paths:
 
 - `plan_tool/cli/gitcommit.py:commit_all` runs a bare `git add -A` then
   `git commit -m`. Its callers are `completeness-audit --commit`
@@ -48,7 +48,9 @@ Decisions a later reader must not re-litigate:
 - **Each verb owns its footprint.** A verb names the paths it wrote: the plan
   file, the step's detail file, the saved audit report and its sidecar, the
   manifest, archived and moved files, run-log artifacts it creates. Deriving
-  each verb's set against live code is `create`'s job. Where the verb already
+  each verb's set against live code is `create`'s job. Build order: the helper's
+  new contract first, then each caller, then the docs and backlog entry, so no
+  caller is converted before the helper can scope it. Where the verb already
   tracks what it wrote, reuse that record; the precedents are
   `gitcommit.py:unexpected_dirty_paths` and `launcher._git_changed_paths_or_none`.
 - **After the commit, assert that no expected path is still dirty.** The change
@@ -88,6 +90,11 @@ Decisions a later reader must not re-litigate:
 - Widening `--commit` to more verbs (BACKLOG #89), which lands after this.
 - `bench.py:_git_commit_baseline` (private scratch repo) and `commit_receipt`
   (already path-limited).
+- Checks beyond the one binary fact that a written path is clean after the
+  commit. Deliberately not allowed: judging whether a commit's content is right
+  or complete, comparing the footprint with prose, size or count caps, and any
+  exit-code change other than the failed-commit result already returned today
+  for a commit that cannot complete.
 - A new footprint-tracking subsystem, a pre-commit hook, `--no-verify`, any
   AI-attribution trailer, and handling for a concurrent process that edits the
   same file the verb wrote (it is committed with the verb's version of the
@@ -144,6 +151,9 @@ sites separately, since they run at different times against different dirt.
 
 Surfaces whose footprint needs new bookkeeping, and detection of a concurrent
 edit to a file the verb also wrote, wait for a separately evidenced request.
+
+Stop / defer: any out-of-scope discovery is filed in BUG_BACKLOG.md (defect) or
+BACKLOG.md (forward work), never applied as plan expansion.
 
 ## References
 
