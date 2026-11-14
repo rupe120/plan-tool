@@ -43,7 +43,11 @@ Compression omissions, kept so a later reader does not restore them:
 | `roadmap-brief-source-drift` | `40e76f91` | Documentation-only commit cited in a scope note, never for a finding |
 | `roadmap-structural-feedback-approval` | `509cd49f`, `8dc2e9d0`, `df582bab`, `4561ff6e` | Documentation- or ledger-only commits in scope lines |
 | `roadmap-concept-comparison` | `#1`, `#6` | Cross-references to finding numbers, not backlog ids |
-| 2026-10-22 ledgers (four) and `context-ceiling`, `completeness-apply-retirement` | reviewer session UUIDs; `#74`, `#139`, `#176`; Integration candidate id `c886d0f2` | Not commits or open backlog ids; the review range, report path and heads stay |
+| `committed-test-authorship`, `scope-out-rollback-ownership`, `seed-default-location`, `step-description-alias` | reviewer session UUIDs | Not commits or backlog ids; the review range, report path and heads stay |
+| `run-iteration-guidance`, `plan-body-newline-preservation` | nothing | No id, hash or backlog reference was dropped |
+| `completeness-apply-retirement` | `#74`, `#139`, `#176` | Dated-provenance references in a verified-clean list, with no disposition |
+| `roadmap-context-ceiling` | Integration candidate id `c886d0f2` | Not a commit; the finding line describes the case |
+| `prompt-budget-model-window` | 9-character forms `0c06447a1`, `203d575b4`, `bcb89a6af`, `e058d8be6`, `f17befcf4` | Each survives in its 8-character form |
 
 ## Still open
 

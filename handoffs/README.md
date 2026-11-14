@@ -63,7 +63,11 @@ branch, and hand the updated settled-decision list to the next reviewer.
   `CLAUDE.md` § "Driving the convergence loops"). The four are not
   interchangeable, and a compressed ledger keeps its own label; rows closed
   before this rule keep the label they carry.
-- Every file in this directory except `README.md` is linked from exactly one section below. Check with `for f in *.md; do [ $f = README.md ] || [ $(grep -c "($f)" README.md) -eq 1 ] || echo "LINKED != 1: $f"; done`; empty output means every file is linked exactly once.
+- Every file in this directory except `README.md` is linked from at least one section
+  below, and every link resolves. Check with
+  `for f in *.md; do [ $f = README.md ] || grep -qF "]($f)" README.md || echo "NOT INDEXED: $f"; done; grep -oE '\]\(([^)#]+\.md)' README.md | sed 's/](//' | sort -u | while read l; do [ -e "$l" ] || echo "DEAD: $l"; done`;
+  empty output means both hold. A section that routes to a file listed in another
+  section (the release pickup) may link it twice; the check does not count sections.
 
 ## Release preparation
 
@@ -71,7 +75,7 @@ Use the [selection record](../docs/evidence/public-release-content-snapshot.md)
 for content decisions, reference ownership and retained conclusions. Use the
 [verification receipt](../docs/evidence/public-release-content-snapshot-verification-20261020.md)
 for exact candidate identity, environment and measured results. The
-release pickup (`2026-10-19-public-onboarding-and-release.md`, listed below) owns the next action. [Sanitized publication](2026-10-21-sanitized-publication.md) records the completed 2026-10-21 publication.
+[release pickup](2026-10-19-public-onboarding-and-release.md) owns the next action. [Sanitized publication](2026-10-21-sanitized-publication.md) records the completed 2026-10-21 publication.
 Keep decisions and finding explanations in their maintained owners when
 compressing or retiring a handoff.
 
@@ -225,6 +229,14 @@ which no longer exists. The plan is deferred and its saved reports pin its text,
 so the citations stay. Use the retained summary in
 [the roadmap arc](../docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md) (the #242
 "Paused" entry). Three frozen archive files (`docs/implementation-plans/archive/2-authored-artifact-format-version.md` and its step-7 detail) and the id-guard ledger cite the old `handoffs/` path of the authored-artifact record, now [the authored-artifact evidence](../docs/evidence/authored-artifact-structure-versioning.md); use that retained replacement while frozen citations stay as written. Citations of `handoffs/2026-09-08-aidlc-authoring-route.md` name an external application's own handoff, not a file in this repository. The [selection record](../docs/evidence/public-release-content-snapshot.md) summarizes the decisions relevant to this repository.
+
+Three handoffs retired 2026-11-13 are cited by path in both
+`docs/evidence/public-release-*-verification-20261021.json` receipts, which pin their
+text, so the citations stay: `handoffs/2026-09-29-handoff-consolidation.md` (now
+[the cleanup record](handoff-directory-cleanup.md)),
+`handoffs/2026-10-15-roadmap-to-plan-backlog.md` (scope in BACKLOG #492) and
+`handoffs/2026-10-16-roadmap-plan-set-creation.md` (scope in the closed #496 record,
+`docs/history/backlog-decisions.md`).
 
 ## 2026-09-08 consolidation record
 
