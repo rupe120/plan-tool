@@ -351,17 +351,20 @@ Durable re-open conditions for retired items are recorded in
 
 ### The audit reports a path a sibling plan in the same roadmap creates as missing
 
-- **Files:** the audit's missing-file grounding. Locate the emitting check
-  first; `plan_tool/grounding.py` and
-  `plan_tool/data_contract.py:_code_anchor_resolves` are the candidates.
+- **Files:** `plan_tool/prompts/plan-audit.md` (the model-driven audit, which
+  receives no sibling footprints). The deterministic missing-file check already
+  merges same-roadmap sibling `creates:` (`plan_tool/review.py:
+  _eligible_planned_paths`, pinned in `tests/test_review.py`); only the
+  model-emitted finding remains.
 - **Symptom:** `integrations/shared/DIRECTIVES.md` tells the triaging session
   that a finding citing a path another plan in the same roadmap creates is a
-  known false positive (T): verify it once and leave the plan alone. The audit
-  still raises it, and in a multi-plan roadmap batch it recurs every round.
+  known false positive (T): verify it once and leave the plan alone. The
+  model-driven audit still raises it (the deterministic check no longer does), and in a multi-plan roadmap batch it recurs every round.
   Integration's batch driver has no `proceed` at Gate 2, so a material T finding there
   can only end in `continue` or `stop`.
-- **Fix:** have the audit exclude paths a sibling roadmap plan declares in
-  `creates:` from missing-file findings, wherever the finding is emitted.
+- **Fix:** give the model-driven audit the sibling roadmap plans' `creates:`
+  footprints (or filter its missing-file findings against them), reusing
+  `_eligible_planned_paths`.
   A two-plan roadmap fixture where plan 2 cites a file plan 1 creates audits
   without that finding.
 - **Deliberately not:** suppressing any other T class, or paths created by
@@ -377,10 +380,10 @@ Durable re-open conditions for retired items are recorded in
 
 ### `create --from-existing` records `source_seed` as the seed path it then archives; for a roadmap-published seed the plan points at a file that no longer exists and Gate 1 rates it HIGH
 
-- **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1677`) and the
+- **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1680`) and the
   seed archive on the superseded-by-new-plan path (`archive_existing_source`,
   `_archive_targets`; the `ARCHIVE_DIRNAME` and `REPLACED_SUFFIX` constants at
-  `:493`, `:503`).
+  `:496`, `:506`).
 - **Verified 2026-11-13 (plain `plan-seeds/` seed only):** one throwaway
   `create --from-existing` plus one single-pass bare audit did **not**
   reproduce the HIGH. `source_seed` stayed `plan-seeds/greeter.md` after the
@@ -422,7 +425,8 @@ Durable re-open conditions for retired items are recorded in
 
 ### A roadmap reader-guard test times out under full-suite load
 
-- **Files:** `tests/` — `test_reader_guard_blocks_a_writer_for_the_same_roadmap`.
+- **Files:** `tests/test_roadmap_revision_publish.py` —
+  `test_reader_guard_blocks_a_writer_for_the_same_roadmap`.
 - **Symptom:** a full `-n 4` run on a loaded machine reaches the test's
   5-second subprocess wait limit; the test passes alone.
 - **Fix:** widen or poll the subprocess wait while preserving the assertion
@@ -666,7 +670,7 @@ Durable re-open conditions for retired items are recorded in
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
 
 - **Files:** `plan_tool/scope_fence.py:extract_h2_sections`.
-- **Symptom:** every one of the 13 current production call sites (verified
+- **Symptom:** every one of the 18 current production call sites (verified
   by grep) now passes `ignore_fenced_code=True` or `strip_fenced_code=True`
   explicitly; none relies on the default. A future consumer of a seed/plan
   `## References`/`## Overview`/etc. section that calls
@@ -732,7 +736,7 @@ Durable re-open conditions for retired items are recorded in
   pure, stateless parser (`response_text: str -> CandidateDelta`) with no
   `limits`/project-config concept anywhere in `roadmap_candidate.py`, unlike
   `roadmap_revision.py`'s threaded `StageRevisionContext`. Threading one
-  through means a signature change across all 7 `parse_candidate_delta` call
+  through means a signature change across all 6 `parse_candidate_delta` call
   sites, including the pydantic `mode="before"` field validator
   (`CandidateProposalEvidence._requires_normalized_operations` in
   `roadmap_candidate_run.py`) that reparses stored evidence on every load —
@@ -838,17 +842,16 @@ Durable re-open conditions for retired items are recorded in
 
 ## MINOR
 
-### `_append_added_row_prose` copies its artifacts mapping even though both call sites hand it an already-fresh, about-to-be-reassigned dict
+### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
 
 - **Files:** `plan_tool/roadmap_candidate.py:_append_added_row_prose`
-  (`amended = dict(artifacts)`); its two callers,
-  `plan_tool/roadmap_candidate.py:materialize_candidate` and
-  `plan_tool/roadmap_candidate_run.py`'s
-  `_require_reproducible_batch_operations` replay path — both build a fresh
-  `dict(predecessor_artifacts)`, mutate it in an `_apply_operation` loop, then
-  pass it straight in and immediately reassign the return value onto the same
-  variable, so nothing holds the pre-call reference afterward.
-- **Symptom:** not a correctness bug — confirmed no aliasing exists at either
+  (`amended = dict(artifacts)`); its sole caller, the shared apply body in
+  `plan_tool/roadmap_candidate.py` (`return _append_added_row_prose(artifacts,
+  prepared)`) that both materialize and replay use — it builds a fresh
+  `dict(predecessor_artifacts)`, mutates it in an `_apply_operation` loop, then
+  passes it straight in and immediately returns the result, so nothing holds
+  the pre-call reference afterward.
+- **Symptom:** not a correctness bug — confirmed no aliasing exists at the
   call site, so the copy is pure waste, not a safety net. On the data volumes
   here (a handful of stage-artifact keys, a handful of operations per
   candidate) the cost is immaterial; recorded so it stops surfacing as a
@@ -859,8 +862,8 @@ Durable re-open conditions for retired items are recorded in
   parameter type from `Mapping[str, RoadmapArtifact]` to a mutable mapping
   type, a real (if small) signature/contract change, not just a body edit.
 - **Deliberately not:** folding the prose-append pass into the
-  `_apply_operation` loop itself — that would need duplicating the fold at
-  both call sites rather than fixing the shared helper once.
+  `_apply_operation` loop itself — that would need duplicating the fold in
+  the shared apply body rather than fixing the helper once.
 - **Approach:** direct, low priority — wasted work only, no behavioral
   change.
 - **Origin:** 2026-09-28, `/code-review high`, flagged in two consecutive
@@ -1031,7 +1034,7 @@ Durable re-open conditions for retired items are recorded in
 - **Symptom:** `detail.py`/`roadmap_candidate_run.py` write parse-failure
   sidecars flat at `.plan-tool/parse-failures/<plan-slug>/`, sharing that
   parent directory with `roadmap.py`'s `_roadmap/<roadmap-slug>/` receipts.
-  `SLUG_RE` (`^[a-z0-9][a-z0-9-]*[a-z0-9]$`, `create.py:221`) is enforced
+  `SLUG_RE` (`^[a-z0-9][a-z0-9-]*[a-z0-9]$`, `create.py:233`) is enforced
   only inside `create`'s own slug-minting path; `cmd_register` (the
   documented way to adopt an on-disk plan file `create` didn't mint) only
   requires `parse_plan()` to succeed, never validates the resulting slug.
@@ -1070,8 +1073,8 @@ Durable re-open conditions for retired items are recorded in
 
 ### `CLAUDE.md`, `TESTING.md`, and backlog entry #190 cite a reconcile prompt, `prompts/reconcile.md`, that has never existed in this repository, so readers cannot find the rules they describe
 
-- **Files:** `CLAUDE.md:226`; `TESTING.md:245` (the "Impact-weighted apply
-  triage" row); `BACKLOG.md:3407` and `:3455` (entry #190).
+- **Files:** `CLAUDE.md:178`; `TESTING.md:229` (the "Impact-weighted apply
+  triage" row); `BACKLOG.md:3410` and `:3458` (entry #190).
 - **Symptom:** each cites `prompts/reconcile.md`. No file has that name, and git
   history shows none at that path. What the citations describe lives elsewhere.
   The refusal of scope-narrowing and criterion-softening edits that `CLAUDE.md`
@@ -1081,7 +1084,7 @@ Durable re-open conditions for retired items are recorded in
   are an inline `(impact=..., complexity=...)` parenthetical asked for by
   `plan-audit.md` (line 344) and `run-reconcile.md` (line 116). The same row
   also cites a test class, `TestDecisionImpactComplexity`, that does not exist
-  (`TestApplyTriage` is at `tests/test_review.py:13513`). Backlog entry #189
+  (`TestApplyTriage` is at `tests/test_review.py:13825`). Backlog entry #189
   already lists `TESTING.md`'s citation among its dead citations.
 - **Fix:** point each citation at the file that holds the text, checking each
   against that file before editing: `detail-reconcile.md` for the refusal list,
@@ -1130,7 +1133,7 @@ Durable re-open conditions for retired items are recorded in
 - **Symptom:** the warning promises to name "the actual call site"
   (`_caller_outside_shell`'s docstring), but it returns the nearest frame
   outside `shell.py`. A call routed through the rate-limit retry loop reports
-  that frame, `rate_limit_loop.py:145`, and `phase` is the generic
+  that frame, `rate_limit_loop.py:146`, and `phase` is the generic
   `claude_invoke`; neither identifies which call was unsinked. Observed on two
   `plan-tool create` runs with an explicit slug (2026-10-01 and 2026-10-02): both
   printed `claude call at rate_limit_loop.py:145 (phase='claude_invoke')` right
@@ -1269,21 +1272,20 @@ not include them.
 ### Reverting a settled decision to `pending` by hand fails source admission, same as the forward hand-edit
 
 - **Severity:** BUG
-- **Files:** `RUNBOOK.md`, `plan_tool/roadmap_gates.py` (the
-  `check_settled_decisions` violation message), and any test covering
-  operator-facing un-settle guidance.
-- **Symptom:** `RUNBOOK.md` tells a reviewer who wants to un-settle a
-  decision to "Confirm it in place, or set its status to `pending`", and
-  `check_settled_decisions`'s own violation message says "the reviewer has
-  to set decision … to status 'pending' … first" — both describing a
+- **Files:** `plan_tool/roadmap_gates.py` (the `check_settled_decisions`
+  violation messages), and any test covering operator-facing un-settle
+  guidance. `RUNBOOK.md` is already corrected (it says never to edit a
+  decision's `status` by hand and points at `--settle-decision`).
+- **Symptom:** `check_settled_decisions`'s violation messages say "the
+  reviewer has to set decision … to status 'pending' … first", describing a
   direct hand-edit of the artifact's `status` field. Exactly like the
   forward direction (`docs/how-to/roadmap.md` §5's "edit `status` to
   `settled`", closed by `roadmap-decision-settlement`), that edit changes a
   field `canonical_projection` includes, so the stage no longer matches its
   recorded `.roadmap-baselines` entry and re-entry refuses it
-  ("source changed outside reviewer feedback"). Both documented
-  instructions lead to a stage every route already refuses.
-- **Fix:** correct both messages to describe the actual working recovery
+  ("source changed outside reviewer feedback"). The
+  documented instruction leads to a stage every route already refuses.
+- **Fix:** correct the messages to describe the actual working recovery
   (revert the edit, matching pre-edit bytes, so the stage matches its
   baseline again, then use whatever confirmed route applies) or add a
   narrow, confirmed un-settle route — the reverse of
@@ -1495,20 +1497,21 @@ not include them.
   was first noted on 2026-09-12 as "known suite instability" in the roadmap
   brief-source review handoff, but never filed.
 
-### `validate_draft_seed_content` parses a draft seed's frontmatter boundary twice
+### `validate_draft_seed_content` parses a draft seed's frontmatter boundary three times
 
 - **Severity:** MINOR
 - **Files:** `plan_tool/roadmap_gates.py:validate_draft_seed_content`,
-  `_draft_seed_references`; `plan_tool/roadmap_artifacts.py:
+  `_draft_seed_sections`; `plan_tool/roadmap_artifacts.py:
   parse_draft_seed_provenance`.
 - **Symptom:** not a correctness bug — both boundary finders agree on
   well-formed frontmatter — but every draft-seed validation call parses the
-  frontmatter/body split twice: once inside
+  frontmatter/body split three times for the same `text`: inside
   `parse_draft_seed_provenance` (via `_parse_frontmatter`, which computes
-  and discards the body), and again inside `_draft_seed_references` (via
-  `scope_fence._strip_frontmatter`) for the same `text`.
+  and discards the body), in `validate_draft_seed_content`'s own
+  unmatched-fence check, and in `_draft_seed_sections` (each via
+  `scope_fence._strip_frontmatter`).
 - **Fix:** thread the body `parse_draft_seed_provenance` already computed
-  through to `_draft_seed_references` instead of re-parsing — needs
+  through to the later two parses instead of re-parsing — needs
   `parse_draft_seed_provenance`'s return shape (or a sibling helper) to
   expose the body, which is a small public-API change to a leaf module
   (`roadmap_artifacts.py`) with its own callers to check.
@@ -1611,48 +1614,6 @@ not include them.
 - **Origin:** 2026-09-24, `/code-review high` pass 2 of the
   roadmap stack-aware approval review (finding P2.1, low, PLAUSIBLE), deferred by the
   owner.
-
-### Confirmed structural approval contradicts the separate review-seal promotion command
-
-- **Severity:** BUG
-- **Files:** `plan_tool/cli/roadmap_cmd.py` (approval and promotion command
-  rendering/dispatch), `plan_tool/roadmap_candidate_review.py` (confirmed
-  structural approval), `plan_tool/roadmap_version_promotion.py` (review-seal
-  promotion), CLI reference/help text, lifecycle documentation, and focused
-  CLI/promotion tests.
-- **Symptom:** the CLI advertises a two-step lifecycle: confirming
-  `--decide-candidate ... --candidate-decision approve --confirm-stack-digest`
-  creates a review seal, then `--promote-review-seal <seal>` advances the
-  accepted head. In fact, confirmed structural approval already promotes the
-  candidate and releases the active-candidate pointer. Its output says
-  `promoted version`, and `tests/cli/test_roadmap_cmd.py` asserts that the
-  accepted head has advanced immediately after confirmation. A user following
-  the documented next command then receives exit 2 with `structural approval
-  does not bind the active candidate`, even though the seal and promotion both
-  succeeded. Integration Group 2 reproduced this on 2026-09-29: candidate
-  `fb1e45b4aa6c786fb8dd8b0e1f5f699b3029e37b2a24285c449bbbed37423c15`, seal
-  `216329677fda58b3dd25fa6660fc8726ffd97954bc720c1bbca92f7589223853`, and
-  accepted head all identify the same promoted revision.
-- **Fix:** preserve the current confirmed-approval behavior as the authoritative
-  lifecycle: the digest confirmation seals and promotes atomically. Make
-  `--promote-review-seal` recognize a seal whose approved candidate is already
-  the accepted head and return exit 0 with an explicit `already promoted`
-  result, without rewriting any lifecycle record. Retain the existing refusal
-  when the seal is neither currently promotable nor already the accepted head.
-  Update CLI help, reference documentation, and rendered approval output so
-  they describe the terminal confirmation accurately; do not ask users to run
-  a redundant promotion command after confirmation.
-- **Verification:** cover a confirmed structural approval that atomically
-  advances accepted head and clears the active candidate; then invoke
-  `--promote-review-seal` with its seal and assert exit 0, an `already
-  promoted` result, and byte-identical accepted-head and admission records.
-  Preserve refusal for a seal whose candidate is not the accepted head and no
-  longer active. Assert CLI help and lifecycle documentation no longer promise
-  a second required promotion step.
-- **Approach:** `direct` — reconcile an already-tested atomic lifecycle with
-  its stale CLI surface; do not change candidate authority or approval
-  semantics.
-- **Origin:** Integration Group 2 manual-session-recovery approval on 2026-09-29.
 
 ### The single candidate correction still names only the first of several defects that the closed diagnostics do not cover
 
@@ -2045,7 +2006,8 @@ not include them.
 - **Symptom:** a stored selector capsule is protected because it is re-rendered
   and compared; a stored batch capsule is never re-rendered, so validation checks
   only that `capsule.ceiling_bytes` is a supported value, that
-  `receipt.ceiling_bytes` equals it, and that the digests match. It does not check
+  `receipt.ceiling_bytes` equals it, that `receipt.payload_bytes` equals
+  `len(payload)`, and that the digests match. It does not check
   that the payload's own embedded `"ceiling_bytes"` equals the recorded value, nor
   that `len(payload)` is within it. A hand-edited or migrated record whose
   capsule says 64 KiB over a 300 KB payload, or whose payload says 384 KiB while
@@ -2053,7 +2015,7 @@ not include them.
   and the digests are unsigned, so this is a consistency gap, not an external
   attack. It predates the 2026-10-09 ceiling change, which adds a third allowed
   value and so makes an accidental mismatch easier.
-- **Fix:** in `_capsule_is_intact`, also require `receipt.payload_bytes <=
+- **Fix:** in `_capsule_is_intact`, also require `len(payload) <=
   capsule.ceiling_bytes` and the payload's embedded `ceiling_bytes` to equal
   `capsule.ceiling_bytes`; pin both with a batch test.
 - **Deliberately not:** re-rendering stored batch capsules (the route is built
