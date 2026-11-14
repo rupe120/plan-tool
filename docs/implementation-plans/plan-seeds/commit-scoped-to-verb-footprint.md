@@ -100,6 +100,20 @@ Decisions a later reader must not re-litigate:
   same file the verb wrote (it is committed with the verb's version of the
   change; this seed does not detect it).
 
+## Scope guardrails
+
+- Change only what each `--commit` surface stages and commits. Do not change the
+  clean-tree precondition, commit subjects, which verbs accept `--commit`,
+  per-step commit granularity, or `launcher.py`'s test-authoring git-delta gate.
+- Do not convert `bench.py:_git_commit_baseline` or `commit_receipt`, and do not
+  widen `--commit` to another verb (BACKLOG #89).
+- Do not add a footprint-tracking subsystem, a hook, `--no-verify`, or an
+  attribution trailer. A verb whose footprint needs new bookkeeping is filed in
+  BUG_BACKLOG.md, not converted.
+- The only check added is that a written path is clean after the commit. Do not
+  add content-quality judgments, prose-agreement checks, caps, or exit-code
+  changes beyond the failed-commit result.
+
 ## Allowed behavior changes
 
 Only the commit's contents change: unrelated dirty files are no longer
