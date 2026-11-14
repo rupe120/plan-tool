@@ -450,6 +450,68 @@ working straight down the tiers.
 > **#66** sits at T3. Everything else here sits below it.
 
 
+**#532 — `create --from-existing` refuses a seed that omits a guardrail heading, and accepts one that says `None`**
+
+- **Labels:** Route `plan`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **What:** a seed's three author-supplied guardrail headings (`## Scope
+  guardrails`, `## Audit guardrails`, `## Expected placement`) are optional
+  today, so a seed with no fence and a seed whose author forgot the fence read
+  the same. `create` captures each heading verbatim and carries it into
+  `detail` and `run` prompts as a hard fence (`scope_fence.py:GUARDRAIL_BODY_SECTIONS`),
+  so a missing one silently weakens every later stage. Make all three required
+  in a `--from-existing` seed, refused before any model call like a missing
+  `## References`, with an explicit `None` accepted as the answer.
+- **Evidence:** `create.py:classify_file_backed_source` refuses only a missing,
+  duplicate, empty or placeholder `## References`; `create.py`'s
+  `OPTIONAL_PLAN_BODY_SECTION_SHAPES` labels the guardrail headings
+  "conditional". At 2026-11-14, 2 of 28 live seeds (6 in
+  `docs/implementation-plans/plan-seeds/`, 22 in `plan-seeds/`) carry `## Scope
+  guardrails`. `scope_fence._is_placeholder_section` matches only `TODO` forms,
+  so `None` already reads as content, not as a placeholder.
+- **Effort:** medium. The refusal itself is small; the cost is the producers
+  that write seeds (`annotate_render.render_create_seed`, `roadmap` stage 4's
+  draft seeds), the live-seed sweep, and the docs.
+- **Risks / fallout:** every seed written without the headings stops working,
+  including `annotate` and `roadmap` output already on disk. Test fixtures
+  that feed `--from-existing` a minimal seed will go red and need the headings.
+- **Dependencies:** none. Lands before the BUG_BACKLOG.md entry "`--commit`
+  stages the whole working tree…" goes through `create` (owner ordering,
+  2026-11-14).
+- **Scope contract:**
+  - **Outcome:** `create --from-existing` refuses, before any model call, a seed
+    missing any of the three guardrail headings or carrying one that is
+    duplicated, empty or a placeholder, and accepts a heading whose body is an
+    explicit `None`.
+  - **In scope:** the file-backed intake check; how an explicit `None` renders
+    into the plan and downstream fence (an explicit empty fence, not an absent
+    one); `annotate`'s and `roadmap` stage 4's seed writers emitting all three
+    headings; the live seeds in both seed directories; `SEED_FORMAT.md`,
+    `PLAN_FORMAT.md` § "Scope fence" and
+    `docs/how-to/pipeline/create-from-existing.md`.
+  - **Out of scope / Non-goals:** deliberately not the tool-written `## Stack`
+    heading, which only `roadmap` writes. Deliberately not `## Outcome` or `##
+    In scope`, which have no guardrail capture; requiring them is a separate
+    decision. Not inline `--from` or `--from-plan`, which have no seed file to
+    hold a heading. Not archived seeds, which are not inputs to a future
+    `create`. No check of what a guardrail says beyond presence: no quality
+    judgment, no agreement check with `Out of scope`, no length cap.
+  - **Allowed behavior changes:** the new refusal and its message; seeds
+    produced by `annotate` and `roadmap` gain the three headings.
+  - **Allowed reorganization:** none.
+  - **Verification:** a seed missing any one heading is refused with no model
+    call, naming the heading; a duplicated, empty or `TODO` heading is refused;
+    a `None` heading is accepted and the plan records the fence as explicitly
+    empty; `annotate` and `roadmap` seeds pass the new check; every live seed
+    passes it.
+  - **Stop / defer:** a seed producer that cannot state a fence without a new
+    model judgment emits `None` and files the follow-up; it does not invent
+    guardrail content.
+- **Origin:** 2026-11-14, owner: "I feel that the guardrails are critical to
+  plan creation, even if those guardrail designations are specified as none."
+
 **#499 — Audit sidecars record each bare-stage finding's detail-level (D) label**
 
 - **Labels:** Route `plan`
