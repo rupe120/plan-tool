@@ -44,7 +44,7 @@ push automatically; push only when the user explicitly requests it.
    Jira stories plus its paired developer handoff; do not preserve a second
    detail lane as compatibility.
 2. **#107** — deferred pending a demonstrated export blocker.
-3. **#49**, **#102**, **#43**, **#55**, **#56** — read each item's
+3. **#102**, **#56** — read each item's
    full `BACKLOG.md` entry before acting.
 4. **#89** — commit-hygiene coverage (extend `--commit` to more mutating
    commands). Observed orphaning gap on `reconcile-code`; see the entry's
