@@ -4764,14 +4764,15 @@ def _persist_final_detail_concepts(
         # Legacy full-tree record: preserve its include-regeneration link
         # machinery, but never record a fresh flat deferral into it — warn
         # so the model's proposal reaches a human (recording into a legacy
-        # record is BACKLOG #131), and drop the unrecordable flat deferrals
+        # record is not done: the migration was discarded, see the #131 row
+        # in docs/history/backlog-decisions.md), and drop the unrecordable flat deferrals
         # so the link replacement never indexes a missing node.
         for deferral in new_deferrals:
             warn(
                 f"step {deferral.step_id}: proposed deferral of "
                 f"`{deferral.concept_id}` cannot be recorded on this plan's "
-                "legacy full-tree concept record; migrate the record "
-                "(BACKLOG #131) to capture the deferral."
+                "legacy full-tree concept record, and no migration route exists; "
+                "record the deferral by hand."
             )
         link_replacements = [
             (step_id, ()) for step_id, _deferrals in written_replacements
