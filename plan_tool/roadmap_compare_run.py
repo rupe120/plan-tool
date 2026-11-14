@@ -11,8 +11,10 @@ from typing import Literal, Mapping
 
 from plan_tool.roadmap import STAGES
 from plan_tool.roadmap_artifacts import (
+    PlansArtifact,
     RoadmapArtifact,
     RoadmapArtifactError,
+    stage_row_collections,
 )
 from plan_tool import roadmap_candidate
 from plan_tool.roadmap_candidate_run import (
@@ -26,7 +28,6 @@ from plan_tool.roadmap_compare import (
     build_roadmap_comparison,
 )
 from plan_tool.roadmap_diff import build_roadmap_diff
-from plan_tool.roadmap_gates import ArtifactEnvelope, check_duplicate_row_ids
 from plan_tool.roadmap_seed_manifest import (
     NoPublishedRoadmapVersionError,
     no_published_version_message,
@@ -107,12 +108,12 @@ def run_roadmap_comparison(
         target = _resolve_target_snapshot(
             plans_dir=Path(plans_dir), slug=slug, version_id=target_version_id
         )
+        _refuse_duplicate_row_ids(base, "base")
+        _refuse_duplicate_row_ids(target, "target")
         prose_amendment_evidence = _bound_prose_amendment_evidence(
             plans_dir=Path(plans_dir), slug=slug, base=base, target=target
         )
         patches = _capture_patches(base=base, target=target)
-        _refuse_duplicate_row_ids(base, "base")
-        _refuse_duplicate_row_ids(target, "target")
         typed_diff = build_roadmap_diff(
             predecessor_artifacts=base.parsed_artifacts,
             candidate_artifacts=target.parsed_artifacts,
@@ -133,26 +134,33 @@ def run_roadmap_comparison(
 
 
 def _refuse_duplicate_row_ids(snapshot: RoadmapComparisonSnapshot, label: str) -> None:
-    """Refuse a snapshot whose row ids collide: the diff keys rows by id.
+    """Refuse a snapshot that holds two rows with one id in the same collection.
 
-    Parsing keeps duplicate ids so the stage gate can report them, and a
-    published version has passed that gate, so this fires only on a version a
-    tool without the gate wrote. The diff would otherwise drop one of two rows
-    that share an id, or pair a stale row with the wrong one, with no trace.
+    The diff keys rows by id within each collection, and an ordering entry by its
+    plan id. Two rows sharing a key collapse on the after side and pair a stale
+    value with the wrong row on the before side, with no trace. Parsing keeps
+    duplicates so the stage gate can report them, and a published version has
+    passed that gate, so this fires only on a version a tool without the gate
+    wrote. A collision across collections or files is not refused here: the diff
+    never merges those keys.
     """
-    parsed = snapshot.parsed_artifacts
-    violations = check_duplicate_row_ids(
-        ArtifactEnvelope(
-            domain=parsed["domain"],
-            constraints=parsed["constraints"],
-            components=parsed["components"],
-            plans=parsed["plans"],
-        )
-    )
-    if violations:
+    duplicates: list[str] = []
+    for artifact_key, artifact in snapshot.parsed_artifacts.items():
+        keyed = {
+            row_type: [row.id for row in rows]
+            for row_type, rows in stage_row_collections(artifact).items()
+        }
+        if isinstance(artifact, PlansArtifact):
+            keyed["ordering"] = [entry.plan_id for entry in artifact.ordering]
+        for row_type, ids in keyed.items():
+            for row_id in dict.fromkeys(ids):
+                if ids.count(row_id) > 1:
+                    duplicates.append(
+                        f"{artifact_key} holds more than one {row_type} entry with id {row_id!r}"
+                    )
+    if duplicates:
         raise RoadmapComparisonRunError(
-            f"the {label} snapshot cannot be compared: "
-            + "; ".join(violation.message for violation in violations)
+            f"the {label} snapshot cannot be compared: " + "; ".join(duplicates)
         )
 
 

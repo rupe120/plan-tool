@@ -15,7 +15,9 @@ from plan_tool.roadmap_artifacts import (
     ComponentsArtifact,
     ConstraintsArtifact,
     DomainArtifact,
+    BusinessRuleRow,
     EntityRow,
+    OrderingEntry,
     PlansArtifact,
     render_components_artifact,
     render_constraints_artifact,
@@ -97,6 +99,14 @@ def _stored_pair(tmp_path: Path, *, target_domain: str = "# Stored target\n"):
     return base, target
 
 
+def _real_snapshot(kind: str, version_id: str):
+    """A parsed snapshot with no stored version behind it, for tests that stub resolution."""
+    return roadmap_compare_run._build_snapshot(
+        kind=kind, version_id=version_id, brief_digest=None, record=None,
+        brief_bytes=None, artifact_bytes=_artifact_bytes(),
+    )
+
+
 def _duplicate_id_entities() -> tuple[EntityRow, ...]:
     return (
         EntityRow(id="shared", name="First", fields=()),
@@ -122,11 +132,64 @@ def test_a_duplicate_row_id_on_either_side_refuses_instead_of_dropping_a_row(
 
     with pytest.raises(
         roadmap_compare_run.RoadmapComparisonRunError,
-        match=rf"the {side} snapshot cannot be compared: row id 'shared' is declared by 2 rows",
+        match=rf"the {side} snapshot cannot be compared: "
+        r"domain holds more than one entities entry with id 'shared'",
     ):
         roadmap_compare_run.run_roadmap_comparison(
             plans_dir=tmp_path / "plans", slug=SLUG, target_version_id=target.record.version_id
         )
+
+
+def test_a_duplicate_ordering_plan_id_refuses_too(tmp_path: Path) -> None:
+    """The diff keys an ordering entry by its plan id, so a repeated one collapses
+    exactly as a repeated row id does."""
+    ordering = (OrderingEntry(plan_id="first"), OrderingEntry(plan_id="first"))
+    rendered = {
+        "domain": render_domain_artifact(DomainArtifact((), (), (), (), "# Domain\n")),
+        "constraints": render_constraints_artifact(ConstraintsArtifact((), (), (), "# Constraints\n")),
+        "components": render_components_artifact(ComponentsArtifact((), (), (), (), "# Components\n")),
+        "plans": render_plans_artifact(PlansArtifact((), ordering, (), (), "# Plans\n")),
+    }
+    duplicated = tuple(rendered[item.artifact_key].encode("utf-8") for item in VERSION_ARTIFACT_INVENTORY)
+    base, target = _prepared(_artifact_bytes()), _prepared(duplicated)
+    _write_version(tmp_path, base, accepted=True)
+    _write_version(tmp_path, target)
+
+    with pytest.raises(
+        roadmap_compare_run.RoadmapComparisonRunError,
+        match=r"the target snapshot cannot be compared: plans holds more than one ordering entry with id 'first'",
+    ):
+        roadmap_compare_run.run_roadmap_comparison(
+            plans_dir=tmp_path / "plans", slug=SLUG, target_version_id=target.record.version_id
+        )
+
+
+def test_the_same_id_in_two_collections_is_not_a_collision_the_diff_cares_about(tmp_path: Path) -> None:
+    """Deliberately not refused: the diff keys rows within each collection, never
+    across them, so an entity and a rule that share an id compare correctly. The
+    stage gate rejects that at publication; this check refuses only what would
+    corrupt the diff."""
+    both = DomainArtifact(
+        (EntityRow(id="shared", name="Thing", fields=()),),
+        (BusinessRuleRow(id="shared", statement="A rule", entity_ids=()),),
+        (), (), "# Domain\n",
+    )
+    rendered = {
+        "domain": render_domain_artifact(both),
+        "constraints": render_constraints_artifact(ConstraintsArtifact((), (), (), "# Constraints\n")),
+        "components": render_components_artifact(ComponentsArtifact((), (), (), (), "# Components\n")),
+        "plans": render_plans_artifact(PlansArtifact((), (), (), (), "# Plans\n")),
+    }
+    target_bytes = tuple(rendered[item.artifact_key].encode("utf-8") for item in VERSION_ARTIFACT_INVENTORY)
+    base, target = _prepared(_artifact_bytes()), _prepared(target_bytes)
+    _write_version(tmp_path, base, accepted=True)
+    _write_version(tmp_path, target)
+
+    result = roadmap_compare_run.run_roadmap_comparison(
+        plans_dir=tmp_path / "plans", slug=SLUG, target_version_id=target.record.version_id
+    )
+
+    assert result.comparison is not None
 
 
 def _activate(monkeypatch: pytest.MonkeyPatch, version_id: str | None) -> None:
@@ -245,10 +308,10 @@ def test_malformed_candidate_evidence_refuses_the_comparison_before_rendering(
         raise CandidateProposalError("candidate evidence does not bind its stored version")
 
     monkeypatch.setattr(roadmap_compare_run, "load_stored_candidate_proposal", _refuse)
-    monkeypatch.setattr(roadmap_compare_run, "_resolve_base_snapshot", lambda **_k: SimpleNamespace(
-        kind="root", version_id="root"))
-    monkeypatch.setattr(roadmap_compare_run, "_resolve_target_snapshot", lambda **_k: SimpleNamespace(
-        kind="candidate", version_id="tip"))
+    monkeypatch.setattr(roadmap_compare_run, "_resolve_base_snapshot", lambda **_k: _real_snapshot(
+        "root", "root"))
+    monkeypatch.setattr(roadmap_compare_run, "_resolve_target_snapshot", lambda **_k: _real_snapshot(
+        "candidate", "tip"))
 
     with pytest.raises(roadmap_compare_run.RoadmapComparisonRunError, match="does not bind"):
         roadmap_compare_run.run_roadmap_comparison(plans_dir=tmp_path, slug=SLUG)

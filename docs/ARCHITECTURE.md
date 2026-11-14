@@ -336,16 +336,17 @@ retain their boundaries.
 `roadmap_diff.py:ordered_stage_collections` delegates its per-artifact-type
 collection lookup to `roadmap_artifacts.stage_row_collections` rather than
 hand-maintaining a second isinstance dispatch (that function's own docstring
-warns two such copies would drift), but keeps its own fail-closed `TypeError`
-guard for an unsupported artifact type, so the comparison does not depend on the
-shared dispatch's guard (`design_row_collections` also refuses an unsupported
-type with a `TypeError`, for every caller).
+warns two such copies would drift). That dispatch fails closed:
+`design_row_collections` raises a `TypeError` for an unsupported artifact type,
+for every caller.
 
-`run_roadmap_comparison` refuses a snapshot whose row ids collide, using the
-stage gates' `check_duplicate_row_ids`, because the diff keys rows by id and
-would otherwise drop one of two rows that share one. A published version has
-passed that gate, so the refusal fires only for a version a tool without the
-gate wrote.
+`run_roadmap_comparison` refuses a snapshot that holds two rows with one id in
+the same collection, or two ordering entries for one plan id, before it renders
+anything. The diff keys rows by id within each collection and would otherwise
+drop one of the two, or pair a stale row with the wrong one. A published version
+has passed the stage gates' duplicate-id check, so the refusal fires only for a
+version a tool without that gate wrote. A repeated id across collections or files
+is left to that gate: the diff never merges those keys.
 
 `roadmap_compare.py:_stripped_for_comparison` ignores a REFERENCE field's
 `entity_id` only where `roadmap_relations.py:_row_relation_specs` treats it

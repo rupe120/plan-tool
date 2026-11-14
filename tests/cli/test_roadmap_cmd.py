@@ -7822,15 +7822,23 @@ def test_compare_rejects_every_sibling_mode_as_a_companion(
 def test_option_occurrences_counts_a_value_equal_to_the_parser_default_as_absent(
     overrides: dict[str, object], expected: tuple[object, ...]
 ) -> None:
-    """``--comparison-output`` defaults to ``"cards"``, not ``None``, so without a
-    ``default`` the fallback reported a supplied ``("cards",)`` for a flag that
-    was never typed. Naming the default fixes that; an explicit occurrence the
-    parser recorded still counts."""
+    """``--comparison-output`` defaults to ``"cards"``, not ``None``, so the
+    fallback used to report a supplied ``("cards",)`` for a flag that was never
+    typed. The helper now knows the default; an explicit occurrence the parser
+    recorded still counts."""
     args = argparse.Namespace(comparison_output="cards")
     for key, value in overrides.items():
         setattr(args, key, value)
-    assert roadmap_cmd._option_occurrences(args, "comparison_output", default="cards") == expected
+    assert roadmap_cmd._option_occurrences(args, "comparison_output") == expected
     assert roadmap_cmd._has_roadmap_comparison(args) is bool(expected)
+
+
+def test_option_parser_defaults_table_matches_the_parser() -> None:
+    """The table the helper reads must agree with what the parser sets, or an
+    option's absence would be misread."""
+    args = _parse("roadmap", "my-roadmap")
+    for name, default in roadmap_cmd._OPTION_PARSER_DEFAULTS.items():
+        assert getattr(args, name) == default, name
 
 
 def test_comparison_companion_option_without_compare_names_the_missing_flag(
