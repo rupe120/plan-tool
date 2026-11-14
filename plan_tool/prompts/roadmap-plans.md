@@ -40,12 +40,15 @@ ${components_artifact}
 Work from those four texts alone. **Do not read the repository** — no file
 reads, no searches. Do not invent scope the brief does not imply.
 
-${smallest_proof_boundary_header} The plan rows collectively
-deliver one concrete path and observable result. Keep a plan only when that
-result cannot be true without it. Each plan's `non_goals` must name the nearby
-eventual capability it deliberately leaves for later. Do not add later roles,
-workflows, integrations, operating modes, or generalized mechanisms merely
-because they would make a later product more complete.
+${smallest_proof_boundary_header} The plan rows collectively deliver every
+requirement the upstream artifacts carry, each through the simplest route that
+meets it. Each plan's `non_goals` must name the nearby eventual capability it
+deliberately leaves for later. Do not add later roles, workflows, integrations,
+operating modes, or generalized mechanisms the brief does not ask for. Prefer
+several small plans, each with its own verifiable result, over one broad plan
+for the same requirements, and split a part that can ship and be verified on its
+own. This is a preference about how to divide the required work, not a target
+plan count.
 
 ${smallest_proof_boundary_footer}
 

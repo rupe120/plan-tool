@@ -527,9 +527,9 @@ feedback: / removals: # same review contract; attach to PlansArtifact.
 ---
 ```
 
-**Purpose:** map components to the smallest end-to-end proof of the brief's
-central outcome — not the eventual product capability — as an ordered plan list
-with closed dispositions. State each plan's intended operational outcome and
+**Purpose:** map components to an ordered plan list that delivers every
+requirement the brief states, each through the smallest route that meets it, and
+nothing the brief does not ask for, with closed dispositions. State each plan's intended operational outcome and
 explicit boundaries; carry ordering, inter-plan assumptions, and review
 collections; and advertise where each plan's draft seed will land. This is
 roadmap altitude: outcome, tradeoffs, ownership, and ordering. The later

@@ -152,11 +152,14 @@ through the accepted head; top-level leftovers do not override its immutable
 stored version. Materialization carries each selected row into a seed without
 repartitioning the accepted mapping.
 
-Review the plan rows as one **smallest end-to-end proof**, not as an eventual
-product backlog. Identify the one concrete path and observable result they
-collectively establish. Every row must be necessary to that result; nearby
-roles, workflows, integrations, operating modes, and generalized mechanisms
-belong in a row's non-goals or a later roadmap, not as extra current slices.
+Review the plan rows against the brief's requirements, not as an eventual
+product backlog. The rows together must deliver every requirement the brief
+states, each through the smallest route that meets it; a stated requirement with
+no row, or a row the brief did not ask for, is the finding. Nearby roles,
+workflows, integrations, operating modes, and generalized mechanisms the brief
+does not ask for belong in a row's non-goals or a later roadmap, not as extra
+current slices. Prefer several small rows, each with its own verifiable result,
+over one broad row.
 Keep that review at roadmap altitude: it judges outcome, tradeoffs, ownership,
 and ordering, while `create` and `detail` own repository-grounded files, APIs,
 storage schema, implementation mechanics, and tests.

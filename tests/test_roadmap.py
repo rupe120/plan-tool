@@ -1980,10 +1980,43 @@ class TestPlansPromptTemplate:
         footer = (prompts_dir() / roadmap.SMALLEST_PROOF_BOUNDARY_FOOTER_FILENAME).read_text(
             encoding="utf-8"
         )
-        assert "smallest end-to-end proof" in header
-        assert "eventual product capability" in header
+        flat_header = " ".join(header.split())
+        assert "The brief's stated requirements are this roadmap's requirements" in flat_header
+        assert "unless the brief or an owner decision narrows it" in flat_header
+        assert "The smallest proof governs how those requirements are met" in flat_header
+        assert "central outcome" not in flat_header
         assert "Stay at the roadmap altitude" in footer
         assert "`create` and `detail`" in footer
+
+    def test_no_roadmap_prompt_keeps_a_requirement_only_when_one_path_needs_it(self) -> None:
+        """Owner rule, 2026-11-14 (BACKLOG #533): the brief's requirements stay;
+        the smallest proof limits how they are met, never which ones are kept."""
+        for text in (
+            _domain_prompt_text(),
+            _constraints_prompt_text(),
+            _components_prompt_text(),
+            _plans_prompt_text(),
+            _seed_prompt_text(),
+        ):
+            flat = " ".join(text.split())
+            assert "cannot be true without it" not in flat
+            assert "concrete path and" not in flat
+            assert "the brief does not ask for" in flat or "do not narrow one" in flat
+
+    def test_domain_prompt_asks_the_owner_instead_of_dropping_a_requirement(self) -> None:
+        flat = " ".join(_domain_prompt_text().split())
+
+        assert "Do not leave out or narrow a stated requirement" in flat
+        assert "record a `pending` decision for the owner instead of dropping it" in flat
+
+    def test_plans_prompt_prefers_small_plans_without_a_count_target(self) -> None:
+        flat = " ".join(_plans_prompt_text().split())
+
+        assert "Prefer several small plans, each with its own verifiable result" in flat
+        assert "not a target plan count" in flat
+        # The preference must not displace the existing limits on division.
+        assert "Do not impose a target plan count" in flat
+        assert "create a separate plan for every shared concern" in flat
 
 
 class TestPlansPromptExample:
@@ -6418,6 +6451,8 @@ class TestSeedPromptTemplate:
     def test_seed_prompt_placeholders_are_a_subset_of_the_variable_map(self) -> None:
         assert _placeholders(_seed_prompt_text()) <= {
             "slug",
+            "smallest_proof_boundary_header",
+            "smallest_proof_boundary_footer",
             "plan_id",
             "domain_artifact",
             "constraints_artifact",
@@ -6469,12 +6504,26 @@ class TestSeedPromptTemplate:
         )
 
     def test_seed_prompt_keeps_the_proof_and_roadmap_altitude(self) -> None:
-        text = _flattened(_seed_prompt_text())
+        text = _seed_prompt_text()
 
-        assert "smallest end-to-end proof" in text
-        assert "eventual capability" in text
-        assert "stay at the roadmap altitude" in text
-        assert "for `create` and `detail` to ground later" in text
+        assert "${smallest_proof_boundary_header}" in text
+        assert "${smallest_proof_boundary_footer}" in text
+        assert "keep all of them, and do not narrow one" in _flattened(text)
+
+    def test_seed_prompt_renders_the_shared_proof_boundary(self) -> None:
+        rendered = roadmap._render_seed_materialize_prompt(
+            slug="demo", plan_id="demo-plan", loaded=()
+        )
+        header = (prompts_dir() / roadmap.SMALLEST_PROOF_BOUNDARY_HEADER_FILENAME).read_text(
+            encoding="utf-8"
+        )
+        footer = (prompts_dir() / roadmap.SMALLEST_PROOF_BOUNDARY_FOOTER_FILENAME).read_text(
+            encoding="utf-8"
+        )
+
+        assert header in rendered
+        assert footer in rendered
+        assert "${smallest_proof_boundary" not in rendered
 
     def test_seed_prompt_invites_repository_inspection(self) -> None:
         text = _seed_prompt_text()
