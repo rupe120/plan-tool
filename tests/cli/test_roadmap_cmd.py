@@ -7746,6 +7746,93 @@ def test_comparison_rejects_companion_modes_before_comparison_loading(
     assert "--compare accepts no companion roadmap options" in capsys.readouterr().err
 
 
+def _supplied(name: str, value: object) -> dict[str, object]:
+    """One option as the parser records it: its value and its occurrence history."""
+    return {name: value, f"_{name}_occurrences": (value,)}
+
+
+_COMPARE_COMPANION_MODES: dict[str, dict[str, object]] = {
+    # Broad-mode companions.
+    "from_existing": {"from_existing": "brief.md"},
+    "apply": {"apply": True},
+    "refresh_seeds": {"refresh_seeds": True},
+    "accept_seed": {"accept_seed": "seed"},
+    "materialize": {"materialize": "plan"},
+    "yes": {"yes": True},
+    "mode": {"mode": "local"},
+    "id": {"id": "row-1"},
+    "output": {"output": "out.md"},
+    # A view request.
+    "view": {"view": "summary", "_roadmap_mode_occurrences": (("--view", "summary"),)},
+    # The confirmed decision-settlement triple.
+    **{
+        name: _supplied(name, "x")
+        for name in ("settle_decision", "settlement_evidence", "confirm_decision_settlement")
+    },
+    # Ledger and candidate lifecycle actions.
+    **{
+        name: _supplied(name, "x")
+        for name in (
+            "propose_candidate", "submit_feedback", "retarget_feedback", "edit_feedback",
+            "defer_feedback", "close_feedback", "reopen_ledger_feedback", "feedback_target",
+            "feedback_request", "review_candidate", "answer_question", "reject_candidate",
+            "discard_candidate", "decide_candidate", "candidate_decision",
+            "candidate_correction", "confirm_stack_digest", "answer", "promote_review_seal",
+            "respond_decision_settlement", "decision_settlement_yes", "decision_settlement_no",
+        )
+    },
+    "revise_feedback": _supplied("revise_feedback", True),
+}
+
+
+@pytest.mark.parametrize("mode", sorted(_COMPARE_COMPANION_MODES))
+def test_compare_rejects_every_sibling_mode_as_a_companion(
+    mode: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    """The rejection list in ``_roadmap_comparison_has_conflict`` is hand-written,
+    so a new roadmap mode added without an entry would pass ``--compare`` through
+    silently; and a reordering of ``cmd_roadmap``'s dispatch could let a sibling
+    mode run before the check. Each sibling is listed here independently of the
+    implementation, so the next one fails loudly instead of inheriting the gap."""
+    monkeypatch.setattr(
+        roadmap_cmd,
+        "run_roadmap_comparison",
+        lambda **_kwargs: (_ for _ in ()).throw(AssertionError("comparison must not load")),
+    )
+
+    overrides = {"compare": True, "from_existing": None, **_COMPARE_COMPANION_MODES[mode]}
+    args = _ns(tmp_path, **overrides)
+
+    assert cmd_roadmap(args) == 2
+    assert "--compare accepts no companion roadmap options" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("overrides", "expected"),
+    [
+        ({}, ()),
+        ({"comparison_output": "patch"}, ("patch",)),
+        (
+            {"comparison_output": "cards", "_comparison_output_occurrences": ("cards",)},
+            ("cards",),
+        ),
+    ],
+    ids=["absent-default", "direct-non-default", "explicit-default"],
+)
+def test_option_occurrences_counts_a_value_equal_to_the_parser_default_as_absent(
+    overrides: dict[str, object], expected: tuple[object, ...]
+) -> None:
+    """``--comparison-output`` defaults to ``"cards"``, not ``None``, so without a
+    ``default`` the fallback reported a supplied ``("cards",)`` for a flag that
+    was never typed. Naming the default fixes that; an explicit occurrence the
+    parser recorded still counts."""
+    args = argparse.Namespace(comparison_output="cards")
+    for key, value in overrides.items():
+        setattr(args, key, value)
+    assert roadmap_cmd._option_occurrences(args, "comparison_output", default="cards") == expected
+    assert roadmap_cmd._has_roadmap_comparison(args) is bool(expected)
+
+
 def test_comparison_companion_option_without_compare_names_the_missing_flag(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
 ) -> None:

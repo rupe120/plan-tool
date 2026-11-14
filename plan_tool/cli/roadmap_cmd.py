@@ -595,9 +595,7 @@ def _has_roadmap_comparison(args: argparse.Namespace) -> bool:
     """Whether any comparison selector or output choice appeared."""
     return any(
         _option_occurrences(args, name) for name in ("compare", "comparison_base", "comparison_target")
-    ) or bool(getattr(args, "_comparison_output_occurrences", ())) or getattr(
-        args, "comparison_output", "cards"
-    ) != "cards"
+    ) or bool(_option_occurrences(args, "comparison_output", default="cards"))
 
 
 def _has_candidate_lifecycle_action(args: argparse.Namespace) -> bool:
@@ -637,13 +635,20 @@ def _selector_free_revise_feedback_selected(args: argparse.Namespace) -> bool:
     return bool(occurrences) and all(value is True for value in occurrences)
 
 
-def _option_occurrences(args: argparse.Namespace, name: str) -> tuple[object, ...]:
-    """Read one option's parser history, with a direct-call fallback."""
+def _option_occurrences(
+    args: argparse.Namespace, name: str, *, default: object = None
+) -> tuple[object, ...]:
+    """Read one option's parser history, with a direct-call fallback.
+
+    ``default`` is the option's parser default: the fallback counts a value equal
+    to it as not supplied, so an option whose default is not ``None`` (such as
+    ``--comparison-output``) reports no occurrence when the flag was absent.
+    """
     occurrences = tuple(getattr(args, f"_{name}_occurrences", ()))
     if occurrences:
         return occurrences
     value = getattr(args, name, None)
-    return () if value is None else (value,)
+    return () if value is None or value == default else (value,)
 
 
 def _view_occurrences(args: argparse.Namespace) -> tuple[object, ...]:

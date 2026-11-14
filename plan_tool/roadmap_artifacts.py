@@ -1054,6 +1054,8 @@ def design_row_collections(artifact: RoadmapArtifact) -> dict[str, tuple[DesignR
             "components": artifact.components,
             "decisions": artifact.decisions,
         }
+    if not isinstance(artifact, PlansArtifact):
+        raise TypeError(f"roadmap artifact has unsupported type {type(artifact).__name__}")
     return {
         "plans": artifact.plans,
         "assumptions": artifact.assumptions,
