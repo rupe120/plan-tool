@@ -89,6 +89,7 @@ steps:
   - 2
   depends_on_notes:
     2: the shared copy-or-_(TODO)_ guardrail block helper in scope_fence.py
+  detail: docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md
   description: 'Make `annotate` write all three guardrail headings into its carryover
     seed. When the source plan or document has a guardrail heading the step 1 predicate
     accepts, `annotate_render.render_create_seed` copies it verbatim through the step
