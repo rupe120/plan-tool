@@ -1143,11 +1143,11 @@ Each entry below was folded into the entry named, which now carries its scope in
 | #388 | #518 | Router-table drift handled with the skill split; the generated-template versus drift-lint decision is settled there. |
 | #88 | #455 | Re-evaluate post-call gates against the tree on disk instead of re-spending the `run` call. Memoizing the call's output is dropped as the wrong frame. |
 | #151 | #210 | Over-requested purity-path grounding is decided only after #210 decides keep or cut; a narrow purity-only mode applies only if the pass is kept. |
-| #379 | #378 | The rule for closing an already-addressed tracker entry. |
+| #379 | #378 | The closing rule with its safeguards: verify first, citation sweep, surface instead of changing a parked or decision-needed entry, tracker-only commit, and the #337 and #315 incidents. |
 | #360 | #355 | The duplicate interruption-log write falls out of any `RunLogWriter` best-effort contract; no standalone helper. |
 | #342 | #349 | One design question: whether the status callback and the run logger are one seam. |
 | #300 | #79 | The two heading regexes migrate with the JSON slice; `_REDIRECT_HEADING_RE` keeps its blank-line anchoring. |
 | #257, #258 | #259 | One change renders the existing `depends_on_notes` entry in grounding, the Jira story body and the detail prompt. |
 | #410, #416, #421 | `--compare` entry in `BUG_BACKLOG.md` | A `default=` parameter on `_option_occurrences`, a fail-closed type check in `design_row_collections`, and one parametrized test of the companion-mode rejection list. |
 | #427 | #458 | Its 212 cited / 95 defined / 117 undefined test-name counts become #458's false-positive corpus. The archived plan's detail files are not rewritten. |
-| #485 | #490 | A deliberate departure from a roadmap row is a disposition of kind `departure`; the authority question is settled in #490. |
+| #485 | #490 | A deliberate departure from a roadmap row is a disposition of kind `departure`; the authority question is assigned to #490 to settle. |

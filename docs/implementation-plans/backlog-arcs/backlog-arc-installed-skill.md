@@ -8,8 +8,8 @@ find the answer itself. It sequenced #370 — shipped 2026-09-16 as the
 skill-router-and-shared-reference plan — ahead of the four items that
 depended on it: #371, #377, #378, #379 (since merged into #378). #371 has since shipped too
 (2026-09-17, direct: the routers' `when_to_use`/`paths` frontmatter and
-situational `description`), leaving #377/#378/#379. `BACKLOG.md` owns each
-item; this file owns only their working order. All three remaining items are
+situational `description`), leaving #377 and #378 (#379 is now part of #378). `BACKLOG.md` owns each
+item; this file owns only their working order. Both remaining items are
 untiered in the priority (mission-grounded) sense — this arc is their sole
 router, the same convention `backlog-arc-roadmap.md` uses for its own items.
 
@@ -100,12 +100,12 @@ requests it.
 - **The shipped #370 plan's own Non-goals stay the boundary for that plan's
   content:** relocating roadmap operational guidance into `DIRECTIVES.md` was
   in scope for it; any *other* directive content addition (seed authoring,
-  discovery capture, stale-entry handling) belongs to #377/#378/#379, not
+  discovery capture, stale-entry handling) belongs to #377/#378, not
   folded back into that shipped work.
 - **No drift-detection machinery.** The shipped #370 plan deliberately
   deferred a lint or gate that fails when a router restates a rule the shared
   reference owns — one shared file is already the anti-drift mechanism. This
-  holds for every remaining item in this arc: none of #377/#378/#379
+  holds for every remaining item in this arc: neither #377 nor #378
   introduces a check, gate, or exit-code flip on guidance content (each
   states this in its own Non-goals; the shipped #371 introduced none either).
 - **#378's capture rule stays incidental, never a proactive sweep** (its own
@@ -116,19 +116,19 @@ requests it.
 
 **This arc's original handoff condition — #370 shipping — is satisfied**:
 the skill-router-and-shared-reference plan shipped 2026-09-16, #371 shipped
-2026-09-17, and #377/#378/#379 are each now independently selectable
+2026-09-17, and #377 and #378 are each now independently selectable
 single-item work, no longer needing this file's ordering beyond the
-#378/#379-after-#377 preference above. This arc doc itself is not retired:
+#378-after-#377 preference above. This arc doc itself is not retired:
 `BACKLOG.md`'s arc-index line still names it as the sole router for
-#377/#378/#379 (and records #371 as shipped from it), so it keeps that role
+#377/#378 (and records #371 as shipped from it), so it keeps that role
 even though its original sequencing job — getting #370 landed first — is
 done. A future related gap gets its own item filed against this same theme
-rather than a new arc. Full closure (all three remaining items shipped) is
+rather than a new arc. Full closure (both remaining items shipped) is
 not required to exit this arc's original job.
 
 ## Out of scope
 
-The original #377/#378/#379 lane changes guidance content and installer
+The original #377/#378 lane (including the former #379) changes guidance content and installer
 plumbing only; it does not change CLI runtime behavior. The public onboarding
 extension below permits only #509’s bounded hosting-configuration reader. It does not add a seed-generating command (#377's own Non-goals),
 a lint or gate on unrecorded discoveries (#378's), an automated backlog
@@ -143,7 +143,7 @@ Choose #508 for portable guidance versus local team policy, #509 for consuming
 repository hosting configuration, #511 for installation/refresh clarity, and
 #512 for model choice and rationale. The recipe-consistency prerequisite is
 satisfied (skill-router repair). #377 remains the owner of
-seed-authoring support; #378/#379 retain tracker convention discovery and
+seed-authoring support; #378 retains tracker convention discovery and
 stale-entry handling. #509 is a bounded extension of this arc into runtime
 configuration, limited to giving the installed session a verified hosting target;
 it does not authorize a general hosting framework.

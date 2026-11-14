@@ -982,6 +982,13 @@ working straight down the tiers.
       `--integration`, including `--copy` and `--user`.
     - The install, format and help or catalog tests that pin today's
       router-and-`DIRECTIVES.md` pair.
+    - **The model-selection pointer (from #425):** the core and each phase
+      skill name § "Which model to run a subcommand with" and tell the session
+      to state the backend and model, and pass them explicitly, before a
+      model-backed command. No model ids are copied into the skills.
+    - **The router-table drift decision (from #388):** what remains of the
+      decision-tree and subcommands tables after the split is covered by a
+      generated template or a drift lint, chosen under **Decision needed**.
   - **Out of scope / Non-goals:**
     - Any change to plan-tool CLI subcommands or their behavior.
     - A gate in the tool that refuses `detail` while the latest bare audit
@@ -989,15 +996,15 @@ working straight down the tiers.
       #370 excluded; file it as its own entry if wanted.
     - Drift-detection machinery on guidance content
       (`backlog-arc-installed-skill.md` § "Decision gates").
-    - Rewording or adding rules. Content moves between files; the rules stay
-      the same.
+    - Rewording or adding rules, except the model-selection pointer absorbed
+      from #425, which operationalizes an existing rule. Content moves between
+      files; the rules stay the same.
     - Changing what the machine-local `~/.claude/directives/plan-tool.md`
       symlink and the project-`CLAUDE.md` pointer reach. Both keep resolving
       to complete content, which constrains the shared-sources decision
       below.
-    - The model-selection pointer (#425), the router-table template (#388),
-      seed-authoring guidance (#377) and capture rules (#378, including the former #379), beyond
-      putting each in the right phase file.
+    - Seed-authoring guidance (#377) and capture rules (#378, including the
+      former #379), beyond putting each in the right phase file.
   - **Allowed behavior changes:**
     - The installed skill becomes several skills.
     - A session triggered for one phase gets that phase's rules loaded.
@@ -1015,6 +1022,8 @@ working straight down the tiers.
       the three exits".
     - Check that `~/.claude/directives/plan-tool.md` and the project-`CLAUDE.md`
       pointer still reach every rule heading.
+    - Check that the core and each phase skill name the model-selection
+      section (binary).
     - Run the existing install and format tests, updated for the new file set.
   - **Stop / defer:**
     - **If a host can't route between several skills,** keep one skill for
@@ -1026,6 +1035,9 @@ working straight down the tiers.
   - **Phase boundaries.** Does reconcile join run, join audit, or get its own
     skill?
   - **What the core carries.**
+  - **Router-table drift (from #388).** Whether a generated template or a
+    drift lint covers the decision-tree and subcommands tables that remain
+    after the split; this entry adds neither unless that choice requires it.
   - **Whether the shared sources stay one file split by markers** (one file
     stays easy to read whole) or become separate files. Either way the
     write-once property has to hold, and so does the symlink constraint under
@@ -3299,14 +3311,34 @@ evidence. It is not an active implementation contract.
   minimum-content entry, commits it on its own, and reports it. Every directive
   site that says "defer", "present separately", or "file it" without saying how
   cites that rule instead of restating it.
-- **Absorbs #379 (merged 2026-11-14):** closing an already-addressed entry.
-  When the session observes that a tracker entry other than the plan's own
-  source entry is already satisfied, partly satisfied, superseded, or based on
-  a false premise, it verifies that against the entry's own terms and updates
-  the entry so it stops reading as open work: close it by the host repo's
-  closure convention, narrow it to its remainder, or annotate it with dated
-  evidence and surface it. The current plan never absorbs the remainder. It
-  shares this entry's convention-discovery and commit rhythm.
+- **Absorbs #379 (merged 2026-11-14):** closing an already-addressed entry, as
+  a subsection beside this entry's rule. Tier stays `architect`: it governs
+  when a session may remove a record another author wrote. When a session
+  observes that a tracker entry other than the plan's own source entry is
+  already satisfied, partly satisfied, superseded, or based on a false
+  premise, these defaults apply (confirm or revise before implementation): (1)
+  incidental only: entries the session's work touched or its searches
+  returned, never a proactive staleness sweep; (2) verify first against the
+  entry's Outcome and Verification (a bug's Symptom) at HEAD, citing the
+  satisfying commit or anchor, and annotate instead of closing if checking
+  needs a new run, measurement or model call; (3) addressed: close by the host
+  convention (a more specific rule in the entry or its plan wins); partial:
+  narrow to the verified remainder and cite what shipped; superseded or false
+  premise: close with a dated reason; uncertain: add a dated evidence note;
+  (4) citation sweep before closing: search tracked docs for the id and the
+  entry's title vocabulary (roll-up boards, arc and runbook docs, seeds,
+  plans) and update or explicitly keep each hit; (5) surface instead of
+  changing when the entry is `decision-needed` or `parked`, or records a user
+  decision not to reopen; (6) commit separately (tracker-only) and list each
+  entry changed with its disposition and evidence. Measured failures behind
+  it: over-deletion (`5042c3ba` restored #337 after a closure applied the
+  general remove-when-shipped convention) and a dangling citation (a step
+  deleted #315 and checked only `BACKLOG.md`, missing an arc-doc citation).
+  Resemblance is not closure: four of five claimed duplicate helpers in #79
+  were wrong. If a host's closure convention cannot be discovered generically,
+  default to a dated evidence note and surfacing. Escalate to a fuller plan if
+  the user wants per-entry confirmation before any closure (which also changes
+  this entry's authority line).
 - **Why:** the practice works where its rules are loaded, and the installed
   skills carry almost none of them to any other repo. Verified 2026-09-16:
   - **Installed guidance.** `integrations/codex/SKILL.md` never mentions a
@@ -3423,12 +3455,14 @@ evidence. It is not an active implementation contract.
   reaches, from every site that defers, one rule that turns an out-of-scope
   discovery into a record in the host repo's own tracker or an explicit,
   reported "not filed".
-- **In scope:** `integrations/shared/DIRECTIVES.md` (the new section and a
+- **In scope:** `integrations/shared/DIRECTIVES.md` (the new section, including
+  the closing-an-addressed-entry subsection absorbed from #379, and a
   citation in each section above); the router pointers as the shipped
   router/reference plan (formerly #370) leaves them; install and format tests
   only where the edits require it.
-- **Out of scope / Non-goals:** updating an existing entry found already
-  addressed (#379); the scope guard's stub output (#380); seed-time
+- **Out of scope / Non-goals:** a command that detects or closes addressed
+  entries; closing items in an external issue tracker; this repo's closure
+  convention in `docs/TRACKING.md`; the scope guard's stub output (#380); seed-time
   source-entry reconciliation (#377 and the existing "Backlog-derived seeds"
   rule); a CLI that harvests or promotes deferrals
   (`docs/implementation-plans/2-deferred-scan-digest.md`,
@@ -3461,8 +3495,13 @@ evidence. It is not an active implementation contract.
     (a) a scratch repo with `BACKLOG.md` / `BUG_BACKLOG.md`, (b) a Integration-shaped
     repo with no tracker and a backlog-named ideation file, and (c) one real
     saved `[out-of-scope-deferred]` finding plus a synthetic scope-guard stub.
+  - A hand replay of the closing rule reaches the right outcome on the three
+    measured incidents: #337 (the plan-specific retention rule beats general
+    removal), #315 (the sweep finds the arc-doc citation), and `2b0273cc`'s
+    already-fixed defect (verified, not filed).
   - Deliberately not checked: whether a session records anything, entry
-    quality, or the fence judgment.
+    quality, the fence judgment, or whether a session notices an addressed
+    entry or verifies it soundly.
 - **Stop / defer:** if sink selection cannot be stated without a tool-side
   key, ship the ask-once and "not filed" fallback and file the key as its own
   entry.
@@ -4734,12 +4773,11 @@ evidence. It is not an active implementation contract.
   would need to move onto `ProgressReporter`'s lifecycle and vocabulary,
   which may not even fit roadmap's per-stage-not-per-attempt reporting
   shape without its own extension — a decision and a design pass, not a
-  proportional fix to make now. Overlaps, and may subsume,
-  `BACKLOG.md` #342 (`status_callback` vs. `RunLoggerLike` unification) —
-  resolve that question as part of scoping this one, not independently.
+  proportional fix to make now. The `status_callback` vs. `RunLoggerLike` unification question (formerly
+  #342) is part of this entry; see "Absorbs" above.
 - **Effort:** large — a genuine cross-cutting migration, not a local
   refactor.
-- **Dependencies:** informs, and may subsume, `#342`.
+- **Dependencies:** none (the former #342 is folded in).
 - **Approach:** decision first.
 - **Origin:** 2026-09-02, round-14 `/code-review` pass (full
   `77e1aeb7..HEAD` to-be-pushed range) on
@@ -6067,22 +6105,28 @@ evidence. It is not an active implementation contract.
   prompt. The Jira part is the lowest priority and costs almost nothing in the
   batch.
 - **Why:** whoever (or whatever) authors the detail file benefits from seeing
-  what a dependency actually delivers, the same reasoning as #257 and #258 one
-  stage earlier in the pipeline.
+  what a dependency actually delivers, the same reasoning applies one stage earlier
+  in the pipeline (body-synthesis grounding, absorbed from #257) and in the Jira
+  export (absorbed from #258).
 - **Effort:** small — thread each edge's `depends_on_notes` text into the
   run-grade dependency block.
 - **Dependencies:** builds on shipped `depends_on_notes`.
 - **Scope contract:**
-  - **Outcome:** the detail-authoring prompt's dependency block shows each
+  - **Outcome:** the detail-authoring prompt's dependency block, the
+    bridging-edge grounding block and the exported Jira story body each show an
     edge's note when one exists.
-  - **In scope:** `plan_tool/detail.py:render_detail_prompt`, tests.
+  - **In scope:** `plan_tool/detail.py:render_detail_prompt`,
+    `plan_tool/create.py:_render_dependency_cohesion_block` (with note text on
+    `_BridgingDependencyEdge`), the story rendering in `plan_tool/jira.py`,
+    tests.
   - **Out of scope / Non-goals:** any check on note content; changing what
     `depends_on` ids are listed.
   - **Allowed behavior changes:** the rendered prompt's dependency block gains
     optional note text per edge.
   - **Allowed reorganization:** none.
   - **Verification:** a step whose antecedent has a note renders it in the
-    prompt; one without renders exactly as today.
+    detail prompt, the bridging-edge grounding block and the Jira story body;
+    one without renders exactly as today in each.
   - **Stop / defer:** anything beyond rendering the note text as-is.
 - **Approach:** `direct`.
 - **Quality:** `audit-coverage`.
@@ -7697,9 +7741,11 @@ evidence. It is not an active implementation contract.
   halting and rely on (a).
 - **Dependencies:** #87 (same gate family).
 - **Outcome:** a retry sees every failed test id from the previous gate with a
-  one-line error; (b) has a recorded decision.
+  one-line error; (b) has a recorded decision. A step whose call succeeded but
+  whose post-call gate failed re-evaluates that gate against the tree on disk
+  without a new model call (absorbed from #88).
 - **In scope:** failure-note construction, `status_note` lifecycle, the decision
-  on (b), and their tests.
+  on (b), the post-gate re-evaluation without a new call, and their tests.
 - **Out of scope / Non-goals:** raising the attempt limit by default; changing
   what the gate checks; unattended retry loops without a bound.
 - **Allowed behavior changes:** failure notes get longer; a stale note is cleared.
@@ -8370,9 +8416,11 @@ evidence. It is not an active implementation contract.
   the convergence diagnostics).
 - **Outcome:** a finding the operator declined or accepted, with a reason, is
   shown to the next audit as settled and is not reported as new while its cited
-  text is unchanged.
+  text is unchanged. A deliberate departure from an accepted roadmap row is
+  recorded as a `departure` disposition and is shown the same way.
 - **In scope:** a disposition record (`declined`, `accepted-risk`, `reopened`,
-  each with a reason); the command that writes one; the completeness-audit
+  and `departure` absorbed from #485, citing the roadmap row and a bound
+  feedback item; each with a reason); the command that writes one; the completeness-audit
   prompt and report rendering; staleness on a changed cited text; tests. If #489
   ships first, the record carries its decider field.
 - **Out of scope / Non-goals:** inferring a disposition from an edit or from
@@ -8384,9 +8432,13 @@ evidence. It is not an active implementation contract.
 - **Allowed reorganization:** none.
 - **Verification:** a fixture finding declined with a reason is not reported as
   new on the next audit of unchanged text, and is reported again once its cited
-  text changes; the full suite passes.
+  text changes; a plan with a recorded departure is not re-reported as
+  contradicting its roadmap row while the cited row text is unchanged; the full
+  suite passes.
 - **Stop / defer:** if stable finding identity does not hold across rounds for
-  the finding classes in scope, file that and stop.
+  the finding classes in scope, file that and stop. If the departure authority
+  question cannot be settled, ship the other dispositions and keep `departure`
+  out.
 - **Route:** `plan` · **Readiness:** `ready` · **Tier:** `experienced`.
   **Principle:** `converge-on-correct-plan`.
 - **Arc assignment:** `backlog-arc-convergence-evidence`.
@@ -8414,7 +8466,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **In scope:** Shared directives and all three skill routers; preserve this
   repository’s applicable policy in repository-owned developer guidance.
 - **Out of scope / Non-goals:** New workflow rules, tracker configuration, automatic
-  publication, or absorbing #378/#379 convention discovery.
+  publication, or absorbing #378's convention discovery and closing rule.
 - **Allowed behavior changes:** Relocate local policy and generalize examples without
   weakening this repository’s approval requirements.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no

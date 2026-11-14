@@ -338,8 +338,8 @@ collection lookup to `roadmap_artifacts.stage_row_collections` rather than
 hand-maintaining a second isinstance dispatch (that function's own docstring
 warns two such copies would drift), but keeps its own fail-closed `TypeError`
 guard for an unsupported artifact type rather than relying on
-`stage_row_collections`'s permissive fallback, which has none (the `--compare` hardening entry in `BUG_BACKLOG.md`, which absorbed #416,
-tracks closing that gap at the source for every caller, not just this one).
+`stage_row_collections`'s permissive fallback, which has none (the `--compare` hardening entry in `BUG_BACKLOG.md` tracks closing that gap at
+the source for every caller, not just this one).
 
 `roadmap_compare.py:_stripped_for_comparison` ignores a REFERENCE field's
 `entity_id` only where `roadmap_relations.py:_row_relation_specs` treats it
