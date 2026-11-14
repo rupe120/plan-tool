@@ -8593,86 +8593,6 @@ implementation contract.
 - **Origin:** 2026-07-30, user request while retiring the archive convention.
 - **Status:** not started.
 
-**#209 — `--commit` should stage only the files the verb touched, not `git add -A`**
-
-- **What:** every `--commit` surface routes through
-  `plan_tool/cli/gitcommit.py:178` `commit_all(repo_root, subject)`, which runs
-  a bare **`git add -A`** and so commits *whatever is in the working tree* —
-  not what the verb produced. Give `commit_all` an explicit touched-path set
-  and stage `git add -A -- <paths>` instead, so a `--commit` run can only ever
-  commit its own output.
-- **Why (near-miss, 2026-07-31):** a `detail --commit` run authoring steps 5–8
-  of `roadmap-01-domain-constraints` was in flight while a second session
-  edited `plan_tool/{detail,review}.py` and
-  `plan_tool/cli/{authoring,review_cmd}.py` in the **same working tree** (one
-  worktree, no clone). The next per-step commit would have swept four unrelated
-  source files into a commit subjected
-  `plan(roadmap-01-domain-constraints): detail step 6 — …`. Caught and the run
-  stopped before step 6 committed; steps 1–5 are clean. The failure mode is
-  nasty precisely because it is quiet: the change lands under a message
-  describing someone else's work, on a branch the author never targeted, and is
-  discovered when it "vanishes" from the tree.
-- **Why the existing gate doesn't cover it:** `--commit` requires a clean tree
-  **up front**, which makes "everything in the tree is mine" true at t=0 and
-  false thereafter. Anything appearing *during* a multi-step run — a concurrent
-  session, an editor writing a sidecar, a hook — is swept. The single-session
-  assumption is also increasingly wrong by the tool's own direction: it ships
-  parallel plan worktrees and `--clone` full isolation; concurrent sessions
-  can also write to one repo.
-- **The precedent already exists.** `gitcommit.py:37`
-  `unexpected_dirty_paths(repo_root, expected)` already takes a
-  caller-supplied *expected*-path set and reasons about nesting and
-  `--untracked-files=all`; `launcher._git_changed_paths_or_none` already
-  computes a changed-path delta for the test-authoring gate. Callers therefore
-  largely know their footprint — this threads it into staging rather than
-  inventing the notion.
-- **Effort:** medium. The helper change is small (`git add -A -- <pathspec>`
-  keeps deletes and renames working *within* scope, so seed-archive moves and
-  frontmatter rewrites still stage correctly). The surviving call sites are in `cli/authoring.py`,
-  `cli/completeness_cmd.py`, and `cli/manifest.py`; each must state its touched
-  paths.
-- **Risks / fallout:** the failure direction **inverts** — today's risk is
-  over-staging, tomorrow's is *under*-staging, where a file the verb genuinely
-  wrote is silently left uncommitted and the run looks clean. That is arguably
-  worse, so the change needs a post-commit assertion that no expected path
-  remains dirty. One interaction to settle rather than discover:
-  **gitignored paths** (`git add -A` skips them silently, which is why
-  `path_is_gitignored`/`warn_recommended_paths_ignored` exist; an explicit
-  pathspec errors instead, so the ignored-but-expected case needs a decided
-  behavior).
-- **Dependencies:** none.
-- **Scope contract:**
-  - **Outcome:** a `--commit` run commits exactly the paths the verb touched;
-    an unrelated dirty file present at commit time is never included.
-  - **In scope:** `cli/gitcommit.py:commit_all` and its surviving call sites; the
-    touched-path plumbing each verb needs; tests.
-  - **Out of scope / Non-goals:** changing the clean-tree precondition,
-    commit subjects/trailers, which verbs accept `--commit`, per-step
-    commit granularity, or anything about branch selection; the
-    `run --commit` test-authoring-gate interaction (`launcher.py`'s delta)
-    stays as-is.
-  - **Allowed behavior changes:** `--commit` no longer includes unrelated
-    working-tree changes; a decided, documented behavior for an
-    ignored-but-expected path. Nothing else user-visible.
-  - **Allowed reorganization:** none beyond adding the parameter — if
-    consolidating `unexpected_dirty_paths`' expected-set construction with the
-    new staging set proves necessary, name the duplication first.
-  - **Verification:** a test per surface that an unrelated dirty file present
-    at commit time is *not* committed; that deletes and renames inside the
-    touched set still stage (the seed-archive move); that every expected path
-    is non-dirty after the commit; and that an ignored expected path takes the
-    decided branch rather than silently vanishing.
-  - **Stop / defer:** if any caller cannot enumerate its footprint without new
-    bookkeeping, ship the surfaces that can and file the remainder rather than
-    widening this into a footprint-tracking refactor.
-- **Approach:** `plan-tool` — mechanical per call site, but "what did this verb
-  touch" is a real per-verb design question across four modules, and the
-  under-staging inversion plus the gitignore branch are decisions worth
-  auditing before they land.
-- **Origin:** 2026-07-31, caught mid-run when a concurrent session's edits were
-  one step away from being committed under a detail-authoring subject.
-- **Status:** not started.
-
 **#234 — Pair `enforce_step_tests` with qualified `test_command` emission so a green step means the suite still passes**
 
 - **Delivered:** `create` writes `enforce_step_tests: true` on new plans and
@@ -9493,52 +9413,6 @@ longer describes current work. It is retained only as dated carve-out context.
   plan's shipped implementation (`e77ebfa5..HEAD`).
 - **Status:** not started; low priority (style/consistency, not a bug).
 
-**#411 — `--compare` can silently drop one of two duplicate-id rows instead of reporting them**
-
-- **What:** `run_roadmap_comparison` goes straight from snapshot loading to
-  `build_roadmap_diff` with no gate check, unlike `roadmap_candidate.py`'s
-  materialization pipeline, which always calls `check_complete_roadmap_gates`
-  first. `roadmap_artifacts.py` deliberately does not reject duplicate row
-  ids at parse time (so the duplicate-id gate has something to report), and
-  `roadmap_diff.py:artifact_row_diffs` builds `before_by_id = {row.id: row
-  for row in before_rows}` — a plain dict that silently keeps only the last
-  row for a duplicated id. Comparing a working roadmap directory that
-  currently has a duplicate id (a realistic mid-revision state, before gates
-  are re-run) silently omits one of the duplicated rows from `--compare`
-  output with no error or warning — nothing tells the operator evidence was
-  dropped. **Sharper reproduction (2026-09-21, round 11 of this same
-  review):** the two directions of the bug are not symmetric. A duplicate
-  id on the **after** side collapses via dict construction before the
-  removed/changed loop even runs, so the surviving after-row masks the
-  other — one of the two after-rows vanishes with **zero trace anywhere**
-  in the output. A duplicate id on the **before** side instead produces
-  **multiple** `RoadmapRowDiff`/`ComparisonCard` entries sharing one
-  `row_id`, each showing a different stale "before" value diffed against
-  the same collapsed "after" — misleading rather than silent. Both are the
-  same root cause (`{row.id: row for row in rows}` collapsing on
-  construction), now the shared `_diff_by_id` helper both `artifact_row_diffs`
-  and `_ordering_diffs` call (round 9 of this review); fixing it fixes both
-  row-kind and ordering-kind comparisons at once.
-- **Effort:** small–medium. A standalone `check_duplicate_row_ids(envelope:
-  ArtifactEnvelope) -> list[Violation]` already exists in `roadmap_gates.py`
-  (noted there as "the one exception" to some rule worth reading before
-  reusing) — likely cheaper than running the full gate battery, but wiring
-  it needs understanding `ArtifactEnvelope` construction, which this review
-  round didn't have budget to fully investigate.
-- **Risks / fallout:** low — this only adds a pre-check in
-  `roadmap_compare_run.py` (new code, this plan's own scope); does not
-  require touching `roadmap_candidate.py` or `artifact_row_diffs`'s
-  established dedup behavior (which has its own preservation contract from
-  the plan that extracted it, "preserving candidate add, replace, and
-  remove behavior" — do not change that function's behavior to fix this).
-- **Dependencies:** none.
-- **Approach:** `direct`.
-- **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
-  plan's shipped implementation (`e77ebfa5..HEAD`).
-- **Status:** not started; low priority (narrow trigger — a roadmap must
-  already be in a duplicate-id state, which gates normally prevent
-  reaching).
-
 **#412 — `--compare`'s relation matching is O(n·m) and now unconditionally reachable**
 
 - **What:** `roadmap_diff.py:relation_occurrence_diffs` matches declared
@@ -9867,51 +9741,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Effort:** small — prose only, no code, no tests.
 - **Approach:** direct. **Origin:** 2026-08-02, `intent-required` step 8; the
   file was in neither that step's nor its sibling doc step's file list.
-- **Status:** not started.
-
-**#226 — `_preserve_on_disk_step_fields` carries `status` across a positional id match, with no identity check**
-
-- **What:** the create `--iterate` loop merges a re-proposal onto the on-disk
-  plan by **step id**, and ids are positional (`_parse_steps_json` assigns them
-  from `enumerate`). A round that inserts, drops, or reorders steps therefore
-  puts a *different* step under the same id, and `status` is carried across
-  regardless.
-- **Why:** a `done` status stamped onto a different step is worse than the
-  intent case that motivated this entry — a later `run` skips work that was
-  never performed, silently. The intent half was fixed 2026-08-03 by gating the
-  carry-over on title equality (`prior.title == proposed.title`); `status` was
-  deliberately **left alone** because it predates that branch (it was
-  `existing_statuses.get(s.id, ...)` inline before step 5 extracted the
-  function) and changing transition semantics is not a review-fix.
-- **The fix is probably the same one-line gate**, but it needs its own test
-  sweep: several existing tests assert status carry-over by id, and at least one
-  (`test_prior_status_still_outlives_the_reproposal`) would need to state
-  whether a retitled step at the same id keeps its status.
-- **Dependencies:** none. `2-intent-required.md` shipped 2026-08-03.
-- **Effort:** small — one condition, plus deciding what a retitled step's status
-  should be.
-- **Scope contract:**
-  - **Outcome:** no step inherits another step's `status` from a positional id
-    collision.
-  - **In scope:** `_preserve_on_disk_step_fields`' status branch and its tests.
-  - **Out of scope / Non-goals:** the intent branch (already fixed); changing
-    where transitions are owned (`plan-tool run`, not create); any new identity
-    scheme such as stable step uuids — that is a much larger change and would
-    need its own entry.
-  - **Allowed behavior changes:** one field stops transferring across a
-    retitled step.
-  - **Allowed reorganization:** none.
-  - **Verification:** a re-proposal that retitles the step at id N leaves that
-    step `pending` rather than inheriting N's prior status; an unchanged title
-    still carries status as today.
-  - **Stop / defer:** if the right answer turns out to need stable step
-    identity rather than a title heuristic, stop and file that instead.
-- **Approach:** `direct` — one condition, one decision, one test sweep.
-- **Quality:** `grounding` — stops a positional collision from asserting work
-  was done.
-- **Origin:** 2026-08-03, xhigh review of `intent-required`; surfaced as the
-  pre-existing half of the intent finding in `_preserve_on_disk_step_fields`
-  (`create.py:7781`).
 - **Status:** not started.
 
 **#263 — `scope-out`'s forward-seed doesn't reference the commits/reports carrying the carved region's prior design work**
@@ -11659,57 +11488,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** `roadmap-versioned-from-birth` code review 1, 2026-10-06; producer-less
   stage-loop names added from code review 2, 2026-10-06.
 
-**#452 — Recover an interrupted publication journal before any writer publishes, and make non-root journals recoverable beside a head**
-
-- **What:** `publish_roadmap_generation` refuses with "an interrupted publication
-  left its journal" when a journal exists, and recovery runs only inside the stage
-  run (`roadmap.py`) and `--settle-decision`
-  (`roadmap_decision_settlement_enrolled.py`). After a crash with a journal left,
-  `--submit-feedback`, `--propose-candidate`, `--promote`, and the ledger edits
-  refuse until the operator runs the stage command, which recovers a root journal
-  and then refuses with `already has an accepted head`. With a head present,
-  `recover_roadmap_publication` accepts only root, selector, and
-  decision-settlement journals, so a crash inside a ledger edit or candidate
-  store (journal and head both present) is refused with "enrolled roadmap refuses
-  recovery of a non-version-owned generation" and the journal is removed by hand.
-  The root-kind recognizer also compares the initial ledger bytes, so a hand
-  edit of the reviewer-editable ledger between a crash and recovery makes
-  recovery refuse with no stated remedy (`roadmap_revision_publish.py`, expected
-  ledger member and the `states != expected` check).
-- **Why:** versioned-from-birth removed the other recovery entry points, so a
-  crash leaves most writers blocked behind a command that reports failure while
-  succeeding at recovery.
-- **Effort:** medium — a recover-before-publish step in the shared writer guard,
-  plus a recognizer decision per journal kind.
-- **Approach:** `direct`; the per-kind recovery policy is a design choice to
-  settle first (roll back, adopt, or refuse by kind).
-- **Dependencies:** none. The refusal wording and the `RUNBOOK.md` /
-  `docs/how-to/roadmap.md` § 3 text name the current route in the meantime.
-- **Outcome:** a leftover journal from any writer kind is recovered or refused
-  with its own actionable remedy by the next command that needs the roadmap, not
-  only by a stage run or settlement.
-- **In scope:** `roadmap_revision_publish.py` (`publish_roadmap_generation`,
-  `recover_roadmap_publication`, `_is_completed_version_owned_generation`, the
-  root recognizer's ledger-member comparison: exempt it once the head names the
-  published version, or name the hand-removal remedy), the
-  call sites of recovery, the refusal text, and the tests and docs that pin them.
-- **Out of scope / Non-goals:** changing the journal format; the first-run
-  rollback semantics; any new CLI command for recovery.
-- **Allowed behavior changes:** a writer beside a recoverable journal recovers it
-  first instead of refusing.
-- **Allowed reorganization:** none.
-- **Verification:** a test per journal kind (root, selector, ledger edit,
-  candidate store, settlement) with a leftover journal and a head: the next writer
-  either recovers and publishes or refuses naming the remedy; the full suite
-  passes.
-- **Stop / defer:** if recovering a non-root kind needs a new member-state
-  invariant the recognizer cannot derive, keep refusing that kind and record it
-  here.
-- **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
-  **Principle:** `untriaged`.
-- **Arc assignment:** `backlog-arc-roadmap`.
-- **Origin:** `roadmap-versioned-from-birth` code review 2, 2026-10-06.
-
 **#453 — Scope the first-run resume directory by plans directory, and stop `INDEX.md` from naming a stale accepted head after a failed refresh**
 
 - **What:** two derived-state scoping gaps from the version-only stage run.
@@ -11742,7 +11520,9 @@ longer describes current work. It is retained only as dated carve-out context.
   mismatch. For (b): unlink `INDEX.md`, rewrite it with a one-line could-not-refresh
   body, or degrade per version in `collect_index_rows` (list an unreadable
   version with status `unreadable`).
-- **Dependencies:** none; independent of #452.
+- **Dependencies:** none; independent of the BUG_BACKLOG.md ROADMAP entry
+  "A publication journal left by a crash blocks most roadmap writers until a
+  stage run, and a non-root journal beside a head can only be removed by hand".
 - **Outcome:** a resume directory is only deleted or reused by the plans directory
   that wrote it, and a refresh failure never leaves an `INDEX.md` that names a
   superseded accepted head without saying it is stale.

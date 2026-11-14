@@ -7813,7 +7813,8 @@ def _preserve_on_disk_step_fields(
     exactly what ``intent_proposal.parse_intent_drafts`` refuses to do when the
     backend mis-targets a draft. Title equality is the identity check: same id
     *and* same title, or the value does not travel. ``status`` keeps its
-    pre-existing id-only keying (see BACKLOG #226).
+    pre-existing id-only keying (see BUG_BACKLOG "`create --iterate` carries a
+    step's `status` onto a different step ...").
 
     A step the proposal newly adds has no ``prior``: it starts ``pending``
     (nothing brand-new can legitimately be ``done`` during create) and keeps
