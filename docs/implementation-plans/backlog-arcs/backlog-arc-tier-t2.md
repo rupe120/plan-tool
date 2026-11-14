@@ -25,17 +25,16 @@ push automatically; push only when the user explicitly requests it.
 
 ## Ordered route
 
-1. **#71** — theoretical, decision-first. Per `BACKLOG.md`'s Readiness lens,
-   this is an investigation whose output may legitimately be "no action";
-   read its full entry in `BACKLOG.md` § A (New capability, well-scoped)
-   before treating it as implementation-ready work.
+1. **#71** — parked. Unpark when a `detail --reconcile` apply is seen
+   narrowing scope or softening a criterion despite the prompt; until then
+   this tier has no active route position. Read its full entry in
+   `BACKLOG.md` § A (New capability, well-scoped) before acting.
 
 ## Exit and handoff
 
 This tier is clear — proceed to
-[tier T3](backlog-arc-tier-t3.md) once #71 is resolved (implemented, or
-closed with a recorded "no action" result) or explicitly deferred with a
-stated reason in `BACKLOG.md`.
+[tier T3](backlog-arc-tier-t3.md) while #71 is parked; if #71 is unparked, resolve it (implemented, or
+closed with a recorded "no action" result) first.
 
 ## Out of scope
 
