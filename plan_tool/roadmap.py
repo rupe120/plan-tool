@@ -3398,20 +3398,7 @@ def _render_seed_materialize_prompt(
             f"roadmap seed materialization prompt input is not readable ({exc})"
         )
 
-    header_path = prompts_dir() / SMALLEST_PROOF_BOUNDARY_HEADER_FILENAME
-    footer_path = prompts_dir() / SMALLEST_PROOF_BOUNDARY_FOOTER_FILENAME
-    if not header_path.is_file() or not footer_path.is_file():
-        raise RoadmapError(f"no shared smallest-proof-boundary guidance at {header_path}")
-    variables = {
-        "slug": slug,
-        "plan_id": plan_id,
-        "smallest_proof_boundary_header": read_roadmap_text(
-            header_path, error_for_read_failure=unreadable_prompt_input
-        ),
-        "smallest_proof_boundary_footer": read_roadmap_text(
-            footer_path, error_for_read_failure=unreadable_prompt_input
-        ),
-    }
+    variables = {"slug": slug, "plan_id": plan_id}
     variables.update({f"{item.stage.artifact_key}_artifact": item.text for item in loaded})
     template_text = read_roadmap_text(
         template_path, error_for_read_failure=unreadable_prompt_input

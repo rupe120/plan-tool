@@ -22,9 +22,10 @@ it describes it.
 
 ${smallest_proof_boundary_header} Model every entity, rule, workflow, and
 decision the brief's requirements need, each as simply as its requirement
-allows. Do not leave out or narrow a stated requirement because the central
-path could finish without it; when the brief seems to leave one optional,
-record a `pending` decision for the owner instead of dropping it. Do not model
+allows. Do not leave out or narrow a stated requirement because the brief's
+main workflow could finish without it. When the brief seems to leave one
+optional, keep it modeled and record a `pending` decision whose chosen option
+keeps it, so the owner can choose to narrow it. Do not model
 later roles, workflows, integrations, operating modes, or generalized mechanisms
 the brief does not ask for.
 

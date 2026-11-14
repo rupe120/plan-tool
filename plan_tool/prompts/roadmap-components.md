@@ -53,7 +53,8 @@ Work from those three texts alone. **Do not read the repository** — no file
 reads, no searches. Do not invent scope the brief does not imply.
 
 ${smallest_proof_boundary_header} Name the ownership, patterns, and stores
-that every modeled requirement and constraint needs, and no more. Do not add
+that every requirement the brief states, and every constraint, needs, and no
+more. When the brief states a requirement the artifact below leaves out, do not follow the omission: record a `pending` decision that names the missing requirement for the owner. Do not add
 components for later roles, workflows, integrations, operating modes, or
 generalized mechanisms the brief does not ask for.
 

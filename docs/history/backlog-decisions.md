@@ -644,10 +644,16 @@ Shipped 2026-11-14. Settled owner rule, do not re-open: the brief's stated
 requirements are the roadmap's requirements, and the smallest-proof rule applies
 to how each is met and to refusing unrequested work, never to narrowing a stated
 requirement unless the brief or the owner directs it. The shared header
-`roadmap-smallest-proof-boundary-header.md` carries the rule to stages 1–4 and,
-since this change, to `roadmap-seed.md`; stage 1 records a `pending` decision
-instead of dropping a requirement it reads as optional; stage 4 prefers several
-small, independently verifiable plans without a count target. The cause was
+`roadmap-smallest-proof-boundary-header.md` carries the rule to stages 1–4. Stage
+1 keeps a requirement it reads as optional modeled and records a `pending`
+decision whose chosen option keeps it; stages 2–4 take requirements from the
+brief and record a `pending` decision when the artifact below left one out;
+stage 4 prefers several small, independently verifiable plans without a count
+target; both revision prompts say a requirement the brief states is never an
+eventual capability. `roadmap-seed.md` deliberately keeps its own paragraph,
+scoped to its plan row, instead of the shared header: the seed model drafts one
+row and never sees the brief, so a brief-level rule there would invite pulling
+sibling rows' scope into the seed. The cause was
 Loom's stage 1 cutting the brief-required repository browser
 (`docs/evidence/roadmap-run-measurements.md` §8). #534 measures the effect; #535
 owns the separate question of stage-authored `settled` decisions.

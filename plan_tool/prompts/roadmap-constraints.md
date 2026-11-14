@@ -40,7 +40,7 @@ Work from those two texts alone. **Do not read the repository** — no file read
 no searches. Do not invent scope the brief does not imply.
 
 ${smallest_proof_boundary_header} Rank and constrain every requirement the
-domain artifact models. Do not add a quality commitment, hosting shape, or
+brief states, as the domain artifact models it. When the brief states a requirement the artifact below leaves out, do not follow the omission: record a `pending` decision that names the missing requirement for the owner. Do not add a quality commitment, hosting shape, or
 decision for later roles, workflows, integrations, operating modes, or
 generalized mechanisms the brief does not ask for.
 
