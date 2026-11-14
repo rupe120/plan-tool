@@ -640,6 +640,14 @@ excluded from the callout.
 
 ## Closed decisions
 
+### #363 — The raw-upgrade operator route is a release rule
+
+Moved 2026-11-14 to `DATA_CONTRACT.md` § "Version-evolution policy", where the next format bump meets it. The first format release that refuses a previously supported live plan or detail artifact ships an operator-invocable upgrade route in that same release; version 1 refuses nothing new, so no route ships now. It was never work with its own deliverable, so no backlog entry remains.
+
+### #396 — No operator view of the decision-settlement receipt proof
+
+Decided 2026-11-14. `roadmap_decision_settlement_receipt.py:decision_settlement_receipt_proves_completion` and its helpers are called only from tests; the function is a test oracle for the read-back proof rule, and receipt visibility lives in git history by the `roadmap-decision-settlement` plan's own design. No `--view decision-settlements` or status command is built. Re-open only when an operator asks for one, with the question they need answered. Origin: 2026-09-18 post-run `/code-review` of that plan, round 3.
+
 ### #269 — No hermetic roadmap-stage harness or production partial-stage mode
 
 Closed 2026-08-28. The existing `_Env` / injected-`StageInvoker` seam in

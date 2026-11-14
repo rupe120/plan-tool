@@ -701,48 +701,6 @@ working straight down the tiers.
   or re-verify anything about the shipped plan/detail classes through this
   entry.
 
-**#363 — Ship the authored-artifact raw-upgrade operator route at the first legacy refusal**
-
-- **What:** version 1 exposes raw plan and detail upgrade entry points as
-  library APIs because it newly refuses no previously supported on-disk
-  representation. The first format release that makes a previously supported
-  live plan or run-grade detail artifact hit a reader or writer refusal must
-  ship an operator-invocable route for the affected class in that same release.
-  It must preflight reader/writer compatibility before every affected mutating
-  command's first state change, then prove upgrade-and-rerun leaves no partial
-  state.
-- **Effort:** medium when triggered — the exact command set depends on the
-  format break, but the raw entry points and compatibility contract already
-  exist as seams.
-- **Dependencies:** a concrete post-version-1 plan or detail format change
-  that causes an existing on-disk representation to reach a refusal. Nothing
-  in version 1 blocks on this entry.
-- **Scope contract:**
-  - **Outcome:** an operator encountering the newly live refusal gets a named
-    route that upgrades the affected raw artifact before a mutating command
-    changes plan-adjacent state.
-  - **In scope:** the selected operator command, both raw upgrade entry points
-    as needed, the affected mutating-command preflights, command help, and
-    upgrade-then-rerun/no-partial-state tests.
-  - **Out of scope / Non-goals:** a version-1 command surface, upgrade-on-read,
-    a general migration engine, multi-hop conversion, roadmap staged artifacts
-    (#362), and a transform for a version that has not been designed.
-  - **Verification:** exercise each affected class from a real legacy fixture;
-    prove refusal before preflight mutation, successful explicit upgrade, and a
-    clean rerun with no partially changed plan state.
-  - **Stop / defer:** if the proposed break cannot state which live artifact
-    representation refuses and why, stop at a fresh bare plan rather than
-    inventing a generic command.
-- **Approach:** `plan-tool` — this is a cross-command behavior change whose
-  exact route is selected by the future format break.
-- **Re-entry trigger:** the first approved plan or detail format bump that
-  makes a previously supported live on-disk artifact reach a reader or writer
-  refusal.
-- **Origin:** filed 2026-09-09 while restructuring the authored-artifact
-  format-version plan after its detail-grounded audit identified the missing
-  operator route for reader-only detail breaks.
-- **Status:** deferred until the re-entry trigger fires.
-
 **#365 — Reconcile authored-artifact documentation and planning-manifest discoverability**
 
 - **What:** document `plan_tool/detail_artifacts.py` as the owner of the live
@@ -2953,32 +2911,6 @@ evidence. It is not an active implementation contract.
   `roadmap-versioned-feedback-revision-chain` shipped reject and discard for batch
   candidates; reshaped 2026-11-14 from a discard-route design to a check-then-retire
   decision.
-
-**#396 — Decision-settlement's receipt read-back proof has no operator-facing entry point — closed as a decision: no `--view`**
-
-- **What:** `roadmap_decision_settlement_receipt.py:decision_settlement_receipt_proves_completion`
-  (and its helpers) has no caller outside its own module and its tests
-  (checked 2026-11-14: only `tests/test_roadmap_decision_settlement_receipt.py`
-  and `tests/test_roadmap_decision_settlement_enrolled.py` call it), and no
-  `--view` or status command exposes it (`roadmap --view` offers summary, walk,
-  ledger, index, seeds, and html).
-- **Decision (2026-11-14):** the function is a test oracle for the read-back
-  proof rule, and receipt visibility lives in git history by the
-  `roadmap-decision-settlement` plan's own design. No operator view is built.
-  An operator who asks for one is the trigger to reopen, with the question they
-  need answered.
-- **Outcome:** none to build. The record of this decision replaces the former
-  undocumented gap.
-- **Out of scope / Non-goals:** deliberately not a `--view decision-settlements`
-  or any status command (no operator has asked, and the plan placed visibility
-  in git on purpose); any change to the read-back proof rule itself; a
-  general-purpose evidence-browsing UI.
-- **Approach:** none — decision recorded. Move this record to
-  `docs/history/backlog-decisions.md` and remove the entry at the next queue
-  cleanup.
-- **Origin:** 2026-09-18, `roadmap-decision-settlement` post-run `/code-review`
-  round 3; decided 2026-11-14 in the value review.
-- **Status:** closed — decided not to build.
 
 **#525 — Validate copied plan-tool skills in the current project so stale instructions are visible**
 

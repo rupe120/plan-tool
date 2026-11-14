@@ -45,6 +45,16 @@ approved roster and zero-blocker record in
 its reader boundary rejects version-1 evidence rather than inferring an
 upgrade.
 
+The first format release that makes a previously supported live plan or
+run-grade detail artifact hit a reader or writer refusal ships an
+operator-invocable upgrade route for the affected class in that same release.
+The route preflights reader and writer compatibility before every affected
+mutating command's first state change, and tests prove upgrade-and-rerun leaves
+no partial state. Version 1 exposes the raw plan and detail upgrade entry points
+as library APIs only, because it newly refuses no previously supported
+representation. Upgrade-on-read, a general migration engine and multi-hop
+conversion are deliberately not part of this rule.
+
 ## Authored-artifact format versions
 
 A plan file and a run-grade detail file each declare their format version
