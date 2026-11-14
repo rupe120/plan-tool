@@ -388,7 +388,7 @@ class TestBackendSelection:
         assert cli.main(tmp_repo.argv("--backend", "claude", "list")) == 0
         assert get_active_backend().name == "claude"
 
-    @pytest.mark.parametrize("model", ("gpt-5.6-terra", "chatgpt-4o-latest"))
+    @pytest.mark.parametrize("model", ("gpt-6.1-sol", "chatgpt-4o-latest"))
     def test_openai_model_family_selects_codex_without_backend_flag(
         self, tmp_repo, monkeypatch: pytest.MonkeyPatch, model: str
     ) -> None:
@@ -404,7 +404,7 @@ class TestBackendSelection:
     ) -> None:
         monkeypatch.setenv("PLAN_TOOL_BACKEND", "claude")
         monkeypatch.setattr(shutil, "which", lambda _binary: "/usr/bin/codex")
-        assert cli.main(tmp_repo.argv("--model", "gpt-5.6-sol", "list")) == 0
+        assert cli.main(tmp_repo.argv("--model", "gpt-6.1-sol", "list")) == 0
         assert get_active_backend().name == "codex"
 
     def test_backend_flag_beats_model_family(
@@ -415,7 +415,7 @@ class TestBackendSelection:
         assert (
             cli.main(
                 tmp_repo.argv(
-                    "--backend", "claude", "--model", "gpt-5.6-terra", "list"
+                    "--backend", "claude", "--model", "gpt-6.1-sol", "list"
                 )
             )
             == 0
@@ -531,7 +531,7 @@ class TestBackendSelection:
 
     @pytest.mark.parametrize(
         ("model", "backend"),
-        (("gpt-5.6-terra", "codex"), ("gemini-3-pro", "gemini")),
+        (("gpt-6.1-sol", "codex"), ("gemini-3-pro", "gemini")),
     )
     def test_nondefault_model_family_preflights_missing_binary(
         self, tmp_repo, capsys: pytest.CaptureFixture[str],
@@ -559,10 +559,10 @@ class TestBackendSelection:
                 EXEC_NOT_FOUND_EXIT,
             ),
             ("codex", (), "codex", EXEC_NOT_FOUND_EXIT),
-            (None, ("--model", "gpt-5.6-terra"), "codex", EXEC_NOT_FOUND_EXIT),
+            (None, ("--model", "gpt-6.1-sol"), "codex", EXEC_NOT_FOUND_EXIT),
             (
                 "codex",
-                ("--backend", "claude", "--model", "gpt-5.6-terra"),
+                ("--backend", "claude", "--model", "gpt-6.1-sol"),
                 "claude",
                 EXEC_NOT_FOUND_EXIT,
             ),
