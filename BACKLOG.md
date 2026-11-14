@@ -6143,9 +6143,13 @@ working straight down the tiers.
 - **Origin:** 2026-08-12, mid-audit on `batch-authoring-observability`,
   discussing why `--audit-passes 1` and `arm-clustering` are currently
   mutually exclusive.
+- **Route:** `plan` · **Readiness:** `parked` (parked 2026-11-14: a new
+  detector for a different signal; `CLAUDE.md` already directs the operator to
+  count the arm by hand when the detector is silent).
+- **Unpark when:** a real missed arm turns up that a cross-round consensus signal would have caught.
 - **Status:** plan-authored: `docs/implementation-plans/2-arm-clustering-cross-round-consensus.md`
   (status `planning`, registered in `.plan-tool/plans.json`); implementation
-  has not started.
+  is not started and stays unstarted while parked.
 
 **#265 — `split` (and similar detail-authoring commands) should default to `--no-detail` when the target plan is bare**
 
@@ -6208,6 +6212,10 @@ working straight down the tiers.
   (two processes/threads racing a write, one wins cleanly, neither drops the
   other's unrelated-plan-id entry).
 - **Approach:** `direct`.
+- **Route:** `direct` · **Readiness:** `parked` (parked 2026-11-14: the tool is
+  serial by design and two concurrent operator processes on one roadmap have
+  not been observed).
+- **Unpark when:** a lost `seed-state.json` write is observed from two concurrent processes.
 - **Origin:** 2026-08-13, `roadmap-seed-materialization` completeness audit,
   finding `seed-state-concurrent-cli-race`.
 - **Status:** not started.
@@ -6403,6 +6411,10 @@ working straight down the tiers.
 - **Approach:** the audit itself is `direct` (a reading/tracing pass, no
   design choice); any resulting (c)-case fix is `plan-tool` if it touches
   more than one module.
+- **Route:** `direct` · **Readiness:** `parked` (parked 2026-11-14: the
+  motivating incident is unverified and the exposure is mostly an
+  editable-install developer-machine hazard).
+- **Unpark when:** a stale-process failure is reproduced in a fresh process, in another project, or from supported-route provenance.
 - **Origin:** 2026-08-26, raised by the user after tracing the roadmap
   evidence-schema incident to a plausible long-running-process cause, with
   the observation that this is a structural exposure class — "almost all
@@ -6521,6 +6533,9 @@ working straight down the tiers.
 - **Approach:** `plan-tool` — create a fresh seed from current code, audit its
   bare plan before detail, and split independent behavior classes if they do
   not share one selected contract.
+- **Route:** `plan` · **Readiness:** `parked` (parked 2026-11-14: the inventory
+  exists and no route is selected).
+- **Unpark when:** a named headless consumer (Loom or Integration) blocks on a direct `input()` call.
 - **Status:** the current-code inventory is recorded in
   [`analysis/headless-process-route-inventory.md`](docs/implementation-plans/backlog-arcs/analysis/headless-process-route-inventory.md).
   Its standalone saved-review selection is complete as
@@ -6536,7 +6551,7 @@ working straight down the tiers.
   root version record, brief, fixed artifact inventory, and final accepted-head
   selector for one root version. Refuse any other journal without recovery or
   capture.
-- **Why deferred:** Normal lifecycle writers do not create a falsely labelled
+- **Why parked:** Normal lifecycle writers do not create a falsely labelled
   `root-enrollment` journal. The shipped #328 happy-path proof already refuses
   actual pending legacy journals before capture; this adds persistence-integrity
   hardening for corrupt or forged journal content.
@@ -6545,8 +6560,8 @@ working straight down the tiers.
 - **Risks / fallout:** An over-broad recognizer could prevent a legitimate
   interrupted root enrollment from recovering. Keep unversioned recovery and
   every other generation kind unchanged.
-- **Dependencies:** #328 remains the source of the published root-generation
-  contract; complete final sign-off on #328 before selecting this work.
+- **Dependencies:** #328 (closed) is the source of the published root-generation
+  contract.
 - **Scope contract:**
   - **Outcome:** root enrollment recovers only the exact writer-produced root
     generation for one root version.
@@ -6569,13 +6584,15 @@ working straight down the tiers.
     backlog items.
 - **Approach:** direct — the fixed member inventory and required refusal are
   already selected by #328.
-- **Arc assignment:** intentionally unassigned. Another branch is updating
-  backlog-arc documentation structure; add this entry to the appropriate arc
-  only after #328 final sign-off completes.
+- **Route:** `direct` · **Readiness:** `parked` (parked 2026-11-14: guards
+  against forged or corrupt journals that normal writers never produce).
+- **Unpark when:** a corrupt or falsely labelled pending root-enrollment journal is observed.
+- **Arc assignment:** `backlog-arc-roadmap` (its persistence-integrity hardening
+  note names this entry).
 - **Origin:** 2026-09-01 post-run reconciliation report
   `20260901-151003-run-reconcile.json`, finding `step4-run-reconcile-cad5fa58`;
   user-confirmed as deferred hardening.
-- **Status:** deferred pending #328 final sign-off and subsequent arc assignment.
+- **Status:** parked; #328 is closed and no corrupt journal has been observed.
 
 **#353 — Durable artifact-contention handoff for terminal and headless operators**
 
@@ -6644,28 +6661,19 @@ working straight down the tiers.
 - **Approach:** `plan-tool` — persistence, restart semantics, human authority,
   and race revalidation form a multi-surface state-machine contract rather
   than a bounded direct fix.
-- **Iterate:** when selected, first author
-  `plan-seeds/artifact-contention-handoff.md` from this scope contract. Then
-  use the default author/detail/audit/run and post-run reconciliation loop;
-  the bare-plan audit is load-bearing for the human-authority and stale-choice
+- **Route:** `plan` · **Readiness:** `parked`.
+- **Unpark when:** the narrow normalized-artifact collision correction reaches external review convergence and the owner explicitly selects this item.
+- **When unparked:** the seed comes first, from this scope contract; the
+  bare-plan audit is load-bearing for the human-authority and stale-choice
   rules, and the detail-grounded audit is load-bearing for persistence and
   idempotence.
-
-  ```bash
-  plan-tool create artifact-contention-handoff --iterate -y --from-existing plan-seeds/artifact-contention-handoff.md
-  plan-tool detail artifact-contention-handoff --commit -y
-  plan-tool completeness-audit artifact-contention-handoff --iterate --commit -y
-  plan-tool run artifact-contention-handoff --commit -y
-  plan-tool reconcile-code artifact-contention-handoff --all
-  ```
 - **Arc assignment:**
   [`backlog-arc-headless-process.md`](docs/implementation-plans/backlog-arcs/backlog-arc-headless-process.md),
   with Integration recorded only as an intended headless consumer.
 - **Origin:** 2026-09-04 user-confirmed scope carve during the external
   `seed-ingestion-routing` review, after recurring collision findings showed
   that durable human coordination is useful but exceeds the narrow correction.
-- **Status:** not started; parked until the narrow collision correction reaches
-  external review convergence and the user explicitly selects this item.
+- **Status:** not started; parked.
 
 ---
 
@@ -6921,12 +6929,13 @@ working straight down the tiers.
 - **Stop / defer:** if the response record cannot gain an optional field without
   a schema version bump, stop and file that as its own entry.
 - **Approach:** `plan-tool`.
-- **Route:** `plan` · **Readiness:** `ready` · **Tier:**
+- **Route:** `plan` · **Readiness:** `parked` · **Tier:**
   `experienced` (a prompt and an additive persisted field within existing
   contracts). **Principle:** `untriaged`.
+- **Unpark when:** reviewers are observed to miss an unjustified "no change" candidate response.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** the IPPT-19 plan carve, 2026-10-02.
-- **Status:** not started.
+- **Status:** not started; parked 2026-11-14 (the Integration case does not need it).
 
 **#438 — Widen the narrative check's removed-id source to a candidate's own `remove-row` operations**
 
@@ -7048,10 +7057,11 @@ working straight down the tiers.
 - **Stop / defer:** if allowing replacement needs span authority beyond the
   issued paragraph, stop and raise it.
 - **Approach:** `plan-tool`.
-- **Route:** `plan` · **Readiness:** `decision-needed` (whether the
-  second review round justifies changing the IPPT-18 rule; the stacked route
-  is the working alternative) · **Tier:** `architect` (changes a settled
+- **Route:** `plan` · **Readiness:** `parked` (parked 2026-11-14: the stacked
+  route works, and this reverses a settled, architect-reviewed contract to save
+  one review round) · **Tier:** `architect` (changes a settled
   candidate contract). **Principle:** `untriaged`.
+- **Unpark when:** the second-round cost of the stacked route recurs across more than one lineage.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** Integration Group 5 prose correction diagnosis, 2026-10-05; moved from
   `BUG_BACKLOG.md` after the stacked route was shown to work.
@@ -7447,11 +7457,11 @@ working straight down the tiers.
 - **Verification:** a test with a stub test command that fails once then passes
   (step passes, both results reported) and one that fails twice (step fails); the
   full suite passes.
-- **Stop / defer:** gated on a second instance of a load flake failing a gate;
-  with one instance, hold at `evidence-gated`.
-- **Route:** `direct` · **Readiness:** `evidence-gated` (gate: a second
-  non-reproducing gate failure) · **Tier:** `experienced`. **Principle:**
+- **Stop / defer:** with one instance, stay parked; a retry can also mask a
+  real order-dependent failure, so the retry stays at one and reports both results.
+- **Route:** `direct` · **Readiness:** `parked` · **Tier:** `experienced`. **Principle:**
   `untriaged`.
+- **Unpark when:** a second non-reproducing gate failure occurs.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` run 6, 2026-10-06.
 
@@ -7557,8 +7567,9 @@ working straight down the tiers.
 - **Verification:** with a stub invoker, the command against a fixture roadmap writes a report naming the accepted version id and every derived plan, the prompt carries the settled decisions, store and hosting rows, and each plan body, the run exits 0 with findings present, and no file under the roadmap folder, `plan-seeds/`, or the plans changes (asserted by a before/after tree comparison); a two-plan fixture choosing different engines for one shared store carries both plans and the store row into one prompt. Real-model behavior on Integration `integration-aidlc-mvp` is observed separately and gates nothing.
 - **Stop / defer:** stop if derived-plan membership cannot be read from the roadmap's existing records without a new link record; surface rather than invent one. Stop if, with `## Stack` carried into plan bodies, the per-plan audit reports every observed conflict, since the cross-plan surface then has no case of its own. Route unrelated defects separately.
 - **Approach:** plan-tool; a new audit surface with its own prompt, persistence, and CLI crosses modules and defines what an audit reports.
-- **Route:** `plan` · **Readiness:** `evidence-gated` · **Tier:** `architect` (it defines a new audit surface and what it may assert, where a wrong call is invisible because the report checks plans against themselves). **Principle:** `converge-on-correct-plan`.
-- **Evidence gate:** executable once one accepted roadmap lineage shows a conflict that a per-plan completeness audit passes clean with `## Stack` carried into the plan body: two derived plans contradicting each other, or a plan contradicting a settled decision that the `## Stack` section does not carry into the plan body. Closing with "no action" is a valid outcome.
+- **Route:** `plan` · **Readiness:** `parked` (owner decision 2026-10-15 kept the evidence gate) · **Tier:** `architect` (it defines a new audit surface and what it may assert, where a wrong call is invisible because the report checks plans against themselves). **Principle:** `converge-on-correct-plan`.
+- **Unpark when:** a concrete case shows what this report catches or resolves that #492's shared contract record and coordinated session-directed edits cannot.
+- **Evidence gate:** the gate is met when one accepted roadmap lineage shows a conflict that a per-plan completeness audit passes clean with `## Stack` carried into the plan body: two derived plans contradicting each other, or a plan contradicting a settled decision that the `## Stack` section does not carry into the plan body. Closing with "no action" is a valid outcome.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Seed:** none until the evidence gate is met.
 - **Origin:** Integration owner request, 2026-10-08. Premise checked read-only on 2026-10-08 against Integration (`<integration-consumer-root>`) and found exactly one conflict:
@@ -7600,8 +7611,8 @@ working straight down the tiers.
   entry's evidence gate and no-new-quality/ordering/gating fence; do not mark it
   ready solely because another per-plan audit needed manual coordination.
 
-- **Owner decision (2026-10-15):** retain the existing evidence gate and
-  `evidence-gated` readiness; no seed or implementation proceeds. The cited
+- **Owner decision (2026-10-15):** retain the existing evidence gate
+  (labelled `parked` since 2026-11-14); no seed or implementation proceeds. The cited
   Integration audits detect the recorded cross-plan conflicts. Coordinated fixes
   demonstrate a resolution problem, not an additional detection capability.
   Use #492's shared contract record and coordinated session-directed edits for
@@ -7734,7 +7745,8 @@ working straight down the tiers.
   complete-response contract; escalate to a plan if a new repair wire is chosen.
 - **Route:** direct · **Readiness:** parked — efficiency follow-up · **Tier:** architect.
   **Principle:** `converge-on-correct-plan`.
-- **Status:** not started; efficiency follow-up.
+- **Unpark when:** roadmap retry failures recur after the ordering fixes.
+- **Status:** not started; one consumer observation, and the retry would add about 68 KB of context.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** Integration owner requested these plan-tool updates on 2026-10-09.
 
@@ -8028,9 +8040,8 @@ working straight down the tiers.
 - **Risks / fallout:** a required field breaks existing scripted confirms until
   they pass it. Plan-tool cannot authenticate the claim, and must not present it
   as verified.
-- **Dependencies:** none to build. **Trigger:** Integration's `roadmap_driver.py` begins
-  relaying an owner's approval into `--decide-candidate`; land this before that
-  driver work.
+- **Dependencies:** none to build. Land this before Integration's
+  `roadmap_driver.py` begins relaying an owner's approval into `--decide-candidate`.
 - **Outcome:** every structural approval and decision settlement records a
   decider kind (`human` or `agent`) and a caller-supplied reference, and a
   confirm without one is refused.
@@ -8050,9 +8061,10 @@ working straight down the tiers.
 - **Stop / defer:** if the seal's stored identity cannot take a new field without
   a schema version, ship the field on the run-log event only and file the seal
   change.
-- **Route:** `direct` · **Readiness:** `blocked-on` the trigger above ·
+- **Route:** `direct` · **Readiness:** `parked` ·
   **Tier:** `architect` (changes an approval contract).
   **Principle:** `deterministic-non-determinism`.
+- **Unpark when:** Integration's `roadmap_driver.py` begins relaying an owner's approval into `--decide-candidate`.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** comparison with `aidlc-workflows`' feedback model, 2026-10-13;
   owner direction that Integration facilitates human decisions rather than hiding them.
@@ -8328,11 +8340,11 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 **#523 — plan-tool is not on PyPI, so installing it needs a Git URL**
 
 - **What:** users install with `uv tool install git+https://github.com/rupe120/plan-tool`. Publishing to PyPI would shorten that to `uv tool install plan-tool`, make the tool findable on PyPI, and give it versioned releases. The name `plan-tool` was unclaimed on PyPI on 2026-11-06.
-- **Route:** direct · **Readiness:** deferred until triggered · **Tier:** architect.
+- **Route:** direct · **Readiness:** parked · **Tier:** architect.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-public-release`.
 - **Effort:** about a day. Measured 2026-11-06: the wheel already bundles `integrations/`, the prompts, LICENSE and NOTICE, and an installed wheel ran `--version`, `install-skill --copy` and the start screen outside the clone.
-- **Trigger:** outside users asking for a PyPI install, a need for versioned releases, or a risk to the `plan-tool` name. Deliberately not done at launch (owner decision, 2026-11-06): the Git install removes the clone step, and every PyPI version is a permanent public release while the tool is still changing quickly.
+- **Unpark when:** outside users ask for a PyPI install, versioned releases become needed, or the `plan-tool` name is at risk. Deliberately not done at launch (owner decision, 2026-11-06): the Git install removes the clone step, and every PyPI version is a permanent public release while the tool is still changing quickly.
 - **Risks / fallout:** published versions cannot be replaced; release steps become user-visible; a symlinked skill points into uv's tool environment, whose path includes the Python version.
 - **Outcome:** `uv tool install plan-tool` installs a released version, and each release is published from a tagged commit.
 - **In scope:** trim the source distribution (it was 23 MB and 8,344 files on 2026-11-06, mostly the captured reports) with a hatch sdist include list; give PyPI a description whose links resolve (the README has 64 relative links); add authors, project URLs, classifiers and keywords; a publish job added to the existing GitHub Actions workflow (`.github/workflows/ci.yml` already runs the suite), triggered by a version tag and using Trusted Publishing; install-guide and RELEASING.md updates.
@@ -8347,7 +8359,8 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 **#524 — plan-tool drives only three CLIs as backends, so Gemini, Kiro, Copilot and OpenCode users cannot run it**
 
 - **What:** the registered backends are `claude`, `codex` and `cursor`. Other common coding CLIs have a headless JSON mode and could be driven the same way. An unregistered name already works as a provisional backend (`[binary, prompt]`, the claude parser, generic failure patterns, extra flags from `.plan-tool/backends.json`), which is best-effort for plain-text CLIs in batch mode and gives no streaming progress or real error classification.
-- **Route:** plan (one plan per backend; the first also settles the capture template) · **Readiness:** decision-needed (which CLI goes first: Kiro is the cheapest capture and settles the template, Gemini has the largest demand; capture needs the CLI installed and an authenticated account) · **Tier:** experienced.
+- **Route:** plan (one plan per backend; the first also settles the capture template) · **Readiness:** parked (parked 2026-11-14: each backend is permanent surface pinned to one CLI version, no user has asked, and the provisional route exists) · **Tier:** experienced.
+- **Unpark when:** a named user requests a specific CLI as a backend; unpark one CLI at a time (Kiro is the cheapest capture and settles the template, Gemini has the largest demand; capture needs the CLI installed and an authenticated account).
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-installed-skill`.
 - **Effort:** about 1–2 days per CLI, mostly capturing real transcripts and failure copy; about a day for the capture template first. Measured 2026-11-06: a backend is a manifest (`integrations/<name>/backend.json`, about 40 lines), a stream-line parser registered in `_PARSER_REGISTRY` when its event schema differs (cursor's is about 120 lines in `plan_tool/backend.py`), a contract document with fixtures (cursor 150 lines, codex 434), tests, and a skill variant.
@@ -8390,7 +8403,8 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 **#528 — Nothing reviews whether the stage-4 plan list in `04-roadmap.md` is a deliberate decomposition**
 
 - **What:** stage 4 maps accepted roadmap rows to plans, and every downstream artifact (draft seeds, `create`, detail) takes its boundaries from that list. Seed distillation has an explicit one-plan-or-many judgment grounded in shared implementation, but no review has compared the stage-4 guidance (`plan_tool/prompts/roadmap-plans.md`, which already requires bounded plan rows, rejects fixed plan counts, and forbids repository inspection) with it or looked at retained stage-4 outputs. An oversized or fragmented plan row is therefore noticed only after seeds or `create` expose it. No confirmed defect exists; this is an assessment.
-- **Route:** direct (an investigation that reports findings) · **Readiness:** ready · **Tier:** architect.
+- **Route:** direct (an investigation that reports findings) · **Readiness:** parked (parked 2026-11-14: no confirmed defect, and no decision waits on the report) · **Tier:** architect.
+- **Unpark when:** downstream seeds or `create` split a stage-4 plan row in practice.
 - **Principle:** converge-on-correct-plan.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Effort:** small to medium; reading, comparison, and a written report.
