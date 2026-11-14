@@ -14,6 +14,16 @@ owns the results and subsequent decisions. Keep the four demo stages on both
 hosts. The inventories below preserve the pre-cleanup evidence and expected tips;
 they are not a list of current remote refs or outstanding deletion requests.
 
+The `v0.1.0` disposition in step 4 is settled. On 2026-10-21 `main` was
+replaced by release commit `03cbb6882` (`Release 0.2.0`), whose parent is the
+sanitized root `9c10d74ca`; annotated tag `v0.2.0` peels to that commit and
+`v0.1.0` was deleted. The four `demo/*` branches point at one commit,
+`0fc0aa4c6` ("docs: mark preserved demo checkpoints as needing update"), a
+child of the release commit. As of 2026-11-13 Bitbucket still shows this state:
+`v0.2.0` is listed and `v0.1.0` is not, and `03cbb6882` is an ancestor of
+`main`. This page records no GitHub read-back and no location of the
+recovery bundle.
+
 ## Proposed sequence
 
 1. Preserve the fetched histories in a recoverable private backup. A local bundle

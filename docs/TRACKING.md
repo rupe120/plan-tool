@@ -438,6 +438,14 @@ missing status or field is a decision and not an oversight.
 | Resolutions Won't Do and No Action | Done, a comment saying why, and the `no-changelog` label | a report has to separate shipped from not-shipped closures without reading comments |
 | A Spike work type | a Task with the `spike` label | Spikes need their own workflow or their own board column |
 
+Board shapes considered and rejected, each for a stated reason:
+
+- **Bulk-importing the backlogs into Jira.** It would create a second backlog
+  that goes stale; the lead promotes by hand.
+- **Scrum sprints.** Work is drained by severity and triaged continuously.
+- **Separate bug and feature projects.** They would split one priority queue in
+  two.
+
 ### Roadmap boundary
 
 The `roadmap` verb and the external application built on it are owner-tracked experimental work. The team's
@@ -780,7 +788,9 @@ When you add a candidate, include at minimum:
     pull-request ref you have not fetched.
   - **What covers the rest.** `tests/test_backlog_ids.py` fails a duplicate on
     the first test run over a tree that holds both entries: your pre-push hook
-    after a rebase or merge, or CI once one exists. Two branches that add the
+    after a rebase or merge, or CI (`.github/workflows/ci.yml` and
+    `bitbucket-pipelines.yml` run the suite on pull requests and on pushes to
+    `main`). Two branches that add the
     same id in different places merge cleanly on the server without running it.
   - **If two entries collide anyway,** the one cited elsewhere keeps its id.
     With equal citations the one filed later moves. Date each with

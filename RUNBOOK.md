@@ -2267,6 +2267,10 @@ recommendation walk on this side. Read the saved report, verify the code
 edits, commit corrections, and invoke `reconcile-code` again as needed;
 `--iterate` is not supported.
 
+A step verdict reading `could not summarize (no findings block)` is not a clean
+result, although the exit code reports success: the reply held no `## Findings`
+block to count. Re-run that step.
+
 The prompt context is intentionally code-edit oriented: it may emphasize
 the implementation excerpt and only enough plan/detail material to judge
 the requested code change. That asymmetry is expected even when
@@ -2912,10 +2916,20 @@ context reference. A path qualifies as a near-miss when:
   (`_NEAR_MISS_RATIO`), catching a typo *inside* the basename
   (`Fooo.tsx` vs `Foo.tsx`).
 
+A basename that repeats by design in every service directory (`Dockerfile`;
+see `_REPEATED_BY_DESIGN_BASENAMES` in `review.py`) is never a near-miss when
+the cited basename is `Dockerfile` and the declared basename is `Dockerfile` or
+a dotted variant such as `Dockerfile.dev`, under either rule: a long shared
+basename would otherwise carry sibling directories past the 85% bar.
+
 Everything else — `amplify/backend.ts` cited by a step that only edits
-`docs/secrets-and-parameters.md`, two unrelated `index.ts` files, or a
-genuinely distinct neighbor like `apps/bar.py` next to a declared
-`apps/foo.py` — is a context reference and produces **no finding**.
+`docs/secrets-and-parameters.md`, or a genuinely distinct neighbor like
+`apps/bar.py` next to a declared `apps/foo.py` — is a context reference and
+produces **no finding**. Two `index.ts` files in unrelated directories also
+produce none, but the generic-basename exemption covers only the first rule:
+sibling directories whose names differ by a few characters
+(`worker-a/index.ts` vs `worker-b/index.ts`) still clear the similarity rule
+and are flagged.
 There's no flag to widen this; the lever is the data (declare the file
 in `files:`, or endorse it in `allowed_mentions:`). The finding names
 the near-match target so it reads *"detail cites `X` resembling declared

@@ -258,7 +258,9 @@ host can be merged locally and pushed back to both.
    preserve a recoverable backup, and coordinate a pause in writes. Replacing
    existing branch history requires a deliberate non-fast-forward operation;
    dual push URLs alone do not perform it. Visibility and organization transfer
-   are separate owner-authorized actions.
+   are separate owner-authorized actions. If one host's replacement succeeds
+   and the other fails, report the partial state and keep both results; do not
+   roll back either result without a reviewed decision.
 4. After authorized replacement, verify both `main` tips and their reachable
    history against the approved root. Inventory other branches and tags before
    public visibility; changing `main` alone does not remove other published refs.
