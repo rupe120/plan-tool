@@ -97,8 +97,7 @@ steps:
     the existing single `annotate` call also returns the missing guardrail bodies,
     which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT` and `PlanAnnotation`
     in `plan_tool/annotate.py`. Existing section-verdict parsing and the existing
-    response stay valid unchanged. A response with no guardrail bodies renders `_(TODO)_`
-    rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`:
+    response stay valid unchanged. Each model-written body is used only when the step 2 helper accepts it under step 1''s rule (non-empty, not a placeholder, no line-starting H2); a missing or unusable body renders `_(TODO)_` rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`:
     write only fences the source already implies, use `None` when it implies none,
     and add no scope, mechanism or requirement. That line carries the proportionality
     rule from `synthesize-body.md`. The printed result in `plan_tool/cli/annotate_cmd.py`

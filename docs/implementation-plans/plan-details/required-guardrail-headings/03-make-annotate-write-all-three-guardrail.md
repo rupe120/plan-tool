@@ -57,7 +57,7 @@ This step makes the carryover seed from `annotate` carry `## Scope guardrails`, 
   - A response with more than one guardrails element is not an error. Merge them, or keep the first. Pick one and pin it with a test.
 - **Rendering order of authority.**
   - **Inherited first.** If the source has a heading step 1's rule accepts, copy it verbatim and ignore any model body for that heading.
-  - **Model-written next.** Otherwise use the model's body for that heading if it is non-blank.
+  - **Model-written next.** Otherwise use the model's body for that heading only if step 2's helper accepts it under the per-heading rule: non-empty, not a `TODO`-form placeholder, and no line-starting `## ` heading outside a fence. This step passes the bodies to the helper and does not re-check them.
   - **`_(TODO)_` last.** Otherwise write `_(TODO)_`.
   - The inherited case must win over the model even when the model body differs. The source is the authority, and the model must not overwrite a fence the operator wrote.
 - **A model body of `None`.** `None` is a valid body. It must pass through unchanged and must not be treated as a placeholder or as missing. Do not add `None` or `N/A` to any placeholder pattern.
@@ -92,6 +92,8 @@ All tests use canned responses through the `invoker=` seam. None spawns a real b
   - `test_missing_guardrail_bodies_render_todo_for_all_three_headings` — an annotation with no guardrail data writes `_(TODO)_` under each heading.
   - `test_seed_carries_all_three_headings_exactly_once` — each heading appears once, in the fixed order, outside any fence.
   - `test_duplicated_or_placeholder_source_heading_is_not_inherited` — a source heading step 1 rejects falls back to the model body or `_(TODO)_`, so the seed does not copy a bad heading.
+  - `test_partial_model_response_fills_only_the_headings_it_supplies` — a response with one or two bodies fills those headings and writes `_(TODO)_` under the rest.
+  - `test_unusable_model_body_is_not_written` — an empty, `TODO`-form, or `## `-containing model body gives `_(TODO)_` for that heading, and the seed still carries each heading exactly once.
   - `test_existing_seed_sections_unchanged_by_guardrail_headings` — carryover scope, done-context, references and provenance render as before.
 - `tests/test_annotate.py`
   - `test_response_with_guardrails_element_populates_the_annotation` — the reserved element is split out and stored.
@@ -115,6 +117,7 @@ Every test above must be green before this step is finished. Verify the new asse
 - A seed from `annotate` contains each of the three headings exactly once, in all of these cases: source has accepted headings, source has none and the model supplies bodies, response has no guardrail data.
 - An accepted source heading is copied verbatim. A model body never replaces it.
 - A response with no guardrail bodies produces `_(TODO)_` under the missing headings, and `annotate` exits 0.
+- A partial response fills only the headings it supplies a usable body for; a missing, empty, `TODO`-form or `## `-containing body gives `_(TODO)_`, and the printed result lists that heading as unfilled.
 - A body of `None` is rendered as `None` and is not replaced by `_(TODO)_`.
 - A response in the old shape (a bare array of sections) parses to the same sections as before.
 - The rendered prompt contains the guardrail instruction line.
