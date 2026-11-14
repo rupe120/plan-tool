@@ -7791,7 +7791,8 @@ def _preserve_on_disk_step_fields(
     - ``status`` — ``propose_steps_from_claude`` can return ``status: done``
       from its reading of the codebase, which is wrong here; transitions belong
       to ``plan-tool run``, not the create authoring flow. An in-flight
-      ``current`` or already-``done`` step keeps its state.
+      ``current`` or already-``done`` step keeps its state, but only when the
+      same id carries the same title.
     - ``intent`` — a usable value already on the step was reviewed by the
       operator at :func:`_offer_missing_intents`, so it **wins over** whatever
       a later automated pass returns, carrying an intent or not.
@@ -7812,10 +7813,9 @@ def _preserve_on_disk_step_fields(
     that step's detail and run prompts under an authoritative heading, which is
     exactly what ``intent_proposal.parse_intent_drafts`` refuses to do when the
     backend mis-targets a draft. Title equality is the identity check: same id
-    *and* same title, or the value does not travel. ``status`` keeps its
-    pre-existing id-only keying (see BUG_BACKLOG "`create --iterate` carries a
-    step's `status` onto a different step when a re-proposal inserts, drops,
-    or reorders steps").
+    *and* same title, or the value does not travel. That holds for ``status``
+    too: a ``done`` stamped onto a different step makes a later ``run`` skip
+    work that was never performed.
 
     A step the proposal newly adds has no ``prior``: it starts ``pending``
     (nothing brand-new can legitimately be ``done`` during create) and keeps
@@ -7823,7 +7823,11 @@ def _preserve_on_disk_step_fields(
     empty case from there.
     """
     update: dict[str, object] = {
-        "status": prior.status if prior is not None else StepStatus.PENDING
+        "status": (
+            prior.status
+            if prior is not None and prior.title == proposed.title
+            else StepStatus.PENDING
+        )
     }
     if (
         prior is not None
@@ -11111,6 +11115,29 @@ def _converge_create_plan(
                                     level="warning",
                                 )
                                 preserved_dropped.append(on_disk_step)
+
+                        # A step that kept its id under a different title no
+                        # longer carries the on-disk status (see
+                        # ``_preserve_on_disk_step_fields``), so the in-flight
+                        # step it replaced leaves the plan; say so.
+                        for s in steps_proposal:
+                            on_disk_step = existing_by_id.get(s.id)
+                            if (
+                                on_disk_step is not None
+                                and on_disk_step.title != s.title
+                                and on_disk_step.status
+                                in (StepStatus.CURRENT, StepStatus.DONE)
+                            ):
+                                tool(
+                                    f"proposal replaced step {s.id} "
+                                    f"({on_disk_step.status.value}, "
+                                    f"{on_disk_step.title!r}) with a different "
+                                    f"step ({s.title!r}); the replaced step's "
+                                    "state is not carried over -- execution work "
+                                    "cannot be silently discarded by the create "
+                                    "iteration loop.",
+                                    level="warning",
+                                )
 
                         merged_proposed = [
                             _preserve_on_disk_step_fields(
