@@ -1344,7 +1344,7 @@ a replacement or a seal.
 proof. It reads the accepted complete version, and a folder with no accepted
 head refuses. A reader never repairs version state, and promotion never
 rewrites a stored version. The remaining direct readers stay deferred in the
-closed `BACKLOG.md` #328 record; they are not candidate-version writers.
+closed #328 record in `docs/history/backlog-decisions.md`; they are not candidate-version writers.
 <!-- immutable-candidate-version-authority:end -->
 
 ## Closed vocabularies

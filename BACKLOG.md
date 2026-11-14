@@ -122,12 +122,13 @@ over a tier doc whenever your session is already committed to its theme:
   route inventory. #322 is untiered — this arc is its sole router.
 - [`backlog-arc-roadmap.md`](docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md)
   — roadmap-level capability and evidence work, from durable artifact facts
-  through the bounded consumers that rely on them. Its items (#328, #242,
+  through the bounded consumers that rely on them. Its items (#242,
   #208, #366, the structured-upstream group #383–#384, and #385) are untiered —
   this arc is their sole router. #384's implementation and review tail are
   complete; #383 is held until a named stage lacks essential grounded facts
   (see its Status). The
-  roadmap-to-plan subroute starts at #492; #493 and #494 remain gated follow-ons,
+  roadmap-to-plan subroute's #492 is closed (use-existing; see
+  `docs/history/backlog-decisions.md`); #493 and #494 remain gated follow-ons,
   and existing #462 retains its own advisory-audit scope.
 - [`backlog-arc-installed-skill.md`](docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md)
   — what an installed Claude Code/Codex/Cursor skill gives a driving session
@@ -1218,54 +1219,6 @@ working straight down the tiers.
 
 **#389 — A newly added backend is rejected by `plan-tool install-skill --integration` with "invalid choice" until someone edits its hard-coded list of three names** → promoted to IPPT-7 (2026-09-24)
 
-**Closed — Route-local brief-drift policy for non-stage Roadmap routes**
-
-- **Delivered (2026-09-14):** `--analyze-escalation` refuses `changed-brief`
-  and `legacy-brief` redacted with status `1` and no immutable analysis
-  publication, while
-  log-free `--view impact-analyses` returns status `0` with no route or workflow.
-  `--rewrite-structural` keeps evaluator admission and guarded recovery before
-  its redacted status-`1` refusal, without artifact, baseline, or seed
-  publication. Backend-free, exclusive `--enroll-version` returns the same
-  redacted status-`1` states without an immutable version or accepted-head claim.
-- **Boundary:** matching recorded decoded-text baselines retain each route's
-  existing behavior. Stage-run lifecycle events and same-path `--from-existing`
-  baseline acceptance remain exclusive to `plan_tool/roadmap.py:_run_roadmap`.
-- **Evidence:** [`Roadmap Non Stage Brief Drift`](docs/implementation-plans/archive/2-roadmap-non-stage-brief-drift.md), its [final detail-grounded audit — retained historical summary](docs/evidence/public-release-content-snapshot.md#applied-dispositions-and-retained-conclusions), and the [guide-contract review guard](tests/test_roadmap_format.py).
-- **Status:** closed.
-
-**Closed (2026-09-16) — #367: Require explicit operator confirmation for changed-brief rebind**
-
-- **Decision (2026-09-15, user-confirmed):** Repeating `--from-existing` at
-  the recorded path is not sufficient consent to accept changed or legacy brief
-  text. A stage run must require a distinct explicit confirmation before it
-  replaces the recorded baseline.
-- **Delivered:** `--confirm-brief-rebind` is a documented, stage-run-only,
-  headless consent signal. A changed or legacy brief rebind requires it and
-  the recorded `--from-existing` path; repeating the recorded path alone
-  refuses.
-- **Boundary:** matching and initial stage runs retain normal behavior, a
-  different path remains refused, and non-stage routes reject the flag. The
-  accepted-rebind lifecycle remains baseline-only and does not grant artifact,
-  feedback, seed, multi-source, generic-confirmation, or Integration authority.
-- **Evidence:** [Roadmap Brief Rebind Confirmation](docs/implementation-plans/archive/2-roadmap-brief-rebind-confirmation.md), its three saved
-  `reconcile-code --all` sweeps, and the Sonnet 5 review records named in the
-  AI-DLC delivery handoff.
-- **Convergence:** the final production-logic change is `48b0957c`; two
-  independent Sonnet 5 reviews after it find no live logic/property failure.
-  The full suite passes with `12633 passed, 190 skipped`.
-- **Arc assignment:** `backlog-arc-roadmap`.
-- **Origin:** 2026-09-12 independent review of
-  `roadmap-brief-source-drift`, Finding 36; this dated closeout replaces the
-  then-pending successor status.
-- **Status:** closed.
-- **Superseded (2026-11-05):** `roadmap-versioned-from-birth` removed
-  `--confirm-brief-rebind`, the recorded-baseline rebind lifecycle, and the
-  non-stage routes this record describes. A stage run now refuses once an
-  accepted head exists; a changed product definition goes through feedback and
-  candidate review or a successor lineage. This record is history, not current
-  behavior.
-
 **#519 — Decide the disposition of the unreachable granularity-split review-walk opt-in**
 
 - **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
@@ -1529,21 +1482,6 @@ working straight down the tiers.
 - **Effort:** medium–large, design-first, once unblocked.
 - **Dependencies:** #110.
 - **Approach:** plan-tool (seed first), once unblocked.
-
-**#269 — Hermetic roadmap-stage integration harness, without a production partial-stage mode**
-
-- **Closed 2026-08-28:** the existing `_Env` / injected-`StageInvoker` seam in
-  `tests/test_roadmap.py` already supplies disposable roots, the real
-  `run_roadmap` path, stage-output and no-write-on-failure assertions, and
-  run-log / in-flight lifecycle coverage. Its focused suite passes **403
-  passed, 166 skipped**.
-- **Decision:** do not add a named harness, developer CLI, or external-backend
-  smoke entry point. Each would duplicate the present proof and risk creating
-  the production partial-stage mode this item forbids.
-- **Future evidence:** a demonstrated transport or logging gap may add the
-  smallest deterministic test to the existing seam. Reopen only when that
-  seam cannot exercise a required stage behavior without a new production
-  surface.
 
 **#173 — Keep incremental completeness scans deferred**
 
@@ -10155,20 +10093,6 @@ longer describes current work. It is retained only as dated carve-out context.
   processes of the tool are long running" — not a one-off worth a narrow fix
   alone.
 
-**#315 — Delivered 2026-08-27: confirmed feedback reopen proof**
-
-> **Historical record.**
-> [`docs/implementation-plans/archive/2-roadmap-confirmed-feedback-reopen.md`](docs/implementation-plans/archive/2-roadmap-confirmed-feedback-reopen.md)
-> delivers one explicitly confirmed operator path for a safe selected
-> `awaiting-review` row. The redacted transition returns that row to `open`
-> and gives its next receipt a fresh identity; confirmation is the authority
-> for the unavailable-evidence determination.
-
-- **Scope boundary:** This proof neither classifies nor recovers evidence,
-  retains response history, permits ordinary feedback reopening, or reissues a
-  historic Integration receipt. It remains a bounded input to #242's later retention
-  redesign, not a solution to that work.
-
 **#314 — Establish whether advisory risk-profile context needs a declaration-authority or escalation guardrail**
 
 - **What:** assess the completed advisory risk-profile context against a
@@ -10487,58 +10411,6 @@ longer describes current work. It is retained only as dated carve-out context.
   user-confirmed as deferred hardening.
 - **Status:** deferred pending #328 final sign-off and subsequent arc assignment.
 
-**Historical retired conversational impact transaction**
-
-> **Superseded 2026-08-31.** The proposal let a model-authored impact manifest
-> become the authority for a candidate transaction. Its audit exposed recurring
-> binding, route-admission, snapshot, and redaction contradictions. The WIP plan
-> is archived as `2-roadmap-conversational-feedback.superseded.md`; do not author
-> or reopen this route. Its pre-merge branch-local `#325` label is historical;
-> the immutable accepted-head lifecycle in closed #328 supersedes it.
-
-**Closed #328 — Immutable accepted-head roadmap versions**
-
-- **Outcome:** enrollment captures one immutable root; an admitted feedback
-  lineage produces inert candidates, questions, answer-bound replacements, and
-  exact review seals; only exact promotion changes the accepted head. The
-  promoted version is the selected source for the completed downstream reader,
-  while every stored version remains immutable and legacy in-place writers
-  refuse an enrolled roadmap.
-- **Direct-reader migration boundary:** `plan_tool/roadmap_view.py:load_roadmap()`
-  is the completed proof. Defer accepted-head migration scope selection for:
-  `plan_tool/create.py:_load_roadmap_research_targets()`,
-  `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed()`,
-  and `plan_tool/cli/roadmap_cmd.py:cmd_roadmap()`.
-- **Real-backend observation (2026-09-01, redacted):** candidate phase;
-  13,212 prompt bytes; context membership is 2 full members and 19 inventory
-  entries; expansion is not used; terminal outcome is `failed`. This records
-  operational facts only, with no prompt, response, or model-quality claim.
-- **Deferred hardening:** #329 and #330 preserve the two persistence-integrity
-  findings that are not required for this representative happy-path proof.
-  Both intentionally remain outside a backlog arc until #328 final sign-off
-  completes and the other branch's backlog-arc documentation structure lands.
-- **Status:** closed 2026-09-01 after the deterministic lifecycle tests and
-  the recorded real-backend observation.
-
-**#327 — Intentional seed ingestion with automatic normalization and split routing**
-
-- **Status:** complete 2026-09-03 through
-  [`2-seed-ingestion-routing.md`](docs/implementation-plans/archive/2-seed-ingestion-routing.md).
-- **Delivered route:** file-backed create selects `seed_body` when present,
-  otherwise `from_description`; rejects unmatched fences and unusable
-  References before a run record; and then selects `direct`, `normalized`,
-  `split`, or `refused`. Direct source authority, one visible preparation
-  decision, `SplitProposal`'s successful no-plan shape, route-owned
-  checkpoint retention, no-plan branch rollback, and CLI-only clean archival
-  ship together.
-- **Documentation:**
-  [seed-ingestion contract](docs/reference/contracts/seed-ingestion.md)
-  owns the route and lifecycle table; the create, resume, CLI, and seed-format
-  pages link to or summarize that shipped contract.
-- **Related:** #102 remains independent semantic alias-matching work. It does
-  not reopen this route's canonical-title normalization, source-authority,
-  split, or lifecycle decisions.
-
 **#353 — Durable artifact-contention handoff for terminal and headless operators**
 
 - **What:** when a normalized-artifact destination becomes occupied again
@@ -10684,22 +10556,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** 2026-09-21, Integration full-MVP roadmap review.
 - **Status:** not started; use the Integration 23-row failure as the first design
   fixture.
-
-**Closed #423 — Route structural roadmap feedback through one revision approval gate**
-
-- **Outcome:** ordinary ledger feedback now validates typed operations into a
-  bounded or structural inert candidate without user route selection. A
-  structural candidate receives one exact approve/edit/reject decision;
-  approval seals that candidate and promotion alone advances the accepted head.
-  Edit requires a fresh decision, and failed, rejected, interrupted, and stale
-  proposals preserve canonical artifacts and seeds.
-- **Boundary:** decision settlement remains a separate selector-shaped route
-  (structural escalation, impact analysis, and exact-pair structural rewrite
-  were removed 2026-11-05 by `roadmap-versioned-from-birth`).
-  Workflow authoring, automatic approval, grouping, and multi-user approval
-  remain out of scope.
-- **Provenance:** opened 2026-09-21 from Integration focused-feedback retries; closed
-  2026-09-23 by the Roadmap Structural Feedback Approval plan.
 
 **#424 — Record and surface create-time plan-altitude re-cut evidence**
 
@@ -11750,25 +11606,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` reconcile-code sweep 2, 2026-10-06.
 
-**Closed (2026-10-09) — #461: Record the technology stack as a roadmap layer and call it out at publish and candidate review**
-
-- **Delivered:** the `stack` collection in `02-constraints.md` records each
-  concern (deployment platform, store engine, language/runtime) as chosen or
-  open. It is called out at first publish, in `INDEX.md`, and in every
-  candidate review, and is rendered into the `## Stack` seed section. A
-  version without the collection reads as "stack not recorded".
-- **Decisions kept (2026-10-08):** no fifth roadmap artifact; stack rows are
-  authoritative over hosting and store `product` fields with no agreement gate
-  or comparison rule (candidate review lists them side by side); any bound
-  feedback item authorizes a stack-row add; the callout is display only and
-  never a defect class or an approval gate. Hand enrollment is deliberately
-  excluded from the callout.
-- **Evidence:** plan `docs/implementation-plans/archive/2-roadmap-stack-layer.md`
-  (completed; PR #46); contract in `ROADMAP_FORMAT.md` § stack collection.
-- **Arc assignment:** `backlog-arc-roadmap`.
-- **Origin:** Integration roadmap review, 2026-10-08.
-- **Status:** closed.
-
 **#462 — Audit every plan derived from an accepted roadmap against its settled decisions and against each other, reported in one saved advisory report**
 
 - **What:** The per-plan completeness audit judges one plan against code at HEAD and never reads the accepted roadmap, so a plan that contradicts a settled roadmap decision or stack row, or two plans that each choose their own technology for a store the roadmap says is shared, pass unseen; a roadmap-level cross-plan audit holds the accepted roadmap version as its reference, puts it and every derived plan (optionally every draft seed) in front of one auditor, and saves the conflicts it reports.
@@ -12496,84 +12333,6 @@ longer describes current work. It is retained only as dated carve-out context.
   arguments. This supports supplying dispositions to later review, not inferring
   them from a generic approval or overriding a settled roadmap. This entry stays
   owned by `backlog-arc-convergence-evidence`; #492's route only consults it.
-
-**#492 — Decide what shared application evidence roadmap-derived plans need before authoring**
-
-- **What:** define the smallest shared composition handoff that helps a driving
-  session derive executable increments from an accepted roadmap, existing code
-  and demonstrated integration boundaries. Determine whether existing references
-  suffice before proposing new tool inputs.
-- **Effort:** medium; a bounded architect investigation over one existing
-  project and the named authoring/audit consumers, not implementation of a new
-  workflow engine.
-- **Evidence:** [Integration handoff evidence](docs/evidence/integration-roadmap-to-plan-handoff.md)
-  records cross-plan contract churn, a layer-assignment error that survived
-  individual plan audits, and a probe that changed the transport decomposition.
-  Those observations motivate investigation; they do not measure savings.
-- **Risks / fallout:** turning a useful shared record into another large design
-  phase, interpreting observed code as approved contract, or making an
-  unobservable feasibility judgment into an execution gate.
-- **Dependencies:** the existing roadmap plan rows and immutable accepted-head
-  reads; source evidence above. No dependency on an AI-DLC upgrade or new live
-  probes. Inspect #490, #485, #262 and #403 to avoid duplicate ownership.
-- **Outcome:** one reviewed design record identifies the minimum shared input,
-  its source/version authority, and whether `create`, `detail` and
-  `completeness-audit` need new support, with an explicit build/use-existing/no-action
-  disposition for each follow-on. The observable is that record and its named
-  consumer decisions, not a certified good decomposition.
-- **In scope:** application journey and layer ownership; critical provider and
-  consumer obligations, including required fields and behavior; versioned
-  evidence and unresolved questions; pointers to full outcome coverage; bounded
-  increment composition; existing-code versus approved-intent distinctions;
-  compatibility treatment for projects without shared context. Start with two
-  sections (ownership/authority and critical contracts/evidence) plus outcome
-  references and unresolved decisions; add views only when a decision needs them.
-- **Out of scope / Non-goals:** new CLI commands, schemas or persisted versions;
-  implementing #493, #462, #494, #490, #485 or #484; a fifth roadmap artifact;
-  rewriting accepted roadmaps; automatic splitting, blocking or semantic
-  validation; a full inventory unrelated to the selected journey; treating CLI
-  names as complete contracts; Integration product/runtime changes or live model probes.
-- **Allowed behavior changes:** none; this investigation produces a design
-  decision and proposed follow-on scopes only.
-- **Allowed reorganization:** none.
-- **Verification:** trace the selected Integration journey from approved outcome to
-  responsible layer, relevant contract, available evidence and proposed increment.
-  Include an unresolved provider question and an extension to an existing
-  interface. Review whether existing source references already carry the needed
-  information. The record names evidence limits and each follow-on disposition;
-  no synthetic example or report silence is claimed as proven feasibility.
-- **Stop / defer:** close with use-existing/no-action if no missing tool-side
-  delivery is demonstrated. Unresolved product choices stay with their owner.
-  If one consumer needs shared lifecycle/schema authority, separate that contract
-  before authoring an implementation seed; do not absorb it into the study.
-- **Approach:** plan-tool investigation; the design determines the later feature
-  boundaries. No implementation seed until its scope and decisions are settled.
-- **Route:** `plan` · **Readiness:** `evidence-gated` · **Tier:** `architect`.
-  **Principle:** `converge-on-correct-plan`.
-- **Arc assignment:** `backlog-arc-roadmap`, roadmap-to-plan subroute.
-- **Stage arc (single authority for this group):**
-  1. #492 decides the minimum handoff and per-consumer need. Tool state is unchanged.
-  2. #493 delivers only approved shared-context inputs and provenance to the
-     closed consumer set. Existing projects without context keep their behavior.
-  3. #462 supplies its separate saved advisory cross-plan conflict report. This
-     is the preferred evaluation order, not a new hard dependency on #493;
-     #462 may proceed independently if its own evidence gate is met.
-  4. #494 adds a read-only prerequisite view only if #492 and current operator
-     evidence establish a distinct status-reporting need. It changes no run gate.
-  Consult #490 through its convergence-evidence arc for finding dispositions,
-  and resolve #485's authority question before relying on departure records.
-  #484's reporting work is independent. Later seeds wait for their inputs; they
-  cite this arc rather than reauthoring it. Evaluate shared-context/audit value
-  before adding selective re-auditing or assisted automatic composition.
-- **Status:** closed 2026-10-15 — the reviewed record at
-  `docs/explanations/roadmap-plan-handoff.md` identifies the accepted-head
-  authority, separates the remaining provider question from settled owner decisions,
-  and records `use-existing` for `create`, `detail`, and `completeness-audit`.
-- **Seed:** `plan-seeds/archive/roadmap-plan-handoff-investigation.replaced.md`. Proposed later seed names, only if approved:
-  `roadmap-plan-handoff-01-shared-context` for #493 and
-  `roadmap-plan-handoff-02-prerequisite-view` for #494.
-- **Origin:** Integration owner request, 2026-10-15, after the roadmap-to-plan pilot
-  and joint approach review. Recording the route is not approval to implement it.
 
 **#493 — Supply selected shared application context to plan authoring and completeness audits**
 

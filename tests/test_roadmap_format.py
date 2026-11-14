@@ -482,10 +482,10 @@ def test_ordinary_feedback_documentation_uses_selector_free_candidate_proposal()
 
 
 def _backlog_328_block() -> str:
-    backlog = _BACKLOG.read_text(encoding="utf-8")
-    start = backlog.index("**Closed #328 — Immutable accepted-head roadmap versions**")
-    end = backlog.index("\n\n**#327 — Intentional seed ingestion", start)
-    return backlog[start:end]
+    history = (_REPO_ROOT / "docs/history/backlog-decisions.md").read_text(encoding="utf-8")
+    start = history.index("### #328 — Accepted-head versions and reader migration")
+    end = history.index("\n### ", start + 4)
+    return history[start:end]
 
 
 def _test_immutable_candidate_version_reference_matches_landed_authority_contract(
@@ -960,13 +960,13 @@ def test_doc_states_absent_stack_is_not_recorded_and_empty_stack_is_recorded(
 
 
 def test_backlog_461_is_a_closed_record_once_shipped() -> None:
-    """#461 shipped (PR #46, 2026-10-09); it stays a closed record, not a live entry."""
+    """#461 shipped (PR #46, 2026-10-09); it is a history record, not a live entry."""
     backlog = _BACKLOG.read_text(encoding="utf-8")
-    heading = next(
-        (line for line in backlog.splitlines() if "#461:" in line and line.startswith("**Closed")),
-        None,
+    history = (_REPO_ROOT / "docs/history/backlog-decisions.md").read_text(encoding="utf-8")
+    assert "### #461 — " in history, "#461 must read as a history record"
+    assert not any(
+        line.startswith("**#461 ") or (line.startswith("**Closed") and "#461" in line)
+        for line in backlog.splitlines()
     )
-    assert heading is not None, "#461 must read as a closed record"
-    assert not any(line.startswith("**#461 ") for line in backlog.splitlines())
     assert (_REPO_ROOT / "docs/implementation-plans/archive/2-roadmap-stack-layer.md").is_file()
     assert (_REPO_ROOT / "plan-seeds/archive/roadmap-stack-layer.replaced.md").is_file()

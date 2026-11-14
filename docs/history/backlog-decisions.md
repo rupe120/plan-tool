@@ -8,9 +8,10 @@ short records preserve decisions that would otherwise invite re-investigation.
 ## Queue cleanup, 2026-09-16
 
 The following delivered IDs remain citable after queue cleanup. Their plans
-or the named contract carry implementation detail. #315, #327, #328, and
-#351 and the brief-drift closeouts also retain compact backlog completion
-records required by their plans.
+or the named contract carry implementation detail. The compact completion
+records that #315, #327, #328, #351 and the brief-drift closeouts once kept in
+`BACKLOG.md` live here and in the table below since 2026-11-14; `BACKLOG.md`
+holds open work only.
 
 On 2026-09-16, three roadmap compatibility entries that shared IDs with
 authored-artifact version work were renumbered: former roadmap #362 → #383
@@ -58,11 +59,26 @@ is a suggestion and cannot amend the plan.
 
 ### #328 — Accepted-head versions and reader migration
 
-Closed 2026-09-01. Enrollment captures one immutable root; candidate,
-question, replacement, and review-seal records stay inert until exact
-promotion changes the accepted head. `plan_tool/roadmap_view.py:load_roadmap`
-is the completed direct-reader proof. Other reader migrations require their
-own selected scope; #329 and #330 retain independent hardening findings.
+- **Outcome:** enrollment captures one immutable root; an admitted feedback
+  lineage produces inert candidates, questions, answer-bound replacements, and
+  exact review seals; only exact promotion changes the accepted head. The
+  promoted version is the selected source for the completed downstream reader,
+  while every stored version remains immutable and legacy in-place writers
+  refuse an enrolled roadmap.
+- **Direct-reader migration boundary:** `plan_tool/roadmap_view.py:load_roadmap()`
+  is the completed proof. Defer accepted-head migration scope selection for:
+  `plan_tool/create.py:_load_roadmap_research_targets()`,
+  `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed()`,
+  and `plan_tool/cli/roadmap_cmd.py:cmd_roadmap()`.
+- **Real-backend observation (2026-09-01, redacted):** candidate phase;
+  13,212 prompt bytes; context membership is 2 full members and 19 inventory
+  entries; expansion is not used; terminal outcome is `failed`. This records
+  operational facts only, with no prompt, response, or model-quality claim.
+- **Deferred hardening:** #329 and #330 keep the two persistence-integrity
+  findings that the representative happy-path proof did not need.
+- **Status:** closed 2026-09-01 after the deterministic lifecycle tests and
+  the recorded real-backend observation; moved here from `BACKLOG.md`
+  2026-11-14.
 
 ### #367 and non-stage routes — Brief rebind authority
 
@@ -590,7 +606,72 @@ and Cursor installs were project symlinks that work only on the machine that
 made them. Do not reintroduce it for the skill route. PyPI or `uvx`
 distribution remains #514's decision.
 
+### #423 — Structural roadmap feedback goes through one revision approval gate
+
+Closed 2026-09-23 by the Roadmap Structural Feedback Approval plan, opened
+2026-09-21 from Integration focused-feedback retries. Ordinary ledger feedback
+validates typed operations into a bounded or structural inert candidate without
+user route selection. A structural candidate receives one exact
+approve/edit/reject decision; approval seals that candidate and promotion alone
+advances the accepted head. Edit requires a fresh decision, and failed,
+rejected, interrupted, and stale proposals preserve canonical artifacts and
+seeds. Decision settlement remains a separate selector-shaped route (structural
+escalation, impact analysis, and exact-pair structural rewrite were removed
+2026-11-05 by `roadmap-versioned-from-birth`). Workflow authoring, automatic
+approval, grouping, and multi-user approval stay out of scope.
+
+### #461 — The technology stack is a roadmap layer
+
+Shipped 2026-10-09 (PR #46; plan
+[`2-roadmap-stack-layer.md`](../implementation-plans/archive/2-roadmap-stack-layer.md);
+contract in `ROADMAP_FORMAT.md` § stack collection). The `stack` collection in
+`02-constraints.md` records each concern (deployment platform, store engine,
+language/runtime) as chosen or open. It is called out at first publish, in
+`INDEX.md`, and in every candidate review, and is rendered into the `## Stack`
+seed section. A version without the collection reads as "stack not recorded".
+
+Decisions kept (2026-10-08; do not reopen): no fifth roadmap artifact; stack
+rows are authoritative over hosting and store `product` fields with no
+agreement gate or comparison rule (candidate review lists them side by side);
+any bound feedback item authorizes a stack-row add; the callout is display only
+and never a defect class or an approval gate. Hand enrollment is deliberately
+excluded from the callout.
+
 ## Closed decisions
+
+### #269 — No hermetic roadmap-stage harness or production partial-stage mode
+
+Closed 2026-08-28. The existing `_Env` / injected-`StageInvoker` seam in
+`tests/test_roadmap.py` already supplies disposable roots, the real
+`run_roadmap` path, stage-output and no-write-on-failure assertions, and
+run-log / in-flight lifecycle coverage. Do not add a named harness, developer
+CLI, or external-backend smoke entry point: each would duplicate that proof and
+risk creating the production partial-stage mode the item forbade. A
+demonstrated transport or logging gap may add the smallest deterministic test
+to the existing seam. Reopen only when that seam cannot exercise a required
+stage behavior without a new production surface.
+
+### Retired conversational impact transaction
+
+Superseded 2026-08-31. The proposal let a model-authored impact manifest become
+the authority for a candidate transaction; its audit exposed recurring binding,
+route-admission, snapshot, and redaction contradictions. The WIP plan is
+archived as `2-roadmap-conversational-feedback.superseded.md`. Do not author or
+reopen this route; the immutable accepted-head lifecycle (#328) supersedes it.
+Its pre-merge branch-local `#325` label is unrelated to the live #325.
+
+### #492 — Shared application evidence for roadmap-derived plans: use existing
+
+Closed 2026-10-15. The reviewed record
+[`docs/explanations/roadmap-plan-handoff.md`](../explanations/roadmap-plan-handoff.md)
+identifies the accepted-head authority, separates the remaining provider
+question from settled owner decisions, and records `use-existing` for `create`,
+`detail`, and `completeness-audit`. Follow-on dispositions: #493 (shared-context
+delivery) and #494 (prerequisite view) are `no-action` unless a delivery or
+status-reporting need is separately demonstrated; #462 (cross-plan advisory)
+keeps its own evidence gate. Evidence:
+[Integration handoff evidence](../evidence/integration-roadmap-to-plan-handoff.md).
+Seed: `plan-seeds/archive/roadmap-plan-handoff-investigation.replaced.md`.
 
 ### #117 — Keep and instrument the code-reveals-a-split detector
 
