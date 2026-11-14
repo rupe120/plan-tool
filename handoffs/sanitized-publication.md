@@ -7,7 +7,7 @@ atomic updates succeed on Bitbucket and GitHub. Full advertised head/tag
 readback confirms the approved object IDs below for the initial sanitized
 release. The annotated v0.2.0 tag names that release, v0.1.0 is absent, and the four
 demo branch names share the needs-updating notice. Later reviewed merges can
-advance main; use the [current release pickup](2026-10-19-public-onboarding-and-release.md)
+advance main; use the [current release pickup](public-onboarding-and-release.md)
 for current host tips, installed version and remaining release steps. Demo
 refresh stays deferred.
 
@@ -106,6 +106,6 @@ carries only pickup and receipt updates; its parentage does not reintroduce the
 former source history.
 
 This handoff and later verification records are outside the frozen candidate.
-Use the [release handoff](2026-10-19-public-onboarding-and-release.md) for the
-broader release route and the [demo refresh handoff](2026-10-21-demo-refresh.md)
+Use the [release handoff](public-onboarding-and-release.md) for the
+broader release route and the [demo refresh handoff](demo-refresh.md)
 only when the deferred demo work resumes.

@@ -13,6 +13,6 @@ General task procedures belong in [how-to](../how-to/README.md). Slide decks and
 presentation assets belong in [presentations](../presentations/README.md).
 Session progress and remaining demo updates belong in
 [handoffs](../../handoffs/README.md); the
-[planning demo refresh handoff](../../handoffs/2026-10-21-demo-refresh.md) tracks
+[planning demo refresh handoff](../../handoffs/demo-refresh.md) tracks
 remaining review and publication work. The [verification record](../evidence/skill-led-demo-examples-verification.md)
 separates documentation checks, the captured rehearsal, its limits and publication status.

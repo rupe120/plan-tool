@@ -283,7 +283,7 @@ detail.
    path, replacing the source baseline without re-grounding artifacts. Semantic
    changes remain owning-artifact feedback or a successor lineage. Its
    independent review converges in
-   `handoffs/2026-09-12-roadmap-brief-source-drift-code-review.md`.
+   `handoffs/roadmap-brief-source-drift-code-review.md`.
 8. **Closed (2026-09-14).** The route-local brief-drift record gives each
    non-stage route a tested,
    route-local changed-brief and legacy-brief policy. Analysis creation and

@@ -8,7 +8,7 @@
 | Baseline | `v1.0.0` → `968bf5991b75d0f80f8557fb48428444d4395ade`, merge of release PR #130 |
 | Current state | PR #147 merged; Bitbucket tags published with explicit approval on 2026-10-23; Jira coverage remains uncertified |
 
-Current publication evidence: [release tag publication](2026-10-23-release-tag-publication.md).
+Current publication evidence: [release tag publication](release-tag-publication.md).
 
 ## Baseline and publication boundaries (preparation record, 2026-10-22)
 

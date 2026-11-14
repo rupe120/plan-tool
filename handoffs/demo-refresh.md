@@ -6,7 +6,7 @@ The bounded live dark-mode planning/local-export rehearsal completes with
 confirmed, current advisory-only audit results and passing story lint. It does
 not implement the feature or verify browser behavior. Remote checkpoint
 publication remains pending and requires separate authorization through the
-[release handoff](2026-10-19-public-onboarding-and-release.md).
+[release handoff](public-onboarding-and-release.md).
 
 The [verification record](../docs/evidence/skill-led-demo-examples-verification.md)
 owns snapshot identities, stage outcomes, the recovered child permission failure,
@@ -14,7 +14,7 @@ artifact hashes and remaining verification limits. Documentation readiness,
 a bounded rehearsal and remote publication are separate results.
 
 Keep `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` on both
-Bitbucket and GitHub. The [sanitized publication record](2026-10-21-sanitized-publication.md)
+Bitbucket and GitHub. The [sanitized publication record](sanitized-publication.md)
 records their shared needs-updating notice. Private recovery bundles retain the
 previous staged contents; local fixture tips below are not approved replacements.
 
@@ -26,7 +26,7 @@ are done. The launcher owns plan status and the post-flight checks. Do not
 re-author the seed, restart the conversion or repeat the completed rehearsal
 merely because the original nested step could not initialize Codex.
 
-The [implementation review ledger](2026-10-21-skill-led-demo-examples-code-review.md)
+The [implementation review ledger](skill-led-demo-examples-code-review.md)
 records two independent clean documentation reviews and the final passing suite.
 
 Next pickup: read the final reconciliation/review evidence and prepare a bounded
@@ -126,5 +126,5 @@ live rehearsal, and do not certify the current remote checkpoint contents.
    with the release workflow. No fresh TTRPG run or browser interaction is claimed.
 
 Use [the planning guide](../docs/demos/planning-demo.md) for the workflow and
-[the documentation placement handoff](2026-10-21-documentation-placement-review.md)
+[the documentation placement handoff](documentation-placement-review.md)
 for the primary-folder review record. No remote publication is performed here.

@@ -20,7 +20,7 @@ configured Atlassian MCP server. The board is team-managed.
 | Priorities | Critical, Highest, High, Medium, Low, Lowest. Critical and Lowest stay unused. |
 | Labels, Parent, Linked Issues, Flagged | Available on the create screens |
 | Custom fields, components, versions | None, deliberately ([the list](../docs/TRACKING.md#deliberately-not-configured)) |
-| Issues | Seven (read 2026-09-25): `IPPT-1`, `IPPT-2`, `IPPT-4`, `IPPT-5`, `IPPT-6`, `IPPT-7`, `IPPT-8`, all in To Do. `IPPT-3` was withdrawn and deleted; its number is not reused. Ticket list and tiers: [`2026-09-24-first-jira-tickets-and-run-merge-guard.md`](2026-09-24-first-jira-tickets-and-run-merge-guard.md). |
+| Issues | Seven (read 2026-09-25): `IPPT-1`, `IPPT-2`, `IPPT-4`, `IPPT-5`, `IPPT-6`, `IPPT-7`, `IPPT-8`, all in To Do. `IPPT-3` was withdrawn and deleted; its number is not reused. Ticket list and tiers: [`first-jira-tickets-and-run-merge-guard.md`](first-jira-tickets-and-run-merge-guard.md). |
 
 `twg` reads work. It has no status or board-column write, and neither does the
 Atlassian connector, so status and column changes happen in the Jira UI.

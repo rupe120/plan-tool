@@ -127,7 +127,7 @@ Do these in order. Only 2 still needs a model call (1 is done).
    off `main`.
 
 Housekeeping, only when asked: `git stash drop` for the stash above; the merged local
-branches whose remotes are gone belong to `handoffs/2026-09-29-branch-cleanup.md`; local
+branches whose remotes are gone belong to `handoffs/branch-cleanup.md`; local
 `main` is far behind, so fast-forward it before branching.
 
 ## Operating notes for the next session

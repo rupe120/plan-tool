@@ -11543,7 +11543,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Renumbered:** filed as #425 on this branch on 2026-09-23 and cited that way in its commit history; renumbered to #428 on merging `main`, which had already allocated #425.
 - **Origin:** 2026-09-23, post-run review of
   `roadmap-versioned-feedback-revision-chain`
-  (`handoffs/2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md`).
+  (`handoffs/roadmap-versioned-feedback-revision-chain-code-review.md`).
 - **Status:** not started.
 
 **#430 — Investigate whether the same-receipt re-entry return in the batch proposal path can ever fire**
@@ -11643,7 +11643,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** 2026-09-23, closing `roadmap-versioned-feedback-revision-chain`; the
   coverage note in
-  `handoffs/2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md`.
+  `handoffs/roadmap-versioned-feedback-revision-chain-code-review.md`.
 
 **#426 — Following 13 links in `RUNBOOK.md` and two dated handoffs lands on a missing file, because the docs they name were renamed or deleted** → promoted to IPPT-4 (2026-09-24)
 
@@ -11756,7 +11756,7 @@ longer describes current work. It is retained only as dated carve-out context.
   (it defines a persisted event contract). **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** the structural-feedback-approval review ledger's owner direction
-  of 2026-09-24 (`handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md`,
+  of 2026-09-24 (`handoffs/roadmap-structural-feedback-approval-code-review.md`,
   "Wider run-log coverage"), filed 2026-09-29.
 - **Status:** not started.
 
@@ -13254,7 +13254,7 @@ plan-tool reconcile-code roadmap-stack-layer --all
   decision from generic revision feedback"
   (`aidlc-workflows` `core/aidlc-common/protocols/stage-protocol-reviewer.md`).
 - **Evidence:** the `no-edits-applied` review (2026-10-13,
-  `handoffs/2026-10-13-no-edits-applied-code-review.md`) re-stated its declined
+  `handoffs/no-edits-applied-code-review.md`) re-stated its declined
   items in every reviewer prompt by hand so later rounds would not re-raise them.
 - **Effort:** medium: a disposition store keyed by stable finding identity, a
   command to record one, and the audit prompt and report reading it.
@@ -13572,7 +13572,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Verification:** Walk the instructions in a consuming repository; check links and
   command examples. Complete #377 seed-authoring support before calling the walkthrough complete.
   The recipe-consistency prerequisite is satisfied by the
-  [skill-router repair](handoffs/2026-10-21-skill-router-recipes-code-review.md).
+  [skill-router repair](handoffs/skill-router-recipes-code-review.md).
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -13690,7 +13690,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
   and limitations. Require #377 and #508–#514 to be
   resolved or explicitly dispositioned before public onboarding sign-off. The
   recipe-consistency prerequisite is satisfied by the
-  [skill-router repair](handoffs/2026-10-21-skill-router-recipes-code-review.md); missing
+  [skill-router repair](handoffs/skill-router-recipes-code-review.md); missing
   credentials remain an explicit coverage gap.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.

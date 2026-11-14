@@ -2,7 +2,7 @@
 
 Use this record to choose release content, preserve the evidence behind current
 decisions, and verify a publication candidate. [The release backlog](../../BACKLOG.md)
-owns remaining distribution and onboarding work; [the pickup record](../../handoffs/2026-10-19-public-onboarding-and-release.md)
+owns remaining distribution and onboarding work; [the pickup record](../../handoffs/public-onboarding-and-release.md)
 owns the next action. The [verification receipt](public-release-content-snapshot-verification-20261020.md)
 identifies measured candidate bytes and results.
 
@@ -55,8 +55,8 @@ owner-approved selection adds these 17 explicit records for a 2,601-path candida
 - `experiments/harness-instruction-loading/RESULTS.md`
 - `experiments/harness-instruction-loading/scored-results.json`
 - `experiments/token-ledger/REPORT.md`
-- `handoffs/2026-10-20-public-release-content-snapshot-execution-review.md`
-- `handoffs/2026-10-20-public-release-reference-repair-review.md`
+- `handoffs/public-release-content-snapshot-execution-review.md`
+- `handoffs/public-release-reference-repair-review.md`
 
 The experiment additions retain the protocol, results, scored measurements,
 recheck and retro that support their conclusions. Cleanup records retain the
@@ -121,10 +121,10 @@ qualification. Test and audit results apply to their named inputs.
 | Authored artifact versions | Version plan/detail formats explicitly and preserve refusal, byte-preservation and recovery contracts. A scoped backend result does not become a clean result merely because it contains no findings | [Structure-versioning record](authored-artifact-structure-versioning.md) |
 | Coverage replay | Keep the hermetic capture-runner proposal withdrawn: its proof system costs more than the bounded measurement it serves. A new need requires independent evidence | [Backlog decisions](../history/backlog-decisions.md) |
 | Jira-grade instrument and measurement | Separate building the instrument from measuring it; require correct audit grounding, independent baselines and a noise-aware comparison | [Planning guidance](../explanations/nondeterministic-plan-design.md) |
-| Convergence evaluator | Preserve the owner-selected withdrawal rather than expanding an interlocked proof mechanism in response to more findings | [Developer-docs decisions](../../handoffs/2026-09-14-developer-docs-and-tracking.md) |
-| Brief drift | Keep lifecycle ownership and source-baseline acceptance with the stage runner; non-stage routes retain their separate boundary | [Roadmap delivery decisions](../../handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md) |
-| Candidate collection guidance | Use actual collection names and verified source hints while preserving persisted capsule and receipt identity | [Candidate guidance](../../handoffs/2026-09-25-roadmap-candidate-vocabulary-retry.md) |
-| Snapshot design audit | The 2026-10-20 bare audit has zero conceptual findings at 0/6 details; the final detail audit has zero at 6/6 with confirmed-dry coverage. The false PDF diagnostic leaves the overall result `awaiting-human-action`; do not call it a clean tool verdict | [Design review](../../handoffs/2026-10-20-public-release-content-snapshot-plan-review.md) |
+| Convergence evaluator | Preserve the owner-selected withdrawal rather than expanding an interlocked proof mechanism in response to more findings | [Developer-docs decisions](../../handoffs/developer-docs-and-tracking.md) |
+| Brief drift | Keep lifecycle ownership and source-baseline acceptance with the stage runner; non-stage routes retain their separate boundary | [Roadmap delivery decisions](../../handoffs/roadmap-aidlc-integration-delivery.md) |
+| Candidate collection guidance | Use actual collection names and verified source hints while preserving persisted capsule and receipt identity | [Candidate guidance](../../handoffs/roadmap-candidate-vocabulary-retry.md) |
+| Snapshot design audit | The 2026-10-20 bare audit has zero conceptual findings at 0/6 details; the final detail audit has zero at 6/6 with confirmed-dry coverage. The false PDF diagnostic leaves the overall result `awaiting-human-action`; do not call it a clean tool verdict | [Design review](../../handoffs/public-release-content-snapshot-plan-review.md) |
 
 ### Reference verification
 
@@ -142,11 +142,11 @@ Report-dependent reader content belongs in these 13 document owners:
 - `docs/explanations/nondeterministic-plan-design.md`
 - `docs/history/backlog-decisions.md`
 - `docs/implementation-plans/archive/2-jira-grade-01-detail-instrument.md`
-- `handoffs/2026-09-14-developer-docs-and-tracking.md`
-- `handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md`
-- `handoffs/2026-09-25-roadmap-candidate-vocabulary-retry.md`
-- `handoffs/2026-10-19-public-onboarding-and-release.md`
-- `handoffs/2026-10-20-public-release-content-snapshot-plan-review.md`
+- `handoffs/developer-docs-and-tracking.md`
+- `handoffs/roadmap-aidlc-integration-delivery.md`
+- `handoffs/roadmap-candidate-vocabulary-retry.md`
+- `handoffs/public-onboarding-and-release.md`
+- `handoffs/public-release-content-snapshot-plan-review.md`
 - `plan-seeds/archive/jira-grade-01-detail-instrument.distilled.replaced.md`
 - `plan-seeds/archive/jira-grade-01-detail-instrument.replaced.md`
 - `BACKLOG.md`

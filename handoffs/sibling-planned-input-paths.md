@@ -38,7 +38,7 @@ source ownership wins over the output plan directory.
 - The changelog fragment is `changelog.d/sibling-planned-input-paths.md`.
   No CLI, schema, shared identity-reader or lower validator change is present.
 - Independent review findings and final review closure belong in
-  [the review ledger](2026-10-15-sibling-planned-input-paths-code-review.md).
+  [the review ledger](sibling-planned-input-paths-code-review.md).
 
 ## Delivery and next action
 

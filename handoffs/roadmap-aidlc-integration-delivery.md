@@ -46,9 +46,9 @@ capabilities the frozen corpus and a controlled comparison show are needed.
 
 | Record | Authority |
 | --- | --- |
-| handoffs/2026-09-11-roadmap-aidlc-inception-fit.md | Framework-fit design, settled decisions, open choices, and the eight possible engine changes. |
-| handoffs/2026-09-11-integration-seam-resume-order.md | Cross-repository checkpoint and Integration execution fence. |
-| handoffs/2026-09-12-roadmap-brief-source-drift-code-review.md | Converged evidence for the delivered stage-run source-admission boundary. |
+| handoffs/roadmap-aidlc-inception-fit.md | Framework-fit design, settled decisions, open choices, and the eight possible engine changes. |
+| handoffs/integration-seam-resume-order.md | Cross-repository checkpoint and Integration execution fence. |
+| handoffs/roadmap-brief-source-drift-code-review.md | Converged evidence for the delivered stage-run source-admission boundary. |
 | BACKLOG.md closed route-local brief-drift record | Delivered policy for non-stage writers. |
 | BACKLOG.md closed #367 record | Delivered changed-brief stage-run rebind operator-intent policy. |
 | BACKLOG.md #384 | Narrow compatibility capability: carried settled decisions with citations. |
@@ -311,7 +311,7 @@ explicitly skips that step.
 
 ## Open decisions
 
-`2026-09-11-roadmap-aidlc-inception-fit.md` § "Open design choices" owns the
+`roadmap-aidlc-inception-fit.md` § "Open design choices" owns the
 list of undecided choices. This table records only the evidence that would
 decide each one. These choices do not belong hidden in a detail file or
 implementation patch.

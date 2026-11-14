@@ -15,7 +15,7 @@
 Convergence loop over the 12 commits on `main` (`403e5fb5..3f0d5c6e`, the
 `roadmap-model-failure-receipts` plan, BACKLOG #217) not yet on `origin/main`.
 This is a new ledger, not a continuation of
-`2026-09-21-unpushed-main-code-review.md`, whose range (the
+`unpushed-main-code-review.md`, whose range (the
 `roadmap-concept-comparison` work) converged and is on `origin/main`.
 
 ## Settled decisions (hand to the next reviewer)

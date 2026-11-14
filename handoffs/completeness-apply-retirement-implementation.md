@@ -5,7 +5,7 @@ implementation PR #163, and plan-status PR #164 are verified merged on
 2026-11-04; the code and plan snapshots match their fetched remote paths.
 This closed review ledger retains implementation and validation provenance.
 Independent completed fixes retain their dispositions in the
-[maintenance review ledger](2026-11-05-completed-maintenance-code-review.md);
+[maintenance review ledger](completed-maintenance-code-review.md);
 remaining work belongs to `BACKLOG.md` and `BUG_BACKLOG.md`.
 
 ## Delivered scope

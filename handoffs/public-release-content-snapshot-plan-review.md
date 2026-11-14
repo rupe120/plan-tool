@@ -3,7 +3,7 @@
 Use this record when checking the content-selection contract or diagnosing a
 planning-workflow issue. The six-step plan supplies content selection, reference
 repair, policy alignment, independent verification and backlog reconciliation.
-Current release actions belong in [the pickup record](2026-10-19-public-onboarding-and-release.md).
+Current release actions belong in [the pickup record](public-onboarding-and-release.md).
 
 ## Contract to preserve
 

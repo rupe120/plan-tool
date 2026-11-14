@@ -20,10 +20,10 @@ deferred and does not block that work.
 | Bitbucket protection | Restored according to the owner; independent branch-restriction reads return 403 for missing token scopes |
 | Demo branches | All four names on both hosts point to the shared needs-updating notice; content refresh remains deferred |
 
-The [publication record](2026-10-21-sanitized-publication.md) owns the exact
+The [publication record](sanitized-publication.md) owns the exact
 sanitized release refs, successful readback, recovery paths and clone cutover.
 Its v0.2.0 measurements describe that frozen release, not later main commits.
-The [demo handoff](2026-10-21-demo-refresh.md) owns the deferred update work.
+The [demo handoff](demo-refresh.md) owns the deferred update work.
 
 ## Completed release and onboarding work
 

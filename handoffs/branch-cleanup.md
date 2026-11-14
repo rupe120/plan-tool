@@ -135,7 +135,7 @@ method as finding 3. What remained, and why it was not kept:
   (2026-09-25), which folded them in; `changelog.d/` correctly holds only its
   README.
 - **Review ledgers:** `main` deleted
-  `handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md` after
+  `handoffs/roadmap-structural-feedback-approval-code-review.md` after
   the feature shipped.
 - **Not checked:** the doc residue (155, 11, and 91 lines across
   `DATA_CONTRACT.md`, `docs/how-to/roadmap.md`, and similar) was not read line by

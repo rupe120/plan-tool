@@ -19,7 +19,7 @@ separate responsibilities.
 The 2026-10-20 detail-grounded correction audit reports zero conceptual findings,
 `confirmed-dry` coverage and no budget limit. The known false PDF coherence
 advisory remains separately refuted in the
-[design review](2026-10-20-public-release-content-snapshot-plan-review.md).
+[design review](public-release-content-snapshot-plan-review.md).
 
 ## Execution rule
 

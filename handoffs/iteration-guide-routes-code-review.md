@@ -154,6 +154,6 @@ committed on `fix/iteration-guide-routes`; no push or PR is part of this action.
 ## Iteration policy/help follow-up — 2026-10-22
 
 The protected-policy and CLI help/warning deferral is implemented in the
-[run iteration guidance repair](2026-10-22-run-iteration-guidance-code-review.md).
+[run iteration guidance repair](run-iteration-guidance-code-review.md).
 That record owns current validation and review status; deferrals above retain
 the provenance of these earlier review snapshots, not a remaining open bug.

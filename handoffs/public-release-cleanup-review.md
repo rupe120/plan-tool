@@ -2,7 +2,7 @@
 
 Preserve these decisions when changing public setup, examples or package metadata.
 The cleanup review closes by owner merge of PR #120. Current implementation
-review and release actions belong to [the pickup record](2026-10-19-public-onboarding-and-release.md).
+review and release actions belong to [the pickup record](public-onboarding-and-release.md).
 
 ## Decisions to preserve
 

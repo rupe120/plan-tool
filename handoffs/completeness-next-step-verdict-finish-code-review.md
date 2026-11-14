@@ -7,7 +7,7 @@
 | Branch | `feat/completeness-next-step-verdict-finish` |
 | Review range | `e8ca455fc..HEAD` |
 | Reviewer | `/code-review high` in-session (forked), report-only |
-| Reader enumeration | `handoffs/2026-10-10-completeness-next-step-verdict-finish-reader-enumeration.md` (step 4's first deliverable) |
+| Reader enumeration | `handoffs/completeness-next-step-verdict-finish-reader-enumeration.md` (step 4's first deliverable) |
 
 ## Settled decisions (hand to the next reviewer)
 

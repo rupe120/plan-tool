@@ -18,7 +18,8 @@ Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
   and `docs/evidence/*.json` receipts, which cite handoffs by path and pin their text;
   rewriting a ledger finding's substance; the gitignored `.tmp/` scratch handoffs
   (owner decision, 2026-09-29).
-- **Per retirement:** grep the retired filename across tracked files. Hits may remain only
+- **Per retirement:** also add the path to `former-dated-names.md`'s retired list.
+- **Per retirement (grep):** grep the retired filename across tracked files. Hits may remain only
   in frozen files, each named in README § "Known dangling citations".
 
 ## State, 2026-11-13
@@ -28,7 +29,10 @@ Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
   reviewer session UUIDs and a few non-commit ids. `roadmap-versioned-from-birth` records
   its deferrals as `tracked` to fit the closed disposition set.
 - Two superseded roadmap pickups and the dated consolidation handoff are retired.
-- New files are named by concept (`README.md` § "Naming").
+- All handoffs are named by concept; the dated prefixes were dropped 2026-11-13 and
+  `former-dated-names.md` keeps the old-name map and dates. One local-only note
+  (`2026-10-16-token-ledger-logging-gaps-reverted-attempt.md`, excluded by
+  `.git/info/exclude`) is untracked, unrenamed and unindexed on purpose.
 
 ## Still open
 

@@ -148,8 +148,8 @@ design" as "shipped code" — they're tracked separately below.
 
 | Item | Status | Reference |
 | --- | --- | --- |
-| The boundary, the role vocabulary, and touchpoints 1–7 above | Settled design, 2026-09-11; none reopened without new evidence | `handoffs/2026-09-11-roadmap-aidlc-inception-fit.md` § "Settled decisions" |
-| Stage-run source-identity + strict/relaxed drift policy | **Shipped** | `handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md` |
+| The boundary, the role vocabulary, and touchpoints 1–7 above | Settled design, 2026-09-11; none reopened without new evidence | `handoffs/roadmap-aidlc-inception-fit.md` § "Settled decisions" |
+| Stage-run source-identity + strict/relaxed drift policy | **Shipped** | `handoffs/roadmap-aidlc-integration-delivery.md` |
 | Changed-brief rebind confirmation (`BACKLOG` #367) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
 | Carried settled decisions with citations (`BACKLOG` #384) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
 | Per-stage supplementary sources with declared roles (`BACKLOG` #383) | **Held** — waiting on a comparison-proven per-stage grounding gap, not scheduled | `BACKLOG.md`, entry #383 |
@@ -172,7 +172,7 @@ brief and #383 stays held. The rest wait on an evidence trigger:
   meaning outside the proven box.
 
 The list, its options, and dependencies live in
-`handoffs/2026-09-11-roadmap-aidlc-inception-fit.md` § "Open design choices".
+`handoffs/roadmap-aidlc-inception-fit.md` § "Open design choices".
 
 ## What stays out of scope for `plan-tool`
 
@@ -186,12 +186,12 @@ The list, its options, and dependencies live in
 
 ## Where the full detail lives
 
-- `handoffs/2026-09-11-roadmap-aidlc-inception-fit.md` — the full design,
+- `handoffs/roadmap-aidlc-inception-fit.md` — the full design,
   settled decisions, and open choices (this page's primary source).
-- `handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md` — the
+- `handoffs/roadmap-aidlc-integration-delivery.md` — the
   delivery record: what shipped, the seam contract, and the ordered
   delivery path.
-- `handoffs/2026-09-11-integration-seam-resume-order.md` — the cross-repository
+- `handoffs/integration-seam-resume-order.md` — the cross-repository
   checkpoint and orchestration-side execution fence.
 - `docs/evidence/roadmap-aidlc-intake-comparison-20260916.md` — the
   controlled comparison against a real, approval-bound Gate-1 corpus

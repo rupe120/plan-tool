@@ -549,7 +549,7 @@ scope; do not reintroduce it under this id. #462, #493 and #494 stay separate.
 Evidence: [comparison](../evidence/roadmap-plan-derivation-comparison.md),
 [corrected-evidence iteration](../evidence/roadmap-corrected-evidence-iteration.md),
 [handoff-content trace](../evidence/roadmap-handoff-content-trace.md) and the
-[testing handoff](../../handoffs/2026-10-16-roadmap-business-logic-base-plan-loop.md).
+[testing handoff](../../handoffs/roadmap-business-logic-base-plan-loop.md).
 
 ### #521 — A short core path for newcomers
 

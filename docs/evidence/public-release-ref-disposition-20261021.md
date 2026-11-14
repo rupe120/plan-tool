@@ -130,5 +130,5 @@ refs, caches, forks, artifacts or backups. Remote ref cleanup alone does not
 certify provider-side erasure.
 
 The [candidate receipt](public-release-distribution-verification-20261021.json)
-owns the selected content and test results. The [pickup handoff](../../handoffs/2026-10-19-public-onboarding-and-release.md)
+owns the selected content and test results. The [pickup handoff](../../handoffs/public-onboarding-and-release.md)
 owns the next action.

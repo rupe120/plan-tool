@@ -11,7 +11,7 @@ All 18 how-to pages are screened by purpose, headings, introductions and searche
 for session status, pending work and dated assumptions. This is a placement and
 initial-workflow review, not a fresh audit of every CLI flag or source-map line.
 
-- The demo update checklist lives in `2026-10-21-demo-refresh.md`, outside how-to.
+- The demo update checklist lives in `demo-refresh.md`, outside how-to.
 - `docs/demos/README.md` is the demo entry point. The planning demo and roadmap
   demo runbook live beside it. The planning demo needs updating before its next
   presentation; its refresh remains deferred. The former roadmap-demo location

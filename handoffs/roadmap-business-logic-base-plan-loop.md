@@ -198,5 +198,5 @@ BACKLOG #496 closed 2026-10-19: the loop met its stop condition. The closure rec
 - [Benchmark inputs and witnessed gaps](../docs/evidence/roadmap-plan-set-benchmark.md)
 - [Initial base-plan assessment](../docs/evidence/roadmap-plan-derivation-review.md)
 - [Comparison record](../docs/evidence/roadmap-plan-derivation-comparison.md): the resumed section records observations; lower sections retain the initial failed-attempt provenance.
-- [Implementation handoff](2026-10-16-roadmap-plan-derivation-implementation.md)
+- [Implementation handoff](roadmap-plan-derivation-implementation.md)
 - [#496 closure record](../docs/history/backlog-decisions.md#496--roadmap-mapping-and-seed-to-plan-derivation-in-the-existing-pipeline) (closed 2026-10-19)

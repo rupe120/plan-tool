@@ -4,7 +4,7 @@ This handoff records where the first `IPPT` tickets stand, the ticket format and
 tier rules settled while writing them, and the owner decisions still open. It is
 the entry point for the next session. The policy lives in
 [`docs/TRACKING.md`](../docs/TRACKING.md); the promotion procedure and the
-recurring loop live in [`2026-09-23-jira-management.md`](2026-09-23-jira-management.md).
+recurring loop live in [`jira-management.md`](jira-management.md).
 This file does not repeat either.
 
 ## State on 2026-09-25
@@ -373,7 +373,7 @@ The other nine `ruff` findings (seven `F811`, two `F841`) are not filed.
 ## Files and scratch
 
 - Ticket format and tier rules: `docs/TRACKING.md`. Procedure and loop:
-  `handoffs/2026-09-23-jira-management.md`. Drafting, creating, editing, and
+  `handoffs/jira-management.md`. Drafting, creating, editing, and
   linting a ticket: `.claude/skills/jira-ticket/`. Withdrawn-item record:
   `docs/history/backlog-decisions.md`.
 - Scratch (`.tmp/`, gitignored, disposable): the ticket drafts and generators;

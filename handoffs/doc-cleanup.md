@@ -11,8 +11,8 @@ is the index that keeps the loose ends in one place.
 | --- | --- | --- |
 | Broken relative links in `RUNBOOK.md` and three dated handoffs | `BACKLOG.md` #426 | Repoint 13 links; decide two with no identified successor. |
 | A link-check test | Not filed | Owner decides whether to file it as its own entry (see below). |
-| Jira docs vs the real `IPPT` project | [`2026-09-23-jira-management.md`](2026-09-23-jira-management.md) | Seed the first tickets. |
-| `CLAUDE.md` evidence extraction | `handoffs/2026-09-17-team-handoff-open-decisions-proposal.md` § 6 | Move the multi-paragraph measurements to `docs/evidence/`; keep the rule and a short verdict. Needs Architect review. |
+| Jira docs vs the real `IPPT` project | [`jira-management.md`](jira-management.md) | Seed the first tickets. |
+| `CLAUDE.md` evidence extraction | `handoffs/team-handoff-open-decisions-proposal.md` § 6 | Move the multi-paragraph measurements to `docs/evidence/`; keep the rule and a short verdict. Needs Architect review. |
 | Bucket C to readiness, per entry | The same handoff, decision 7 | Check each entry the "Readiness lens" section once called bucket C against its actual readiness label. |
 | Route, readiness, and tier labels | `docs/TRACKING.md` § "Labels every entry carries" | Count coverage with `grep -c '^- \*\*Route:\*\*' BACKLOG.md` (likewise `Readiness:` and `Tier:`) against `grep -c '^\*\*#[0-9]* — ' BACKLOG.md`. Tag an entry when someone next touches it. |
 | One stale citation in a roadmap plan detail | The 09-17 handoff, "for the roadmap owner" | `docs/implementation-plans/archive/plan-details/roadmap-decision-settlement/07-document-settlement-route-retire-every.md` line 77 cites `BUG_BACKLOG.md:275`. Fix it at that plan's next re-audit: editing the detail makes its saved reports stale. |
@@ -73,7 +73,7 @@ plan and plan-detail files. Nothing is filed; the owner decides.
 ## Jira docs vs the real project
 
 `docs/TRACKING.md` § "Jira board" describes the board, and
-[`2026-09-23-jira-management.md`](2026-09-23-jira-management.md) owns the
+[`jira-management.md`](jira-management.md) owns the
 ticket seeding.
 
 ## Settled: do not reopen

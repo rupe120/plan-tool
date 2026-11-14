@@ -198,7 +198,7 @@ execution is corrected; the skill already contains the Claude review requirement
 Pass-2 finding 6 above is incorrectly refuted: the canonical directive itself
 contains a stale claim. `cmd_run` and its existing dispatch test explicitly
 reject `run --reconcile --iterate` with exit 2. The
-[iteration-route repair](2026-10-22-iteration-guide-routes-code-review.md)
+[iteration-route repair](iteration-guide-routes-code-review.md)
 corrects the user-facing guides and directives against source/test evidence;
 protected CLAUDE.md policy and generated help remain separately tracked.
 The earlier no-router-defect verdict does not establish run-side flag support.
@@ -207,6 +207,6 @@ The earlier no-router-defect verdict does not establish run-side flag support.
 ## Iteration policy/help follow-up — 2026-10-22
 
 The protected-policy and CLI help/warning deferral is implemented in the
-[run iteration guidance repair](2026-10-22-run-iteration-guidance-code-review.md).
+[run iteration guidance repair](run-iteration-guidance-code-review.md).
 That record owns current validation and review status; deferrals above retain
 the provenance of these earlier review snapshots, not a remaining open bug.

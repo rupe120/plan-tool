@@ -3,7 +3,7 @@
 Use merged [PR #123](https://bitbucket.org/protagona/plan-tool/pull-requests/123) to
 review the accepted content-preparation decisions. The merged selected bytes
 match the independently tested prose candidate. Current next
-actions belong in [the pickup record](2026-10-19-public-onboarding-and-release.md).
+actions belong in [the pickup record](public-onboarding-and-release.md).
 
 ## Review map
 

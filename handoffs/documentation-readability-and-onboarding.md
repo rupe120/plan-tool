@@ -15,7 +15,7 @@ reconciles live references to those layers on the current branch before deeper
 readability review continues.
 
 It does not reopen the documentation split recorded in
-[`2026-09-14-developer-docs-and-tracking.md`](2026-09-14-developer-docs-and-tracking.md),
+[`developer-docs-and-tracking.md`](developer-docs-and-tracking.md),
 nor does it change product behavior. Its target is how the existing, verified
 information is structured and explained.
 

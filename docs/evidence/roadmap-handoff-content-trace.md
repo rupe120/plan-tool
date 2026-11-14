@@ -94,4 +94,4 @@ Disposition: keep the audit as a session procedure after `--materialize`; no too
 
 ## Checkpoint
 
-The read-only trace predates the producer-seed run and the loop-4 and loop-5 mapping and seed runs. No detail authoring or application work occurs, and no process remains active. The [testing handoff](../../handoffs/2026-10-16-roadmap-business-logic-base-plan-loop.md) records the pickup. Production code is `0d8d7ca95` in the implementation checkout.
+The read-only trace predates the producer-seed run and the loop-4 and loop-5 mapping and seed runs. No detail authoring or application work occurs, and no process remains active. The [testing handoff](../../handoffs/roadmap-business-logic-base-plan-loop.md) records the pickup. Production code is `0d8d7ca95` in the implementation checkout.

@@ -106,7 +106,7 @@ they resolve.
   entry removed in `ea5396a14`. `docs/ITERATION.md` § "How the loop terminates"
   now lists every `should_continue` reason with its code, per-command scope and
   exit codes, pinned by a drift test. Pass-by-pass record and closure (stopped at
-  exit 2): [ledger](2026-11-13-loop-termination-lists-code-review.md).
+  exit 2): [ledger](loop-termination-lists-code-review.md).
 
 ## Deliberately not in this handoff
 

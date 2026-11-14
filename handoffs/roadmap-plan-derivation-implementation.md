@@ -2,7 +2,7 @@
 
 ## Current testing direction
 
-Owner decision, 2026-10-16: stop at base plans and focus the next tool iterations on application business logic. The [base-plan testing workflow](2026-10-16-roadmap-business-logic-base-plan-loop.md) is the current pickup record. It supersedes further detail authoring and broad infrastructure experimentation. Eight candidate base plans are captured; two delivery rows remain seeds. The identical-seed control completes and demonstrates local References retention. Earlier in-progress notes below are dated implementation provenance, not the current testing instructions.
+Owner decision, 2026-10-16: stop at base plans and focus the next tool iterations on application business logic. The [base-plan testing workflow](roadmap-business-logic-base-plan-loop.md) is the current pickup record. It supersedes further detail authoring and broad infrastructure experimentation. Eight candidate base plans are captured; two delivery rows remain seeds. The identical-seed control completes and demonstrates local References retention. Earlier in-progress notes below are dated implementation provenance, not the current testing instructions.
 
 ## Current checkpoint
 

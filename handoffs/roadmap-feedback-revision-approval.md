@@ -56,10 +56,10 @@ and exact-pair rewrite routes remain outside ordinary proposal approval.
 ## Current artifacts
 
 - Revision-history plan: `docs/implementation-plans/archive/2-roadmap-versioned-feedback-revision-chain.md` (`completed`). Its seed was consumed by `create`; the final generation is archived at `plan-seeds/archive/roadmap-versioned-feedback-revision-chain.replaced.2.md`.
-- Revision-history review record: `handoffs/2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md`.
+- Revision-history review record: `handoffs/roadmap-versioned-feedback-revision-chain-code-review.md`.
 - Revision-history pull request: `https://github.com/rupe120/plan-tool/pull/18`, squash-merged 2026-09-23.
 - Structural-approval plan: `docs/implementation-plans/archive/2-roadmap-structural-feedback-approval.md`.
-- Structural-approval review record: `handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md`.
+- Structural-approval review record: `handoffs/roadmap-structural-feedback-approval-code-review.md`.
 - Stack-aware approval plan: `docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md`. It extends the structural-approval lifecycle to the whole unpromoted stack.
 - Reconstruction evidence: `<integration-consumer-root>/.tmp/plan-tool-423-structural-roadmap-feedback-revision-reconstruction.md`.
 
