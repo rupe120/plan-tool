@@ -1604,9 +1604,9 @@ class TestRunResumeCommand:
     def test_build_run_resume_command_includes_explicit_model(self) -> None:
         set_active_backend(CODEX_BACKEND)
         cmd = _build_run_resume_command(
-            self._args(model="gpt-5.6-terra"), "feature"
+            self._args(model="gpt-6.1-sol"), "feature"
         )
-        assert cmd == "plan-tool --backend codex --model gpt-5.6-terra run feature"
+        assert cmd == "plan-tool --backend codex --model gpt-6.1-sol run feature"
 
     def test_build_run_resume_command_omits_model_after_backend_switch(self) -> None:
         set_active_backend(CODEX_BACKEND)

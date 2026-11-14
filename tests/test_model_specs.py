@@ -110,7 +110,7 @@ class TestProviderAndDefault:
     @pytest.mark.parametrize(
         ("model", "backend"),
         [
-            ("gpt-5.6-terra", "codex"),
+            ("gpt-6.1-sol", "codex"),
             ("chatgpt-4o-latest", "codex"),
             ("o3-pro", "codex"),
             ("openai/gpt-5-codex", "codex"),
@@ -119,7 +119,7 @@ class TestProviderAndDefault:
             ("gemini-3-pro", "gemini"),
             ("google/gemini-3-pro", "gemini"),
             ("claude:anthropic/foo", "claude"),
-            ("gpt-5.6:anthropic/foo", "codex"),
+            ("gpt-6.1:anthropic/foo", "codex"),
             ("anthropic.claude-3-5-sonnet-20241022-v2:0", "claude"),
             ("us.anthropic.claude-3-5-sonnet-20241022-v2:0", "claude"),
         ],

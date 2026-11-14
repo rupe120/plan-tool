@@ -272,7 +272,7 @@ def project_models(tmp_repo, monkeypatch):
     (["--backend", "claude"], "codex", "claude", "list-claude"),
     (["--model", "claude-sonnet-4-5"], "codex", "claude", "claude-sonnet-4-5"),
     (["--model", "opaque"], None, "codex", "opaque"),
-    (["--backend", "claude", "--model", "gpt-5.6-terra"], None, "claude", "gpt-5.6-terra"),
+    (["--backend", "claude", "--model", "gpt-6.1-sol"], None, "claude", "gpt-6.1-sol"),
 ])
 def test_project_selection_preserves_explicit_override_authority(
     tmp_repo, project_models, monkeypatch, flags, environment, backend, model,
@@ -380,7 +380,7 @@ def test_mixed_case_default_backend_does_not_raise_a_spurious_model_hint(
     payload["default_backend"] = default_backend
     path.write_text(json.dumps(payload))
     monkeypatch.setattr(shutil, "which", lambda binary: None)
-    assert cli.main(tmp_repo.argv("--model", "gpt-5.6-terra", "list")) == EXEC_NOT_FOUND_EXIT
+    assert cli.main(tmp_repo.argv("--model", "gpt-6.1-sol", "list")) == EXEC_NOT_FOUND_EXIT
     err = capsys.readouterr().err
     assert "'codex' executable was not found" in err  # preflight, not another exit path
     assert "remove or change --model" not in err
@@ -529,8 +529,8 @@ def test_project_model_family_never_selects_a_different_backend(
 
     path, payload = project_models
     payload["default_backend"] = "claude"
-    payload["backends"]["claude"]["commands"]["list"]["model"] = "gpt-5.6-terra"
+    payload["backends"]["claude"]["commands"]["list"]["model"] = "gpt-6.1-sol"
     path.write_text(json.dumps(payload))
     assert cli.main(tmp_repo.argv("list")) == 0
     assert get_active_backend().name == "claude"
-    assert "gpt-5.6-terra" in get_active_backend().streaming_argv("P")
+    assert "gpt-6.1-sol" in get_active_backend().streaming_argv("P")
