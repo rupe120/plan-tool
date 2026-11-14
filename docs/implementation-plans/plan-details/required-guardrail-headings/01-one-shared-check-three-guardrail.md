@@ -35,7 +35,7 @@ Both the `create --from-existing` intake and the roadmap draft gate must refuse 
 - **Constant.**
   - Name it something like `REQUIRED_GUARDRAIL_HEADINGS`, a tuple of the three headings in the order `GUARDRAIL_BODY_SECTIONS` already uses.
   - Leave `GUARDRAIL_BODY_SECTIONS` alone. It also carries `Stack`, which is not required, and `render_scope_fence` and `extract_plan_guardrails` depend on its order.
-  - Store the title without the `## ` prefix (for example `Scope guardrails`), because `extract_h2_section_occurrences` returns lowercased titles and callers want a short list to put in an error message. Choose one form and keep it consistent between the constant and the return value.
+  - Store the title without the `## ` prefix (for example `Scope guardrails`), because `extract_h2_section_occurrences` returns lowercased titles and callers want a short list to put in an error message. The constant and the return value both hold the bare title in its canonical case (`Scope guardrails`), and every message that names a heading, in step 4 and step 6 alike, renders it as `## <title>` from this value, so the `create` and roadmap refusals spell it the same way.
 - **Function.**
   - Name it something like `missing_required_guardrail_headings(text: str) -> tuple[str, ...]`.
   - It returns the offending headings in constant order, and an empty tuple means the seed passes.
