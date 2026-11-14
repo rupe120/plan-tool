@@ -3878,7 +3878,7 @@ working straight down the tiers.
 
 **#71 — [Decision] Define the `detail --reconcile` refusal-token shape (enforce vs. record)**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `architect`
 - **Unpark when:** a `detail --reconcile` apply narrows scope or softens an acceptance criterion despite the prompt's prose refusal policy.
 - **Principle:** `converge-on-correct-plan` — a refusal token the apply layer can check.
 - **What:** Decide the shape of a machine-readable *refusal* marker for
@@ -3918,6 +3918,7 @@ working straight down the tiers.
 
 **#141 — Document the 4h jira story-size floor against a `--max-hours` below it, and warn on `--max-hours < 4`**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** The jira story-size soft floor (`_STORY_SIZE_SOFT_FLOOR_HOURS = 4`
   in `plan_tool/jira.py`, feeding `lint_story_size` and the `prompts/jira.md`
   decomposition-floor rule) is a **fixed constant**, while `--max-hours` (the
@@ -3966,7 +3967,7 @@ working straight down the tiers.
 
 **#210 — Decide whether the per-step purity Claude pass earns its cost: it has never reported a finding, and 87.5% of its calls never return**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `architect`
 - **Unpark when:** an independently justified audit has invoked `--purity` and recorded an outcome (zero findings so far); decide keep, opt-in, or cut from those outcomes. Passive observation is settled and user-confirmed; no dedicated measurement.
 - **What:** the `completeness-audit` phase-1 per-step MIXED-STEP purity pass
   (`purity_scan` phase) spends one Claude call per step per audit. Decide,
@@ -4021,6 +4022,7 @@ working straight down the tiers.
 
 **#212 — `apply_finding` rewrites a step but can leave its `intent` stale: one instruction in `apply-finding.md`**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `Step.intent` has shipped (plan `2-intent-scope-fence.md`), and
   `plan_tool/launcher.py:apply_finding` rewrites a step's title, files, and
   acceptance criteria from an audit finding while leaving `intent` untouched.
@@ -4078,6 +4080,7 @@ working straight down the tiers.
 
 **#228 — A deterministic enumeration/count drift check across a plan and its detail bundle**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** a no-Claude check that flags a *count or enumeration* in a plan's
   prose that some other part of the same plan bundle falsifies — "three
   failure kinds", "all three traps", "15 new `VIOLATION_*` constants", "four
@@ -4155,6 +4158,7 @@ working straight down the tiers.
 
 **#213 — Conceptual-audit lens: a plan proposing a check must name the binary observable it asserts**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** add one lens to `plan_tool/prompts/plan-audit.md` that fires **only
   when the plan under audit proposes a check, gate, finding, or enforcement**,
   and asks two questions:
@@ -4312,6 +4316,7 @@ working straight down the tiers.
 
 **#431 — `_gate_correction`'s prefix matcher → one exhaustive `kind → remedy` table**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `roadmap_candidate._gate_correction` routes each `Violation.kind`
   to a remedy string by matching `kind.startswith((...))` prefix tuples, with
   `_DROP_EXTRA_ROWS_GATE_KINDS` as a hand-maintained set of exact kinds pulled
@@ -4387,6 +4392,12 @@ working straight down the tiers.
 
 **#432 — `render_candidate_question_prompt` still reads its template with a bare, unguarded `read_text()`**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `beginner`
+- **Start here:** `plan_tool/roadmap_candidate_review.py` (`render_candidate_question_prompt`, the two `read_text` sites) and `tests/test_roadmap_candidate_review.py`.
+- **Precedent:** `plan_tool/roadmap_candidate_run.py:1106` (`render_candidate_delta_prompt` reads its template through `read_roadmap_text` with a local `unreadable_template` closure); `read_roadmap_text` is already imported at line 21 of that module.
+- **Settled decisions to respect:** raise `CandidateReviewError` (this module's convention), not `CandidateProposalError`; no new named per-module wrapper function (flagged and removed in pass 7, P7.1); leave the caller's `except OSError` handling alone.
+- **Done when:** a missing or unreadable `roadmap-candidate-questions.md` raises `CandidateReviewError` naming the file at both read sites, pinned by a test; the focused tests are green.
+- **Reviewer:** unassigned
 - **What:** `roadmap_candidate_review.render_candidate_question_prompt` (two
   call sites, lines ~768 and ~797) reads `roadmap-candidate-questions.md` via
   `(prompts_dir() / name).read_text(encoding="utf-8")`, with no domain-error
@@ -4423,7 +4434,7 @@ working straight down the tiers.
 
 **#355 — "second-KeyboardInterrupt-safe" is a per-call-site convention in the roadmap candidate flows, not a property `RunLogWriter` enforces**
 
-- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `plan` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** a lost or corrupt run log is attributed to a double Ctrl-C.
 - **What:** `RunLogWriter`'s `phase_end`, `run_end`, `parse_failure`, and
   `run_interrupted` methods do not guarantee that a second
@@ -4496,7 +4507,7 @@ working straight down the tiers.
 
 **#349 — Consider migrating the roadmap stage loop's hand-rolled status channel onto `progress.py`'s shared reporter**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** roadmap operators report silent long stages (for example, a missing heartbeat).
 - **What:** the stage-lifecycle status machinery this diff built
   (`_emit_roadmap_status`, `_emit_stage_retry_status`,
@@ -4539,6 +4550,7 @@ working straight down the tiers.
 
 **#326 — Reconsider where the sampler checkpoint lives (bolted onto `SavedReview`/`save_review`)**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `architect`
 - **What:** the `audit-pass-persistence` plan's sampler-checkpoint feature
   (`plan_tool/review.py`'s `audit_plan_until_stable` resume machinery) persists
   through the general-purpose `SavedReview`/`save_review` shape in
@@ -4583,6 +4595,7 @@ working straight down the tiers.
 
 **#323 — Share the ordering/plan reconciliation between `--view walk` and `--view html`**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `roadmap_view.py:render_traceability_walk` (the ordering loop) and
   `roadmap_html.py:_plans_block` each encode the same three-case reconciliation
   of `PlansArtifact.plans` against `PlansArtifact.ordering`: group rows by id,
@@ -4622,6 +4635,7 @@ working straight down the tiers.
 
 **#324 — `jira --output` lacks the directory/trailing-separator check `roadmap --view html --output` has**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `roadmap --view html --output PATH`
   (`cli/roadmap_cmd.py:cmd_roadmap`, the html branch) rejects a destination
   that names a directory, carries a trailing separator on a path that
@@ -4647,6 +4661,7 @@ working straight down the tiers.
 
 **#325 — Check a valid id of the wrong row kind in reference lists once, in the gates**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `roadmap_view.resolve_id_of_kind` warns at render time when an
   entity-typed reference (a `REFERENCE`-typed field or an `entity_ids` list)
   resolves to a row of the wrong kind. Other cross-artifact reference-id lists
@@ -4689,6 +4704,7 @@ working straight down the tiers.
 
 **#270 — `CliBackend.batch_output` is set by every backend but never read**
 
+- **Labels:** Route `direct` · Readiness `decision-needed` · Tier `architect`
 - **What:** `plan_tool/backend.py`'s `CliBackend.batch_output` field
   (`"stdout"`/`"json"`) is populated by every built-in backend registration
   and round-tripped through `backend.json`, but no production code path
@@ -4710,6 +4726,7 @@ working straight down the tiers.
 
 **#288 — Drop the redundant "Per-step test strategy" block from rendered plan bodies**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `create.py:8735`'s `_render_testing_strategy()` appends a
   "Per-step test strategy" block to every plan's `## Testing` section (called
   from `_render_plan_body` at `create.py:8904`), one bullet per step. For
@@ -4774,7 +4791,7 @@ working straight down the tiers.
 
 **#278 — `materialize_plan_seed` and `materialize_and_diff_one_plan` duplicate their "acquire-or-reuse a writer guard" branch**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** the next change touches either function's writer-guard logic; fold the extraction into that change.
 - **What:** Both functions in `plan_tool/roadmap.py` repeat an identical
   "acquire a fresh writer guard if none was supplied, else validate and
@@ -4791,6 +4808,7 @@ working straight down the tiers.
 
 **#89 — Extend `--commit` to `reconcile-code` / `reconcile-plan` (orphaned saved reports)**
 
+- **Labels:** Route `plan` · Readiness `blocked-on` the BUG_BACKLOG.md `--commit` staging entry · Tier `experienced`
 - **Principle:** `untriaged` — commit hygiene; it may bear on `survive-interruption`, which the entry does not say.
 - **What:** `--commit` is accepted by four surfaces — `run` (per-step green
   commits), `detail`, `completeness-audit`, and `manifest sweep`/archive.
@@ -4843,6 +4861,7 @@ working straight down the tiers.
 
 **#83 — End-to-end bare-plan action-surface regression harness**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** Add one integration fixture driving `completeness-audit` on bare
   and partially-detailed plans. Verify conceptual findings remain reported for
   session-directed edits and deterministic detail-level writers stay withheld.
@@ -4868,6 +4887,7 @@ working straight down the tiers.
 
 **#79 — Finish the lenient JSON-envelope slice; the measured do-not-merge list stays (most of the original duplicate-helper list turned out not to be duplication)**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **Principle:** `none` — consolidation; its claims need re-verifying before any merge.
 - **Absorbs #300 (merged 2026-11-14):** finish the `response_contract.py`
   migration for the two heading regexes of the same shape,
@@ -5004,6 +5024,7 @@ working straight down the tiers.
 
 **#80 — Consolidate the duplicated `iterate_parent` companion flags into `parser.py`**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **Principle:** `none` — consolidation of shared argparse parents.
 - **What:** the `--iterate` companion flags (`--time-budget` and the others,
   a ~60-line block ×3 in `run_cmd`/`completeness_cmd`/`authoring`) are rebuilt
@@ -5032,7 +5053,7 @@ working straight down the tiers.
 
 **#81 — Extract the byte-identical sub-blocks shared by the 4 convergence loops (NOT a unified driver)**
 
-- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `plan` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** the next fix has to touch the same sub-block in all four convergence loops; extract that block then.
 - **Principle:** `none` — extraction of sub-blocks shared by the convergence loops.
 - **What:** The `gates → apply_finding → re-audit` convergence loop is
@@ -5081,6 +5102,7 @@ working straight down the tiers.
 
 **#56 — Add a linter (ruff) + pre-commit gate**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **Principle:** `none` — a repository lint gate, not a property of the tool's output.
 - **What:** `ruff` is in the dev dependency group (`ruff>=0.16.3`) and
   `pyproject.toml` carries `[tool.ruff]` with `select = ["F", "E9"]`; as of
@@ -5104,6 +5126,7 @@ working straight down the tiers.
 
 **#176 — Run-log writers for the remaining Claude-spending verbs (`jira`, `annotate`, `reconcile-plan-walk`)**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** these three spend Claude and open no run log at all — no cost
   record, no `in-flight.json`, nothing in `plan-tool runs list`. Verified
   empirically against every saved log in this repo: the only `run_start`
@@ -5165,7 +5188,7 @@ working straight down the tiers.
 
 **#177 — Decide how `create`'s slug proposal gets logged (it runs before the log exists)**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** the BUG_BACKLOG fix that makes the unsinked-call warning name its real caller lands; then default to option (c), a RUNBOOK note, unless the unlogged cost matters.
 - **What:** `create.py:suggest_slug` makes a Claude call that no run log can
   currently record. `cli/authoring.py` must resolve the slug **before**
@@ -5216,6 +5239,7 @@ working straight down the tiers.
 
 **#180 — Structural renumbering: fix detail-file H1s and report surviving step references after split/merge/scope-out**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced`
 - **What:** `plan-tool split` (and the same renumber path used by `merge` and
   `scope-out`) renames detail files and repairs `depends_on`, but leaves every
   human-readable step reference stale. After a split it does not update: the
@@ -5302,6 +5326,7 @@ working straight down the tiers.
 
 **#183 — `scope-out`'s blocked-path advice should name the small fix, not jump to re-decomposition**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** when the carve safety gate refuses (correctly), the only remedy the
   warning offers is total: "To restructure anyway, re-seed and re-decompose the
   whole plan." Observed 2026-07-29 carving step 10 of
@@ -5350,7 +5375,7 @@ working straight down the tiers.
 
 **#185 — `scope-out --into-seed <path>`: carve into an existing seed instead of always minting a standalone**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** a second hand-merge of a carved seed into an existing seed is needed (the first target seed has since been withdrawn).
 - **What:** `scope-out` always writes a new standalone seed, even when the
   carved scope already has a named owner. Observed 2026-07-29: the plan body of
@@ -5396,6 +5421,7 @@ working straight down the tiers.
 
 **#186 — Carved seeds inherit no fence: the seed must state what the parent kept, so the carve can't be silently re-absorbed**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** a backlog-derived seed is required to carry its source entry's
   scope contract forward (see the scope-contract rule in `docs/TRACKING.md`), but a *carved*
   seed inherits nothing about the parent: the 2026-07-29 carve of
