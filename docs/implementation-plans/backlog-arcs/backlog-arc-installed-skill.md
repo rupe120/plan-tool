@@ -59,10 +59,11 @@ purely to avoid double-editing (that concern no longer applies to #371,
 which already shipped in its own commit). The former #379 is now part of #378 and shares its
 convention-discovery and commit rhythm.
 
-**Route differs across the remaining items.** #377 and #378 are `plan`
-(citation sweeps and an authority line each need a paper trail; #378 now
-includes the former #379, which carried an explicit `Escalate to plan if:` for
-per-entry confirmation). #371, also `direct`, shipped 2026-09-17.
+**Route differs across the remaining items.** #377 is `plan` (its authority
+line needs a paper trail). #378 is `direct` since 2026-11-14: one section in
+`DIRECTIVES.md` with citations, and it includes the former #379, whose
+`Escalate to plan if:` for per-entry confirmation still applies. #371, also
+`direct`, shipped 2026-09-17.
 
 ## Choose this arc when
 

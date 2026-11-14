@@ -306,9 +306,10 @@ lens exists to produce; keep it in sync as entries land or are added):
   scope-bound audit converges instead of grinding on correctly-deferred
   adjacent findings), **#181** (proportionality detection at create time; also
   `heuristic-tuning`),
-  **#262** (surface a non-gating detail-readiness recommendation after repeated
-  bare-plan audits, so a user advances to the artifact that can resolve the
-  remaining implementation contracts rather than re-sampling the same plan).
+  **#262** (one static bare-stage report line saying detail-owned remedies are
+  expected and `detail` is the next step, so a user advances to the artifact
+  that can resolve the remaining implementation contracts rather than
+  re-sampling the same plan).
 - **gate-signal:** the shipped calibrated impact-aware convergence policy
   (high-impact findings and high/critical severities block; evidence-qualified
   low-impact medium findings may be demoted), the settled four-loop blocking
@@ -364,11 +365,11 @@ competes for the next session?"
 |---|---|---|
 | **Now — bug triage** | `BUG_BACKLOG.md` | Work from the live BUG section and its triage rules; the earlier bounded direct batch is no longer the current queue. |
 | **Roadmap — Integration** | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
-| **Next (evidence-gated)** | `quality-bench-01` (#216), position 01 | Preserve its noise-floor question, but first perform one disposable current-model observation rather than build its runner/CLI. A fresh plan is justified only if that exercise demonstrates a durable replay surface is needed. `roadmap-05` (#208) remains unauthored until a named framework-specific roadmap need exists. |
+| **Next (evidence-gated)** | `roadmap-05` (#208) | Remains unauthored until a named framework-specific roadmap need exists. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | #194 on #193 · `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | #353 Integration-compatible artifact-contention handoff · `security-check-command` (10 steps, open design issues in-plan) · #173 incremental completeness cache (deferred; #299 coverage-replay withdrawn 2026-08-20) · Bucket D consolidation #79–#81 | #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; the rest are edge / dormant / evidence-gated — and #79's claims need re-verification before any merge |
+| **Parked / defer** | #216 quality benchmark (`quality-bench-01`; one disposable observation, run only when a named A/B question needs it) · #353 Integration-compatible artifact-contention handoff · `security-check-command` (10 steps, open design issues in-plan) · #173 incremental completeness cache (deferred; #299 coverage-replay withdrawn 2026-08-20) · Bucket D consolidation #79–#81 | #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; the rest are edge / dormant / evidence-gated — and #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
 
@@ -419,8 +420,7 @@ the highest-leverage move (e.g. a `heuristic-tuning` unlock).
 - **Theoretical (decide/investigate first):** **#71** (refusal-token shape —
   the one theoretical item in a top tier),
   **#111** (orphaned-deliverable identity model), **#110** (claim-vs-delivery
-  FP rate), **#87** (test-authoring gate hardening), **#141** (jira story-size floor vs. the
-  configurable ceiling), **#210** (keep/cut the purity pass — passive
+  FP rate measurement), **#210** (keep/cut the purity pass — passive
   observation only; do not schedule a dedicated audit), **#381** (lesson-confidence threshold measurement), plus **#499**
   and **#504** (each `decision-needed`). One more carries a
   **spike-gated front** — theoretical before its concrete build: **#66**
@@ -2452,12 +2452,13 @@ evidence. It is not an active implementation contract.
   which plans shipped. Cut to trailers plus `list --archived` 2026-11-14.
 - **Status:** not started.
 
-**#202 — Claim-to-test coverage: every acceptance criterion should name a test**
+**#202 — Acceptance-criterion test references: each criterion names its test, and the check verifies the test exists**
 
-- **What:** compare a step's declared `## Acceptance criteria` against its
-  `## Tests` roster and the test functions actually present, and surface
-  criteria with no corresponding case.
-- **Why — measured this session, not hypothetical.** Four of the eight executed
+- **What:** the run-grade detail format requires each `## Acceptance criteria`
+  bullet to name the test function(s) that assert it, and a deterministic check
+  verifies that every named test function exists in the repo. A criterion with
+  no named test, or naming a test that does not exist, is surfaced.
+- **Why — measured, not hypothetical.** Four of the eight executed
   steps shipped **a named guarantee with no assertion behind it**, and every one
   passed the test-authoring gate, its step gate, and the full 6,749-test suite:
   - step 2: an assertion that passed **vacuously** (the fixture carried no
@@ -2469,49 +2470,57 @@ evidence. It is not an active implementation contract.
   - step 7: an acceptance criterion naming **three** side effects the guard must
     precede, with tests asserting **two**.
   All four are the same shape: *a claim in the detail with no test behind it.*
-- **Why the tool can check this at all:** both halves are already
-  machine-readable and required by the run-grade contract. Nothing compares
-  them today.
-- **Implementation recommendation:** model it on
-  `review.py:detect_claim_vs_delivery`, which already does claim-vs-delivery for
-  *deliverables* — this is the same shape applied to *assertions* for
-  run-grade detail. Deterministic, no Claude. **Ship it advisory (`info`),
-  not blocking**, matching the existing
-  fuzzy claim matcher's own calibration (*"fuzzy prose matching can
-  false-positive, so this never blocks"*); promote only on measured precision.
+- **Why a binary check and not a name matcher.** Fuzzy matching between
+  criterion prose and test names is a semantic proxy: operators learn to ignore
+  it, and it would not have caught the vacuous or under-asserted cases above
+  (only mutation does). The observable the tool can assert is binary: the
+  criterion names a test, and that test function exists. Whether the test
+  asserts the criterion stays with the human and the reviewer.
 - **Scope note: there is no longer a `refactor` pre-change contract to cover.**
   A sibling entry once proposed verifying that a refactor step's tests pass
   against **pre-change** code. It was measured and **withdrawn 2026-07-30** —
   81–89% of real refactor steps cannot satisfy it for legitimate reasons (see
   `CLAUDE.md` § "Withdrawn: the per-`change_type` test-ordering contract").
   This entry stands on its own and must **not** be widened to revive it.
-- **Risks / fallout:** naming-level matching is fuzzy in both directions — one
-  test can satisfy several criteria, and one criterion can need several tests.
-  Report unmatched criteria, never "excess" tests.
+- **Risks / fallout:** the format requirement changes `DETAIL_FORMAT.md`, so
+  the format version and its legacy-bundle handling are decided explicitly in
+  the plan, not left implicit. One test can legitimately be named by several
+  criteria, and one criterion can name several tests; report only criteria with
+  a missing or non-existent reference, never "excess" tests.
 - **Dependencies:** none.
-- **Effort:** medium — the extraction is easy, the matching heuristic and its
-  precision calibration are the work.
+- **Effort:** medium — the format-contract change, the extraction of named
+  tests, and the existence check; no matching heuristic and no precision
+  calibration.
 - **Scope contract:**
-  - **Outcome:** an advisory finding per acceptance criterion with no
-    identifiable test case.
-  - **In scope:** the run-grade claim/roster extraction, the matcher, its
-    registry entry, and tests.
-  - **Out of scope / Non-goals:** blocking on the finding before precision is
-    measured; reviving any refactor pre-change ordering check; mutation testing; coverage
-    thresholds; judging test *quality* beyond existence.
-  - **Allowed behavior changes:** one new advisory finding source.
+  - **Outcome:** a finding per acceptance criterion that names no test, or
+    names a test function that does not exist.
+  - **In scope:** the `DETAIL_FORMAT.md` requirement (with its format-version
+    handling), the detail authoring prompt line, the run-grade
+    criterion/test-reference extraction, the existence check, its registry
+    entry, and tests.
+  - **Out of scope / Non-goals:** deliberately not a fuzzy name or prose
+    matcher between criteria and tests (a semantic proxy that operators learn
+    to ignore, and one that would not catch vacuous or under-asserted cases);
+    judging whether a named test really asserts the criterion; mutation
+    testing; coverage thresholds; reviving any refactor pre-change ordering
+    check; flipping any exit code.
+  - **Allowed behavior changes:** one new finding source, and the
+    detail-format requirement that criteria name their tests.
   - **Allowed reorganization:** none.
-  - **Verification:** a step whose criterion has no test is flagged; a step whose
-    criteria are all covered is silent; the finding never flips an exit code.
-  - **Stop / defer:** if precision is poor enough that operators learn to ignore
-    it, stop and report the rate rather than tuning indefinitely — a
-    always-ignored advisory is worse than none.
-- **Approach:** `plan-tool` — the matching heuristic is an open design call.
+  - **Verification:** a criterion naming no test is flagged; a criterion naming
+    a non-existent test function is flagged; a step whose criteria all name
+    existing tests is silent; the finding never flips an exit code.
+  - **Stop / defer:** if the format requirement forces churn across existing
+    bundles that the version handling cannot absorb, stop and report rather
+    than adding a matcher.
+- **Approach:** `plan-tool` — the format-version handling is the open design
+  call.
 - **Quality:** `audit-coverage` — closes the gap between what a step promises
   and what it proves.
-- **Origin:** 2026-07-30, from a 15-mutation spot-check over this session's
+- **Origin:** 2026-07-30, from a 15-mutation spot-check over a session's
   shipped guards (14 caught, 1 unasserted guarantee) plus four review findings
-  of the same shape.
+  of the same shape. Reshaped 2026-11-14 from a fuzzy claim-to-test matcher to
+  the binary named-test check.
 - **Status:** not started.
 
 **#208 — `roadmap` arc position 05: framework lenses** *(anchor entry for the `roadmap-NN-*` seed group)*
@@ -2626,13 +2635,18 @@ evidence. It is not an active implementation contract.
 
 **#216 — A quality benchmark for plan-tool's own output, floors first** *(anchor entry for the `quality-bench-NN-*` seed group)*
 
-- **What:** a corpus replay (note: a `plan-tool bench {run,report}` group already
-  exists for backend × task-family comparison, and this replay and its noise
-  floor are not built there) that replays a fixed corpus of seeds through
-  an authoring stage, stores the artifacts, and reports metric deltas between
-  two labelled runs **against each metric's own measured rerun spread**. The
-  point is to make "did this change help?" answerable over time. The arc
-  deliberately ships **no model-scored metric in position 01**.
+- **What:** one disposable observation of each metric's own rerun spread,
+  run **only when a concrete "did change X help?" question exists** that the
+  spread would let someone answer. A corpus replay that stores artifacts and
+  reports deltas between labelled runs against that spread (note: a
+  `plan-tool bench {run,report}` group already exists for backend × task-family
+  comparison, and this replay is not built there) is a possible later route,
+  not current scope. The arc deliberately ships **no model-scored metric in
+  position 01**.
+- **Trigger — no question named today.** Measurement is worth doing only when
+  a decision consumes it. Nothing consumes it now: position 02 is unauthored
+  and no pending A/B question is named, so the observation is **not scheduled**
+  and the entry is off the board's "Next" lane. A named question promotes it.
 - **Why floors come first, and why this entry is not #164 again.** Nobody
   knows what any of these metrics do when *nothing changes*. Measured on
   `roadmap` stage 2, 2026-08-01, three runs on byte-identical input (all three
@@ -2676,18 +2690,19 @@ evidence. It is not an active implementation contract.
   01 establishes the corpus and noise floors needed before confidence claims
   are generalized or calibrated. This order keeps risk (change impact),
   confidence (evidence support), and benchmark evidence distinct.
-- **Re-triage (2026-08-28):** retain position 01's noise-floor question, but
-  withdraw its current three-step plan. Even after its earlier scope reset,
-  that plan builds a corpus format, persisted record, runner, CLI, and
-  documentation before one current-model exercise demonstrates that a durable
-  replay surface is needed. First run one disposable two-item, serial stage-2
-  observation with an explicit Codex backend and record only the three factual
-  measurements. It must create no new command or reusable storage. A fresh
-  bare plan is justified only if that observation cannot answer the question or
-  demonstrates a repeated durable replay need. It receives completed risk and
-  confidence surfaces only as context for what later claims might concern; it
-  does not score either field, turn either into a decision rule, or merge their
-  contracts. Renderer consolidation (the discarded `#316`) stays out.
+- **Re-triage (2026-08-28; reshaped 2026-11-14):** position 01's noise-floor
+  question is retained and its three-step plan is withdrawn: that plan builds a
+  corpus format, persisted record, runner, CLI, and documentation before one
+  current-model exercise shows a durable replay surface is needed. The
+  observation is one disposable two-item, serial stage-2 run with an explicit
+  Codex backend that records only the three factual measurements. It creates no
+  new command or reusable storage, and it runs only once the trigger above
+  fires. A fresh bare plan is justified only if that observation cannot answer
+  the question or shows a repeated durable replay need. It receives completed
+  risk and confidence surfaces only as context for what later claims might
+  concern; it does not score either field, turn either into a decision rule, or
+  merge their contracts. Renderer consolidation (the discarded `#316`) stays
+  out.
 - **Prior scope reset (2026-08-27; historical):** the seven-step
   `quality-bench-01-corpus-and-noise-floor` plan received repeated
   completeness-stage `split=1` then `split=2` assessments (for example,
@@ -2697,9 +2712,23 @@ evidence. It is not an active implementation contract.
   three-step smallest-proof feasibility effort, not a reusable benchmark
   subsystem. That conclusion reduced the plan but did not make its runner and
   CLI necessary; the plan is now historical, not the selected scope.
-- **Current effort:** a single low-cost observation. Any future verb group,
-  metric registry, artifact store, or data-contract row needs fresh evidence
-  from that observation rather than inheriting this entry's old product shape.
+- **Current effort:** a single low-cost observation, run only on the trigger
+  above. Any future verb group, metric registry, artifact store, or
+  data-contract row needs fresh evidence from that observation rather than
+  inheriting this entry's old product shape.
+- **Current scope contract (the observation):**
+  - **Outcome:** the three factual rerun measurements for one two-item stage-2
+    replay, recorded against the named A/B question that triggered the run.
+  - **In scope:** one disposable serial run and a short evidence note.
+  - **Out of scope / Non-goals:** deliberately not a command, runner, corpus
+    format, artifact store, or `DATA_CONTRACT.md` row (a durable surface needs
+    the observation's evidence first); deliberately not running without a named
+    question (nothing would consume the result); any model-scored metric.
+  - **Allowed behavior changes:** none.
+  - **Allowed reorganization:** none.
+  - **Verification:** the note states the A/B question, the backend, and the
+    three measurements.
+  - **Stop / defer:** with no named question, do nothing.
 - **Risks:** the corpus is a **recurring Claude spend** — the roadmap smoke run
   was ~$2.50 for two stages, so R reruns × N items is the whole budget
   conversation, and a floor needs R > 1 by construction. A corpus that drifts
@@ -2714,8 +2743,8 @@ evidence. It is not an active implementation contract.
   `docs/history/backlog-decisions.md`), the `gate_violations` run-log event (shipped
   2026-08-02), which makes gate-attempt metrics diagnosable rather than merely
   countable.
-- **Future capability boundary** (not current scope; a later evidence-backed
-  seed pins its own):
+- **Future capability boundary** (not current scope, not on the board; a later
+  evidence-backed seed pins its own):
   - **Outcome:** a repeatable corpus replay that reports metric deltas between
     two labelled runs against each metric's measured rerun spread.
   - **In scope:** the `bench` verb group, the corpus directory format and its
@@ -2748,7 +2777,8 @@ evidence. It is not an active implementation contract.
 - **Origin:** 2026-08-01, user request for a systematic LLM-judged quality
   suite to track the impact of changes over time; re-ordered floors-first
   against the rerun-variance data the same session produced.
-- **Status:** no active position-01 seed or plan. The withdrawn plan and its
+- **Status:** parked until a concrete A/B question names a consumer for the
+  measurement. No active position-01 seed or plan. The withdrawn plan and its
   audit reports preserve the rejected runner/CLI shape as history. Position 02
   remains unauthored until a future, reviewed floor record exists.
 
@@ -2871,7 +2901,7 @@ evidence. It is not an active implementation contract.
   confirmation proof remains input to a later retention redesign, not a
   solution to it.
 
-**#395 — A selector-era candidate lineage on an enrolled roadmap has no discard route**
+**#395 — Selector-era candidate lineage has no discard route: check whether any enrolled roadmap holds one**
 
 - **What:** `--reject-candidate` and `--discard-candidate` release only an active
   *batch* candidate: `roadmap_candidate_review.py:_release_active_candidate`
@@ -2887,51 +2917,68 @@ evidence. It is not an active implementation contract.
   admission slot for the roadmap's life. While it sits unpromoted on the current
   accepted head it refuses enrolled decision settlement and the ledger-batch
   route, both as `unpromoted-candidate-lineage`.
-- **Why now:** the exposure is legacy-only and matters when a ledger-less or
+- **Why now:** the exposure is legacy-only and matters only when a ledger-less or
   freshly migrated roadmap holds an unfinished selector-era candidate.
-  Ledger-batch candidates release through the routes above.
-- **Outcome:** an operator can abandon a stalled, unpromoted selector-era candidate
-  lineage on an enrolled roadmap, freeing the one candidate-admission slot, without
-  weakening the "one admission per roadmap" invariant that protects a lineage still
-  in progress.
-- **Out of scope / Non-goals:** any change to `promote_review_seal` or the
+  Ledger-batch candidates release through the routes above. No evidence yet
+  shows that any enrolled roadmap holds such a lineage, so the first step is to
+  check rather than design.
+- **Outcome:** a recorded answer to "does any enrolled roadmap hold a
+  selector-era candidate lineage (an admission with `root_version_id` of
+  `None`)?". If none does, the selector-era route is retired or a hand recovery
+  for it is documented. If one does, that lineage is recovered by hand and the
+  entry closes with the recovery recorded.
+- **In scope:** inspecting the admission file of each enrolled roadmap the owner
+  names; then either retiring the selector-era route or documenting the hand
+  recovery (for example in `docs/how-to/roadmap.md`).
+- **Out of scope / Non-goals:** deliberately not a new discard route, and
+  deliberately not "stalled"-versus-slow semantics or an operator confirmation
+  for them (the exposure is legacy-only, so a designed state machine is
+  disproportionate); any change to `promote_review_seal` or the
   sealed-promotion boundary; discarding a lineage that has already produced a
   sealed, promotable review; the batch reject and discard routes; widening the
   narrower `unpromoted-candidate-lineage` predicate the batch route uses.
-- **Approach:** `plan-tool` — needs a design decision (what counts as "stalled"
-  versus merely slow, whether discard requires an explicit operator confirmation
-  comparable to `--reopen-feedback`'s, or whether to retire the selector-era route
-  instead, since it is legacy) before a bounded implementation.
+- **Allowed behavior changes:** retiring the selector-era route, only if the
+  check finds no lineage; otherwise none.
+- **Allowed reorganization:** none.
+- **Verification:** the entry states which roadmaps were checked and what each
+  admission held; a retirement is covered by a test that the retired route is
+  refused with an actionable message.
+- **Stop / defer:** if a selector-era lineage exists on a roadmap the owner
+  cannot inspect, leave the entry open and record the unknown.
+- **Approach:** direct — an inspection, then either a small retirement or a
+  documented hand recovery.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** 2026-09-18, `roadmap-decision-settlement` bare-plan audit round 5,
   finding `enrolled-lineage-block-exit`; narrowed 2026-09-23 when
   `roadmap-versioned-feedback-revision-chain` shipped reject and discard for batch
-  candidates.
+  candidates; reshaped 2026-11-14 from a discard-route design to a check-then-retire
+  decision.
 
-**#396 — Decision-settlement's receipt read-back proof has no operator-facing entry point**
+**#396 — Decision-settlement's receipt read-back proof has no operator-facing entry point — closed as a decision: no `--view`**
 
 - **What:** `roadmap_decision_settlement_receipt.py:decision_settlement_receipt_proves_completion`
-  (and its helpers) — fully built and tested — has no caller anywhere outside
-  its own module and its tests, and no `--view` or status command exposes it
-  (`roadmap --view` offers summary, walk, ledger, index, seeds, and html).
-  `roadmap-decision-settlement`'s own plan schedules no such step (step 7 is
-  documentation-only).
-- **Why now:** found 2026-09-18 during `roadmap-decision-settlement`'s
-  post-run `/code-review` loop (round 3). Likely intentional — the plan's own
-  design treats receipt visibility as living in git history rather than a
-  dedicated view — but nothing records that as a deliberate choice, so the
-  gap was previously undocumented.
-- **Outcome:** an operator can ask, for a given roadmap, whether a named
-  decision-settlement receipt still proves its settlement completed, without
-  reading git history or writing a throwaway script against the internal
-  function.
-- **Out of scope / Non-goals:** any change to the read-back proof rule
-  itself; a general-purpose evidence-browsing UI beyond this one predicate.
-- **Approach:** `plan-tool` — likely a `--view decision-settlements` (or
-  similar) addition to `cli/roadmap_cmd.py`, following the shape of the
-  existing `--view` choices; small enough to scope directly once picked up.
+  (and its helpers) has no caller outside its own module and its tests
+  (checked 2026-11-14: only `tests/test_roadmap_decision_settlement_receipt.py`
+  and `tests/test_roadmap_decision_settlement_enrolled.py` call it), and no
+  `--view` or status command exposes it (`roadmap --view` offers summary, walk,
+  ledger, index, seeds, and html).
+- **Decision (2026-11-14):** the function is a test oracle for the read-back
+  proof rule, and receipt visibility lives in git history by the
+  `roadmap-decision-settlement` plan's own design. No operator view is built.
+  An operator who asks for one is the trigger to reopen, with the question they
+  need answered.
+- **Outcome:** none to build. The record of this decision replaces the former
+  undocumented gap.
+- **Out of scope / Non-goals:** deliberately not a `--view decision-settlements`
+  or any status command (no operator has asked, and the plan placed visibility
+  in git on purpose); any change to the read-back proof rule itself; a
+  general-purpose evidence-browsing UI.
+- **Approach:** none — decision recorded. Move this record to
+  `docs/history/backlog-decisions.md` and remove the entry at the next queue
+  cleanup.
 - **Origin:** 2026-09-18, `roadmap-decision-settlement` post-run `/code-review`
-  round 3.
+  round 3; decided 2026-11-14 in the value review.
+- **Status:** closed — decided not to build.
 
 **#525 — Validate copied plan-tool skills in the current project so stale instructions are visible**
 
@@ -2946,8 +2993,8 @@ evidence. It is not an active implementation contract.
   check makes stale copied instructions visible before they guide work.
 - **Route:** direct.
 - **Readiness:** decision-needed — select the existing validation surface and
-  when it runs; coordinate with #403's doctor spike without requiring a new
-  doctor command or its broader readiness inventory.
+  when it runs; #403 builds no doctor command, so this check ships on the
+  existing skill-install surface without a broader readiness inventory.
 - **Tier:** experienced.
 - **Principle:** deterministic-non-determinism.
 - **Effort:** small — project installation discovery, byte comparison against
@@ -2956,7 +3003,8 @@ evidence. It is not an active implementation contract.
   describe a difference without judging instruction quality or overwriting it.
   Missing packaged sources must report inability to compare, not a match.
 - **Dependencies:** no implementation dependency; coordinate ownership with
-  #403, which already considers stale copied skills among its candidate checks.
+  #403, which owns the doctor-reference cleanup and assigns stale copied skills
+  to this entry.
 - **Scope contract:**
   - **Outcome:** an operator can determine whether a copied plan-tool skill in
     the current project matches the installed package's corresponding files.
@@ -2975,111 +3023,64 @@ evidence. It is not an active implementation contract.
     stale directives only, missing companion/source, both project skill roots,
     the Codex copy default, and symlink exclusion. Verify no files change.
   - **Stop / defer:** resolve the validation-surface choice before implementation;
-    file broader readiness checks separately or leave them with #403.
+    file broader readiness checks as separate entries (#403's revisit condition).
 - **Origin:** explicit owner request, 2026-11-12, during project model
   configuration design.
 - **Status:** not started.
 
-**#403 — Spike: define a read-only `plan-tool doctor` readiness contract**
+**#403 — `plan-tool doctor`: fix the stale `docs/GATES.md` reference and file readiness checks individually**
 
-- **What:** investigate and design a small, reliable `plan-tool doctor` command
-  that tells an operator whether the local installation and current repository
-  are ready for ordinary plan-tool work. The spike inventories current checks,
-  their owners, their cost, their failure modes, and their actionable repair
-  routes before selecting the command's first released check set and output
-  schema. It then produces a reviewed recommendation or a tightly scoped seed
-  for implementation; it does not ship a speculative kitchen-sink command.
-- **Why:** `docs/GATES.md` already names `plan-tool doctor` as a deferred
-  pre-everything gate, but the CLI has no doctor subcommand. Operators must
-  separately discover whether the installed package contains the required
-  bundled skill/directives, whether a configured skill installation still
-  resolves to that package, and whether `.gitignore` excludes plan-tool state
-  that must be shared or fails to exclude known local runtime state. Some
-  narrow primitives already exist, including
-  `cli.gitcommit.ignored_recommended_paths` for durable `.plan-tool` files and
-  `cli.skill_cmd`'s packaged-source/destination classification, but there is no
-  coherent read-only readiness report or ownership boundary for assembling
-  them.
-- **Spike questions:**
-  - Which existing checks can be reused unchanged, and which would need a new
-    read-only primitive rather than importing a mutating command handler?
-  - Which conditions are universal prerequisites, and which are relevant only
-    when an operator uses a particular feature such as installed skills,
-    roadmap, a backend, Jira, or a commit-capable workflow?
-  - How should doctor distinguish `pass`, `advisory`, `not-applicable`, and
-    `cannot-determine` so a missing optional integration never reads as an
-    installation failure?
-  - Which Git-ignore rules concern plan-tool-owned paths that are known to be
-    shared or local, without expanding into the general `.gitignore` audit
-    already tracked by #318?
-  - How should the command verify a skill install: bundled sources exist,
-    symlinks resolve to the installed package, copied bytes still match, and
-    the router's shared directives are present, while respecting project and
-    user skill roots?
-  - What JSON and terminal contracts let a human, an installed skill, and a
-    CI wrapper consume the same report without making doctor a policy gate?
-  - Does the stale `docs/GATES.md` reference describe the selected command, or
-    should the documentation instead point to a narrower existing surface?
-- **Candidate check inventory for evaluation:** packaged version and required
-  resource availability; repository/worktree discovery; known durable
-  `.plan-tool` paths accidentally ignored; known local plan-tool runtime paths
-  accidentally unignored; skill-router and shared-directives installation
-  state; supported configured backend executable availability without a model
-  call; selected roadmap lifecycle files that are unreadable or malformed;
-  and the presence of a usable Git executable. The spike must justify every
-  selected check from an existing command or documented operator outcome; it
-  may recommend deferring any candidate that lacks a clear owner or remedy.
+- **What:** no `plan-tool doctor` command is built. Three bounded actions replace
+  the former spike: (1) fix or remove the `plan-tool doctor` line in
+  `docs/GATES.md` § "Correctness checks (shipped, follow-ups deferred)", which
+  names a unified pre-everything gate the CLI does not have; (2) ship the
+  copied-skill staleness check as #525 on the existing skill-install surface
+  (`cli.skill_cmd`), not on a new command; (3) file each further readiness
+  check as its own backlog entry when an operator observes the need.
+- **Why:** the entry was triggered by one incident (a persistent local writer
+  lock that needed a precise `.gitignore` rule), and its candidate inventory
+  (version and resources, worktree discovery, ignore rules, skill state,
+  backend executable, malformed roadmap files, Git executable) was a kitchen
+  sink with no shared owner, remedy, or observed demand. One observed check
+  does not justify a top-level command, status vocabulary, or JSON contract.
+  Narrow primitives already exist: `cli.gitcommit.ignored_recommended_paths`
+  for durable `.plan-tool` files and `cli.skill_cmd`'s packaged-source and
+  destination classification.
+- **Revisit condition:** reopen a `doctor` design only once three or more
+  individually owned checks exist, each with a stable remedy, so the shared
+  report shape is drawn from real checks. The general `.gitignore` audit stays
+  #318.
 - **Scope contract:**
-  - **In scope:** current-code and documentation inventory; check ownership
-    map; selected initial check set; status vocabulary; terminal and JSON
-    report proposal; remediation text; false-positive and platform analysis;
-    direct reuse candidates; and a narrow implementation seed or a recorded
-    decision not to proceed.
-  - **Out of scope / Non-goals:** changing `.gitignore` rules across arbitrary
-    repositories; modifying skill installations; authenticating or invoking a
-    model provider; changing project state, Git state, roadmap artifacts,
-    baselines, seeds, receipts, or run logs; a general security scanner;
-    broad environment inventory; and implementing doctor before the check set
-    is selected.
-  - **Allowed behavior changes:** none during the spike. A follow-up may add
-    one read-only command only after its inputs, statuses, and remedies are
-    explicitly selected.
-  - **Verification:** reproduce the candidate checks in fixtures covering a
-    healthy repository, ignored durable state, visible local runtime state,
-    missing packaged integrations, valid and dangling skill symlinks, stale
-    copied skill content, an unavailable optional backend, a non-Git directory,
-    and platform path differences. Verify that every proposed doctor check is
-    read-only and that every non-pass result names a specific, safe next step
-    or reports `cannot-determine`.
-  - **Stop / defer:** if the inventory cannot identify a small shared set of
-    checks with stable remedies, document the existing command-specific checks
-    and do not introduce a top-level doctor command. Any generic ignore-file
-    linter remains #318.
-- **Existing logic to evaluate for reuse:**
-  `plan_tool.cli.gitcommit.path_is_gitignored` and
-  `ignored_recommended_paths`; `plan_tool.cli.skill_cmd`'s bundled-source and
-  destination classification; repository-root resolution in
-  `plan_tool.cli.context`; backend/package discovery in `plan_tool.backend`;
-  command registration in `plan_tool.cli.parser` and `plan_tool.cli.app`; and
-  the existing read-only `status`, `validate`, `convergence`, and roadmap-view
-  output conventions. The resulting doctor reader must not call mutating
-  helpers merely because they contain nearby inspection code.
+  - **Outcome:** `docs/GATES.md` no longer names a doctor command that does not
+    exist (or names it as deliberately deferred with the revisit condition),
+    and the doctor-related readiness checks have owners: #525 for skill
+    staleness, individual entries for anything else observed.
+  - **In scope:** the `docs/GATES.md` line; the #525 cross-reference; filing
+    individual check entries as observed.
+  - **Out of scope / Non-goals:** deliberately not a `plan-tool doctor`
+    command, status vocabulary, or JSON report now (one incident does not
+    support a framework; reopen at three owned checks); deliberately not a
+    spike or inventory of the candidate list; changing `.gitignore` rules
+    across arbitrary repositories (#318); modifying skill installations;
+    authenticating or invoking a model provider; a general security scanner.
+  - **Allowed behavior changes:** none.
+  - **Allowed reorganization:** none.
+  - **Verification:** `docs/GATES.md` agrees with the CLI's actual subcommands
+    (`plan-tool --help` lists no `doctor`, and the doc does not claim one).
+  - **Stop / defer:** any readiness check without a clear owner or remedy stays
+    unfiled until observed.
 - **Risks / fallout:** an over-broad doctor can become a misleading release
-  gate, report machine-local optional tooling as failure, or duplicate checks
-  that should remain feature-specific. A check without a clear remedy creates
-  noise rather than readiness. The spike must keep the command advisory and
-  separate health facts from policy decisions.
-- **Dependencies:** related to #318's broad ignore-rule audit but does not
-  depend on it. The installed-skill entries #377–#378 are input to the skill
-  inventory; this spike does not reopen their shipped routing behavior.
-- **Approach:** `plan-tool` — the work spans CLI architecture, packaged
-  resources, Git semantics, skill installation, documentation, and a new
-  output contract. Start with a seed grounded in the inventory rather than a
-  direct implementation.
+  gate or duplicate checks that belong to the feature that owns them; the
+  revisit condition keeps that from being designed early.
+- **Dependencies:** #525 ships the skill-staleness check independently; related
+  to #318's broad ignore-rule audit but does not depend on it. The
+  installed-skill entries #377–#378 are not reopened.
+- **Approach:** direct — a one-line doc fix and bookkeeping.
 - **Origin:** 2026-09-21, a Integration roadmap run left a persistent local writer
   lock that needed a precise `.gitignore` rule, alongside questions about the
-  active plan-tool installation and installed skill readiness.
-- **Status:** not started; spike only.
+  active plan-tool installation and installed skill readiness; reshaped
+  2026-11-14 from a doctor-contract spike.
+- **Status:** not started.
 
 **#404 — Decide the completeness audit's intent-fidelity boundary**
 
@@ -3225,13 +3226,14 @@ evidence. It is not an active implementation contract.
 
 **#378 — Installed skills route discoveries outside a plan's intent, proportionality, or scope into the host repo's tracker**
 
-- **What:** give the installed shared reference one rule for a discovery the
-  driving session will not act on because it falls outside the plan's stated
-  intent, the proportionality bound, or the scope contract. The rule picks the
-  sink by the host repo's convention, checks for an existing record, writes a
-  minimum-content entry, commits it on its own, and reports it. Every directive
-  site that says "defer", "present separately", or "file it" without saying how
-  cites that rule instead of restating it.
+- **What:** one direct edit adds a single section to the installed shared
+  reference (`integrations/shared/DIRECTIVES.md`) for a discovery the driving
+  session will not act on because it falls outside the plan's stated intent,
+  the proportionality bound, or the scope contract. The section states four
+  things: the sink order, the ask-once fallback with an explicit "not filed"
+  report, an existing-record search before filing, and the entry's own commit.
+  Every directive site that says "defer", "present separately", or "file it"
+  without saying how cites that section instead of restating it.
 - **Absorbs #379 (merged 2026-11-14):** closing an already-addressed entry, as
   a subsection beside this entry's rule. Tier stays `architect`: it governs
   when a session may remove a record another author wrote. When a session
@@ -3318,61 +3320,47 @@ evidence. It is not an active implementation contract.
     scope) to <path>` and writes a stub whose `kept-by-impact` section records
     a scope expansion that already landed — a review item, not a deferral.
     #380 owns the tool side.
-- **Proposed defaults (2026-09-16; confirm or revise before `create`):**
-  1. **Triggers.** An `[out-of-scope-deferred]` finding; a finding declined
-     under the proportionality rule; an out-of-scope sibling from check 0; a
-     review or reconcile-tail remainder kept out of the verdict or deferred on
-     an unavailable capability; a broader fix declined by the smallest-change
-     rule; a scope-guard stub's reverted records; a defect noticed in passing,
-     duplication included; a `plan-tool` defect found while driving another
-     repo; an exit-3 item. **Not a trigger:** an in-scope advisory tail, which
-     its saved report already retains.
-  2. **Sink, in order.** The host repo's stated convention (its instruction
+- **The section's four rules (reshaped 2026-11-14 from six defaults):**
+  1. **Sink, in order.** The host repo's stated convention (its instruction
      file, or a contributing or tracking doc); an existing forward-work and
      defect tracker pair such as `BACKLOG.md` / `BUG_BACKLOG.md`, choosing by
      "would a user filing this as an issue be right?"; the plan's own
      `## Deferred` for later scope or an open decision that belongs to that
-     plan; otherwise ask the user once. Unanswered in a headless run, the item
-     is listed in the final report under an explicit *Not filed — no tracker
-     identified* heading. Never create a tracker, or file into a
-     similarly named artifact with another purpose, without the user. A
-     `plan-tool` defect goes to `plan-tool`'s tracker, not the host's; with no
-     writable `plan-tool` checkout, surface it with the evidence needed to
-     file it.
+     plan. A `plan-tool` defect goes to `plan-tool`'s tracker, not the host's;
+     with no writable `plan-tool` checkout, surface it with the evidence needed
+     to file it.
+  2. **Ask once, else "not filed".** With no sink identified, ask the user
+     once. Unanswered in a headless run, the item is listed in the final report
+     under an explicit *Not filed — no tracker identified* heading. Never
+     create a tracker, or file into a similarly named artifact with another
+     purpose, without the user.
   3. **Existing record first.** Search by identifier and by vocabulary (check
      0's two searches) and extend a matching entry with the new provenance
      rather than duplicating it.
-  4. **Minimum content.** What was found; provenance (plan slug, command or
-     phase, report path and finding anchor, or commit); the fence that
-     excluded it, quoted — intent, proportionality, an explicit Non-goal, or a
-     later stage; evidence status (verified at HEAD with an anchor, or marked
-     unverified); and the host repo's entry format when it has one. No design
-     beyond what the evidence supports.
-  5. **When and how.** Recorded once classified and before the next
-     `plan-tool` invocation's pre-call commit, as its own tracker-only commit
-     and never inside a plan-correction batch. A chat message, handoff note,
-     or scratch file is not a record.
-  6. **Authority.** Recording belongs to the session and is reported by
-     location in the user-facing response. Deferring a material,
-     in-scope-looking finding that no explicit fence excludes, or accepting a
-     `kept-by-impact` expansion, is a scope decision that the existing
-     override rule surfaces first.
-- **Effort:** medium — one new reference section, citation edits in the nine
-  sections above plus the router pointers, and three hand-walk fixtures. No
-  code.
-- **Risks:** filing noise if the trigger list reads as "record every finding"
-  — default 1's advisory-tail exclusion is load-bearing; drift if sites
-  paraphrase the rule instead of citing it; misrouting in a repo with an
-  unusual convention, which default 2's ask-once fallback contains. (Touching
-  the Claude router's lines twice was a risk only while the router/reference
-  split, formerly #370, hadn't landed; it shipped 2026-09-16, so the routers
-  are already thin.)
+  4. **Own commit.** Record once classified and before the next `plan-tool`
+     invocation's pre-call commit, as its own tracker-only commit and never
+     inside a plan-correction batch. A chat message, handoff note, or scratch
+     file is not a record. The session reports each record by location.
+  The section applies to a discovery outside the plan's fence (an
+  `[out-of-scope-deferred]` finding, a finding declined under the
+  proportionality rule, an out-of-scope sibling from check 0, a broader fix the
+  smallest-change rule declines, a scope-guard stub's reverted records, an
+  exit-3 item, a `plan-tool` defect found while driving another repo). An in-scope advisory tail is not covered; its
+  saved report already retains it. Deferring a material, in-scope-looking
+  finding that no explicit fence excludes remains a scope decision that the
+  existing override rule surfaces first.
+- **Effort:** small to medium — one new reference section, citation edits in
+  the nine sections above plus the router pointers, and two hand-walk checks.
+  No code.
+- **Risks:** filing noise if the section reads as "record every finding" — the
+  advisory-tail exclusion is load-bearing; drift if sites paraphrase the rule
+  instead of citing it; misrouting in a repo with an unusual convention, which
+  the ask-once fallback contains.
 - **Dependencies:** none — the shared reference is the installed
   `DIRECTIVES.md` file, shipped 2026-09-16 as the skill-router-and-shared-reference
   plan (formerly tracked as #370); that plan's own Non-goals excluded
   directive content changes beyond relocating roadmap guidance. This item
-  edits the same files as #377 (and, before it shipped 2026-09-17, #371);
-  sequence after #377 if it is also taken.
+  edits the same files as #377; sequence after #377 if it is also taken.
 - **Outcome:** a session driving `plan-tool` through an installed skill
   reaches, from every site that defers, one rule that turns an out-of-scope
   discovery into a record in the host repo's own tracker or an explicit,
@@ -3382,7 +3370,12 @@ evidence. It is not an active implementation contract.
   citation in each section above); the router pointers as the shipped
   router/reference plan (formerly #370) leaves them; install and format tests
   only where the edits require it.
-- **Out of scope / Non-goals:** a command that detects or closes addressed
+- **Out of scope / Non-goals:** deliberately not a plan route (guidance text
+  with an explicit Verification, reviewed through the normal pull request at
+  `architect` tier, needs no plan decomposition); deliberately not the six
+  numbered defaults the entry first proposed (a required minimum-content
+  template and a separate authority default restate content the host's own
+  entry format and the existing override rule already carry); a command that detects or closes addressed
   entries; closing items in an external issue tracker; this repo's closure
   convention in `docs/TRACKING.md`; the scope guard's stub output (#380); seed-time
   source-entry reconciliation (#377 and the existing "Backlog-derived seeds"
@@ -3414,9 +3407,8 @@ evidence. It is not an active implementation contract.
     source checkout (extends the install test from the shipped
     router/reference plan, formerly #370).
   - A hand walk of the rule reaches a sink or an explicit "not filed" for
-    (a) a scratch repo with `BACKLOG.md` / `BUG_BACKLOG.md`, (b) a Integration-shaped
-    repo with no tracker and a backlog-named ideation file, and (c) one real
-    saved `[out-of-scope-deferred]` finding plus a synthetic scope-guard stub.
+    (a) a scratch repo with `BACKLOG.md` / `BUG_BACKLOG.md` and (b) a
+    Integration-shaped repo with no tracker and a backlog-named ideation file.
   - A hand replay of the closing rule reaches the right outcome on the three
     measured incidents: #337 (the plan-specific retention rule beats general
     removal), #315 (the sweep finds the arc-doc citation), and `2b0273cc`'s
@@ -3427,116 +3419,90 @@ evidence. It is not an active implementation contract.
 - **Stop / defer:** if sink selection cannot be stated without a tool-side
   key, ship the ask-once and "not filed" fallback and file the key as its own
   entry.
-- **Route:** `plan` — nine citation sites and an authority line whose paper
-  trail matters; the bare-plan gate catches a missed site or a mis-drawn
-  authority boundary before detail multiplies it.
+- **Route:** `direct` — guidance text in one reference file plus citations; a
+  missed site is caught by the binary citation check in Verification.
 - **Readiness:** `ready` — the router/reference split it depended on (formerly
   #370) shipped 2026-09-16.
 - **Tier:** `architect` — it changes the canonical directives every driving
   assistant follows.
-- **Iterate:** standard recipe. The seed is not yet authored.
-
-  ```bash
-  plan-tool create skill-backlog-capture --iterate -y --from-existing plan-seeds/skill-backlog-capture.md
-  plan-tool completeness-audit skill-backlog-capture --iterate --commit -y
-  plan-tool detail skill-backlog-capture --commit -y
-  plan-tool completeness-audit skill-backlog-capture --iterate --commit -y
-  plan-tool run skill-backlog-capture --commit -y --step N
-  plan-tool reconcile-code skill-backlog-capture --all
-  ```
 - **Origin:** 2026-09-16, a user-directed review of the installed skills and
   this backlog for orchestration-layer duties when work surfaces outside a
-  plan's intent, proportionality, or scope.
+  plan's intent, proportionality, or scope; reshaped 2026-11-14 to one direct
+  section.
 - **Status:** not started.
 
 ### B. Significant UX changes
 
-**#262 — Surface a detail-readiness advisory after repeated bare-plan audit churn**
+**#262 — Bare-stage report header: one static line that detail is the next step**
 
-- **What:** when a plan remains bare after several fresh completeness audits,
-  deterministic checks are clean, and no CRITICAL/HIGH conceptual-correctness
-  finding remains, emit one report and terminal advisory that the next useful
-  validation surface is step detail. The advisory names the qualifying bare-audit
-  count, the remaining findings/owning steps, and the detail command; it says
-  plainly that this is a stage-transition recommendation, **not** proof that the
-  plan is complete. A budget-limited or still-discovering audit remains
-  unconfirmed coverage, not a reason to hide the recommendation.
+- **What:** the bare-stage completeness report (the one that labels exact
+  detail coverage) carries one static line in its header: *"Remaining
+  detail-owned remedies are expected; with no HIGH/CRITICAL plan-correctness
+  finding, `detail` is the next step."* The line is fixed text. It counts
+  nothing, reads no audit history, and is not conditioned on how many bare
+  audits ran.
 - **Why:** a bare plan has no detail bundle for the audit to ground against, so
   repeated conceptual samples can keep discovering increasingly fine
-  implementation contracts. The retired #231 planning session reached eight
-  bare-plan audits; initial high-level gaps were resolved, but later MEDIUM
-  findings were schema, timestamp, event-history, and rendering choices that
-  step details are designed to pin. The existing stage bars correctly preserve
-  correctness findings; they do not tell the operator that further bare-plan
-  sampling now has lower value than authoring detail.
-- **Effort:** medium — this is a cross-plan audit/report policy with history
-  filtering, stable report/JSON rendering, CLI summary copy, and fixture
-  coverage; it must not be an uncalibrated counter hidden in a prompt.
-- **Risks / fallout:** a premature recommendation could teach users to defer a
-  genuinely unsound design into detailed prose, while an over-strict predicate
-  recreates the current silent churn. Audit histories include legacy and
-  checkpoint sidecars, so the counter must use only eligible final
-  completeness reports and must degrade to no recommendation when the evidence
-  is absent. Copy must not imply a changed exit code, bar, or pass/fail verdict.
-- **Dependencies / related:** the settled bare-vs-detail convergence bar. this
-  item consumes the shipped stage facts without adding a second blocking rule.
+  implementation contracts. The need is mostly covered already: the bare-stage
+  bar does not block on `plan-completeness` medium findings, the
+  severity-aware low-yield exit exists, the `bare_mechanism_findings` advisory
+  exists, and `CLAUDE.md` already says a confirmed-dry re-audit plus a fresh
+  unchanged snapshot is enough to proceed to `detail`. What is missing is the
+  same sentence at the point where an operator reads a bare-stage report.
+- **Cut 2026-11-14 (do not re-open without new evidence):** a history-counting
+  policy (the qualifying bare-audit count, saved-history eligibility filtering,
+  a JSON advisory payload) and its plan route. Its only evidence was one
+  retired planning session (n=1, the #231 plan's eight bare-plan audits), and
+  an uncalibrated counter over legacy and checkpoint sidecars is a
+  maintenance cost the static line avoids.
+- **Effort:** small — one header line in the report renderer, and a test that
+  the line renders on a bare-stage report and not on a detail-stage report.
+- **Risks / fallout:** a fixed line could teach users to skip a genuinely
+  unsound design into detailed prose; the HIGH/CRITICAL condition in the line
+  states the exception, and the existing correctness findings are unchanged.
+  Copy must not imply a changed exit code, bar, or verdict.
+- **Dependencies / related:** the settled bare-vs-detail convergence bar; this
+  item consumes the shipped stage facts without adding a blocking rule.
   Narrowing the bare prompt (the discarded #241) and a separate
-  implementation-time finding class (the discarded #139) are not a substitute
-  for telling the operator when detail is the better next artifact.
-  The shipped plan-mass snapshot (`PlanMass`, `DATA_CONTRACT.md`) provides
-  supporting evidence but must not become a growth threshold.
+  implementation-time finding class (the discarded #139) are not a substitute.
 - **Scope contract:**
-  - **Outcome:** eligible bare-plan audits render a deterministic,
-    recommendation-only detail-readiness signal with its evidence and a precise
-    next command; ineligible audits render nothing new.
-  - **In scope:** `plan_tool/review_persistence.py` history readers and saved
-    audit metadata, `plan_tool/completeness_report.py` report/JSON display,
-    `plan_tool/cli/completeness_cmd.py` terminal summary, relevant CLI/report
-    fixtures, and user-facing CLI documentation.
-  - **Out of scope / Non-goals:** changing conceptual finding severity or
-    source; suppressing, auto-applying, or reclassifying findings; modifying
-    `--audit-passes`; changing the bare/detail blocking bars or exit codes;
-    automatically invoking `detail`; and adding a plan-mass or audit-count gate.
-  - **Allowed behavior changes:** one informational report/terminal advisory
-    and, if needed for machine consumers, a clearly non-blocking JSON advisory
-    payload. Existing audit verdicts, findings, and exit codes stay unchanged.
-  - **Allowed reorganization:** none beyond a small pure eligibility/rendering
-    helper shared by the report and terminal surfaces.
-  - **Verification:** fixtures cover (a) an eligible sequence of final bare
-    reports with only MEDIUM-or-lower correctness findings, (b) a HIGH/CRITICAL
-    correctness finding suppressing the signal, (c) a completed or partial
-    detail bundle suppressing it, (d) checkpoint/legacy/unreadable reports not
-    inflating the count, and (e) budget-limited coverage retaining its existing
-    unconfirmed warning beside—not replaced by—the advisory. Assert unchanged
-    return codes and blocking JSON fields.
-  - **Stop / defer:** if replay across saved histories shows the predicate is
-    either nearly universal or never useful, record the measurement and close
-    this as a no-op rather than tuning thresholds to the retired #231 planning
-    session.
-- **Approach:** `plan-tool` — policy, persistence/history selection, two render
-  surfaces, JSON compatibility, and calibration require a scoped plan rather
-  than a direct copy edit.
+  - **Outcome:** a bare-stage completeness report states, in one fixed line,
+    that detail-owned remedies are expected and that `detail` is the next step
+    absent a HIGH/CRITICAL plan-correctness finding; detail-stage reports are
+    unchanged.
+  - **In scope:** the bare-stage header in `plan_tool/completeness_report.py`,
+    its fixture, and the CLI documentation line that describes the report.
+  - **Out of scope / Non-goals:** deliberately not a history count, an
+    eligibility predicate over saved audits, or a JSON advisory payload (the
+    cut above); changing conceptual finding severity or source; suppressing,
+    auto-applying, or reclassifying findings; modifying `--audit-passes`;
+    changing the bare/detail blocking bars or exit codes; automatically
+    invoking `detail`; adding a plan-mass or audit-count gate.
+  - **Allowed behavior changes:** one informational line in the bare-stage
+    report. Existing verdicts, findings, JSON fields, and exit codes stay
+    unchanged.
+  - **Allowed reorganization:** none.
+  - **Verification:** a bare-stage report renders the line; a detail-stage
+    report does not; return codes and blocking JSON fields are unchanged.
+  - **Stop / defer:** if the line cannot be placed without touching a JSON
+    contract, render it in the terminal summary only and record that.
+- **Approach:** direct — a fixed header line and one test.
 - **Quality:** `convergence` and `gate-signal` — sharpens the operator's next
   action without weakening the audit's correctness or coverage verdicts.
-- **Iteration:** use the current `integrations/shared/DIRECTIVES.md`
-  authoring and audit gates. The scope fence is enforced by the plan's
-  contract; it does not require a one-shot `create` pass.
-
-  ```bash
-  plan-tool create detail-readiness-advisory --iterate -y --from-existing BACKLOG.md
-  plan-tool detail detail-readiness-advisory --commit -y
-  plan-tool completeness-audit detail-readiness-advisory --iterate --commit -y
-  plan-tool reconcile-code detail-readiness-advisory -y --step N
-  ```
 - **Origin:** 2026-08-11, operator decision during eight bare-plan audits of
   the now-retired #231 plan: the plan was materially ready for detail, but the
-  audit offered only more findings and no stage-transition signal.
+  audit offered only more findings and no stage-transition signal; reshaped
+  2026-11-14 from a history-counting advisory to one static line.
 - **Status:** not started.
 
 **#167 — Make plain English the default writing style for every generated plan-detail file**
 
-- **What:** Change `plan-tool detail` so every generated per-step detail file is
-  understandable in plain English on a first read. Keep concrete file paths,
+- **What:** Change the `plan-tool detail` prompts so every generated per-step
+  detail file is understandable in plain English on a first read. The change is
+  a prompt-rubric delta: compare the rubric below with what
+  `plan_tool/prompts/detail.md` already says (it already carries a plain-language
+  top rule, a swap list, and an active-voice rule) and add only the missing
+  items. Keep concrete file paths,
   symbol anchors, constraints, test intent, acceptance criteria, and any required
   call order or compatibility rule. Those technical facts are non-negotiable;
   rewrite only the prose around them into short, direct sentences and familiar
@@ -3549,28 +3515,28 @@ evidence. It is not an active implementation contract.
   over-prescriptive prose. Plain English improves reviewability and supports
   #164's lower-altitude contract without removing the evidence an implementer
   needs to find the right code.
-- **Design sketch:**
-  1. Define a shared writing rubric for run-grade detail: lead with the outcome;
-     use active voice and short sentences; **be to the point — say each thing
-     once, no filler, no restated context**; expand or explain project
-     abbreviations; separate required constraints from suggested implementation;
-     and use a small concrete example instead of a dense abstract paragraph.
-     Both directives (plain English and conciseness) target the descriptive
-     prose only — they never reduce code anchors, paths, symbols, examples, or
-     stated constraints.
-  2. Update run-grade detail prompts and quality-review prompts to use that
-     rubric. Preserve every full repo-relative path, symbol anchor,
-     identifier, test reference, and required mechanical/compatibility sequence;
-     make the explanatory sentences around those anchors easier to read instead
-     of removing or generalizing the anchors themselves.
-  3. Add conservative checks for mechanical signals (such as excessive sentence
-     length, undefined acronyms, and outcomes buried under mechanics), plus model
-     review guidance for clarity that heuristics cannot judge. Findings recommend
-     a rewrite; they never silently delete facts. Sentence- and paragraph-length
-     thresholds are stated directly in this repo's own words (see Decision
-     below), not sourced from an external standard.
-  4. Provide an opt-in re-author/review path for existing bundles. New detail is
-     the default target; do not bulk-rewrite the corpus on upgrade.
+- **Design (reshaped 2026-11-14 from four steps to two):**
+  1. Define the rubric delta for run-grade detail: lead with the outcome; **be
+     to the point — say each thing once, no filler, no restated context**;
+     expand or explain project abbreviations; separate required constraints
+     from suggested implementation; and use a small concrete example instead of
+     a dense abstract paragraph. Both directives (plain English and
+     conciseness) target the descriptive prose only — they never reduce code
+     anchors, paths, symbols, examples, or stated constraints. Add each item
+     that `detail.md` does not already say to `detail.md`, and the reviewer
+     wording to `detail-quality.md`. Preserve every full repo-relative path,
+     symbol anchor, identifier, test reference, and required
+     mechanical/compatibility sequence.
+  2. Land it together with #497's shared plain-words swap list, so the swap list
+     and the rubric are edited in one pass rather than twice.
+- **Cut 2026-11-14 (do not re-open without new evidence):** mechanical
+  readability checks (sentence length, undefined acronyms, buried outcomes) and
+  an opt-in re-author path for existing bundles. The checks are a
+  semantic-property proxy that fires on legitimate prose, which `CLAUDE.md`
+  § "Validating a semantic property you cannot observe" and #497 refuse; a
+  clarity finding comes from the model reviewer reading the rubric in
+  `detail-quality.md`, not from a heuristic. New detail is the target; existing
+  bundles are not rewritten.
 - **Decision (2026-08-27): plain, self-stated rubric — not an external writing
   standard.** An earlier version of this entry proposed sourcing the
   sentence-length/mechanical-signal thresholds from ASD-STE100 (Simplified
@@ -3583,42 +3549,45 @@ evidence. It is not an active implementation contract.
   corresponding benefit — a restricted-redistribution PDF to store and
   hand-transcribe, and a controlled dictionary that would have flagged
   legitimate API names (`invoker`, `fingerprint`, `worktree`) as violations had
-  it been adopted. Do not re-open without a concrete case where a self-stated
-  threshold produced a materially worse result than a sourced one would have.
-- **Effort:** medium — `plan_tool/prompts/detail*.md`,
-  `plan_tool/prompts/detail-quality.md`, `plan_tool/detail.py`,
-  `DETAIL_FORMAT.md`, fixtures, and quality tests.
-- **Risks / fallout:** simplistic readability rules can erase necessary precision
-  or flag legitimate API names. Treat paths, symbols, identifiers, code spans,
-  test references, and stated mechanical/compatibility constraints as immutable
-  facts; keep heuristic signals advisory and pin both plain-English and
-  precision-preserving technical fixtures.
-- **Dependencies:** complements #149 (compact structure). Jira-grade detail is
-  retired, so this entry applies only to supported run-grade detail.
+  it been adopted. With the mechanical checks cut, no thresholds remain to
+  source. Do not re-open without a concrete case where a self-stated rubric
+  produced a materially worse result than a sourced one would have.
+- **Effort:** small — `plan_tool/prompts/detail.md`,
+  `plan_tool/prompts/detail-quality.md`, and the prompt-rendering tests; no
+  parser or check code.
+- **Risks / fallout:** simplistic readability rules can erase necessary precision.
+  Treat paths, symbols, identifiers, code spans, test references, and stated
+  mechanical/compatibility constraints as immutable facts and keep the rubric
+  scoped to descriptive prose.
+- **Dependencies:** lands together with #497 (shared swap list); complements
+  #149 (compact structure). Jira-grade detail is retired, so this entry applies
+  only to supported run-grade detail.
 - **Scope contract:**
   - **Outcome:** newly authored plan detail is clear, direct plain English while
     retaining the actionable technical facts needed to implement and verify it.
-  - **In scope:** detail prompts, detail-quality prompts/checks, the detail
-    parser/quality loop as needed, `DETAIL_FORMAT.md`, fixtures, and tests.
-  - **Out of scope / Non-goals:** changing plan-body prose; removing, weakening,
+  - **In scope:** `detail.md` and `detail-quality.md` rubric text (the delta
+    against what they already say), and prompt-rendering tests.
+  - **Out of scope / Non-goals:** deliberately not mechanical readability checks
+    or thresholds (sentence length, undefined acronyms, buried outcomes) — a
+    semantic-property proxy that fires on legitimate prose, refused by
+    `CLAUDE.md` and #497; deliberately not an opt-in re-author path or any
+    rewrite of existing bundles; changing plan-body prose; removing, weakening,
     or generalizing required evidence, file paths, symbols, tests, acceptance
-    criteria, or mechanical constraints; changing implementation behavior; bulk
-    rewriting existing bundles without opt-in; sourcing thresholds from an
-    external writing standard (decided above).
-  - **Allowed behavior changes:** new detail output and clarity findings may be
-    more concise and less prescriptive; existing read compatibility remains.
-  - **Allowed reorganization:** only the prompt/quality helpers required to
-    use one rubric for supported run-grade detail.
-  - **Verification:** tests demonstrate that clear detail passes, jargon-heavy or
-    overly dense surrounding prose gets a targeted clarity finding, and every
-    technical anchor/constraint stays byte-for-byte present through the rewrite.
-    Review samples from each grade for direct, outcome-first language without loss
-    of anchors.
-  - **Stop / defer:** if a clarity check cannot distinguish verbosity from
-    necessary precision, keep it advisory and defer blocking or auto-rewrite
-    behavior rather than degrading implementation guidance.
-- **Approach:** `plan-tool`, direct. The output contract and quality loop own
-  this behavior; it does not require an open architectural experiment.
+    criteria, or mechanical constraints; changing implementation behavior;
+    sourcing thresholds from an external writing standard (decided above).
+  - **Allowed behavior changes:** new detail output may be more concise and less
+    prescriptive; existing read compatibility remains.
+  - **Allowed reorganization:** only the prompt text needed to use one rubric
+    for supported run-grade detail, shared with #497's swap list.
+  - **Verification:** a prompt-rendering test shows each rubric item appears in
+    the rendered `detail.md` and `detail-quality.md` once, with the rubric
+    stating that paths, symbols, examples, and constraints are never reduced.
+    Review a sample run-grade detail for direct, outcome-first language without
+    loss of anchors.
+  - **Stop / defer:** if the delta against `detail.md` is empty, close this entry
+    with that finding rather than adding text.
+- **Approach:** `plan-tool`, direct. Prompt text only; no open architectural
+  experiment.
 - **Status:** not started. 2026-07-22 — two directives recorded: (1) the
   rubric explicitly includes **conciseness** (prose to the point, not
   verbose) alongside plain English, both aimed at descriptions only — code
@@ -3629,25 +3598,29 @@ evidence. It is not an active implementation contract.
   prose** (`create` output) is outside this entry's fence — promote it to
   its own entry when scheduling this work.
 
-**#149 — Compact `detail` output: `--summary` review cards + a compact required-H2 authoring schema — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
+**#149 — Compact `detail` output: a compact required-H2 authoring schema (phase B is the only phase) — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
 
-- **What:** make `plan-tool detail` output less verbose in two reinforcing
-  layers. (1) A read-only **summary review surface** (`plan-tool detail <name>
-  --summary`) prints one compact review card per step from existing detail
-  files (Intent/Summary + Footprint/Files + Done-when/Acceptance + short
-  Tests/Deferred), spending no Claude and always exiting 0. (2) A **compact
-  required detail schema** that changes what `detail` authors by default:
-  merge Summary+Why into a single `Intent` and drop the Table of Contents.
+- **What:** make `plan-tool detail` output less verbose with a **compact
+  required detail schema** that changes what `detail` authors by default: merge
+  Summary+Why into a single `Intent` and drop the Table of Contents. This is
+  the only phase, because it is the part that reduces tokens and stale prose.
   **Deferred for run-grade re-baseline:** this plan's compact-schema authority
   names the retired Jira-grade lane. Do not preserve `plan_tool/jira_grade.py` as an
   alias source. Re-baseline the compact-schema phase on a run-grade-owned
   contract before execution; a complexity gate can then keep `low` steps
   always-compact while `medium`/`high` may expand only the section carrying
-  the approach.
+  the approach. The format version changes **explicitly through
+  `DETAIL_FORMAT.md`** and its format-version marker, not as an implicit side
+  effect of a prompt change.
   Legacy seven-section files stay valid on the **read** path via dual-token
-  lookup — nothing is force-migrated; the write path emits compact only. The
-  read-only `--summary` layer (1) is untouched by the re-baseline: it renders from
-  whatever sections a file has.
+  lookup — nothing is force-migrated; the write path emits compact only.
+- **Optional, demoted — the `--summary` review surface (phase A).** A read-only
+  `plan-tool detail <name> --summary` that prints one compact review card per
+  step from existing detail files (spending no Claude, always exiting 0) is
+  optional and not part of this entry's outcome. It is the plan's P5 only: it
+  renders from whatever sections a file has, so it does not depend on the
+  compact schema and does not block it. Take it only if the compact schema has
+  shipped and an operator still wants cards.
 - **Why:** `_REQUIRED_H2_TOKENS` hard-requires seven sections, so even a
   one-line change authors ~70 lines and denser steps land at ~120–170; ToC is
   ceremony, Why duplicates Summary, and Implementation inflates into call-site
@@ -3656,26 +3629,47 @@ evidence. It is not an active implementation contract.
   re-inflates new files. Length also compounds cost: `run` injects the full
   detail body into the implementer prompt (relates to #38's detail-length
   drift signal).
-- **Approach:** `plan-tool` — its own decomposition (~6 steps across three
-  phases: A summary cards, B compact authoring contract + complexity gate +
-  sibling hygiene, C read-compat/migration). Touches `plan_tool/detail.py`
+- **Approach:** `plan-tool` — the existing plan, re-baselined: phase B
+  (compact authoring contract + complexity gate + sibling hygiene) and phase C
+  (read-compat via dual-token lookup) are the scope; phase A is optional.
+  Touches `plan_tool/detail.py`
   (`_REQUIRED_H2_TOKENS`/`_REQUIRED_H2_DISPLAY`/parse gate + read
   compatibility), `plan_tool/cli/authoring.py`, `plan_tool/prompts/detail.md` +
   `detail-quality.md`, `DETAIL_FORMAT.md`, `docs/how-to/pipeline/detail.md`, CLI-reference
-  regen, and `tests/test_detail.py`. **Out of scope:** the retired Jira-grade
-  lane, an interactive detail wizard (the discarded #49), purity-prompt
-  size (the discarded #133), and auto-rewriting historical detail files.
+  regen, and `tests/test_detail.py`.
+- **Scope contract:**
+  - **Outcome:** newly authored run-grade detail uses the compact required-H2
+    set, at a stated format version in `DETAIL_FORMAT.md`; legacy seven-section
+    files still read.
+  - **In scope:** the compact schema and its explicit format-version change, the
+    complexity gate, sibling-body hygiene, dual-token read compatibility, and
+    their prompts, docs, and tests.
+  - **Out of scope / Non-goals:** deliberately not the `--summary` cards as part
+    of this outcome (optional and demoted above); the retired Jira-grade lane;
+    an interactive detail wizard (the discarded #49); purity-prompt size (the
+    discarded #133); auto-rewriting historical detail files.
+  - **Allowed behavior changes:** `detail` authors the compact schema; the
+    format version changes through `DETAIL_FORMAT.md`.
+  - **Allowed reorganization:** the parse-gate token tables the dual-token read
+    requires.
+  - **Verification:** a freshly authored step has no Table of Contents and a
+    single `Intent` section; a legacy seven-section file still parses; the
+    format-version marker rejects an unsupported value as `DETAIL_FORMAT.md`
+    states.
+  - **Stop / defer:** if the re-baselined schema cannot name a run-grade-owned
+    authority, stop and report rather than retaining the removed module.
 - **Status:** a WIP plan `docs/implementation-plans/2-detail-verbosity-compact-summary.md`
   (status `planning`, 6 steps) is authored for this; its detail bundle is
   **incomplete** (steps 1–3 detailed, 4–6 pending) and it is
-  registered in `.plan-tool/plans.json`. When the plan ships, its final step
-  removes/marks this entry. **Deferred:** the former Jira-grade schema authority is removed. Re-baseline the WIP plan and its incomplete
-  detail bundle before phase B runs; it must not retain the removed module as
-  a compatibility dependency. The former terminal companion (#293, superseded)
-  is not this entry's target surface.
+  registered in `.plan-tool/plans.json`. Re-baseline the WIP plan and its
+  incomplete detail bundle on phase B before it runs (the former Jira-grade
+  schema authority is removed, and the plan must not retain the removed module
+  as a compatibility dependency); the plan's phase A step becomes optional. When
+  the plan ships, its final step removes/marks this entry. The former terminal
+  companion (#293, superseded) is not this entry's target surface.
 - **Origin:** 2026-07-18 — filed to close the plan's dangling forward-reference
   to "BACKLOG #149" (the plan's step 6 and detail files cite it). Companion to
-  #38 (detail length as a drift signal).
+  #38 (detail length as a drift signal); reshaped 2026-11-14 to phase B only.
 
 **#114 — Give `detail` and `completeness-audit` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
 
@@ -3841,7 +3835,7 @@ evidence. It is not an active implementation contract.
   real borderline pairs are not. Preserve each pair, model output, and judged
   disposition so another reader can reproduce the comparison.
 - **Dependencies:** none for a disposable measurement. Coordinate with #216's
-  corpus/noise-floor route before creating a durable benchmark, calibrated
+  noise-floor observation (parked until a named A/B question exists) before creating a durable benchmark, calibrated
   probability, or shared confidence policy.
 - **Outcome:** a short evidence table and a recommendation to keep, change,
   or stop using the numeric floor for lesson-drop decisions. No threshold or
@@ -3971,83 +3965,88 @@ evidence. It is not an active implementation contract.
   finding, accepted PLAUSIBLE tradeoffs" (the `stop-patching-file-a-backlog-entry`
   rule for a non-converging region).
 
-**#110 — Measure `claim-vs-delivery` false-positive rate (incl. fuzzy near-miss misses) and decide promotion to blocking**
+**#110 — Measure `claim-vs-delivery` false-positive rate (incl. fuzzy near-miss misses) and decide its status**
 
 - **What:** `detect_claim_vs_delivery` (shipped in #100) is deliberately
   **advisory** on `smell_recs` — it never flips rc — until its false-positive
-  rate is measured on real plans; a follow-up then decides whether to promote it
-  onto the blocking `self_consistency_recs` bucket. This entry rescues that
-  follow-up from #100's now-archiving `## Deferred` section and pins a concrete
-  data point: the fuzzy match `_claim_delivered` uses `SequenceMatcher.ratio()
+  rate is measured on real plans. This entry is the measurement and the
+  decision it supports, nothing more. It pins a concrete data point: the fuzzy
+  match `_claim_delivered` uses `SequenceMatcher.ratio()
   >= _NEAR_MISS_RATIO` (0.85) over whole tokens, so a claim clearly delivered by
   a related-but-differently-named symbol misses (`parse_plan` vs a declared
-  `parser` scores ~0.75) and is reported as undelivered — advisory noise today,
-  but exactly the kind of FP that must be characterized (and the threshold /
-  tokenization tuned) before any promotion.
-- **Output of investigation:** run the detector across the repo's real plans,
-  bucket the findings into true/false positives, and either (a) "precision is
-  adequate" → spawn a Bucket A/D item to promote it to the gate-read bucket, or
-  (b) "FP rate too high" → tune `_NEAR_MISS_RATIO` / token normalization (or keep
-  it advisory) with the measured rate as justification.
-- **Where to promote it, once precision is adequate:** both `create --iterate`'s
-  own deterministic loop and the completeness-audit smell layer — the former
-  doesn't run this check at all today, which is why a seam can surface rounds
-  later in the audit instead of at `create` time — plus the inverse direction
-  (a step whose headline intent maps to no acceptance criterion), which the
-  current detector checks neither way.
+  `parser` scores ~0.75) and is reported as undelivered — advisory noise today.
+- **Output of investigation:** run the detector across the repo's real plans
+  (no Claude), bucket the findings into true/false positives, and record the
+  rate. Apply `CLAUDE.md` § "Validating a semantic property you cannot observe"
+  rule 5 (a high false-positive rate means kill, not tune):
+  - **FP rate at or below about 1 in 5:** the detector stays advisory with the
+    measured rate recorded; promotion to a blocking bucket is a separate
+    follow-up (below), filed only on this result.
+  - **FP rate above about 1 in 5:** keep it advisory or remove it. Do **not**
+    tune `_NEAR_MISS_RATIO` or the token normalization to buy a lower rate.
+- **Follow-ups, filed only if the measurement supports promotion (not part of
+  this entry):** wiring the check into `create --iterate`'s own deterministic
+  loop and the completeness-audit smell layer (`create --iterate` does not run
+  it today, so a seam can surface rounds later in the audit), and the inverse
+  check (a step whose headline intent maps to no acceptance criterion), which
+  the current detector checks neither way. Each is its own entry.
 - **Risks / fallout:** the detector's advisory status is a **settled
   decision, not an oversight** — `detect_claim_vs_delivery`'s docstring pins
   "stays advisory" on fuzzy-matching false positives (this entry's own
-  `_NEAR_MISS_RATIO` data point above is exactly that risk). Promotion must
-  not adopt the raw fuzzy `SequenceMatcher` matcher wholesale — measured
-  precision or an exact-match-only subset first. A false positive on a
-  criterion legitimately delivered by a non-step mechanism gets an explicit
-  carve plus a test, never a severity retreat.
-- **Scope contract** (carried forward from an earlier folded-in entry,
-  2026-08-13 — do not re-widen without updating this fence):
-  - **Outcome:** the measurement decides whether `claim-vs-delivery`
-    promotes; if it does, promotion lands in both `create --iterate`'s
-    deterministic loop and the completeness-audit smell layer, plus the
-    inverse (intent with no criterion) direction.
-  - **In scope:** `plan_tool/review.py`'s `detect_claim_vs_delivery` and its
-    deterministic-collector wiring; `create`'s convergence severity mapping;
-    the plan-side `smell_recs`→`self_consistency_recs` routing move (below);
-    tests.
-  - **Out of scope / Non-goals:** any Claude-judged check on claim quality;
-    the completeness-audit conceptual bar (`is_blocking_finding`); step
-    schema changes (that is #268's carrier decision, not this entry's);
+  `_NEAR_MISS_RATIO` data point above is exactly that risk). Any later
+  promotion must not adopt the raw fuzzy `SequenceMatcher` matcher wholesale —
+  measured precision or an exact-match-only subset first.
+- **Scope contract** (cut back to the measurement 2026-11-14; the
+  `create --iterate` wiring, the inverse check, and the severity/routing move
+  are follow-ups, do not re-widen without updating this fence):
+  - **Outcome:** a recorded true/false-positive count over the repo's real
+    plans and a stated decision: stay advisory with the rate, or keep advisory
+    or remove it because the rate is above about 1 in 5.
+  - **In scope:** a no-Claude run of `plan_tool/review.py`'s
+    `detect_claim_vs_delivery` over the repo's plans, the bucketed counts, and
+    the decision note.
+  - **Out of scope / Non-goals:** deliberately not tuning `_NEAR_MISS_RATIO`
+    or token normalization (rule 5: a high false-positive rate means kill, not
+    tune); deliberately not promoting the detector to `self_consistency_recs`
+    or changing `create`'s convergence severity mapping; deliberately not the
+    `create --iterate` wiring or the inverse (intent with no criterion) check
+    — each is a follow-up filed only if the result supports promotion; any
+    Claude-judged check on claim quality; the completeness-audit conceptual bar
+    (`is_blocking_finding`); step schema changes (#268's carrier decision);
     exit-code conventions.
-  - **Allowed behavior changes:** `create --iterate` may iterate (or stop
-    with a blocking finding) on a criterion↔step mismatch it previously
-    converged past at INFO.
-  - **Allowed reorganization:** the `smell_recs`→`self_consistency_recs`
-    routing move `#100`'s Architecture already describes for
-    `suppression-shape`; no other reorganization.
-  - **Verification:** the measurement's bucketed true/false-positive counts;
-    once promoted, unit tests for both directions including the
-    previously-INFO-would-have-converged case now blocking, and one carve
-    asserted as a deliberate exemption.
+  - **Allowed behavior changes:** none.
+  - **Allowed reorganization:** none.
+  - **Verification:** the measurement's bucketed true/false-positive counts and
+    the recorded decision.
   - **Stop / defer:** newly noticed criterion patterns needing judgment (not
     delivery tracing) go to the backlog, not into this check.
-- **Effort:** small (the measurement); the promotion/tuning that follows is a
-  separate item, medium once create-loop wiring and the inverse check are
-  included. **Approach:** `direct` for the measurement; if promotion is
-  chosen, `plan-tool` for the wiring — it now spans two integration points
-  (`create --iterate`'s loop and the completeness-audit smell layer) plus
-  the open precision decision above, which is exactly the multi-module/
-  open-design-choice shape BACKLOG.md's own direct-vs-plan-tool heuristic
-  routes to a plan. This **supersedes** the earlier folded-in entry's "direct,
-  with the hand convergence loop" note (2026-08-13) — reconciled rather than
-  left standing beside it.
-- **Dependencies:** none — #100 shipped the detector.
+- **Effort:** small — a no-Claude measurement and a decision note.
+  **Approach:** `direct`.
+- **Dependencies:** none — #100 shipped the detector. #268 waits on this
+  decision.
 - **Origin:** 2026-07-09 — #100's `## Deferred` ("Promoting `claim-vs-delivery`
   to blocking … until its false-positive rate is measured") plus the high-effort
   workflow review's fuzzy near-miss finding on `review.py:3788`
-  (`detect_claim_vs_delivery`).
+  (`detect_claim_vs_delivery`); cut to the measurement 2026-11-14.
 
-**#87 — [Investigation] Harden the test-authoring gate against a dirty working tree (don't depend on `--commit` discipline)**
+**#87 — Hash test files before the call so the test-authoring gate does not depend on `--commit` discipline**
 
-- **What:** The test-authoring gate isolates a step's test coverage as the
+- **What (the build, 2026-11-14):** hash each test file before the backend call
+  and count a changed content hash after the call as authored, in place of the
+  *post-call git-changed delta against a pre-call baseline of dirty paths*. A
+  step's edit to an already-dirty shared test module changes its hash and
+  counts, so the gate no longer depends on `--commit` to clear the tree between
+  steps. The gate's observable stays binary (a test file's content changed
+  during the call); test quality is not graded. A no-edit retry with no declared
+  files stays on `run --step N --accept`; the hash check does not pass an
+  unchanged file.
+- **Why this is the build, not a question:** this is the most recurring gate
+  problem in the history below (2026-07, 2026-10-06, 2026-10-08, 2026-10-15),
+  and hand-added `enforce_test_authoring: false` exemptions are left sitting in
+  plan frontmatter afterward. The `--commit` mandate in `CLAUDE.md` is a
+  workaround that depends on operator discipline; a per-file hash removes that
+  dependency.
+- **Problem statement.** The test-authoring gate isolates a step's test coverage as the
   *post-call git-changed delta against a pre-call baseline* (`launcher.py`). On a
   multi-step `run` **without `--commit`**, an earlier step's edits to a shared
   test file (e.g. `tests/test_split_criteria.py`) stay dirty, so a later step's
@@ -4068,14 +4067,9 @@ evidence. It is not an active implementation contract.
   `--commit`):** (1) a retry whose tests were already in the tree from an earlier
   attempt made no edits, so the delta was empty and the gate failed it (step 3,
   attempt 3); `enforce_test_authoring: false` was then added by hand to steps 3
-  through 9 so a retry could advance. (2) *(Fixed 2026-10-22: the gate now unions the working-tree delta with backend-committed test paths, `launcher.py` `committed_changed_paths`.)* The model committed its own work inside
+  through 9 so a retry could advance. (2) *(Fixed 2026-10-22: the gate now unions the working-tree delta with backend-committed test paths, `launcher.py` `committed_changed_paths`; the per-file hash build keeps that union.)* The model committed its own work inside
   the call (a 49-file commit, step 10), so the working-tree delta was empty, the
-  gate reported "no test file modified", and the suite gate never ran. Candidate
-  fixes for the open question below: pass when the step's declared test files
-  already differ from the last green commit, and compute the delta from the
-  pre-call HEAD to the post-call tree *and* HEAD (or state in the run prompt that
-  the model must not commit; a prompt rule alone is not a guarantee). The gate's
-  observable stays binary; test quality is not graded. Exemptions added by hand
+  gate reported "no test file modified", and the suite gate never ran. Exemptions added by hand
   persist in plan frontmatter after the run. Related: #455.
 - **Cause (1) again, 2026-10-08 (`roadmap-stack-propagation`):**
   - Two times, a re-run after a hand fix of the step's own failing test changed
@@ -4090,9 +4084,9 @@ evidence. It is not an active implementation contract.
   - `run --step N --accept` (shipped 2026-10-10) gives the hand-fix case a route
     that needs no re-run. Since 2026-10-13 a no-edit re-run of a step that
     declares files is reported as "no edits applied" before this gate runs, so
-    whether the gate should pass a no-edit retry whose tests already differ from
-    the last green commit stays this entry's open question only for steps that
-    declare no files.
+    a no-edit retry whose tests already differ from the last green commit, for
+    a step that declares no files, stays on `run --step N --accept` (decided
+    2026-11-14: the hash check does not pass an unchanged file).
 - **Cause (2) again, 2026-10-15 (`sibling-planned-input-paths`):** steps 1
   and 2 start clean under `run --all --commit`, author regression tests, and
   commit them inside the backend call (`373997be9`, `bf44003f3`). Both return
@@ -4101,18 +4095,39 @@ evidence. It is not an active implementation contract.
   coverage; `run --step N --accept --commit` runs the suite again and advances
   each step. No gate exemption is needed. This reproduces the committed-delta
   case independently of the dirty-baseline case; keep both in any remedy matrix.
-- **Open question:** should the gate be made robust to a dirty baseline
-  (e.g. snapshot each step's pre-call state per-file and diff against that, rather
-  than the raw working tree) so correctness doesn't depend on operator `--commit`
-  discipline — or is the documented `--commit` mandate a sufficient floor?
-- **Effort:** small (decision) → medium (if the gate baseline is reworked).
-- **Approach:** decision first (`direct` write-up), then `plan-tool` if a gate
-  change follows.
+- **Scope contract:**
+  - **Outcome:** a step that edits a test file passes the authorship gate when
+    that file was already dirty before the call, with no `--commit` needed
+    between steps, and a step that changes no test file's content still fails
+    it.
+  - **In scope:** the pre-call per-file content-hash snapshot and the
+    post-call comparison in `launcher.py`'s test-authoring gate (keeping the
+    committed-path union), and tests.
+  - **Out of scope / Non-goals:** deliberately not passing a no-edit retry whose
+    tests merely differ from the last green commit (that stays on
+    `run --step N --accept`); grading test quality; a prompt rule telling the
+    model not to commit (not a guarantee); removing the `--commit` mandate from
+    `CLAUDE.md` in the same change (a follow-up once the gate ships); the
+    #455 failure-receipt work.
+  - **Allowed behavior changes:** the gate stops blocking a step whose edit to
+    an already-dirty test file the old path-delta masked.
+  - **Allowed reorganization:** none.
+  - **Verification:** a test with a dirty shared test file edited by the next
+    step passes; a test where the step changes no test file fails; a test
+    where the model commits its own test edit inside the call still passes;
+    verify by mutation that reverting to the path delta turns the first test
+    red.
+  - **Stop / defer:** if hashing every test file is too slow on a large tree,
+    hash only the step's declared and changed-candidate test files and record
+    the choice.
+- **Effort:** medium — a snapshot and comparison in the gate, plus the tests.
+- **Approach:** `direct` — one gate in `launcher.py` with a settled design.
 - **Dependencies:** the `--commit`-on-multi-step-`run` mandate in CLAUDE.md is the
-  current workaround this would supersede.
+  current workaround this supersedes.
 - **Origin:** 2026-07-04 — surfaced running visualize-split-criteria without
   `--commit`; root cause corrected 2026-07-05 after the `--commit` known-limit
-  rule landed upstream.
+  rule landed upstream; turned from an investigation into the per-file hash
+  build 2026-11-14.
 
 **#71 — [Decision] Define the `detail --reconcile` refusal-token shape (enforce vs. record)**
 
@@ -4152,7 +4167,7 @@ evidence. It is not an active implementation contract.
   refusal-signal work as a forward-looking design decision, not a correctness
   bug.
 
-**#141 — Decide how the fixed 4h jira story-size floor relates to the configurable `--max-hours` ceiling**
+**#141 — Document the 4h jira story-size floor against a `--max-hours` below it, and warn on `--max-hours < 4`**
 
 - **What:** The jira story-size soft floor (`_STORY_SIZE_SOFT_FLOOR_HOURS = 4`
   in `plan_tool/jira.py`, feeding `lint_story_size` and the `prompts/jira.md`
@@ -4164,27 +4179,41 @@ evidence. It is not an active implementation contract.
   but `lint_story_size` still advisory-warns every one of them as "below the 4h
   floor." Both surfaces are advisory-only (exit 0, never block a write), so this
   is noise, not a correctness break — but the noise fires on the whole export.
-- **Why deferred (not patched):** two high-effort review rounds churned on this
-  exact region. A first attempt clamped the *prompt* floor to `min(4, max_hours)`
-  but left the *lint* floor fixed, which made the two diverge (worse). Making
-  them agree requires either (a) threading `max_hours` into `lint_story_size` /
-  `partition_lint_findings` / `_emit_story_warnings` — but the `jira --lint`
-  path lints an existing artifact with **no `--max-hours` context** (it would
-  default to 8, so the surfaces still disagree between `export` and `--lint`), or
-  (b) forbidding / clamping `--max-hours` below the floor (changes `--max-hours`
-  semantics), or (c) accepting the overlap as a pathological-config non-issue and
-  documenting it. The current shipped state is a **fixed 4h floor everywhere**
-  (lint + prompt), with the prompt prose deferring to a lower `--max-hours`
-  target so the *prompt* is self-consistent; only the lint-vs-prompt overlap at
-  `--max-hours < 4` remains.
-- **Effort:** small (option c: one doc line + maybe a `--max-hours < 4` warning)
-  → small–medium (option a/b: signature threading or arg validation). **Approach:**
-  `direct` — narrow, single-surface, no plan needed once the option is chosen.
+- **Decision (2026-11-14): option (c), then close.** The overlap is advisory
+  noise reachable only with a pathological config, and two high-effort review
+  rounds already churned on this exact region: a first attempt clamped the
+  *prompt* floor to `min(4, max_hours)` but left the *lint* floor fixed, which
+  made the two diverge (worse). The work is one doc line in `JIRA_FORMAT.md`
+  stating that a `--max-hours` below the 4h floor makes every story advisory-lint
+  as below the floor, plus a one-line warning when `--max-hours < 4`. The
+  current shipped state is a **fixed 4h floor everywhere** (lint + prompt), with
+  the prompt prose deferring to a lower `--max-hours` target.
+- **Scope contract:**
+  - **Outcome:** `JIRA_FORMAT.md` documents the `--max-hours < 4` overlap and
+    `jira` prints a one-line warning when `--max-hours` is below 4; the entry
+    then closes.
+  - **In scope:** the `JIRA_FORMAT.md` line, the `--max-hours < 4` warning in
+    `plan_tool/cli/jira_cmd.py`, and a test for the warning.
+  - **Out of scope / Non-goals:** deliberately not threading `max_hours` into
+    `lint_story_size` / `partition_lint_findings` / `_emit_story_warnings`
+    (option a: `jira --lint` has no `--max-hours` context, so the surfaces would
+    still disagree between `export` and `--lint`); deliberately not forbidding
+    or clamping `--max-hours` below the floor (option b: changes `--max-hours`
+    semantics); changing the 4h constant or the lint's advisory status.
+  - **Allowed behavior changes:** one stderr warning on `--max-hours < 4`; exit
+    code unchanged.
+  - **Allowed reorganization:** none.
+  - **Verification:** `--max-hours 3` prints the warning and exits as before;
+    `--max-hours 4` and the default print none.
+  - **Stop / defer:** if the warning needs plumbing beyond `jira_cmd.py`, ship
+    the doc line alone.
+- **Effort:** small. **Approach:** `direct` — one doc line and one warning.
 - **Quality/accuracy lens:** low — advisory-only noise reachable only by a
   ceiling-below-floor misconfiguration; the default (`--max-hours 8`) is unaffected.
 - **Origin:** 2026-07-16 — surfaced by the round-2 code review of the story-size
   floor feature (the fixed-floor-vs-configurable-ceiling tension), deferred here
-  rather than patched a third time per the convergence escape hatch.
+  rather than patched a third time per the convergence escape hatch; narrowed
+  to option (c) 2026-11-14.
 
 **#210 — Decide whether the per-step purity Claude pass earns its cost: it has never reported a finding, and 87.5% of its calls never return**
 
@@ -4239,16 +4268,27 @@ evidence. It is not an active implementation contract.
   check was worth it.
 - **Status:** passive observation only, settled 2026-08-20 (user-confirmed).
 
-**#212 — `apply_finding` rewrites a step but never clears its `intent`, leaving an authoritative stale why**
+**#212 — `apply_finding` rewrites a step but can leave its `intent` stale: one instruction in `apply-finding.md`**
 
 - **What:** `Step.intent` has shipped (plan `2-intent-scope-fence.md`), and
   `plan_tool/launcher.py:apply_finding` rewrites a step's title, files, and
   acceptance criteria from an audit finding while leaving `intent` untouched.
-  The result is a one-line why that no longer describes the step but still
+  The result can be a one-line why that no longer describes the step but still
   renders into the `detail`, `run`, and conceptual-audit prompts as
   authoritative input — the "a stale intent is worse than an absent one" hazard
   that plan's Risks section names, arriving through a verb that plan does not
-  cover.
+  cover. The remedy is **one instruction in `plan_tool/prompts/apply-finding.md`**
+  telling the model to keep `intent` consistent with the step when it rewrites
+  the step (revise the one-line why to match, or leave it when the rewrite does
+  not change the step's purpose). `apply_finding` is a Claude-driven edit, so
+  the consistency decision belongs in that prompt, not in a code path.
+- **Decision (2026-11-14): do not clear `intent`.** The earlier remedy, a code
+  rule that clears the field on a rewrite, conflicts with the shipped
+  intent-required rule (`CLAUDE.md` § "The two intent reversals"): a missing
+  intent is a `medium` self-consistency finding that blocks completeness
+  convergence, so clearing a rewritten step's intent would create a blocking
+  finding. Conceptual findings are also now applied by hand, so
+  `apply_finding` rarely rewrites steps.
 - **Why it is filed rather than folded in:** `2-intent-scope-fence.md` scopes
   propagation to the four **structural** verbs (`split`, `merge`, `scope-out`,
   `reground`). `apply_finding` is not one of them, and that plan's
@@ -4258,27 +4298,31 @@ evidence. It is not an active implementation contract.
   not expanding the plan.
 - **Dependencies:** none — `2-intent-scope-fence.md` shipped the field, so the
   one blocker this entry had is clear.
-- **Effort:** small — one clearing rule plus a test, if the answer is "clear
-  it". Deciding *whether* a rewritten step should keep, clear, or re-derive its
-  intent is the actual work.
+- **Effort:** small — one prompt instruction and a prompt-rendering test.
 - **Scope contract:**
-  - **Outcome:** a step rewritten by `apply_finding` never carries an intent
-    that contradicts it.
-  - **In scope:** `apply_finding`'s step-rewrite path and its tests.
-  - **Out of scope / Non-goals:** re-deriving a new intent with a Claude call;
+  - **Outcome:** the `apply-finding` prompt tells the model to keep a rewritten
+    step's `intent` consistent with the step.
+  - **In scope:** one instruction in `plan_tool/prompts/apply-finding.md` and
+    its prompt-rendering test.
+  - **Out of scope / Non-goals:** deliberately not clearing `intent` in
+    `apply_finding` (it would create a blocking missing-intent finding, above);
+    a code path that rewrites or re-derives intent; a separate Claude call to
+    re-derive it;
     any intent-vs-work agreement check (permanently refused — see CLAUDE.md
     § "Validating a semantic property you cannot observe", "The two intent
     reversals"); the four structural verbs, which `2-intent-scope-fence.md`
     already owns.
-  - **Allowed behavior changes:** one field cleared on one existing path.
+  - **Allowed behavior changes:** `apply_finding` prompt text only.
   - **Allowed reorganization:** none.
-  - **Verification:** a step carrying an intent, rewritten by `apply_finding`,
-    ends with no stale intent; a step with no intent is byte-identical to today.
-  - **Stop / defer:** if clearing proves wrong for some finding classes, record
-    which and defer the per-class rule rather than widening.
-- **Approach:** `direct` — one path, one rule, one test.
+  - **Verification:** the rendered `apply-finding` prompt contains the
+    instruction; no code path changes, so a step with no intent is
+    byte-identical to today.
+  - **Stop / defer:** park this entry if `apply_finding` is found to rarely
+    rewrite steps in practice; record that as the reason.
+- **Approach:** `direct` — one prompt line and one test.
 - **Quality:** `grounding` — keeps an authoritative input from going stale.
-- **Origin:** 2026-08-01, round-1 conceptual audit of `2-intent-scope-fence.md`.
+- **Origin:** 2026-08-01, round-1 conceptual audit of `2-intent-scope-fence.md`;
+  remedy changed from clearing to a prompt instruction 2026-11-14.
 - **Status:** not started; unblocked (that plan's step 1 landed the field).
 
 **#228 — A deterministic enumeration/count drift check across a plan and its detail bundle**
@@ -4514,7 +4558,7 @@ evidence. It is not an active implementation contract.
 - **Principle:** `write-for-the-human`.
 - **Origin:** 2026-10-19 review of generated plan and roadmap prose.
 
-**#431 — `_gate_correction`'s kind→remedy classification is a vocabulary-prefix matcher with hand-curated exceptions, not a type-checked decision**
+**#431 — `_gate_correction`'s prefix matcher → one exhaustive `kind → remedy` table**
 
 - **What:** `roadmap_candidate._gate_correction` routes each `Violation.kind`
   to a remedy string by matching `kind.startswith((...))` prefix tuples, with
@@ -4540,31 +4584,53 @@ evidence. It is not an active implementation contract.
   different remedy will silently render the wrong retry instruction to a
   model, and the exhaustiveness test stays green because it only checks
   generic-vs-specific, never specific-vs-*correct*-specific.
-- **Approach sketch:** an explicit `remedy_shape` (or similar closed
-  enum/field) set at each `Violation(...)` construction site in
-  `roadmap_gates.py`, read directly by `_gate_correction` instead of
-  re-derived from the kind string in a different module. Turns "does this
-  kind's vocabulary look like X" into "did the check that raised this
-  violation say it needs X" — a decision made once, where the defect's actual
-  shape is known, not guessed at a distance.
+- **Approach sketch (reshaped 2026-11-14):** replace the prefix tuples and
+  `_DROP_EXTRA_ROWS_GATE_KINDS` with one exhaustive `kind → remedy` table in
+  `roadmap_candidate.py` covering every `VIOLATION_*` constant in
+  `roadmap_gates.py` (currently 81), and read the remedy from the table in
+  `_gate_correction`. Add a test that every `VIOLATION_*` constant appears in
+  the table, so a new kind fails the test until someone chooses its remedy.
+  This makes the decision explicit per kind, where the author adds the kind,
+  without touching the ~95 `Violation(...)` construction sites.
+- **Deliberately not a `remedy_shape` field on `Violation`:** setting the remedy
+  at each of ~95 construction sites is more churn than the property needs. The
+  table gives the same per-kind explicitness and the same new-kind failure at a
+  fraction of the change. Revisit only if the table drifts from the checks
+  that raise the kinds.
 - **Scope contract:**
-  - **Outcome:** a new `VIOLATION_*` kind cannot land in a wrong
-    specifically-routed remedy bucket without a test failing.
-  - **In scope:** `Violation`'s shape, its ~95 construction sites in
-    `roadmap_gates.py`, and `_gate_correction`'s dispatch.
-  - **Out of scope / Non-goals:** any change to a violation's `message` text,
-    to `_INTENTIONALLY_GENERIC_GATE_KINDS`'s membership, or to which kinds are
-    routed where today — this is a mechanism change, not a remedy re-audit
-    (the current mapping is already verified correct).
-- **Effort:** medium — touches every `Violation(...)` call site in
-  `roadmap_gates.py`, a stdlib-plus-leaves module with no first-party
-  dependents besides its own consumers; mechanical but wide.
-- **Approach:** direct, or a small plan if the construction-site sweep proves
-  large enough to want its own convergence loop.
+  - **Outcome:** a new `VIOLATION_*` kind cannot land without an explicit
+    remedy choice: a test fails until the kind has a row in the
+    `kind → remedy` table.
+  - **In scope:** the `kind → remedy` table in `roadmap_candidate.py`,
+    `_gate_correction`'s dispatch from it, retiring the prefix tuples and
+    `_DROP_EXTRA_ROWS_GATE_KINDS`, and the every-constant-is-in-the-table test.
+  - **Out of scope / Non-goals:** deliberately not changing `Violation`'s shape
+    or its ~95 construction sites in `roadmap_gates.py` (the table delivers the
+    explicit per-kind decision without that churn); any change to a violation's
+    `message` text, or to which remedy each existing kind gets today — this is
+    a mechanism change, not a remedy re-audit (the current mapping is already
+    verified correct; kinds in `_INTENTIONALLY_GENERIC_GATE_KINDS` map to the
+    generic remedy explicitly in the table).
+  - **Allowed behavior changes:** none; every existing kind renders the same
+    correction text.
+  - **Allowed reorganization:** the table replaces the prefix tuples in
+    `_gate_correction`.
+  - **Verification:** a test that every `VIOLATION_*` constant in
+    `roadmap_gates.py` is a key of the table, and a test that each existing
+    kind's rendered correction equals today's (captured before the change);
+    verify by mutation that adding a constant without a table row turns the
+    first test red.
+  - **Stop / defer:** if a kind's remedy depends on the violation's fields
+    rather than the kind alone (as the ordering-reference condition does), keep
+    that field-keyed branch and table the kind to it explicitly.
+- **Effort:** small — one table, one dispatch change, and two tests; no
+  construction-site sweep.
+- **Approach:** direct.
 - **Origin:** 2026-09-27, roadmap-candidate gate-correction review pass 5,
   finding 3 (`plan_tool/roadmap_candidate.py:_gate_correction`) — raised after
   three prior passes (R1.5, P2.1, P3.1) each fixed one more instance of the
-  same false-friend-prefix shape.
+  same false-friend-prefix shape; reshaped 2026-11-14 from a construction-site
+  `remedy_shape` field to an exhaustive table.
 - **Status:** not started.
 
 **#432 — `render_candidate_question_prompt` still reads its template with a bare, unguarded `read_text()`**
