@@ -52,8 +52,9 @@ This step makes roadmap draft seeds carry `Scope guardrails`, `Audit guardrails`
 
 - **Prompt edit.**
   - Add the three headings to the section list, in the order step 1's constant uses.
-  - Say to write each from the accepted plan row and the carried fences in the upstream artifacts.
-  - Say to write the bare word `None` as the body where the row sets no fence. Do not tell the model to leave a heading out, and do not suggest `N/A` or `_(TODO)_`.
+  - Name the sources per heading. `## Scope guardrails` comes from the plan row's `non_goals` and from the settled decisions and constraints the row's components own in the accepted artifacts. `## Audit guardrails` and `## Expected placement` come only from content in those artifacts that states an audit boundary or a placement for this row; the roadmap schema has no field for either, so they are usually `None`.
+  - Use the step 3 proportionality wording for both model-written paths: write only fences the row and its accepted artifacts already imply, use `None` when they imply none, and add no scope, mechanism or requirement.
+  - Say to write the bare word `None` as the body where those sources set no fence. Do not tell the model to leave a heading out, and do not suggest `N/A` or `_(TODO)_`.
   - Restate the rule inline. No template under `plan_tool/prompts/` cites a `*_FORMAT.md` doc, and none can.
   - If you need a literal `$`, write `$$`. The template renders with `safe_substitute`.
   - Keep the edit to a few lines. The prompt already carries long scope-fence guidance, and this step adds no new input variable.
@@ -118,7 +119,7 @@ Every case above must be green before this step is finished, and the tests above
 
 - `validate_draft_seed_content` returns one violation per missing, duplicated, empty or `_(TODO)_` guardrail heading, and none for a body of `None`.
 - A draft missing a guardrail heading uses one attempt in `materialize_plan_seed`'s retry loop, and the next prompt contains the violation message.
-- `plan_tool/prompts/roadmap-seed.md` names all three headings and tells the model to write `None` where the row sets no fence.
+- `plan_tool/prompts/roadmap-seed.md` names all three headings, names each one's source in the row and its accepted artifacts, carries the step 3 proportionality line, and tells the model to write `None` where those sources set no fence.
 - A draft without the headings classifies as `DRAFT_SEED_STATE_MALFORMED`. Its detail, and the `--accept-seed` refusal, name `--refresh-seeds`.
 - A `--refresh-seeds` run on such a draft produces a draft that classifies as current.
 - `git diff --stat` shows only the five declared files. In particular `plan_tool/roadmap.py` and `plan_tool/roadmap_seed_manifest.py` have no diff.

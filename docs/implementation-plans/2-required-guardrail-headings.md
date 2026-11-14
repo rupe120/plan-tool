@@ -125,8 +125,7 @@ steps:
   description: 'Make `roadmap --materialize` and `--refresh-seeds` produce draft seeds
     that carry all three guardrail headings. In `plan_tool/prompts/roadmap-seed.md`,
     add `Scope guardrails`, `Audit guardrails` and `Expected placement` to the required
-    section list. The prompt says to write them from the accepted plan row and to
-    put `None` where the row sets no fence. `roadmap_gates.validate_draft_seed_content`
+    section list. The prompt says to write `Scope guardrails` from the plan row's `non_goals` and the settled decisions and constraints its components own, to write the other two only from accepted content that states them, to write only fences those sources imply and add no scope (the step 3 rule), and to put `None` where they set none. `roadmap_gates.validate_draft_seed_content`
     calls the step 1 predicate and returns one violation per offending heading. That
     makes a draft missing a heading consume an attempt in `materialize_plan_seed`''s
     existing retry loop, with the violation message as the correction. The operator
