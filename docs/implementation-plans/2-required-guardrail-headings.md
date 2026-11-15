@@ -129,9 +129,7 @@ steps:
   depends_on_notes:
     1: the shared guardrail-presence predicate
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/04-make-roadmap-materialize-refresh-seeds.md
-  status: current
-  status_note: 'test-authoring gate failed: feature step created or modified no test
-    file; step not advanced.'
+  status: done
   description: 'Make `roadmap --materialize` and `--refresh-seeds` produce draft seeds
     that carry all three guardrail headings. In `plan_tool/prompts/roadmap-seed.md`,
     add `Scope guardrails`, `Audit guardrails` and `Expected placement` to the required
@@ -169,6 +167,7 @@ steps:
   depends_on_notes:
     1: the predicate used to confirm every swept seed passes
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/05-three-guardrail-headings-hand-every.md
+  status: current
   description: Add the three guardrail headings by hand to every live seed in `docs/implementation-plans/plan-seeds/`
     and `plan-seeds/` that lacks one; the step 1 predicate, run over both directories,
     defines which seeds lack a heading. Write each body from that seed's own content
