@@ -77,8 +77,7 @@ steps:
     the exact set in detail against the write sites in `plan_tool/detail.py`. Pass
     the footprint to `commit_all` in place of the transitional `[repo_root]`. Change
     `_commit_if_dirty` so it decides ''nothing to commit'' from dirt inside the footprint,
-    not from a dirty tree. Otherwise an unrelated dirty file would trigger an empty
-    commit that fails. Keep its never-raises contract and the stop-after-first-failure
+    not from a dirty tree. The check decides only whether a commit is reported; step 1 already makes an empty footprint a successful no-op, so it no longer prevents a failure. Keep its never-raises contract and the stop-after-first-failure
     rule. The rule still matters because a failed commit leaves footprint paths staged.
     Rewrite the `--commit` help text, which says it stages everything, and regenerate
     `docs/cli/detail.md` with `python -m plan_tool.cli_reference --write`. Tests go

@@ -20,7 +20,7 @@
 
 ## Why
 
-After the sweep, the `--commit` block asks `working_tree_dirty(ctx.repo_root)` about the whole tree and then calls `commit_all(ctx.repo_root, subject)`, which stages everything. A file another process changes while the sweep runs is committed with the archive moves. The same whole-tree check also decides "nothing to commit", so an unrelated dirty file turns a sweep that moved nothing into a commit attempt. Step 1 gives `commit_all` a required `paths` footprint. This step supplies it for `manifest sweep`.
+After the sweep, the `--commit` block asks `working_tree_dirty(ctx.repo_root)` about the whole tree and then calls `commit_all(ctx.repo_root, subject)`, which stages everything. A file another process changes while the sweep runs is committed with the archive moves. The same whole-tree check also decides "nothing to commit", so an unrelated dirty file turns a sweep that moved nothing into a reported commit attempt. Step 1 makes an empty footprint a successful no-op, so the check now only decides which message the sweep prints. Step 1 gives `commit_all` a required `paths` footprint. This step supplies it for `manifest sweep`.
 
 ## Input
 

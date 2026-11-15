@@ -20,7 +20,7 @@
 
 ## Why
 
-`_commit_if_dirty` asks `_working_tree_dirty` about the whole tree and then calls `_commit_all`. A file another process changes while a multi-step authoring run is in flight is committed with the verb's own edits. The serial path commits once per converged step, so one unrelated edit lands in the first step's commit. After step 1, `commit_all` can commit a named footprint. This step supplies that footprint at the `detail --commit` sites. It also fixes the "is there anything to commit" test, which must stop looking at the whole tree. Otherwise an unrelated dirty file would pass the check and `git commit` would find nothing staged and fail.
+`_commit_if_dirty` asks `_working_tree_dirty` about the whole tree and then calls `_commit_all`. A file another process changes while a multi-step authoring run is in flight is committed with the verb's own edits. The serial path commits once per converged step, so one unrelated edit lands in the first step's commit. After step 1, `commit_all` can commit a named footprint. This step supplies that footprint at the `detail --commit` sites. It also fixes the "is there anything to commit" test, which must stop looking at the whole tree. Step 1 already makes an empty footprint a successful no-op, so the check no longer prevents a failure. It decides only whether `_commit_if_dirty` returns `None` (nothing to commit) and so whether the run prints a commit line; with a whole-tree check, an unrelated dirty file would make the run report a commit that did not happen.
 
 ## Input
 
