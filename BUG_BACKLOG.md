@@ -557,35 +557,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
 
-### `BACKLOG.md` `Iterate:` recipes run `detail` straight after `create`, skipping the bare-plan gate
-
-- **Files:** `BACKLOG.md` (four `Iterate:` or `Iteration:` command blocks remain: the
-  `incremental-completeness-audit`, `partial-mutation-snapshot-restore`,
-  `roadmap-05-framework-lenses` and `artifact-contention-handoff` recipes; the
-  other seven found on 2026-11-13 left with their entries); authority
-  `integrations/shared/DIRECTIVES.md` Gate 1.
-- **Symptom:** each block runs `detail` straight after `create` and audits only
-  after it, so an operator who copies it skips the bare-plan audit that Gate 1
-  runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
-  in the tracked documents for a `plan-tool detail` command that follows a
-  `plan-tool create` within 80 lines with no `plan-tool completeness-audit`
-  between; its 24 hits included eleven such blocks, two real gaps in `docs/how-to/roadmap.md`
-  (since corrected), and independent syntax or opt-in examples. The routers carry
-  both gates, so this reaches only an operator who copies a queue entry's recipe.
-  One of the entries (`roadmap-05-framework-lenses`) tells the reader to follow
-  the current directives directly above a recipe that skips Gate 1.
-- **Fix:** insert `plan-tool completeness-audit <slug> --iterate --commit -y`
-  after `create` in each block, as each entry is next touched, with the routers'
-  caveat to commit the plan first (`--commit` refuses a dirty working tree).
-  Deliberately not done: a script that rewrites the queue, because the recipes are part of
-  entries that are edited when picked up.
-- **Approach:** `direct` — documentation only.
-- **Verification:** no `BACKLOG.md` recipe block has a `plan-tool detail` line
-  without a `plan-tool completeness-audit` line before it in the same block
-  (a `detail --reconcile` or `--dry-run` line is exempt).
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
-
 ### The loop-stop resume hints print a command that does not change the run: `--iterate` is omitted for `detail` and `completeness-audit`, and `--max-iterations 5` is fixed
 
 - **Files:** `plan_tool/detail.py` (the `deadline_exceeded`, `max_iterations` and
@@ -704,6 +675,29 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** 2026-11-15, round 6 of the `/code-review` of
   `commit-scoped-to-verb-footprint`.
+
+### The tracked `.claude/skills/plan-tool/` copy of the skill and directives has drifted from `integrations/`
+
+- **Files:** `.claude/skills/plan-tool/DIRECTIVES.md` and `SKILL.md` (tracked);
+  `integrations/shared/DIRECTIVES.md` and `integrations/claude/SKILL.md` (the
+  sources); `tests/cli/test_skill_cmd.py` (names the path).
+- **Symptom:** `diff` against the sources shows 87 differing lines in
+  `DIRECTIVES.md` (the "independent syntax examples, not a stage sequence"
+  disclaimer is missing, and the model-selection section is an older wording)
+  and a differing `description` in `SKILL.md` ("claude subprocess" against
+  "backend subprocess"). The tracked copy was last touched 2026-11-06; the
+  sources have moved since. An assistant working in this clone loads the stale
+  copy as its plan-tool guidance. Found 2026-11-15 while retiring the `Iterate:`
+  recipes entry.
+- **Fix:** decide whether the copy should be tracked at all. If yes, regenerate
+  it with `plan-tool install-skill --copy` and add a drift test beside the
+  existing path check; if no, untrack it. Deliberately not done: hand-syncing
+  the two files, which drifts again.
+- **Approach:** `direct` once decided.
+- **Verification:** a test fails when the tracked copy differs from its
+  sources, or the path is no longer tracked.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** 2026-11-15, bug-backlog drain.
 
 ## RISK
 

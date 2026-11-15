@@ -116,6 +116,19 @@ coverage. Records marked **Retired** are not behavior fixes; their retained
 re-open condition identifies the evidence or scope change that will justify a
 new entry.
 
+### `BACKLOG.md` recipes that run `detail` straight after `create`
+
+Retired 2026-11-15. The four recipe blocks the entry named left `BACKLOG.md`
+with their entries, and the file now holds no fenced block, so there is no
+recipe to correct. A repo-wide sweep of tracked documents for a fenced
+`plan-tool create` followed by `plan-tool detail` with no
+`plan-tool completeness-audit` between finds six pairs: the headless syntax
+examples in `integrations/shared/DIRECTIVES.md` and the three router
+`SKILL.md` files (and their `.claude/skills/plan-tool/` copies), each labelled
+"independent syntax examples, not a stage sequence" next to the two audit
+gates. Reopen when a `BACKLOG.md` entry carries a copyable recipe that runs
+`plan-tool detail` after `create` with no `completeness-audit` before it.
+
 ### Roadmap evidence-storage hardening
 
 Retired 2026-09-01. No current roadmap consumer requires the configured tree
