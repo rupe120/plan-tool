@@ -133,7 +133,7 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all`
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/04-give-manifest-sweep-commit-plan-tool.md
-  status: current
+  status: done
   description: 'Give `manifest sweep --commit` in `plan_tool/cli/manifest.py` its
     footprint from records the sweep already returns: the manifest path, and each
     `ArchiveOutcome`''s original `plan_path` (a delete) and `archived_to` (an add).
@@ -165,6 +165,7 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all` that `_commit_green_step` delegates to
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/05-make-paths-required-on-commit-green.md
+  status: current
   description: 'Make `paths` required on `_commit_green_step` in `plan_tool/cli/run_cmd.py`
     and have it delegate staging and committing to `commit_all`, so `run --commit`
     uses the same ignored-path warning and post-commit clean check. The `--accept`
