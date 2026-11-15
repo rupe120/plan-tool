@@ -8475,6 +8475,7 @@ def find_dropped_references(distilled_markdown: str) -> list[DroppedReference]:
     # strip_fenced_code, not just ignore_fenced_code: a fenced example
     # mentioning a keyword must not corroborate or manufacture a reference.
     # ``extract_h2_sections`` lowercases keys.
+    # No _strip_frontmatter: the text is the distiller's own output, not a seed.
     sections = extract_h2_sections(distilled_markdown, strip_fenced_code=True)
     acceptance = sections.get("acceptance criteria", "").lower()
     artifact_re = _artifact_ref_re()
@@ -8741,6 +8742,7 @@ def _find_placeholder_body_sections(body: str) -> list[str]:
     a ``## Deferred`` bullet saying ``TODO: revisit``) doesn't trip
     the wizard's fail-loud gate.
     """
+    # No _strip_frontmatter: ``body`` is the tool's rendered plan body.
     sections = extract_h2_sections(body, ignore_fenced_code=True)
     placeholders: list[str] = []
     for section in PLAN_BODY_SECTIONS:

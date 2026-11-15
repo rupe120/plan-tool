@@ -186,6 +186,12 @@ def test_new_run_id_tail_is_at_least_64_random_bits_from_secrets(
     )
 
 
+def test_consecutive_run_ids_differ() -> None:
+    """The width pin above says where the tail comes from; this catches an ID
+    that stopped varying at all. 64 random bits make a false failure ~1e-19."""
+    assert new_run_id() != new_run_id()
+
+
 def test_logs_with_the_old_and_new_tail_widths_are_read_side_by_side(
     tmp_path: Path,
 ) -> None:

@@ -1308,6 +1308,20 @@ class TestUnexpectedDirtyPaths:
         (svc / "stranger.txt").write_text("s\n", encoding="utf-8")
         assert unexpected_dirty_paths(svc, [plan]) == ["svc/stranger.txt"]
 
+    def test_symlinked_repo_root_matches_expected_paths(self, tmp_path: Path) -> None:
+        # git reports the real top level; the caller may hold a symlink to it
+        # (macOS /tmp and /var are symlinks), and both spellings must match.
+        real = tmp_path / "real"
+        real.mkdir()
+        _init_git_repo(real)
+        _commit_initial(real)
+        link = tmp_path / "link"
+        link.symlink_to(real, target_is_directory=True)
+        plan = real / "plan.md"
+        plan.write_text("edited\n", encoding="utf-8")
+        assert unexpected_dirty_paths(link, [link / "plan.md"]) == []
+        assert unexpected_dirty_paths(real, [link / "plan.md"]) == []
+
     def test_non_repo_returns_none(self, tmp_path: Path) -> None:
         assert unexpected_dirty_paths(tmp_path, []) is None
 
