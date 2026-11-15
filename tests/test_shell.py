@@ -740,7 +740,6 @@ class TestUnsinkedCallWarning:
         err = capsys.readouterr().err
         assert "claude call at test_shell.py:" in err
         assert "rate_limit_loop.py" not in err
-        assert "backend_runner.py" not in err
 
 
 # ---------- claude_invoke: failure recovery ----------

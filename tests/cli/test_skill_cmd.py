@@ -75,6 +75,15 @@ class TestInstallSkill:
                 "`.plan-tool/backends.json` exists, else pass the recommendations"
                 ) in " ".join(router_text.split())
         assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
+        # Every relative link the router cites resolves beside the installed
+        # router (presence only; BACKLOG #443's Non-goals rule out drift checks).
+        links = {
+            t.split("#")[0]
+            for t in re.findall(r"\]\(([^)\s]+)", router_text)
+            if "://" not in t and not t.startswith("#")
+        }
+        assert "DIRECTIVES.md" in links
+        assert sorted(t for t in links if not (router.parent / t).is_file()) == []
         policy = directives.read_text(encoding="utf-8")
         flat = " ".join(policy.split())
         assert "Honor explicit user requests for backend and model" in flat
