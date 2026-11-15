@@ -20,6 +20,7 @@ import sys
 from plan_tool.cli.context import _load_context
 from plan_tool.cli.parser import Handler
 from plan_tool.locator import resolve_plan_for_context, slug_from_filename
+from plan_tool.scope_fence import guardrail_next_step_lines
 from plan_tool.scope_out import (
     ScopeOutResult,
     _carve_target_label,
@@ -114,6 +115,10 @@ def render_scope_out_result(
             f"carved {label} out of {plan_slug}: wrote seed "
             f"{result.seed_path} and narrowed the plan ({renumber}; {cursor})."
         )
+        for line in guardrail_next_step_lines(
+            result.inherited_guardrails, result.unfilled_guardrails
+        ):
+            info(f"  {line}")
         if result.body_sweep_hits:
             warn(
                 f"plan body still references carved or renumbered work "

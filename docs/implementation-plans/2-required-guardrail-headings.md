@@ -52,6 +52,17 @@ steps:
   change_type: feature
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/02-make-scope-out-reground-write-all-three.md
   status: current
+  status_note: 'test gate failed (rc=1); step not advanced. Tail: 267: AssertionError
+
+    =========================== short test summary info ============================
+
+    FAILED tests/cli/test_scope_out_cmd.py::test_next_steps_name_inherited_headings_for_review
+
+    FAILED tests/cli/test_scope_out_cmd.py::test_next_steps_name_todo_headings_to_fill_in
+
+    FAILED tests/cli/test_scope_out_cmd.py::test_next_steps_omit_a_group_that_is_empty
+
+    FAILED tests/test_scope_out.py::test_ca'
   description: 'Make `scope-out` and `reground` write all three guardrail headings
     into the seeds they render. `scope_out.render_carved_seed`, `scope_out.render_carved_region_seed`
     and `reground.render_rebaseline_seed` copy each heading''s body verbatim from

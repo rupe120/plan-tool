@@ -37,6 +37,8 @@ from plan_tool.scope_fence import (
     _strip_frontmatter,
     collapse_intent_to_one_line,
     extract_h2_sections,
+    guardrail_headings_block,
+    guardrail_next_step_lines,
     is_placeholder_intent,
     source_references_block,
 )
@@ -229,12 +231,19 @@ def reground_bridge(
 
     # 7. Confirm gate.
     flagged = [plan.step_by_id(sid) for sid in to_mark]
+    guardrail_notice: list[str] = []
+    if disposition == DISPOSITION_REBASELINE:
+        _, inherited, unfilled = guardrail_headings_block(
+            _strip_frontmatter(plan_path.read_text(encoding="utf-8"))
+        )
+        guardrail_notice = guardrail_next_step_lines(inherited, unfilled)
     if not _confirm_reground(
         prompt_fn,
         plan_path=plan_path,
         flagged_steps=flagged,
         yes=yes,
         disposition=disposition,
+        guardrail_notice=guardrail_notice,
     ):
         return RegroundResult(
             outcome="recommended", requested_ids=requested, marked_ids=to_mark
@@ -255,6 +264,7 @@ def reground_bridge(
             flagged_ids=to_mark,
             source_path=plan_path,
             source_references=source_references,
+            source_body=source_body,
         )
         seed_path = _rebaseline_seed_path(plan_path, to_mark, repo_root)
         seed_path.parent.mkdir(parents=True, exist_ok=True)
@@ -279,6 +289,7 @@ def _confirm_reground(
     flagged_steps: list[Step],
     yes: bool,
     disposition: str = DISPOSITION_MARK_DONE,
+    guardrail_notice: Sequence[str] = (),
 ) -> bool:
     """Interactive re-ground confirm — the repo's destructive-verb idiom
     (mirrors :func:`scope_out._confirm_scope_out` / ``detail._confirm_merge``).
@@ -315,6 +326,7 @@ def _confirm_reground(
             "A `plan-tool create --from-existing` re-baseline seed will also be "
             "written under docs/implementation-plans/plan-seeds/."
         )
+        lines.extend(f"  {line}" for line in guardrail_notice)
     lines.append("Mark them done? [y/N]: ")
     try:
         answer = confirm_fn("\n".join(lines)).strip().lower()
@@ -335,6 +347,7 @@ def render_rebaseline_seed(
     flagged_ids: Sequence[int],
     source_path: Path,
     source_references: str | None = None,
+    source_body: str | None = None,
 ) -> str:
     """Render a ``create --from-existing`` re-baseline seed for the flagged
     already-built steps.
@@ -406,6 +419,7 @@ def render_rebaseline_seed(
     lines.extend(_rebaseline_scope_block(remaining))
     lines.extend(_rebaseline_deferred_block(deferred))
 
+    lines.extend(guardrail_headings_block(source_body)[0])
     lines.extend(source_references_block(source_path, source_references))
 
     lines.append("## Provenance")

@@ -405,3 +405,86 @@ class TestScopeOutThroughCLI:
         assert sub is not None
         flags = {opt for a in sub._actions for opt in a.option_strings}
         assert "--through" in flags
+
+
+# --------------------------------------------------------------------------
+# Next-step text names inherited vs unfilled guardrail headings.
+# --------------------------------------------------------------------------
+
+_ALL_HEADINGS = ("Scope guardrails", "Audit guardrails", "Expected placement")
+
+
+def _result(inherited=(), unfilled=(), outcome="applied"):
+    from plan_tool.scope_out import NarrowResult, ScopeOutResult
+
+    narrow = None
+    if outcome == "applied":
+        narrow = NarrowResult(
+            carved_ids=[2],
+            renumber=[],
+            new_current_id=None,
+            new_plan_status=PlanStatus.PLANNING,
+            archived=[],
+            migrated=[],
+        )
+    return ScopeOutResult(
+        outcome=outcome,
+        carved_id=2,
+        carved_ids=[2],
+        seed_path=Path("seed.md"),
+        narrow=narrow,
+        inherited_guardrails=tuple(inherited),
+        unfilled_guardrails=tuple(unfilled),
+    )
+
+
+def _render_out(result, capsys) -> str:
+    from plan_tool.cli.scope_out_cmd import render_scope_out_result
+
+    render_scope_out_result(result, plan_slug="p", name="p", recommend_hint="hint")
+    captured = capsys.readouterr()
+    return captured.out + captured.err
+
+
+def test_next_steps_name_inherited_headings_for_review(capsys):
+    out = _render_out(
+        _result(inherited=("Scope guardrails", "Audit guardrails")), capsys
+    )
+    assert "review before `create`" in out
+    assert "## Scope guardrails, ## Audit guardrails" in out
+    assert "fill in by hand" not in out
+
+
+def test_next_steps_name_todo_headings_to_fill_in(capsys):
+    out = _render_out(_result(unfilled=("Expected placement",)), capsys)
+    assert "fill in by hand before `create`" in out
+    assert "## Expected placement" in out
+
+
+def test_next_steps_omit_a_group_that_is_empty(capsys):
+    assert "fill in by hand" not in _render_out(
+        _result(inherited=_ALL_HEADINGS), capsys
+    )
+    assert "review before `create`" not in _render_out(
+        _result(unfilled=_ALL_HEADINGS), capsys
+    )
+    out = _render_out(_result(), capsys)
+    assert "review before" not in out and "fill in by hand" not in out
+
+
+@pytest.mark.parametrize(
+    "outcome", ["recommended", "unsafe", "empty-plan", "step-missing"]
+)
+def test_next_steps_unchanged_for_recommended_unsafe_and_step_missing_outcomes(
+    outcome, capsys
+):
+    out = _render_out(
+        _result(
+            inherited=("Scope guardrails",),
+            unfilled=("Audit guardrails",),
+            outcome=outcome,
+        ),
+        capsys,
+    )
+    assert "review before `create`" not in out
+    assert "fill in by hand" not in out

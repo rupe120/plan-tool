@@ -65,6 +65,7 @@ from plan_tool.scope_fence import (
     collapse_intent_to_one_line,
     extract_h2_sections,
     is_placeholder_intent,
+    guardrail_headings_block,
     source_references_block,
 )
 
@@ -100,6 +101,7 @@ def render_carved_seed(
     source_path: Path,
     plan_intent: Optional[str] = None,
     source_references: str | None = None,
+    source_body: str | None = None,
 ) -> str:
     """Render the carved-region ``create --from-existing`` forward-seed.
 
@@ -137,6 +139,7 @@ def render_carved_seed(
     lines.extend(_scope_block(carved_step, detail_body, detail_missing))
     lines.extend(_done_context_block(carved_step))
     lines.extend(_upstream_block(upstream_context))
+    lines.extend(guardrail_headings_block(source_body)[0])
     lines.extend(source_references_block(source_path, source_references))
 
     lines.append("## Provenance")
@@ -158,6 +161,7 @@ def render_carved_region_seed(
     source_path: Path,
     plan_intent: Optional[str] = None,
     source_references: str | None = None,
+    source_body: str | None = None,
 ) -> str:
     """Render one forward-seed covering a whole carved *region* (≥2 steps).
 
@@ -200,6 +204,7 @@ def render_carved_region_seed(
         lines.extend(_scope_block(carved_step, detail_body, detail_missing))
         lines.extend(_done_context_block(carved_step))
     lines.extend(_upstream_block(upstream_context))
+    lines.extend(guardrail_headings_block(source_body)[0])
     lines.extend(source_references_block(source_path, source_references))
 
     lines.append("## Provenance")
@@ -1216,6 +1221,8 @@ class ScopeOutResult:
     preview: Optional[NarrowPreview] = None
     blockers: list[NarrowBlocker] = field(default_factory=list)
     body_sweep_hits: list[BodySweepHit] = field(default_factory=list)
+    inherited_guardrails: tuple[str, ...] = ()
+    unfilled_guardrails: tuple[str, ...] = ()
 
 
 def _outcome_for_blockers(blockers: list[NarrowBlocker]) -> str:
@@ -1341,6 +1348,9 @@ def scope_out_step(
     source_references = extract_h2_sections(
         source_body, ignore_fenced_code=True
     ).get("references")
+    _, inherited_guardrails, unfilled_guardrails = guardrail_headings_block(
+        source_body
+    )
 
     upstream_context = _resolve_upstream_context(plan, carved_steps, preview)
 
@@ -1362,6 +1372,7 @@ def scope_out_step(
             source_path=plan_path,
             plan_intent=plan.intent,
             source_references=source_references,
+            source_body=source_body,
         )
         seed_path = _carved_seed_path(plan_path, carved_step, repo_root)
     else:
@@ -1384,6 +1395,7 @@ def scope_out_step(
             source_path=plan_path,
             plan_intent=plan.intent,
             source_references=source_references,
+            source_body=source_body,
         )
         seed_path = _carved_region_seed_path(plan_path, carved_steps, repo_root)
 
@@ -1417,6 +1429,8 @@ def scope_out_step(
         narrow=narrow,
         preview=preview,
         body_sweep_hits=body_hits,
+        inherited_guardrails=inherited_guardrails,
+        unfilled_guardrails=unfilled_guardrails,
     )
 
 

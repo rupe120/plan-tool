@@ -1150,3 +1150,107 @@ def test_rebaseline_confirm_prompt_mentions_seed(tmp_path, monkeypatch):
         repo_root=tmp_path,
     )
     assert "create --from-existing" in captured["msg"]
+
+
+# --------------------------------------------------------------------------
+# Guardrail headings in the re-baseline seed.
+# --------------------------------------------------------------------------
+
+
+def _with_guardrails(path: Path, **bodies: str | None) -> None:
+    keys = {
+        "scope": "Scope guardrails",
+        "audit": "Audit guardrails",
+        "placement": "Expected placement",
+    }
+    out = []
+    for key, title in keys.items():
+        body = bodies.get(key, f"{key} body")
+        if body is not None:
+            out += [f"## {title}", "", body, ""]
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(
+            "Plan prose body that survives re-grounding.", "\n".join(out)
+        ),
+        encoding="utf-8",
+    )
+
+
+def _rebaseline(path: Path, tmp_path: Path):
+    return reground_bridge(
+        path,
+        step_ids=[1, 2],
+        allow_reground=True,
+        yes=True,
+        disposition="re-baseline",
+        repo_root=tmp_path,
+    )
+
+
+def _seed_section(seed: str, title: str) -> str:
+    return seed.split(f"## {title}\n", 1)[1].split("\n## ", 1)[0].strip()
+
+
+def test_rebaseline_seed_copies_guardrails_verbatim_including_none(tmp_path):
+    path = _built_plan_file(tmp_path)
+    _with_guardrails(path, audit="None")
+    seed = _rebaseline(path, tmp_path).seed_path.read_text(encoding="utf-8")
+    assert _seed_section(seed, "Scope guardrails") == "scope body"
+    assert _seed_section(seed, "Audit guardrails") == "None"
+    assert _seed_section(seed, "Expected placement") == "placement body"
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [None, "", "first\n\n## Audit guardrails\n\nsecond", "_(TODO)_"],
+    ids=["absent", "empty", "duplicated", "placeholder"],
+)
+def test_rebaseline_seed_writes_todo_for_absent_empty_duplicated_or_placeholder_heading(
+    tmp_path, bad
+):
+    path = _built_plan_file(tmp_path)
+    _with_guardrails(path, audit=bad)
+    seed = _rebaseline(path, tmp_path).seed_path.read_text(encoding="utf-8")
+    assert _seed_section(seed, "Audit guardrails") == "_(TODO)_"
+    assert _seed_section(seed, "Scope guardrails") == "scope body"
+    assert _seed_section(seed, "Expected placement") == "placement body"
+
+
+def test_rebaseline_notice_names_inherited_and_unfilled_headings(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr("sys.stdin.isatty", lambda: True)
+    path = _built_plan_file(tmp_path)
+    _with_guardrails(path, audit=None)
+    captured = {}
+
+    def _prompt(msg: str) -> str:
+        captured["msg"] = msg
+        return "n"
+
+    reground_bridge(
+        path,
+        step_ids=[1, 2],
+        allow_reground=True,
+        yes=False,
+        prompt_fn=_prompt,
+        disposition="re-baseline",
+        repo_root=tmp_path,
+    )
+    msg = captured["msg"]
+    assert "review before `create`" in msg
+    assert "## Scope guardrails, ## Expected placement" in msg
+    assert "fill in by hand before `create`" in msg
+    assert "## Audit guardrails" in msg
+
+
+def test_reground_mark_done_unchanged_when_seed_gains_guardrails(tmp_path):
+    path = _built_plan_file(tmp_path)
+    _with_guardrails(path)
+    result = _rebaseline(path, tmp_path)
+    assert result.outcome == "applied"
+    assert result.marked_ids == [1, 2]
+    reloaded = parse_plan(path)
+    assert reloaded.step_by_id(1).status is StepStatus.DONE
+    assert reloaded.step_by_id(2).status is StepStatus.DONE
+    assert result.seed_path.exists()

@@ -3194,3 +3194,144 @@ def test_scope_out_syncs_plan_and_concept_bytes_before_reporting_success(tmp_pat
     result = scope_out_step(path, carved_id=2, repo_root=tmp_path, allow_scope_out=True, yes=True)
     assert result.outcome == "applied"
     assert synced == {"plan", "concept", "directory"}
+
+
+# --------------------------------------------------------------------------
+# Guardrail headings: copied from the source plan when acceptable, else TODO.
+# --------------------------------------------------------------------------
+
+_GUARDRAIL_TITLES = ("Scope guardrails", "Audit guardrails", "Expected placement")
+
+
+def _guardrail_source(**bodies: str | None) -> str:
+    """Source body with one section per keyword (``None`` value = omit it)."""
+    keys = {
+        "scope": "Scope guardrails",
+        "audit": "Audit guardrails",
+        "placement": "Expected placement",
+    }
+    out = ["Prose.", ""]
+    for key, title in keys.items():
+        body = bodies.get(key, f"{key} body")
+        if body is not None:
+            out += [f"## {title}", "", body, ""]
+    return "\n".join(out)
+
+
+def _section(seed: str, title: str) -> str:
+    """The section body, read fence-aware so a quoted ``##`` line is not a boundary."""
+    from plan_tool.scope_fence import extract_h2_sections
+
+    return extract_h2_sections(seed, ignore_fenced_code=True)[title.lower()].strip()
+
+
+def test_carved_seed_copies_guardrails_verbatim_from_source():
+    seed = _render(source_body=_guardrail_source())
+    assert _section(seed, "Scope guardrails") == "scope body"
+    assert _section(seed, "Audit guardrails") == "audit body"
+    assert _section(seed, "Expected placement") == "placement body"
+    for title in _GUARDRAIL_TITLES:
+        assert seed.count(f"## {title}\n") == 1
+
+
+def test_carved_seed_copies_a_none_body_verbatim():
+    # `None` is content, never a placeholder: it must not become `_(TODO)_`.
+    seed = _render(source_body=_guardrail_source(audit="None"))
+    assert _section(seed, "Audit guardrails") == "None"
+
+
+_BAD_STATES = {
+    "absent": None,
+    "empty": "",
+    "duplicated": "first\n\n## Audit guardrails\n\nsecond",
+    "placeholder": "_(TODO)_",
+}
+
+
+@pytest.mark.parametrize("state", list(_BAD_STATES))
+def test_carved_seed_writes_todo_for_absent_empty_duplicated_or_placeholder_heading(
+    state,
+):
+    seed = _render(source_body=_guardrail_source(audit=_BAD_STATES[state]))
+    assert _section(seed, "Audit guardrails") == "_(TODO)_"
+    assert _section(seed, "Scope guardrails") == "scope body"
+    assert _section(seed, "Expected placement") == "placement body"
+
+
+def test_carved_seed_without_source_body_writes_all_todo():
+    seed = _render()
+    for title in _GUARDRAIL_TITLES:
+        assert _section(seed, title) == "_(TODO)_"
+
+
+def test_carved_seed_keeps_fenced_text_in_a_copied_body():
+    body = "keep:\n\n```\n## Not a heading\nx\n```"
+    seed = _render(source_body=_guardrail_source(scope=body))
+    assert _section(seed, "Scope guardrails") == body
+
+
+def test_carved_region_seed_applies_the_same_copy_rule():
+    seed = render_carved_region_seed(
+        plan_title="P",
+        carved_steps=[_step(id=2), _step(id=3)],
+        detail_bodies=[None, None],
+        detail_missings=[False, False],
+        source_path=SOURCE,
+        source_body=_guardrail_source(scope="None", audit=""),
+    )
+    assert _section(seed, "Scope guardrails") == "None"
+    assert _section(seed, "Audit guardrails") == "_(TODO)_"
+    assert _section(seed, "Expected placement") == "placement body"
+
+
+def test_scope_out_step_seed_file_carries_all_three_headings(tmp_path):
+    from plan_tool.scope_fence import missing_required_guardrail_headings
+
+    plan = _mk_plan(
+        [_mk_step(1), _mk_step(2), _mk_step(3)], status=PlanStatus.PLANNING
+    )
+    path = _write_plan_file(tmp_path, plan)
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(
+            "Plan prose body that survives narrowing.",
+            _guardrail_source(audit="_(TODO)_", placement="None"),
+        ),
+        encoding="utf-8",
+    )
+    result = scope_out_step(
+        path, carved_id=2, repo_root=tmp_path, allow_scope_out=True, yes=True
+    )
+    assert result.outcome == "applied"
+    assert result.inherited_guardrails == ("Scope guardrails", "Expected placement")
+    assert result.unfilled_guardrails == ("Audit guardrails",)
+    seed = result.seed_path.read_text(encoding="utf-8")
+    assert missing_required_guardrail_headings(seed) == ("Audit guardrails",)
+
+
+def test_scope_out_narrowing_and_detail_archival_unchanged_by_guardrail_copy(
+    tmp_path,
+):
+    # Deliberate carve-out: only the seed text gains guardrails; the narrowed
+    # plan frontmatter is identical whether or not the source has guardrails.
+    def narrowed(root: Path, body: str | None) -> str:
+        root.mkdir()
+        plan = _mk_plan(
+            [_mk_step(1), _mk_step(2), _mk_step(3)], status=PlanStatus.PLANNING
+        )
+        path = _write_plan_file(root, plan)
+        if body is not None:
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "Plan prose body that survives narrowing.", body
+                ),
+                encoding="utf-8",
+            )
+        scope_out_step(
+            path, carved_id=2, repo_root=root, allow_scope_out=True, yes=True
+        )
+        return path.read_text(encoding="utf-8")
+
+    plain = narrowed(tmp_path / "a", None)
+    fenced = narrowed(tmp_path / "b", _guardrail_source())
+    assert "Plan prose body that survives narrowing." in plain
+    assert plain.split("---", 2)[1] == fenced.split("---", 2)[1]

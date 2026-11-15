@@ -28,6 +28,7 @@ shared ``scope_`` prefix — they share no code and no concern.
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -379,6 +380,73 @@ def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
         if len(bodies) != 1 or not is_acceptable_guardrail_body(bodies[0]):
             offenders.append(title)
     return tuple(offenders)
+
+
+def guardrail_headings_block(
+    source_body: str | None,
+    model_bodies: Mapping[str, str] | None = None,
+) -> tuple[list[str], tuple[str, ...], tuple[str, ...]]:
+    """Seed lines for the three required guardrail headings, copy-or-``_(TODO)_``.
+
+    Returns ``(lines, inherited, unfilled)`` with bare heading titles in
+    :data:`REQUIRED_GUARDRAIL_HEADINGS` order. A heading the source carries
+    acceptably (exactly one fence-safe occurrence, body accepted by
+    :func:`is_acceptable_guardrail_body`; ``None`` included) is copied verbatim,
+    fences intact, and listed as inherited. Otherwise a ``model_bodies`` entry
+    (step 3's ``annotate``; ``scope-out``/``reground`` pass none) fills it only
+    if it is acceptable too; any other state writes ``_(TODO)_`` and is unfilled.
+    Presence only: no judgment of what a body says.
+    """
+    stripped = _strip_frontmatter(source_body or "")
+    scan = _fenced_code_spans(stripped)
+    checked = extract_h2_section_occurrences(
+        stripped, strip_fenced_code=True, fenced_spans=scan.spans
+    )
+    verbatim = extract_h2_section_occurrences(
+        stripped, ignore_fenced_code=True, fenced_spans=scan.spans
+    )
+    lines: list[str] = []
+    inherited: list[str] = []
+    unfilled: list[str] = []
+    for title in REQUIRED_GUARDRAIL_HEADINGS:
+        key = title.lower()
+        checked_bodies = checked.get(key, [])
+        verbatim_bodies = verbatim.get(key, [])
+        body = "_(TODO)_"
+        if (
+            len(checked_bodies) == 1
+            and is_acceptable_guardrail_body(checked_bodies[0])
+            and len(verbatim_bodies) == 1
+        ):
+            body = verbatim_bodies[0]
+            inherited.append(title)
+        else:
+            model_body = (model_bodies or {}).get(title)
+            if model_body is not None and is_acceptable_guardrail_body(model_body):
+                body = model_body.strip()
+            else:
+                unfilled.append(title)
+        lines.extend([f"## {title}", "", body, ""])
+    return lines, tuple(inherited), tuple(unfilled)
+
+
+def guardrail_next_step_lines(
+    inherited: Sequence[str], unfilled: Sequence[str]
+) -> list[str]:
+    """Printed next steps naming inherited and unfilled headings; empty groups omitted."""
+    out: list[str] = []
+    if inherited:
+        out.append(
+            "review before `create` (inherited from the parent plan; its fence "
+            "can be wrong for the narrower plan): "
+            + ", ".join(f"## {t}" for t in inherited)
+        )
+    if unfilled:
+        out.append(
+            "fill in by hand before `create` (`_(TODO)_` in the seed): "
+            + ", ".join(f"## {t}" for t in unfilled)
+        )
+    return out
 
 
 def _strip_frontmatter(text: str) -> str:
