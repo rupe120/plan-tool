@@ -334,6 +334,64 @@ class TestCommitAll:
         assert _head_files(tmp_path) == [".plan-tool/plans.json"]
         assert "gitignored" not in capsys.readouterr().err
 
+    def _repo_with_submodule(self, tmp_path: Path) -> Path:
+        lib = tmp_path / "lib"
+        lib.mkdir()
+        _init_git_repo(lib)
+        (lib / "code.txt").write_text("c\n")
+        _git(lib, "add", ".")
+        _git(lib, "commit", "-q", "-m", "lib")
+        main = tmp_path / "main"
+        main.mkdir()
+        self._repo(main)
+        _git(main, "-c", "protocol.file.allow=always", "submodule", "add", "-q", str(lib), "vendor/lib")
+        _git(main, "commit", "-q", "-m", "add submodule")
+        return main
+
+    def test_untracked_content_in_a_submodule_is_not_a_dirty_footprint_path(
+        self, tmp_path: Path
+    ) -> None:
+        # The commit cannot hold content untracked inside a submodule, and git
+        # keeps reporting `` M vendor/lib`` for it: not a hook rewrite.
+        main = self._repo_with_submodule(tmp_path)
+        (main / "vendor" / "lib" / "scratch.txt").write_text("build output\n")
+        (main / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(main, "s", [main / "a.txt", main / "vendor" / "lib"])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(main) == ["a.txt"]
+
+    def test_tracked_change_in_a_submodule_still_fails_the_check(
+        self, tmp_path: Path
+    ) -> None:
+        main = self._repo_with_submodule(tmp_path)
+        (main / "vendor" / "lib" / "code.txt").write_text("edited\n")
+        (main / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(main, "s", [main / "a.txt", main / "vendor" / "lib"])
+
+        assert committed and rc != 0
+        assert "vendor/lib" in tail
+
+    def test_a_non_idempotent_clean_filter_still_fails_the_check(
+        self, tmp_path: Path
+    ) -> None:
+        # Git itself reports the file as changed after the commit, which is
+        # indistinguishable from a hook rewriting it: the check keeps counting it.
+        self._repo(tmp_path)
+        _git(tmp_path, "config", "filter.stamp.clean", "sed \"s/$/ $(date +%N)/\"")
+        _git(tmp_path, "config", "filter.stamp.smudge", "cat")
+        (tmp_path / ".gitattributes").write_text("*.log filter=stamp\n")
+        _git(tmp_path, "add", ".gitattributes")
+        _git(tmp_path, "commit", "-q", "-m", "attrs")
+        (tmp_path / "b.log").write_text("x\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "b.log"])
+
+        assert committed and rc != 0
+        assert "b.log" in tail
+
     def test_absent_ignored_entry_is_skipped_without_a_warning(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:

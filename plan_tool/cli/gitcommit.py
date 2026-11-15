@@ -185,7 +185,10 @@ def _dirty_footprint_paths(
     """Dirty paths (either side of a rename) covered by ``entries``, which, like
     ``git status`` paths, are relative to the work-tree top level ``top``;
     ``None`` when git status cannot be read."""
-    records = status_records_or_none(top)
+    # Untracked content inside a committed submodule is not something this
+    # commit could have held, so it is not a footprint path left dirty. Tracked
+    # changes in a submodule, and every other path, still count.
+    records = status_records_or_none(top, ignore_submodules="untracked")
     if records is None:
         return None
 
