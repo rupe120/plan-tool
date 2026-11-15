@@ -155,6 +155,7 @@ steps:
   - 1
   depends_on_notes:
     1: the path-scoped `commit_all` that `_commit_green_step` delegates to
+  detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/05-make-paths-required-on-commit-green.md
   description: 'Make `paths` required on `_commit_green_step` in `plan_tool/cli/run_cmd.py`
     and have it delegate staging and committing to `commit_all`, so `run --commit`
     uses the same ignored-path warning and post-commit clean check. The `--accept`
