@@ -745,3 +745,103 @@ def test_renderers_are_pure_no_side_effects():
     assert render_annotated_report(ann) == render_annotated_report(ann)
     rp = Path("docs/x.annotated.md")
     assert render_create_seed(ann, report_path=rp) == render_create_seed(ann, report_path=rp)
+
+
+# --- guardrail headings in the seed -----------------------------------------
+
+_GUARDRAIL_TITLES = ("Scope guardrails", "Audit guardrails", "Expected placement")
+
+
+def _guardrail_seed(source_text: str = "# Plan\n", bodies: dict | None = None) -> str:
+    ann = _annotation(source_text=source_text)
+    if bodies is not None:
+        ann = PlanAnnotation(**{**ann.__dict__, "guardrail_bodies": bodies})
+    return render_create_seed(ann, report_path=Path("r.md"))
+
+
+def _body_of(seed: str, title: str) -> str:
+    after = seed.split(f"## {title}\n", 1)[1]
+    return after.split("\n## ", 1)[0].strip()
+
+
+def test_inherited_guardrail_heading_is_copied_verbatim():
+    seed = _guardrail_seed("# P\n\n## Scope guardrails\n\n- keep `a`\n- keep `b`\n")
+    assert _body_of(seed, "Scope guardrails") == "- keep `a`\n- keep `b`"
+
+
+def test_inherited_guardrail_beats_model_written_body_for_the_same_heading():
+    """The source is the authority: a model body never replaces an operator's fence."""
+    seed = _guardrail_seed(
+        "# P\n\n## Scope guardrails\n\nsource fence\n",
+        {"Scope guardrails": "model fence"},
+    )
+    assert _body_of(seed, "Scope guardrails") == "source fence"
+    assert "model fence" not in seed
+
+
+def test_model_written_guardrail_fills_a_heading_the_source_lacks():
+    seed = _guardrail_seed(bodies={"Audit guardrails": "stay within the module"})
+    assert _body_of(seed, "Audit guardrails") == "stay within the module"
+
+
+def test_model_body_none_is_rendered_as_none_not_todo():
+    seed = _guardrail_seed(bodies={"Expected placement": "None"})
+    assert _body_of(seed, "Expected placement") == "None"
+
+
+def test_missing_guardrail_bodies_render_todo_for_all_three_headings():
+    seed = _guardrail_seed()
+    assert [_body_of(seed, t) for t in _GUARDRAIL_TITLES] == ["_(TODO)_"] * 3
+
+
+def test_seed_carries_all_three_headings_exactly_once():
+    seed = _guardrail_seed(bodies={"Scope guardrails": "None"})
+    lines = seed.splitlines()
+    positions = []
+    for title in _GUARDRAIL_TITLES:
+        assert lines.count(f"## {title}") == 1
+        positions.append(lines.index(f"## {title}"))
+    assert positions == sorted(positions)
+    assert lines.index("## References") > positions[-1]
+
+
+def test_duplicated_or_placeholder_source_heading_is_not_inherited():
+    dup = "## Scope guardrails\n\nA\n\n## Scope guardrails\n\nB\n\n## Audit guardrails\n\n_(TODO)_\n"
+    seed = _guardrail_seed("# P\n\n" + dup, {"Scope guardrails": "model"})
+    assert _body_of(seed, "Scope guardrails") == "model"
+    assert _body_of(seed, "Audit guardrails") == "_(TODO)_"
+    assert seed.splitlines().count("## Scope guardrails") == 1
+
+
+def test_mixed_source_inherits_its_accepted_heading_and_takes_model_bodies_for_the_rest():
+    seed = _guardrail_seed(
+        "# P\n\n## Scope guardrails\n\nsource\n",
+        {"Scope guardrails": "ignored", "Audit guardrails": "model audit"},
+    )
+    assert _body_of(seed, "Scope guardrails") == "source"
+    assert _body_of(seed, "Audit guardrails") == "model audit"
+    assert _body_of(seed, "Expected placement") == "_(TODO)_"
+
+
+def test_partial_model_response_fills_only_the_headings_it_supplies():
+    seed = _guardrail_seed(bodies={"Scope guardrails": "s", "Expected placement": "p"})
+    assert [_body_of(seed, t) for t in _GUARDRAIL_TITLES] == ["s", "_(TODO)_", "p"]
+
+
+@pytest.mark.parametrize("bad", ["", "   ", "_(TODO)_", "TODO", "x\n\n## Injected\n\ny"])
+def test_unusable_model_body_is_not_written(bad):
+    seed = _guardrail_seed(bodies={"Scope guardrails": bad})
+    assert _body_of(seed, "Scope guardrails") == "_(TODO)_"
+    assert "## Injected" not in seed
+    assert seed.splitlines().count("## Scope guardrails") == 1
+
+
+def test_existing_seed_sections_unchanged_by_guardrail_headings():
+    lines = _guardrail_seed().splitlines()
+    for heading in (
+        "## Carryover scope (remaining work)",
+        "## Already implemented (done-context — do not re-plan)",
+        "## References",
+        "## Provenance",
+    ):
+        assert heading in lines

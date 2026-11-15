@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import ast
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
@@ -87,8 +87,22 @@ _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
         "remaining": "",
         "confidence_low": False,
         "is_step": False,
+    }, {
+        # Optional; omit when the document implies no fence. Not a section.
+        "guardrails": {
+            "scope": "fence the source implies, or None",
+            "audit": "fence the source implies, or None",
+            "placement": "fence the source implies, or None",
+        },
     }],
 )
+
+# Keys of the optional ``guardrails`` element, one per required seed heading.
+GUARDRAIL_RESPONSE_KEYS: dict[str, str] = {
+    "scope": "Scope guardrails",
+    "audit": "Audit guardrails",
+    "placement": "Expected placement",
+}
 
 
 class AnnotateError(Exception):
@@ -175,6 +189,9 @@ class PlanAnnotation:
     grounding_candidate_count: int = 0
     grounding_skipped_count: int = 0
     grounding_skip_reasons: tuple[str, ...] = ()
+    # Model-written guardrail bodies keyed by heading title; empty when the
+    # response carried none (older shape). The renderer decides whether to use them.
+    guardrail_bodies: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -528,9 +545,39 @@ def _unresolved_code_refs(repo_root: Path, code_refs: tuple[str, ...]) -> tuple[
     return tuple(ref for ref in code_refs if not _code_ref_resolves(repo_root, ref))
 
 
+def _split_guardrails_element(
+    items: list,
+) -> tuple[list, dict[str, str]]:
+    """Pull ``guardrails`` elements (no ``heading``) out of the response array.
+
+    Multiple elements merge, the first usable body per heading winning. A
+    missing key, non-string or blank value means no body, never an error.
+    """
+    sections: list = []
+    bodies: dict[str, str] = {}
+    for item in items:
+        if isinstance(item, dict) and "guardrails" in item and "heading" not in item:
+            raw_bodies = item["guardrails"]
+            if isinstance(raw_bodies, dict):
+                for key, title in GUARDRAIL_RESPONSE_KEYS.items():
+                    value = raw_bodies.get(key)
+                    if isinstance(value, str) and value.strip():
+                        bodies.setdefault(title, value.strip())
+            continue
+        sections.append(item)
+    return sections, bodies
+
+
 def _parse_annotation_response(
     raw: str, *, repo_root: Path
 ) -> tuple[SectionAnnotation, ...]:
+    """Section verdicts only; see :func:`_parse_annotation_result` for guardrails."""
+    return _parse_annotation_result(raw, repo_root=repo_root)[0]
+
+
+def _parse_annotation_result(
+    raw: str, *, repo_root: Path
+) -> tuple[tuple[SectionAnnotation, ...], dict[str, str]]:
     """Lift the JSON array out of a Claude response into section verdicts.
 
     Same extraction shape as
@@ -547,6 +594,7 @@ def _parse_annotation_response(
     items = _ANNOTATE_RESPONSE_CONTRACT.decode(raw)
     if not isinstance(items, list):
         raise AnnotateError("annotate response contained no JSON array")
+    items, guardrail_bodies = _split_guardrails_element(items)
     if not items:
         raise AnnotateError("annotate response JSON array was empty or not a list")
 
@@ -627,7 +675,7 @@ def _parse_annotation_response(
                 contradiction_review=contradiction_review,
             )
         )
-    return tuple(sections)
+    return tuple(sections), guardrail_bodies
 
 
 def _has_incomplete_grounding(
@@ -750,9 +798,10 @@ def classify_plan_implementation(
     )
     raw = invoker(prompt)
     low_grounding = _has_incomplete_grounding(grounding)
-    sections = _apply_grounding_floor(
-        _parse_annotation_response(raw, repo_root=grounding.repo_root), grounding
+    parsed_sections, guardrail_bodies = _parse_annotation_result(
+        raw, repo_root=grounding.repo_root
     )
+    sections = _apply_grounding_floor(parsed_sections, grounding)
     return PlanAnnotation(
         source_path=source_path,
         source_text=source_text,
@@ -764,4 +813,5 @@ def classify_plan_implementation(
         grounding_candidate_count=grounding.candidate_count,
         grounding_skipped_count=grounding.skipped_count,
         grounding_skip_reasons=grounding.skip_reasons,
+        guardrail_bodies=guardrail_bodies,
     )

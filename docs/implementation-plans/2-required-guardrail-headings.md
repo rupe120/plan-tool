@@ -91,7 +91,7 @@ steps:
   depends_on_notes:
     2: the shared copy-or-_(TODO)_ guardrail block helper in scope_fence.py
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md
-  status: current
+  status: done
   description: 'Make `annotate` write all three guardrail headings into its carryover
     seed. When the source plan or document has a guardrail heading the step 1 predicate
     accepts, `annotate_render.render_create_seed` copies it verbatim through the step
@@ -129,6 +129,7 @@ steps:
   depends_on_notes:
     1: the shared guardrail-presence predicate
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/04-make-roadmap-materialize-refresh-seeds.md
+  status: current
   description: 'Make `roadmap --materialize` and `--refresh-seeds` produce draft seeds
     that carry all three guardrail headings. In `plan_tool/prompts/roadmap-seed.md`,
     add `Scope guardrails`, `Audit guardrails` and `Expected placement` to the required

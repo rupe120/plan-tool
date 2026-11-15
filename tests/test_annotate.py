@@ -971,3 +971,84 @@ def test_heading_less_source_classified_as_one_section(tmp_path: Path) -> None:
         src, repo_root=tmp_path, invoker=_stub(response)
     )
     assert len(result.sections) == 1
+
+
+# --- guardrails element -----------------------------------------------------
+
+_ONE_SECTION = {"heading": "Overview", "status": "NOT-IMPLEMENTED", "evidence": "absent"}
+
+
+def _classify_with(tmp_path: Path, response_items: list[dict]) -> PlanAnnotation:
+    src = _write_notes(tmp_path, "notes.md", "# Overview\n\nSome notes.\n")
+    return classify_plan_implementation(
+        src, repo_root=tmp_path, invoker=_stub(_canned(response_items))
+    )
+
+
+def test_response_with_guardrails_element_populates_the_annotation(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path,
+        [_ONE_SECTION, {"guardrails": {"scope": "keep it small", "audit": "None"}}],
+    )
+    assert result.guardrail_bodies == {
+        "Scope guardrails": "keep it small",
+        "Audit guardrails": "None",
+    }
+
+
+def test_guardrails_element_does_not_count_as_a_section(tmp_path: Path) -> None:
+    result = _classify_with(tmp_path, [{"guardrails": {"scope": "x"}}, _ONE_SECTION])
+    assert [s.heading for s in result.sections] == ["Overview"]
+
+
+def test_older_response_shape_without_guardrails_still_parses(tmp_path: Path) -> None:
+    result = _classify_with(tmp_path, [_ONE_SECTION])
+    assert [s.heading for s in result.sections] == ["Overview"]
+    assert result.guardrail_bodies == {}
+
+
+def test_response_with_only_a_guardrails_element_still_raises_empty(tmp_path: Path) -> None:
+    with pytest.raises(AnnotateError, match="empty"):
+        _classify_with(tmp_path, [{"guardrails": {"scope": "x"}}])
+
+
+def test_blank_or_non_string_guardrail_value_is_treated_as_absent(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path,
+        [_ONE_SECTION, {"guardrails": {"scope": "  ", "audit": 3, "placement": None}}],
+    )
+    assert result.guardrail_bodies == {}
+
+
+def test_multiple_guardrails_elements_merge_first_body_wins(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path,
+        [
+            {"guardrails": {"scope": "first"}},
+            _ONE_SECTION,
+            {"guardrails": {"scope": "second", "audit": "None"}},
+        ],
+    )
+    assert result.guardrail_bodies == {
+        "Scope guardrails": "first",
+        "Audit guardrails": "None",
+    }
+
+
+def test_classify_makes_one_invoker_call_with_guardrails_requested(tmp_path: Path) -> None:
+    src = _write_notes(tmp_path, "notes.md", "# Overview\n\nSome notes.\n")
+    prompts: list[str] = []
+
+    def invoker(prompt: str) -> str:
+        prompts.append(prompt)
+        return _canned([_ONE_SECTION, {"guardrails": {"scope": "None"}}])
+
+    classify_plan_implementation(src, repo_root=tmp_path, invoker=invoker)
+    assert len(prompts) == 1
+
+
+def test_annotate_prompt_contains_the_guardrail_fence_instruction() -> None:
+    prompt = render_annotate_prompt("# Doc\n", "", "")
+    assert "only when the document already implies that fence" in prompt
+    assert "add no scope, mechanism or requirement" in prompt
+    assert '"guardrails"' in prompt
