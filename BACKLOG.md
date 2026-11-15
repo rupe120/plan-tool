@@ -4530,7 +4530,12 @@ working straight down the tiers.
   with ~50 saved reports spawns several hundred git processes per commit.
 - **Fix:** one call per check over all entries (`check-ignore --stdin`, one
   `ls-files -z`, one `ls-tree -z HEAD`, one `diff --cached --name-only -z`),
-  matched back to entries by path prefix. Deliberately not changed: the
+  matched back to entries by path prefix. Two cheaper cuts first: the
+  `--archive` footprints in `run_cmd._step_footprint` and
+  `manifest._sweep_commit_footprint` list every per-file `plan_details_moved`
+  pair where the source and destination directories would cover them, and
+  `run_cmd._commit_step_footprint` reads `git status` again right after
+  `commit_all`'s own post-commit read. Deliberately not changed: the
   per-entry decisions themselves (ignored, staged-delete, no-change), which the
   `TestCommitAll` cases pin.
 - **Effort:** small.
