@@ -100,6 +100,7 @@ steps:
   - 1
   depends_on_notes:
     1: the path-scoped `commit_all`
+  detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/03-give-completeness-audit-commit-plan.md
   description: 'Give `completeness-audit --commit` in `plan_tool/cli/completeness_cmd.py`
     its own footprint: the plan file, the plan''s `plan-details/<slug>/` directory
     (the saved report and sidecar from `write_completeness_report`, plus detail files
