@@ -17,6 +17,7 @@ characterization tests can drive them by patching ``builtins.input``.
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -685,20 +686,22 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     # the sweep moved nothing (no completed plans, no orphans/missing),
     # leaving nothing to commit.
     if getattr(args, "commit", False):
-        if working_tree_dirty(ctx.repo_root):
-            n_archived = sum(
-                1 for o in report.archived if o.archived_to is not None
-            )
-            commit_rc, tail = commit_all(
-                ctx.repo_root, _sweep_commit_subject(n_archived), [ctx.repo_root]
-            )
-            if commit_rc == 0:
-                success("committed sweep changes")
-            else:
-                error(f"git commit failed (rc={commit_rc})")
-                if tail:
-                    error(tail)
-                return 1
+        n_archived = sum(1 for o in report.archived if o.archived_to is not None)
+        head_before = _head_commit(ctx.repo_root)
+        commit_rc, tail = commit_all(
+            ctx.repo_root,
+            _sweep_commit_subject(n_archived),
+            _sweep_commit_footprint(
+                manifest_path, report, duplicate_archive_results
+            ),
+        )
+        if commit_rc != 0:
+            error(f"git commit failed (rc={commit_rc})")
+            if tail:
+                error(tail)
+            return 1
+        if _head_commit(ctx.repo_root) != head_before:
+            success("committed sweep changes")
         else:
             info("--commit: nothing to commit (sweep moved nothing)")
 
@@ -708,6 +711,41 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     # failure of the sweep itself. Non-zero is reserved for a run that
     # couldn't proceed (e.g. directory-mode refusal above, rc 2).
     return 0
+
+
+def _head_commit(repo_root: Path) -> str:
+    """Current HEAD sha, or '' when unreadable (e.g. no commits yet)."""
+    proc = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo_root,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+    )
+    return proc.stdout.strip() if proc.returncode == 0 else ""
+
+
+def _sweep_commit_footprint(
+    manifest_path: Path,
+    report: SweepReport,
+    duplicate_archive_results: list[tuple[Path, Path]],
+) -> list[Path]:
+    """Paths a sweep wrote: manifest plus both sides of every move.
+
+    Both sides matter: the source is a delete and the destination an add, so
+    staging them together lets git record a rename. Missing-entry prunes only
+    edit the manifest, which is already listed.
+    """
+    paths: list[Path] = [manifest_path]
+    for outcome in report.archived:
+        paths.append(outcome.plan_path)
+        if outcome.archived_to is not None:
+            paths.append(outcome.archived_to)
+        for src, dest in outcome.plan_details_moved:
+            paths.extend((src, dest))
+    for src, dest in duplicate_archive_results:
+        paths.extend((src, dest))
+    return paths
 
 
 def _sweep_commit_subject(n_archived: int) -> str:
@@ -1059,8 +1097,9 @@ def register(subparsers) -> dict[str, Handler]:
         action="store_true",
         dest="commit",
         help=(
-            "after sweeping, stage all changes (git add -A) and create one "
-            "commit for the archived plans + manifest edits (subject "
+            "after sweeping, create one commit holding only the archived "
+            "plans, their plan-details moves, and the manifest edits "
+            "(subject "
             "'sweep: archive N completed plans'). Requires a clean working "
             "tree up front; incompatible with --dry-run / --report-only; "
             "off by default; only commits when the sweep moved something."
