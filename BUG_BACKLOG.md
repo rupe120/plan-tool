@@ -639,6 +639,29 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
+### `--commit` fails when a footprint directory sits under an ignored parent but holds force-tracked files
+
+- **Files:** `plan_tool/cli/gitcommit.py:commit_all`.
+- **Symptom:** a repo that ignores `.plan-tool/` wholesale but force-tracks
+  `.plan-tool/lessons/project.md` (the setup `warn_recommended_paths_ignored`
+  already warns about). `git check-ignore` does not match the `.plan-tool/lessons`
+  entry, because it holds a tracked file, so the entry reaches
+  `git add -A -- .plan-tool/lessons`. git stages the tracked change, then exits
+  1 with "paths are ignored by one of your .gitignore files". `commit_all`
+  returns that rc, and `detail --commit` reports the step's commit as failed.
+  Probed 2026-11-14. The whole-tree `git add -A` this replaced exited 0 here.
+- **Fix:** stage such an entry without naming the ignored directory as a
+  pathspec (for example `git add -u -- <entry>` for its tracked files), or skip
+  it with the same warning as an ignored file. Deliberately not done: forcing
+  ignored files in with `git add -f`.
+- **Approach:** `direct`, with a test on that repo shape.
+- **Verification:** `detail --lessons --commit` in that repo commits the
+  modified `project.md` and exits 0.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-14, `/code-review` of `commit-scoped-to-verb-footprint`.
+  The reviewer described the symptom as the entry being silently dropped; the
+  probe shows the commit fails instead.
+
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in

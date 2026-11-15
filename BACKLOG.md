@@ -4520,6 +4520,26 @@ working straight down the tiers.
 
 ### D. Process / hygiene
 
+**#536 — Batch `commit_all`'s per-path git calls**
+
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **What:** `plan_tool/cli/gitcommit.py:commit_all` runs `check-ignore`,
+  `ls-files`, sometimes `ls-tree HEAD`, and `diff --cached` once per footprint
+  entry. A footprint is usually a handful of paths, but an archiving `run` step
+  or a `manifest sweep` lists both sides of every plan-details move, so a plan
+  with ~50 saved reports spawns several hundred git processes per commit.
+- **Fix:** one call per check over all entries (`check-ignore --stdin`, one
+  `ls-files -z`, one `ls-tree -z HEAD`, one `diff --cached --name-only -z`),
+  matched back to entries by path prefix. Deliberately not changed: the
+  per-entry decisions themselves (ignored, staged-delete, no-change), which the
+  `TestCommitAll` cases pin.
+- **Effort:** small.
+- **Approach:** direct; the existing `TestCommitAll` cases are the regression
+  net, plus one test that counts git invocations for a many-entry footprint.
+- **Origin:** 2026-11-14, `/code-review` of `commit-scoped-to-verb-footprint`
+  (deferred as a cost, not a defect).
+- **Status:** not started.
+
 **#497 — Keep one plain-words swap list for the detail, audit, and apply prompts**
 
 - **Labels:** Route `direct`
