@@ -1212,6 +1212,44 @@ class TestUnexpectedDirtyPaths:
         # stranger is still reported.
         assert unexpected_dirty_paths(repo, [outside]) == ["stranger.txt"]
 
+    def test_expected_path_with_a_space_is_matched(self, tmp_path: Path) -> None:
+        # Non-``-z`` porcelain quotes such a name (``"my plan.md"``), which never
+        # equals the expected path, so ``--accept`` refused its own plan file.
+        _init_git_repo(tmp_path)
+        _commit_initial(tmp_path)
+        plan = tmp_path / "my plan.md"
+        plan.write_text("edited\n", encoding="utf-8")
+        (tmp_path / "caf\u00e9.txt").write_text("x\n", encoding="utf-8")
+        assert unexpected_dirty_paths(tmp_path, [plan]) == ["caf\u00e9.txt"]
+
+    def test_staged_rename_reports_each_side_not_an_arrow_string(
+        self, tmp_path: Path
+    ) -> None:
+        _init_git_repo(tmp_path)
+        (tmp_path / "old.txt").write_text("line one\nline two\nline three\n", encoding="utf-8")
+        _git(tmp_path, "add", "old.txt")
+        _git(tmp_path, "commit", "-q", "-m", "init")
+        _git(tmp_path, "mv", "old.txt", "new.txt")
+        assert unexpected_dirty_paths(tmp_path, []) == ["new.txt", "old.txt"]
+        # Expecting both sides covers a rename of an expected file.
+        assert unexpected_dirty_paths(
+            tmp_path, [tmp_path / "old.txt", tmp_path / "new.txt"]
+        ) == []
+
+    def test_project_root_below_the_git_top_level_matches_expected_paths(
+        self, tmp_path: Path
+    ) -> None:
+        # Status paths are top-level-relative; the expected paths are under the
+        # project root, which here sits one level below the top.
+        _init_git_repo(tmp_path)
+        _commit_initial(tmp_path)
+        svc = tmp_path / "svc"
+        svc.mkdir()
+        plan = svc / "plan.md"
+        plan.write_text("p\n", encoding="utf-8")
+        (svc / "stranger.txt").write_text("s\n", encoding="utf-8")
+        assert unexpected_dirty_paths(svc, [plan]) == ["svc/stranger.txt"]
+
     def test_non_repo_returns_none(self, tmp_path: Path) -> None:
         assert unexpected_dirty_paths(tmp_path, []) is None
 

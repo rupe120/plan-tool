@@ -40,64 +40,47 @@ def working_tree_dirty(repo_root: Path) -> bool:
     return bool(proc.stdout.strip())
 
 
+def _covers(entries: Sequence[str], rel: str) -> bool:
+    """True when ``rel`` equals, or is nested under, any of ``entries``
+    (top-level-relative POSIX paths; ``"."`` covers everything)."""
+    return any(
+        exp == "." or rel == exp or rel.startswith(exp + "/") for exp in entries
+    )
+
+
 def unexpected_dirty_paths(
     repo_root: Path, expected: Sequence[Path]
 ) -> "list[str] | None":
-    """Repo-relative dirty paths in ``repo_root`` not covered by ``expected``.
+    """Dirty paths in the work tree not covered by ``expected``, as ``git status``
+    reports them (relative to the git top level), sorted.
 
-    Runs ``git status --porcelain --untracked-files=all``. The ``-uall`` mode is
-    load-bearing: git otherwise collapses a wholly-new untracked directory into
-    one ``?? .plan-tool/`` line, which would both mask the expected file inside
-    it and hide an unrelated file sitting next to it. Same gotcha
-    ``scenario_capture.working_tree_dirty`` solves — generalized here from one
-    hardcoded prefix to a caller-supplied set. A reported path counts as
-    expected when it equals, or is nested under, any ``expected`` entry (so a
-    directory in ``expected`` covers the files ``-uall`` lists beneath it).
+    Reads ``git status -z --untracked-files=all`` through
+    ``git_state.status_records_or_none``: ``-z`` keeps a name with a space or
+    non-ASCII character verbatim, a rename reports both sides, and ``-uall`` lists
+    files in a wholly-new directory individually (git otherwise collapses it to
+    one ``?? dir/`` line that would mask an expected file inside it and hide a
+    stranger beside it). A reported path is expected when it equals, or is nested
+    under, an ``expected`` entry, so a directory covers its files.
 
-    Each ``expected`` path is resolved and relativized against ``repo_root``; an
-    entry that can't be under ``repo_root`` (an out-of-repo ``--manifest``
-    override) is skipped, since it can't appear in this repo's status anyway.
-    Returns the sorted reported paths not in the expected set (``[]`` when all
-    dirt is accounted for), or ``None`` when ``git status`` can't be read (not a
-    work tree, git unavailable) — a caller that must fail closed treats ``None``
-    the same as a non-empty list, never as "clean" (mirrors
-    ``launcher._git_changed_paths_or_none``'s None-means-"couldn't-tell").
+    ``expected`` paths are made top-level-relative, so a project root below the
+    top level matches; one outside the work tree can't appear in its status and
+    is skipped. ``None`` when git can't be read — a caller that must fail closed
+    treats it like a non-empty list, never as "clean".
     """
-    try:
-        proc = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=all"],
-            cwd=repo_root,
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            text=True,
-        )
-    except OSError:
-        # git binary absent / repo_root unreadable → "couldn't tell", same as a
-        # non-zero rc. Mirrors scenario_capture.working_tree_dirty's OSError
-        # guard so a missing git crashes nothing (the caller fails closed).
+    records = status_records_or_none(repo_root)
+    top = toplevel_or_none(repo_root)
+    if records is None or top is None:
         return None
-    if proc.returncode != 0:
-        return None
-    root = repo_root.resolve()
-    expected_rel: set[str] = set()
-    for path in expected:
-        try:
-            expected_rel.add(path.resolve().relative_to(root).as_posix())
-        except ValueError:
-            continue  # not under repo_root — can't appear in its git status
-    unexpected: list[str] = []
-    for line in proc.stdout.splitlines():
-        if not line.strip():
-            continue
-        # Porcelain v1: two status chars + space + path.
-        reported = line[3:].strip()
-        if any(
-            reported == exp or reported.startswith(exp + "/")
-            for exp in expected_rel
-        ):
-            continue
-        unexpected.append(reported)
-    return sorted(unexpected)
+    expected_rel = [
+        rel for rel in (repo_relative(top, path) for path in expected) if rel is not None
+    ]
+    reported = {
+        rel
+        for path, origin in records
+        for rel in (path, origin)
+        if rel is not None and not _covers(expected_rel, rel)
+    }
+    return sorted(reported)
 
 
 def path_is_gitignored(repo_root: Path, path: Path) -> bool:
@@ -206,16 +189,11 @@ def _dirty_footprint_paths(
     if records is None:
         return None
 
-    def covered(rel: str) -> bool:
-        return any(
-            exp == "." or rel == exp or rel.startswith(exp + "/") for exp in entries
-        )
-
     dirty = {
         rel
         for path, origin in records
         for rel in (path, origin)
-        if rel is not None and covered(rel)
+        if rel is not None and _covers(entries, rel)
     }
     return sorted(dirty)
 

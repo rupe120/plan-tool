@@ -2494,6 +2494,23 @@ class TestRunAccept:
             _accept_args(), ctx=_ctx(tmp_path), plan_path=plan_path
         ) == 2
 
+    def test_accept_succeeds_when_the_plan_name_has_a_space_and_only_it_is_dirty(
+        self, tmp_path: Path
+    ) -> None:
+        """``git status`` quotes such a name unless read with ``-z``; the clean
+        check then saw the plan as a stranger and refused its own certified fix."""
+        _init_git_repo(tmp_path)
+        plan_path = _accept_plan(tmp_path)
+        spaced = tmp_path / "my accept.md"
+        plan_path.rename(spaced)
+        _commit_everything(tmp_path)
+        # Stands in for the failed gate's status_note the tool leaves behind.
+        spaced.write_text(spaced.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+        assert _git_status_porcelain(tmp_path).strip().endswith('"my accept.md"')
+        assert run_cmd._cmd_run_accept(
+            _accept_args(), ctx=_ctx(tmp_path), plan_path=spaced
+        ) == 0
+
     def test_a_gitignored_lessons_file_does_not_fail_the_commit(
         self, tmp_path: Path
     ) -> None:
