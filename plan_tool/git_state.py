@@ -42,8 +42,30 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
     seen as ``tests/test_x.py``. ``-z`` disables git's path quoting/escaping,
     so spaces/tabs/non-ASCII come through verbatim; each NUL record is
     ``XY <path>`` and a rename/copy (``X`` in ``R``/``C``) is followed by an
-    extra NUL field (the origin) we skip.
+    extra NUL field (the origin) we skip; :func:`renamed_origins_or_none`
+    reads those origins.
     """
+    records = _status_records_or_none(repo_root)
+    if records is None:
+        return None
+    return {path for path, _origin in records}
+
+
+def renamed_origins_or_none(repo_root: Path) -> Optional[dict[str, str]]:
+    """Map each renamed/copied destination to its origin path, or ``None`` when
+    git can't be read. Additive companion to :func:`changed_paths_or_none`,
+    which omits origins."""
+    records = _status_records_or_none(repo_root)
+    if records is None:
+        return None
+    return {path: origin for path, origin in records if origin is not None}
+
+
+def _status_records_or_none(
+    repo_root: Path,
+) -> Optional[list[tuple[str, Optional[str]]]]:
+    """``(path, origin)`` per ``git status`` record (``origin`` set only for a
+    rename/copy), or ``None`` when git can't be read."""
     try:
         proc = subprocess.run(
             ["git", "status", "--porcelain", "-z", "--untracked-files=all"],
@@ -60,7 +82,7 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
     # trailing NUL yields a final empty token we skip. Walk it as a cursor so
     # a rename/copy can consume its extra origin-path field.
     fields = proc.stdout.split("\0")
-    paths: set[str] = set()
+    records: list[tuple[str, Optional[str]]] = []
     i = 0
     while i < len(fields):
         entry = fields[i]
@@ -68,11 +90,14 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
             i += 1
             continue
         status, path = entry[:2], entry[3:]
-        paths.add(path)
-        # Rename/copy records are followed by their origin path in the next
-        # NUL field; skip it so it isn't parsed as a separate status entry.
-        i += 2 if status[0] in ("R", "C") else 1
-    return paths
+        if status[0] in ("R", "C"):
+            origin = fields[i + 1] if i + 1 < len(fields) else ""
+            records.append((path, origin or None))
+            i += 2
+        else:
+            records.append((path, None))
+            i += 1
+    return records
 
 
 def changed_paths(repo_root: Path) -> set[str]:
