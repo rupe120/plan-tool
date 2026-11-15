@@ -51,18 +51,7 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/02-make-scope-out-reground-write-all-three.md
-  status: current
-  status_note: 'test gate failed (rc=1); step not advanced. Tail: 267: AssertionError
-
-    =========================== short test summary info ============================
-
-    FAILED tests/cli/test_scope_out_cmd.py::test_next_steps_name_inherited_headings_for_review
-
-    FAILED tests/cli/test_scope_out_cmd.py::test_next_steps_name_todo_headings_to_fill_in
-
-    FAILED tests/cli/test_scope_out_cmd.py::test_next_steps_omit_a_group_that_is_empty
-
-    FAILED tests/test_scope_out.py::test_ca'
+  status: done
   description: 'Make `scope-out` and `reground` write all three guardrail headings
     into the seeds they render. `scope_out.render_carved_seed`, `scope_out.render_carved_region_seed`
     and `reground.render_rebaseline_seed` copy each heading''s body verbatim from
@@ -102,6 +91,7 @@ steps:
   depends_on_notes:
     2: the shared copy-or-_(TODO)_ guardrail block helper in scope_fence.py
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md
+  status: current
   description: 'Make `annotate` write all three guardrail headings into its carryover
     seed. When the source plan or document has a guardrail heading the step 1 predicate
     accepts, `annotate_render.render_create_seed` copies it verbatim through the step
