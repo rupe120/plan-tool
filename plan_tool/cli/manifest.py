@@ -690,7 +690,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
             ctx.repo_root,
             _sweep_commit_subject(n_archived),
             _sweep_commit_footprint(
-                manifest_path, report, duplicate_archive_results
+                ctx.repo_root, manifest_path, report, duplicate_archive_results
             ),
         )
         if committed.rc != 0:
@@ -710,17 +710,21 @@ def cmd_sweep(args: argparse.Namespace) -> int:
 
 
 def _sweep_commit_footprint(
+    repo_root: Path,
     manifest_path: Path,
     report: SweepReport,
     duplicate_archive_results: list[tuple[Path, Path]],
 ) -> list[Path]:
-    """Paths a sweep wrote: manifest plus both sides of every move.
+    """Paths a sweep wrote: manifest, plan-tool's state directory, and both
+    sides of every move.
 
     Both sides matter: the source is a delete and the destination an add, so
     staging them together lets git record a rename. Missing-entry prunes only
     edit the manifest, which is already listed.
     """
-    paths: list[Path] = [manifest_path]
+    from plan_tool.cli.commit_footprint import plan_tool_state_dir
+
+    paths: list[Path] = [manifest_path, plan_tool_state_dir(repo_root)]
     for outcome in report.archived:
         paths.extend(outcome.touched_paths())
     for src, dest in duplicate_archive_results:

@@ -338,7 +338,7 @@ it is given.
 
 - **Run's footprint:** the plan's own paths (`commit_footprint.plan_commit_footprint`:
   the plan file, `plan-details/<slug>/`, declared `steps[].detail` files, the
-  plan's `lessons:` log, project lessons), any `--archive` outputs and manifest,
+  plan's `lessons:` log, and `.plan-tool/`), any `--archive` outputs and manifest,
   and the git delta since the step's baseline, both sides of a rename. A path
   already dirty at the baseline is left out of the delta and named in a warning.
 - **Entry rules:**
@@ -349,7 +349,8 @@ it is given.
   | symlink | the link itself is committed, not its target |
   | absent, and not in the index or `HEAD` | skipped silently |
   | only in `HEAD` (`git rm`, origin of `git mv`) | committed as a delete, not passed to `git add` |
-  | gitignored | skipped with a warning |
+  | gitignored file | skipped with a warning |
+  | gitignored directory | its tracked files are committed (`git add -u`); the rest is skipped silently |
   | relative path | read relative to the current directory |
   | staged delete of a force-tracked file matching an ignore rule | committed, no warning |
 
@@ -362,10 +363,11 @@ it is given.
   `rc 0` with no commit. A footprint path still dirty after the commit (a hook
   rewrote it) is non-zero with `committed` true. An unreadable index or git
   status fails closed.
-- **Runtime state is assumed ignored:** `.plan-tool/runs/` and
-  `.plan-tool/run-prefs.json` are written around the commits and are not in any
-  footprint. A repo that does not gitignore them is left dirty after a run
-  (BUG_BACKLOG).
+- **Plan-tool's own files follow `.gitignore`:** every footprint includes
+  `.plan-tool/`, so the repo's ignore rules decide which of its files (manifest,
+  lessons, telemetry, run logs, run-prefs) are committed. Writes made after the
+  last commit, such as the run-log end record, are left dirty in a repo that
+  does not ignore them (BUG_BACKLOG).
 
 ## After the plan completes — the two-loop verification tail
 

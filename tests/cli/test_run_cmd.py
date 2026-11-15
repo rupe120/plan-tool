@@ -2100,6 +2100,7 @@ class TestRunCommitFootprint:
             baseline=baseline,
             archive_outcome=kw.get("archive_outcome"),
             manifest_path=kw.get("manifest_path"),
+            plan_footprint=kw.get("plan_footprint"),
         )
 
     def test_file_dirtied_after_baseline_is_in_delta_and_committed_known_residual(
@@ -2125,7 +2126,9 @@ class TestRunCommitFootprint:
         def bad_bytes(*_a, **_k):
             raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid start byte")
 
-        monkeypatch.setattr(run_cmd, "parse_plan", bad_bytes)
+        import plan_tool.cli.commit_footprint as commit_footprint
+
+        monkeypatch.setattr(commit_footprint, "parse_plan", bad_bytes)
         rc, tail, committed = self._commit(tmp_path, plan_path, set())
         assert rc == 0 and committed, tail
         assert "step_work.txt" in _git_head_files(tmp_path)
@@ -2253,6 +2256,37 @@ class TestRunCommitFootprint:
         assert _git_status_porcelain(tmp_path) == ""
         assert "m.json" in _git_head_files(tmp_path)
         assert any(f.startswith("archive/") for f in _git_head_files(tmp_path))
+
+    def test_archiving_step_reads_the_plan_before_the_archive_notice(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """The archive prepends a notice the parser rejects; the plan's
+        footprint is read first, so no warning and the lessons log rides."""
+        _init_git_repo(tmp_path)
+        plan_path, manifest_path = _completed_plan_and_manifest(tmp_path)
+        plan_path.write_text(
+            plan_path.read_text(encoding="utf-8").replace(
+                "---\n", "---\nlessons: notes/lessons.md\n", 1
+            ),
+            encoding="utf-8",
+        )
+        (tmp_path / "notes").mkdir()
+        (tmp_path / "notes" / "lessons.md").write_text("old\n", encoding="utf-8")
+        _commit_baseline(tmp_path)
+        (tmp_path / "notes" / "lessons.md").write_text("halt\n", encoding="utf-8")
+        baseline = {"notes/lessons.md"}  # dirty before the step, plan-owned
+        pre = run_cmd.plan_commit_footprint(tmp_path, plan_path)
+        outcome = run_cmd._archive_on_completion(
+            plan_path, ctx=_ctx(tmp_path), manifest_path=manifest_path
+        )
+        rc, tail, committed = self._commit(
+            tmp_path, plan_path, baseline,
+            archive_outcome=outcome, manifest_path=manifest_path,
+            plan_footprint=pre,
+        )
+        assert rc == 0 and committed, tail
+        assert "could not read" not in capsys.readouterr().err
+        assert "notes/lessons.md" in _git_head_files(tmp_path)
 
     def test_plan_file_is_clean_after_each_green_commit(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

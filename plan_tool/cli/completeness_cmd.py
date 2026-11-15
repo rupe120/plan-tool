@@ -1679,7 +1679,8 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "after a clean --iterate run that applied findings, stage only "
             "the plan file, its plan-details/<slug>/ directory, the detail "
-            "files the plan declares and the project lessons directory, and "
+            "files and lessons log the plan declares and the files under "
+            ".plan-tool/ that .gitignore does not exclude, and "
             "create one commit with subject "
             "'plan(<slug>): completeness — applied audit findings'. Requires "
             "--iterate (an audit-only run makes no plan edits) and a clean "

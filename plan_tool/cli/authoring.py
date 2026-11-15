@@ -3250,7 +3250,8 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "after a clean authoring run (and the completeness tail), commit "
             "only the plan file, the plan's plan-details/<slug>/ directory, "
-            "the detail files the plan declares, and project lessons, with "
+            "the detail files and lessons log the plan declares, and the "
+            "files under .plan-tool/ that .gitignore does not exclude, with "
             "subject 'plan(<slug>): detail — authored N step(s)'; other "
             "changed files are left alone. Requires a clean working tree up "
             "front; off by default; ignored under --dry-run or when nothing "

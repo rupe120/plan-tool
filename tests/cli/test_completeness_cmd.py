@@ -6932,7 +6932,7 @@ class TestCompletenessCommitFootprint:
         assert plan_path in footprint
         assert plan_path.parent / "plan-details" / "demo" in footprint
         assert tmp_repo.root / "plans/details/01-only-step.md" in footprint
-        assert tmp_repo.root / ".plan-tool" / "lessons" in footprint
+        assert tmp_repo.root / ".plan-tool" in footprint
         assert tmp_repo.root not in footprint
 
 

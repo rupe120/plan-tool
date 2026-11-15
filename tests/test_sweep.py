@@ -1516,3 +1516,21 @@ class TestSweepDuplicatePlans:
         # Destination exists.
         archived = dup_plan.parent / "archive" / dup_plan.name
         assert archived.is_file()
+
+
+class TestArchiveOutcomeTouchedPaths:
+    def test_details_directories_are_listed_whole_when_known(self, tmp_path: Path) -> None:
+        """The source details directory is removed whole, so an entry no per-file
+        move recorded (a tracked symlink to a directory) is still covered."""
+        from plan_tool.sweep import ArchiveOutcome
+
+        src, dst = tmp_path / "plan-details" / "x", tmp_path / "archive" / "plan-details" / "x"
+        outcome = ArchiveOutcome(
+            plan_path=tmp_path / "1-x.md",
+            archived_to=tmp_path / "archive" / "1-x.md",
+            plan_details_moved=[(src / "a.md", dst / "a.md")],
+            plan_details_dirs=(src, dst),
+        )
+        assert outcome.touched_paths() == [
+            tmp_path / "1-x.md", tmp_path / "archive" / "1-x.md", src, dst,
+        ]

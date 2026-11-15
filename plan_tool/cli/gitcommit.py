@@ -116,6 +116,7 @@ def path_is_gitignored(repo_root: Path, path: Path) -> bool:
         stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
+        errors="surrogateescape",
     )
     return proc.returncode == 0
 
@@ -246,6 +247,17 @@ def _in_index(repo_root: Path, rel: str) -> bool:
     return bool(_git_literal(repo_root, "ls-files", "--", rel).stdout.strip())
 
 
+def _matches_ignore_rules(repo_root: Path, rel: str) -> bool:
+    """True when ``rel`` matches an ignore rule, tracked or not (``--no-index``).
+    No literal-pathspec env: ``check-ignore`` takes paths and rejects it."""
+    return subprocess.run(
+        ["git", "check-ignore", "-q", "--no-index", "--", rel],
+        cwd=repo_root,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+    ).returncode == 0
+
+
 def _in_head(repo_root: Path, rel: str) -> bool:
     return bool(
         _git_literal(
@@ -268,7 +280,7 @@ class CommitOutcome(NamedTuple):
         lead = (
             f"{what} was committed, but the commit check failed (rc={self.rc})"
             if self.committed
-            else f"git commit failed for {what} (rc={self.rc})"
+            else f"{what} not committed (rc={self.rc})"
         )
         return lead + (f": {self.tail}" if self.tail else "")
 
@@ -277,42 +289,68 @@ def commit_all(
     repo_root: Path, subject: str, paths: Sequence[Path]
 ) -> CommitOutcome:
     """Stage and commit only the ``paths`` footprint with ``subject``, never
-    with ``--no-verify`` or an attribution trailer. Entry rules (directories,
-    symlinks, ignored, absent and staged-delete paths) and the post-commit
-    clean check: docs/how-to/pipeline/run.md § "Commit footprint".
+    with ``--no-verify`` or an attribution trailer. Never raises: a git
+    subprocess or decoding error is an uncommitted failure. Entry rules and the
+    post-commit clean check: docs/how-to/pipeline/run.md § "Commit footprint".
     """
+    try:
+        return _commit_footprint(repo_root, subject, paths)
+    except (OSError, ValueError) as exc:
+        return CommitOutcome(1, f"git subprocess error: {exc}", False)
+
+
+def _commit_footprint(
+    repo_root: Path, subject: str, paths: Sequence[Path]
+) -> CommitOutcome:
+    # Work from the git top level: a project root holding .plan-tool/plans.json
+    # can sit below it, and a step may edit files outside the project root.
+    top = toplevel_or_none(repo_root)
+    if top is None:
+        return CommitOutcome(1, "could not find the git work tree to commit in", False)
+    repo_root = top
     nothing = CommitOutcome(
         0, "nothing changed in the footprint; no commit made", False
     )
     entries: list[str] = []
-    stageable: list[str] = []
+    stage_all: list[str] = []
+    stage_tracked: list[str] = []
     for path in paths:
         rel = repo_relative(repo_root, path)
         if rel is None:
-            continue  # not under repo_root — nothing here to commit
+            continue  # outside the work tree — nothing here to commit
         absolute = repo_root.resolve() / rel
-        on_disk_or_index = os.path.lexists(absolute) or _in_index(repo_root, rel)
+        in_index = _in_index(repo_root, rel)
+        on_disk_or_index = os.path.lexists(absolute) or in_index
         in_head = not on_disk_or_index and _in_head(repo_root, rel)
         if not on_disk_or_index and not in_head:
             continue  # nothing there to commit, ignored or not
-        # A staged delete of a tracked file is committed even if its name now
-        # matches an ignore rule (check-ignore sees it once it leaves the index).
-        if not in_head and rel != "." and path_is_gitignored(repo_root, absolute):
-            print(
-                f"warning: not committing gitignored path: {rel}",
-                file=sys.stderr,
-            )
+        if in_head:
+            entries.append(rel)  # staged delete: committed, never passed to add
             continue
-        if on_disk_or_index:
-            stageable.append(rel)
+        if rel != "." and _matches_ignore_rules(repo_root, rel):
+            # Naming an ignored path makes ``git add -A`` fail, so stage only
+            # its tracked files (``add -u``); untracked ones stay ignored.
+            if in_index:
+                stage_tracked.append(rel)
+                entries.append(rel)
+            elif not absolute.is_dir():
+                # An ignored directory is the repo opting that area out; an
+                # ignored file the verb meant to commit is worth saying.
+                print(
+                    f"warning: not committing gitignored path: {rel}",
+                    file=sys.stderr,
+                )
+            continue
+        stage_all.append(rel)
         entries.append(rel)
     if not entries:
         return nothing
 
-    if stageable:
-        add = _git_literal(repo_root, "add", "-A", "--", *stageable)
-        if add.returncode != 0:
-            return CommitOutcome(add.returncode, add.stderr.strip(), False)
+    for mode, group in (("-A", stage_all), ("-u", stage_tracked)):
+        if group:
+            add = _git_literal(repo_root, "add", mode, "--", *group)
+            if add.returncode != 0:
+                return CommitOutcome(add.returncode, add.stderr.strip(), False)
 
     # Only entries with a staged change: an entry git knows nothing about
     # (empty directory, only ignored files) would fail ``commit -- <pathspec>``.

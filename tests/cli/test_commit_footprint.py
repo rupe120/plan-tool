@@ -7,7 +7,7 @@ from pathlib import Path
 from plan_tool.cli.commit_footprint import plan_commit_footprint
 
 
-def test_unreadable_plan_still_yields_plan_details_and_lessons(
+def test_unreadable_plan_still_yields_plan_details_and_state_dir(
     tmp_path: Path, capsys
 ) -> None:
     plan = tmp_path / "plans" / "1-demo.md"
@@ -19,7 +19,7 @@ def test_unreadable_plan_still_yields_plan_details_and_lessons(
     assert footprint == [
         plan,
         plan.parent / "plan-details" / "demo",
-        tmp_path / ".plan-tool" / "lessons",
+        tmp_path / ".plan-tool",
     ]
 
 

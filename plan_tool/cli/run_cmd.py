@@ -103,7 +103,6 @@ from plan_tool.git_state import (
     status_records_or_none,
     toplevel_or_none,
 )
-from plan_tool.review_persistence import plan_reports_dir
 
 # Reconcile engine (step-15 leaf). ``cmd_run`` forward-calls
 # ``_cmd_run_reconcile`` for the ``--reconcile`` code-side audit (which owns
@@ -552,10 +551,13 @@ def _step_footprint(
     baseline: Optional[set[str]],
     archive_outcome: Optional[ArchiveOutcome],
     manifest_path: Optional[Path],
+    plan_footprint: Optional[list[Path]] = None,
 ) -> "tuple[Optional[list[Path]], str]":
     """Paths a green ``run --commit`` step may commit, or ``(None, reason)``:
     the plan's own paths and archive outputs always, plus the step's git delta
-    (a path dirty at the baseline is left out). See docs/how-to/pipeline/run.md.
+    (a path dirty at the baseline is left out). ``plan_footprint`` is the
+    plan's paths read before an archive rewrote the file. See
+    docs/how-to/pipeline/run.md.
     """
     root = ctx.repo_root
     if baseline is None:
@@ -570,15 +572,15 @@ def _step_footprint(
     rels: set[str] = set(delta)
     rels.update(origins[dest] for dest in delta if dest in origins)
 
-    fixed: list[Path] = [plan_path, plan_reports_dir(plan_path).parent]
-    plan_file = plan_path
+    fixed: list[Path] = list(
+        plan_footprint
+        if plan_footprint is not None
+        else plan_commit_footprint(root, plan_path)
+    )
     if archive_outcome is not None:
         fixed.extend(archive_outcome.touched_paths())
-        if archive_outcome.archived_to is not None:
-            plan_file = archive_outcome.archived_to
         if manifest_path is not None:
             fixed.append(manifest_path)
-    fixed.extend(plan_commit_footprint(root, plan_file))
     # Status paths are relative to the work tree's top level, not ``root``.
     return fixed + [toplevel / rel for rel in sorted(rels)], ""
 
@@ -593,6 +595,7 @@ def _commit_step_footprint(
     baseline: Optional[set[str]],
     archive_outcome: Optional[ArchiveOutcome],
     manifest_path: Optional[Path],
+    plan_footprint: Optional[list[Path]] = None,
 ) -> CommitOutcome:
     """Commit one green ``run`` step's footprint; fail closed on unreadable git."""
     paths, reason = _step_footprint(
@@ -601,6 +604,7 @@ def _commit_step_footprint(
         baseline=baseline,
         archive_outcome=archive_outcome,
         manifest_path=manifest_path,
+        plan_footprint=plan_footprint,
     )
     if paths is None:
         return CommitOutcome(1, f"no commit made: {reason}", False)
@@ -1337,10 +1341,13 @@ def cmd_run(args: argparse.Namespace) -> int:
         archived = False
         archive_outcome: Optional[ArchiveOutcome] = None
         manifest_path = None
+        plan_footprint: Optional[list[Path]] = None
         if getattr(args, "archive", False) and result.plan_completed:
             manifest_path = getattr(args, "manifest", None) or (
                 default_manifest_path(ctx.repo_root)
             )
+            # Read before the archive prepends its notice, which the parser rejects.
+            plan_footprint = plan_commit_footprint(ctx.repo_root, path)
             archive_outcome = _archive_on_completion(
                 path, ctx=ctx, manifest_path=manifest_path
             )
@@ -1360,6 +1367,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                 baseline=commit_baseline,
                 archive_outcome=archive_outcome,
                 manifest_path=manifest_path,
+                plan_footprint=plan_footprint,
             )
             if committed.rc != 0:
                 err_msg = _green_commit_failure_msg(
@@ -1776,8 +1784,11 @@ def _cmd_run_sweep(
                 getattr(args, "archive", False) and result.plan_completed
             )
             archive_outcome: Optional[ArchiveOutcome] = None
+            plan_footprint: Optional[list[Path]] = None
             if plan_archived:
                 assert archive_manifest_path is not None
+                # Read before the archive prepends its notice, which the parser rejects.
+                plan_footprint = plan_commit_footprint(ctx.repo_root, plan_path)
                 archive_outcome = _archive_on_completion(
                     plan_path,
                     ctx=ctx,
@@ -1801,6 +1812,7 @@ def _cmd_run_sweep(
                     baseline=commit_baseline,
                     archive_outcome=archive_outcome,
                     manifest_path=archive_manifest_path,
+                    plan_footprint=plan_footprint,
                 )
                 if committed.rc != 0:
                     err_msg = _green_commit_failure_msg(
@@ -2056,8 +2068,11 @@ def register(subparsers) -> dict[str, Handler]:
         dest="commit",
         help=(
             "after each step goes green, create one commit holding the plan "
-            "file, its detail directory, any --archive move, and the files "
-            "the step changed since it started, with subject "
+            "file, its plan-details/<slug>/ directory, the detail files and "
+            "lessons log the plan declares, files under .plan-tool/ that "
+            ".gitignore does not exclude, any --archive "
+            "move, and the files the step changed since it started, with "
+            "subject "
             "'plan(<slug>): step N green — <title>'. Applies to execution "
             "(--mode run) at either scope (single-step or --all); requires a "
             "clean working tree up front; off by default. No-ops (with a "

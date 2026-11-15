@@ -250,6 +250,90 @@ class TestCommitAll:
         assert committed
         assert rc != 0 and "a.txt" in tail
 
+    def test_git_error_is_an_uncommitted_outcome_not_an_exception(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        import plan_tool.cli.gitcommit as gc
+
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+
+        def undecodable(*_a, **_k):
+            raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid start byte")
+
+        monkeypatch.setattr(gc, "_matches_ignore_rules", undecodable)
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc != 0 and not committed
+        assert "git subprocess error" in tail
+
+    def test_not_committed_outcome_does_not_blame_git_commit(self) -> None:
+        from plan_tool.cli.gitcommit import CommitOutcome
+
+        text = CommitOutcome(128, "fatal: beyond a symbolic link", False).describe(
+            "sweep changes"
+        )
+        assert "git commit failed" not in text
+        assert "not committed" in text and "beyond a symbolic link" in text
+
+    def test_project_root_below_top_level_commits_edits_outside_it(
+        self, tmp_path: Path
+    ) -> None:
+        # A step in svc/ may edit shared/; the commit covers the work tree.
+        self._repo(tmp_path)
+        (tmp_path / "svc").mkdir()
+        (tmp_path / "shared").mkdir()
+        (tmp_path / "shared" / "lib.py").write_text("x = 1\n")
+
+        rc, tail, committed = commit_all(
+            tmp_path / "svc", "s", [tmp_path / "shared" / "lib.py"]
+        )
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == ["shared/lib.py"]
+
+    def test_state_dir_commits_what_gitignore_allows_and_nothing_else(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # The repo's ignore rules decide which plan-tool files are committed.
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text(".plan-tool/runs\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "commit", "-q", "-m", "ignore")
+        state = tmp_path / ".plan-tool"
+        (state / "telemetry").mkdir(parents=True)
+        (state / "telemetry" / "decisions.jsonl").write_text("{}\n")
+        (state / "runs").mkdir()
+        (state / "runs" / "r.jsonl").write_text("{}\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [state])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == [".plan-tool/telemetry/decisions.jsonl"]
+        assert "gitignored" not in capsys.readouterr().err
+
+    def test_wholly_ignored_dir_commits_its_tracked_files(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # ``.plan-tool/`` ignored as a whole, plans.json force-tracked: naming
+        # the directory makes ``git add -A`` fail, so tracked files go via -u.
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text(".plan-tool/\n")
+        state = tmp_path / ".plan-tool"
+        state.mkdir()
+        (state / "plans.json").write_text("{}\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "add", "-f", ".plan-tool/plans.json")
+        _git(tmp_path, "commit", "-q", "-m", "track manifest")
+        (state / "plans.json").write_text('{"plans": []}\n')
+        (state / "scratch.json").write_text("{}\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [state])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == [".plan-tool/plans.json"]
+        assert "gitignored" not in capsys.readouterr().err
+
     def test_absent_ignored_entry_is_skipped_without_a_warning(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:

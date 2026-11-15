@@ -210,10 +210,11 @@ the tree clean between steps (load-bearing for the test-authoring gate, same as
   the run starts from a known baseline. Skipped under `--dry-run`.
 - **Footprint staging:** every commit (per-step, batch, residual) stages and
   commits only the plan file, the plan's `plan-details/<slug>/` directory, every
-  `steps[].detail` file the plan declares, and the project lessons directory
-  (`plan_commit_footprint` in `plan_tool/cli/commit_footprint.py`, the same
-  rule `completeness-audit` and `run` use). An unrelated file that changes during the run
-  stays out of the commit. A gitignored footprint path is skipped with a warning.
+  `steps[].detail` file and the `lessons:` log the plan declares, and the files
+  under `.plan-tool/` that `.gitignore` does not exclude (`plan_commit_footprint`
+  in `plan_tool/cli/commit_footprint.py`, the same rule `completeness-audit` and
+  `run` use). An unrelated file that changes during the run stays out of the
+  commit. Entry rules: [run.md § Commit footprint](run.md#commit-footprint).
 - **Per-step:** each written step commits with subject
   `plan(<slug>): detail step N — <title>`; a step that skips (already authored)
   or splits does **not** commit. A clean footprint at a step's turn is a silent
