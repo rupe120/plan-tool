@@ -216,6 +216,18 @@ def _dirty_footprint_paths(
     return sorted(dirty)
 
 
+def _in_index(repo_root: Path, rel: str) -> bool:
+    return bool(_git_literal(repo_root, "ls-files", "--", rel).stdout.strip())
+
+
+def _in_head(repo_root: Path, rel: str) -> bool:
+    return bool(
+        _git_literal(
+            repo_root, "ls-tree", "--name-only", "HEAD", "--", rel
+        ).stdout.strip()
+    )
+
+
 def commit_all(
     repo_root: Path, subject: str, paths: Sequence[Path]
 ) -> "tuple[int, str]":
@@ -225,10 +237,12 @@ def commit_all(
     Stages with ``git add -A -- <paths>`` and commits with
     ``git commit -- <paths>`` so unrelated dirty or pre-staged files stay out.
     A directory entry covers everything beneath it. Gitignored entries are
-    skipped with a warning; entries neither on disk nor tracked are skipped
-    silently. No change in the footprint is success with no commit. A footprint
-    path still dirty after the commit (e.g. a hook rewrote it) is a non-zero rc
-    naming it.
+    skipped with a warning; entries neither on disk, in the index, nor in
+    ``HEAD`` are skipped silently. An entry only in ``HEAD`` is a staged delete
+    (``git rm``, or the origin of ``git mv``): it is committed but not passed to
+    ``git add``, which would reject it. No change in the footprint is success
+    with no commit. A footprint path still dirty after the commit (e.g. a hook
+    rewrote it) is a non-zero rc naming it.
 
     No AI-attribution trailer — the operator's own git identity is the sole
     author of record. No ``--no-verify`` — pre-commit hooks run and a
@@ -237,6 +251,7 @@ def commit_all(
     """
     root = repo_root.resolve()
     entries: list[str] = []
+    stageable: list[str] = []
     for path in paths:
         resolved = path.resolve()
         try:
@@ -249,17 +264,18 @@ def commit_all(
                 file=sys.stderr,
             )
             continue
-        if not resolved.exists() and not _git_literal(
-            repo_root, "ls-files", "--", rel
-        ).stdout.strip():
+        if resolved.exists() or _in_index(repo_root, rel):
+            stageable.append(rel)
+        elif not _in_head(repo_root, rel):
             continue
         entries.append(rel)
     if not entries:
         return 0, "nothing changed in the footprint; no commit made"
 
-    add = _git_literal(repo_root, "add", "-A", "--", *entries)
-    if add.returncode != 0:
-        return add.returncode, add.stderr.strip()
+    if stageable:
+        add = _git_literal(repo_root, "add", "-A", "--", *stageable)
+        if add.returncode != 0:
+            return add.returncode, add.stderr.strip()
 
     # Only entries with a staged change: an entry git knows nothing about
     # (empty directory, only ignored files) would fail ``commit -- <pathspec>``.

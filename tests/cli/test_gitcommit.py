@@ -235,6 +235,28 @@ class TestCommitAll:
             tmp_path, "show", "--format=", "--name-status", "HEAD"
         ).stdout.decode().split() == ["D", "f.txt"]
 
+    @pytest.mark.parametrize("op", ["rm", "mv"])
+    def test_staged_delete_absent_from_index_is_still_committed(
+        self, tmp_path: Path, op: str
+    ) -> None:
+        # ``git rm`` and ``git mv`` drop the old path from the index; it is
+        # still in HEAD, so the commit must carry the delete, not skip it.
+        self._repo(tmp_path)
+        if op == "rm":
+            _git(tmp_path, "rm", "-q", "f.txt")
+            footprint = [tmp_path / "f.txt"]
+        else:
+            _git(tmp_path, "mv", "f.txt", "g.txt")
+            footprint = [tmp_path / "f.txt", tmp_path / "g.txt"]
+
+        rc, tail = commit_all(tmp_path, "s", footprint)
+
+        assert rc == 0, tail
+        assert "D\tf.txt" in _git(
+            tmp_path, "show", "--format=", "--name-status", "--no-renames", "HEAD"
+        ).stdout.decode().splitlines()
+        assert _porcelain(tmp_path) == ""
+
     def test_footprint_with_no_changes_returns_success_and_makes_no_commit(
         self, tmp_path: Path
     ) -> None:
