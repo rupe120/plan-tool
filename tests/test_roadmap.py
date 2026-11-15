@@ -6721,6 +6721,19 @@ class TestMaterializePlanSeed:
             "published": False,
         }
 
+    def test_materialized_draft_seed_passes_create_from_existing_preflight(
+        self, env: _Env
+    ) -> None:
+        # The draft carries all three guardrail headings, so `create
+        # --from-existing` accepts it without an operator edit.
+        from plan_tool.create import validate_from_existing_seed
+
+        _prepare_seed_materialization(env)
+
+        _materialize(env, _StubInvoker(_seed_text()))
+
+        validate_from_existing_seed(_written_draft(env))
+
     def test_materialize_accepts_a_bare_outer_reply_fence(self, env: _Env) -> None:
         _prepare_seed_materialization(env)
         candidate = _seed_text(marker="WRAPPED")
@@ -6992,6 +7005,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         from plan_tool import create as create_module
         from plan_tool.schema import Step
+        from tests.seed_fixtures import NONE_GUARDRAILS
         from tests.test_create import _direct_ready_file_source, _patch_direct_route_metadata
 
         _prepare_seed_materialization(env)
@@ -7002,8 +7016,11 @@ class TestMaterializePlanSeed:
             "AUTH-23 is a sibling prerequisite; do not implement auth here.",
             "PROOF-31 requires an observed checkout result.",
         )
+        # _seed_text already carries the guardrail headings; drop the helper's
+        # copy so each appears exactly once.
         candidate = _seed_text(marker="MATERIALIZED") + _direct_ready_file_source().replace(
-            "## References\n\n- [API](https://example.test/api)\n", ""
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
+            "",
         )
         candidate = candidate.replace("Overview body.", obligations[0]).replace(
             "Architecture body.", obligations[1]

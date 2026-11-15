@@ -88,6 +88,7 @@ from plan_tool.scope_fence import (
     extract_h2_section_occurrences,
     extract_h2_sections,
     is_placeholder_intent,
+    missing_required_guardrail_headings,
 )
 from plan_tool.runner_detect import qualify_uv_pytest_command
 from plan_tool.shell import (
@@ -367,19 +368,19 @@ OPTIONAL_PLAN_BODY_SECTION_SHAPES: dict[str, str] = {
         "plan does not consume an existing contract."
     ),
     "Scope guardrails": (
-        "Conditional, source-backed boundary section. Preserve the supplied "
-        "body verbatim when the seed includes this heading; do not invent or "
-        "revise scope decisions."
+        "Required, source-backed boundary section: every seed carries it "
+        "(an explicit `None` is a valid body). Preserve the supplied body "
+        "verbatim; do not invent or revise scope decisions."
     ),
     "Audit guardrails": (
-        "Conditional, source-backed audit boundary section. Preserve the "
-        "supplied body verbatim when the seed includes this heading; do not "
-        "invent or revise audit decisions."
+        "Required, source-backed audit boundary section: every seed carries "
+        "it (an explicit `None` is a valid body). Preserve the supplied body "
+        "verbatim; do not invent or revise audit decisions."
     ),
     "Expected placement": (
-        "Conditional, source-backed placement section. Preserve the supplied "
-        "body verbatim when the seed includes this heading; do not invent or "
-        "revise placement decisions."
+        "Required, source-backed placement section: every seed carries it "
+        "(an explicit `None` is a valid body). Preserve the supplied body "
+        "verbatim; do not invent or revise placement decisions."
     ),
     "Stack": (
         "Conditional, source-backed hosting and store section. Preserve the "
@@ -615,16 +616,30 @@ def classify_file_backed_source(
         text, strip_fenced_code=True, fenced_spans=scan.spans
     )
     references = occurrences.get("references", [])
+    problems: list[str] = []
     if (
         len(references) != 1
         or not references[0]
         or _is_placeholder_section(references[0])
     ):
-        raise CreateError(
+        problems.append(
             "--from-existing seed requires exactly one non-placeholder "
             "`## References` section before authoring. Add the developer/API "
-            "references or source evidence the plan relies on and retry; no "
-            "authoring model was invoked."
+            "references or source evidence the plan relies on."
+        )
+    bad_guardrails = missing_required_guardrail_headings(source_text)
+    if bad_guardrails:
+        named = ", ".join(f"`## {title}`" for title in bad_guardrails)
+        problems.append(
+            f"--from-existing seed requires exactly one section each for "
+            f"{named} with a non-empty, non-placeholder body (an explicit "
+            "`None` counts as an answer); each is missing, duplicated, empty "
+            "or a placeholder."
+        )
+    if problems:
+        raise CreateError(
+            " ".join(problems)
+            + " Fix the seed and retry; no authoring model was invoked."
         )
 
     direct_ready = all(

@@ -11,6 +11,7 @@ import difflib
 from pathlib import Path
 
 import pytest
+from tests.seed_fixtures import NONE_GUARDRAILS
 
 from plan_tool.annotate import AnnotationStatus, PlanAnnotation, SectionAnnotation
 from plan_tool.annotate_render import (
@@ -18,7 +19,7 @@ from plan_tool.annotate_render import (
     render_annotated_report,
     render_create_seed,
 )
-from plan_tool.create import validate_from_existing_seed
+from plan_tool.create import CreateError, validate_from_existing_seed
 
 
 def _annotation(
@@ -477,11 +478,32 @@ def test_seed_preserves_source_references_or_uses_source_fallback():
     assert "- Annotated report: `docs/orig.annotated.md`" in fallback
 
 
+def test_seed_without_source_guardrails_is_refused_by_create():
+    # The source states no guardrails, so the seed carries `_(TODO)_` bodies
+    # that the operator must fill before `create --from-existing` accepts it.
+    seed = _seed(
+        _annotation(
+            source_text="# Source\n\n## Overview\n\nBody.\n",
+            sections=(
+                SectionAnnotation(
+                    heading="A", status=AnnotationStatus.NOT_IMPLEMENTED, evidence=""
+                ),
+            ),
+        )
+    )
+
+    with pytest.raises(CreateError, match=r"`## Scope guardrails`"):
+        validate_from_existing_seed(seed)
+
+
 def test_seed_frontmatter_only_references_uses_source_fallback():
     seed = _seed(
         _annotation(
             source_path=Path("docs/orig.md"),
-            source_text="---\n## References\n---\n# Source\n\n## Overview\n\nBody.\n",
+            source_text=(
+                "---\n## References\n---\n# Source\n\n## Overview\n\nBody.\n"
+                + NONE_GUARDRAILS
+            ),
             sections=(
                 SectionAnnotation(
                     heading="A", status=AnnotationStatus.NOT_IMPLEMENTED, evidence=""
@@ -503,6 +525,7 @@ def test_seed_fenced_only_references_uses_source_fallback():
             source_path=Path("docs/orig.md"),
             source_text=(
                 "```markdown\n## References\n- https://example.test/api\n```\n"
+                + NONE_GUARDRAILS
             ),
             sections=(
                 SectionAnnotation(
@@ -525,6 +548,7 @@ def test_seed_preserves_body_references_after_frontmatter():
             source_text=(
                 "---\n## References\n---\n# Source\n\n## References\n\n"
                 "- `plan_tool/annotate_render.py`\n"
+                + NONE_GUARDRAILS
             ),
             sections=(
                 SectionAnnotation(

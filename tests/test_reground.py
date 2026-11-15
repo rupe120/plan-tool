@@ -9,8 +9,9 @@ from pathlib import Path
 
 import pytest
 import yaml
+from tests.seed_fixtures import NONE_GUARDRAILS
 
-from plan_tool.create import validate_from_existing_seed
+from plan_tool.create import CreateError, validate_from_existing_seed
 import plan_tool.reground as reground
 from plan_tool.parser import _coerce_enums, parse_plan
 from plan_tool.reground import (
@@ -72,14 +73,20 @@ def _step(
     )
 
 
-def _write_plan_file(tmp_path: Path, plan: Plan, name: str = "2-reground.md") -> Path:
+def _write_plan_file(
+    tmp_path: Path,
+    plan: Plan,
+    name: str = "2-reground.md",
+    *,
+    body: str = "Plan prose body that survives re-grounding.\n",
+) -> Path:
     dumped = _coerce_enums(plan.model_dump(exclude_defaults=True, exclude_none=True))
     fm = yaml.safe_dump(
         dumped, default_flow_style=False, sort_keys=False, allow_unicode=True
     )
     path = tmp_path / name
     path.write_text(
-        f"---\n{fm}---\n\nPlan prose body that survives re-grounding.\n",
+        f"---\n{fm}---\n\n{body}",
         encoding="utf-8",
     )
     return path
@@ -519,7 +526,12 @@ def test_rebaseline_writes_seed_first_then_marks_done(tmp_path, monkeypatch):
 
 
 def test_rebaseline_seed_is_create_from_existing_consumable(tmp_path):
-    path = _built_plan_file(tmp_path)
+    # The source plan states each guardrail, so the rebaseline seed is create-ready.
+    path = _write_plan_file(
+        tmp_path,
+        _plan([_step(1, status=StepStatus.CURRENT), _step(2), _step(3)]),
+        body="Plan prose body that survives re-grounding.\n" + NONE_GUARDRAILS,
+    )
     result = reground_bridge(
         path,
         step_ids=[1, 2],
@@ -537,6 +549,23 @@ def test_rebaseline_seed_is_create_from_existing_consumable(tmp_path):
     )[0]
     assert references.strip() == f"- Source plan: `{path}`"
     validate_from_existing_seed(body)
+
+
+def test_rebaseline_seed_todo_guardrails_are_refused_by_create(tmp_path):
+    # No guardrails in the source plan: the renderer writes `_(TODO)_`, which
+    # `create --from-existing` refuses until the operator fills them.
+    path = _built_plan_file(tmp_path)
+    result = reground_bridge(
+        path,
+        step_ids=[1, 2],
+        allow_reground=True,
+        yes=True,
+        disposition="re-baseline",
+        repo_root=tmp_path,
+    )
+
+    with pytest.raises(CreateError, match=r"`## Audit guardrails`"):
+        validate_from_existing_seed(result.seed_path.read_text(encoding="utf-8"))
 
 
 def test_rebaseline_seed_preserves_source_references(tmp_path):

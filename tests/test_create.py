@@ -19,6 +19,8 @@ import pytest
 
 from pydantic import ValidationError as PydanticValidationError
 
+from plan_tool.scope_fence import REQUIRED_GUARDRAIL_HEADINGS
+from tests.seed_fixtures import NONE_GUARDRAILS
 from plan_tool import create as create_module
 from plan_tool.create import (
     CreateError,
@@ -1026,7 +1028,7 @@ class TestRiskProfileClassification:
         direct_file = tmp_path / "seed.md"
         direct_file.write_text(
             "Direct file seed.\n\n## References\n\n"
-            "- [API](https://example.test/api)\n",
+            "- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -1076,7 +1078,8 @@ class TestRiskProfileClassification:
 
         assert seen == [
             "Inline seed.",
-            "Direct file seed.\n\n## References\n\n- [API](https://example.test/api)\n",
+            "Direct file seed.\n\n## References\n\n- [API](https://example.test/api)\n"
+            + NONE_GUARDRAILS,
             canonical,
             "Original distilled seed.",
             "Passthrough seed.",
@@ -4011,7 +4014,7 @@ class TestCreatePlanFromExistingViaCli:
         source.write_text(
             "# Old Plan\n\nWe should refactor the auth module.\n\n"
             "## References\n\n"
-            "- [Auth API](https://example.test/auth)\n",
+            "- [Auth API](https://example.test/auth)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         return repo, out_dir, manifest, source
@@ -6207,7 +6210,7 @@ class TestCreatePlanRecoveryBoundaries:
         source = tmp_path / "seed.md"
         source.write_text(
             "source that remains available\n\n## References\n\n"
-            "- [API](https://example.test/api)\n",
+            "- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         manifest = tmp_path / "m.json"
@@ -6242,7 +6245,7 @@ class TestCreatePlanRecoveryBoundaries:
         assert existing.read_text(encoding="utf-8") == "retained collision\n"
         assert source.read_text(encoding="utf-8") == (
             "source that remains available\n\n## References\n\n"
-            "- [API](https://example.test/api)\n"
+            "- [API](https://example.test/api)\n" + NONE_GUARDRAILS
         )
         assert json.loads(manifest.read_text(encoding="utf-8")) == {
             "plans": ["plans/2-demo.md"]
@@ -6420,7 +6423,8 @@ class TestCreatePlanRecoveryBoundaries:
             retained.read_text(encoding="utf-8").replace(
                 "## References\n\n_(TODO)_",
                 "## References\n\n- [API](https://example.test/api)",
-            ),
+            )
+            + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         retained_bytes = retained.read_bytes()
@@ -6912,6 +6916,19 @@ class TestTestingStrategyEnumeration:
         assert "existing contract" in input_bullet
         assert "Omit this section" in input_bullet
 
+    def test_guardrail_shapes_say_required_under_the_conditional_tag(self) -> None:
+        """Deliberately still tagged ``[conditional]``: the prompts define only
+        that tag's "emit for a supplied heading, verbatim" rule, which holds now
+        that every seed supplies the three headings. The shape text says required."""
+        from plan_tool.scope_fence import REQUIRED_GUARDRAIL_HEADINGS
+
+        lines = _render_section_shapes_block().splitlines()
+        for title in REQUIRED_GUARDRAIL_HEADINGS:
+            bullet = next(ln for ln in lines if ln.startswith(f"- **{title}**"))
+            assert "_[conditional]_" in bullet
+            assert "Required" in bullet
+            assert "`None` is a valid body" in bullet
+
     def test_section_shapes_block_tags_each_bullet_with_policy(self) -> None:
         """Every catalog bullet carries its derive/evidence policy tag, keyed
         off ``_DERIVE_FROM_INTENT_SECTIONS`` — the one source both the distill
@@ -7099,6 +7116,7 @@ _CANONICAL_BODY = (
     "## References\n"
     "\n"
     "- [Canonical API](https://example.test/canonical)\n"
+    + NONE_GUARDRAILS
 )
 
 
@@ -7641,7 +7659,7 @@ class TestSourceSeedProvenance:
         source = tmp_path / "notes.md"
         source.write_text(
             "# Notes\n\nRefactor the auth module.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -7660,7 +7678,7 @@ class TestSourceSeedProvenance:
         source = tmp_path / "plan-seeds" / "notes.md"
         source.write_text(
             "# Notes\n\nRefactor the auth module.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -7688,7 +7706,7 @@ class TestSourceSeedProvenance:
         source = outside / "notes.md"
         source.write_text(
             "# Notes\n\nRefactor the auth module.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -7721,7 +7739,7 @@ class TestSourceSeedProvenance:
         source.write_text(
             "# Plan seed: demo\n\n"
             "## Outcome\n\nShip the demo feature end to end.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -7800,6 +7818,7 @@ def _canonical_with_provenance(
         "\n"
         "## References\n\n"
         "- [Canonical API](https://example.test/canonical)\n"
+        + NONE_GUARDRAILS
     )
 
 
@@ -8015,6 +8034,7 @@ class TestCreatePlanReusesPlanDetails:
         body = (
             "# X\n\n## Overview\n\no\n\n## Steps\n\n### 1. s\n\n"
             "## References\n\n- [API](https://example.test/api)\n"
+            + NONE_GUARDRAILS
         )
         canonical.write_text(body, encoding="utf-8")
         manifest = tmp_path / "m.json"
@@ -8065,7 +8085,7 @@ class TestCliArchivesOriginalSeed:
         seed = out_dir / "2-old.md"
         seed.write_text(
             "# Old Plan\n\nSeed body.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         # Canonical with provenance pointing at the seed.
@@ -8560,7 +8580,7 @@ class TestDecideReplaceFromExistingSeed:
         seed = out_dir / "foo.md"
         seed.write_text(
             "# Foo Draft\n\nUnstructured prose seed.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         manifest = tmp_path / "m.json"
@@ -9319,12 +9339,14 @@ class TestFromExistingSeedValidation:
     def test_accepts_nonempty_references(self) -> None:
         validate_from_existing_seed(
             "# Draft\n\n## References\n\n- [API](https://example.test/api)\n"
+            + NONE_GUARDRAILS
         )
 
     @pytest.mark.parametrize("heading", ("references", "References ##"))
     def test_accepts_normalized_references_heading(self, heading: str) -> None:
         validate_from_existing_seed(
             f"# Draft\n\n## {heading}\n\n- [API](https://example.test/api)\n"
+            + NONE_GUARDRAILS
         )
 
     def test_rejects_frontmatter_only_references(self) -> None:
@@ -9342,12 +9364,13 @@ class TestFromExistingSeedValidation:
     def test_accepts_body_references_after_frontmatter(self) -> None:
         validate_from_existing_seed(
             "---\n## References\n---\n# Draft\n\n## References\n\n"
-            "- `plan_tool/create.py`\n"
+            "- `plan_tool/create.py`\n" + NONE_GUARDRAILS
         )
 
     def test_accepts_reference_content_that_mentions_todo(self) -> None:
         validate_from_existing_seed(
             "# Draft\n\n## References\n\n- TODO: verify API version\n"
+            + NONE_GUARDRAILS
         )
 
     def test_direct_create_rejects_before_every_invoker(self, tmp_path: Path) -> None:
@@ -9423,7 +9446,7 @@ class TestFromExistingSeedValidation:
 
 def _direct_ready_file_source(*, steps: str = "") -> str:
     sections = [
-        "## References\n\n- [API](https://example.test/api)\n",
+        "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
     ]
     for heading in create_module._BODY_SECTIONS_CANONICAL_KEYS:
         sections.append(f"## {heading}\n\n{heading} body.\n")
@@ -9452,6 +9475,194 @@ def _patch_direct_route_metadata(monkeypatch: pytest.MonkeyPatch) -> None:
             mode="direct-test",
         ),
     )
+
+
+_GUARDRAIL_OFFENCES = ("missing", "duplicated", "empty", "placeholder")
+
+
+def _seed_with_guardrail_offence(heading: str | None, offence: str) -> str:
+    """A `--from-existing` seed where ``heading`` has ``offence``; the other two are valid.
+
+    ``heading=None`` returns the fully valid seed.
+    """
+    parts = ["## References\n\n- [API](https://example.test/api)\n"]
+    for title in REQUIRED_GUARDRAIL_HEADINGS:
+        if title != heading:
+            parts.append(f"## {title}\n\nNone\n")
+        elif offence == "duplicated":
+            parts.append(f"## {title}\n\nNone\n\n## {title}\n\nNone\n")
+        elif offence == "empty":
+            parts.append(f"## {title}\n\n")
+        elif offence == "placeholder":
+            parts.append(f"## {title}\n\n_(TODO)_\n")
+        else:
+            assert offence == "missing"
+    return "\n".join(parts)
+
+
+def _refused_create(tmp_path: Path, seed: str) -> CreateError:
+    """Drive ``create_plan`` on ``seed``; every model seam fails the test if reached."""
+    (tmp_path / ".git").mkdir(exist_ok=True)
+    source = tmp_path / "seed.md"
+    source.write_text(seed, encoding="utf-8")
+
+    def invoker(_prompt: str) -> str:
+        pytest.fail("a refused seed must not reach any model call")
+
+    with pytest.raises(CreateError) as excinfo:
+        create_plan(
+            "demo",
+            repo_root=tmp_path,
+            output_dir_override=tmp_path / "plans",
+            manifest_path=tmp_path / "manifest.json",
+            from_description=seed,
+            from_existing_path=source,
+            claude_invoker=invoker,
+        )
+    assert not (tmp_path / "plans").exists()
+    return excinfo.value
+
+
+class TestRequiredGuardrailHeadingRefusal:
+    """A `--from-existing` seed must state each guardrail heading; `None` is an answer."""
+
+    @pytest.mark.parametrize("heading", REQUIRED_GUARDRAIL_HEADINGS)
+    def test_missing_guardrail_heading_is_refused_before_any_model_call(
+        self, tmp_path: Path, heading: str
+    ) -> None:
+        error = _refused_create(tmp_path, _seed_with_guardrail_offence(heading, "missing"))
+
+        assert f"`## {heading}`" in str(error)
+        assert "no authoring model was invoked" in str(error)
+
+    @pytest.mark.parametrize("heading", REQUIRED_GUARDRAIL_HEADINGS)
+    def test_duplicated_guardrail_heading_is_refused_before_any_model_call(
+        self, tmp_path: Path, heading: str
+    ) -> None:
+        error = _refused_create(tmp_path, _seed_with_guardrail_offence(heading, "duplicated"))
+
+        assert f"`## {heading}`" in str(error)
+
+    @pytest.mark.parametrize("heading", REQUIRED_GUARDRAIL_HEADINGS)
+    def test_empty_guardrail_heading_is_refused_before_any_model_call(
+        self, tmp_path: Path, heading: str
+    ) -> None:
+        error = _refused_create(tmp_path, _seed_with_guardrail_offence(heading, "empty"))
+
+        assert f"`## {heading}`" in str(error)
+
+    @pytest.mark.parametrize("heading", REQUIRED_GUARDRAIL_HEADINGS)
+    def test_todo_placeholder_guardrail_heading_is_refused_before_any_model_call(
+        self, tmp_path: Path, heading: str
+    ) -> None:
+        error = _refused_create(
+            tmp_path, _seed_with_guardrail_offence(heading, "placeholder")
+        )
+
+        assert f"`## {heading}`" in str(error)
+
+    def test_only_the_offending_heading_is_named(self, tmp_path: Path) -> None:
+        # The other two headings are valid, so the message must not accuse them.
+        error = str(
+            _refused_create(tmp_path, _seed_with_guardrail_offence("Audit guardrails", "missing"))
+        )
+
+        assert "`## Audit guardrails`" in error
+        assert "`## Scope guardrails`" not in error
+        assert "`## Expected placement`" not in error
+
+    def test_two_missing_guardrail_headings_are_both_named_in_one_error(
+        self, tmp_path: Path
+    ) -> None:
+        seed = "## References\n\n- [API](https://example.test/api)\n\n## Scope guardrails\n\nNone\n"
+
+        error = str(_refused_create(tmp_path, seed))
+
+        assert "`## Audit guardrails`" in error
+        assert "`## Expected placement`" in error
+        assert "`## Scope guardrails`" not in error
+
+    def test_guardrail_offence_and_references_problem_are_reported_together(
+        self, tmp_path: Path
+    ) -> None:
+        seed = "## References\n\n_(TODO)_\n\n## Scope guardrails\n\nNone\n"
+
+        error = str(_refused_create(tmp_path, seed))
+
+        assert "non-placeholder `## References`" in error
+        assert "`## Audit guardrails`" in error
+        assert "`## Expected placement`" in error
+        assert error.count("no authoring model was invoked") == 1
+
+    def test_valid_references_with_bad_guardrail_does_not_blame_references(
+        self, tmp_path: Path
+    ) -> None:
+        error = str(
+            _refused_create(tmp_path, _seed_with_guardrail_offence("Scope guardrails", "empty"))
+        )
+
+        assert "`## References`" not in error
+
+    def test_classifier_refuses_directly_so_every_caller_is_covered(self) -> None:
+        # `classify_file_backed_source` is the one function the CLI preflight,
+        # `validate_from_existing_seed` and `create_plan` share.
+        seed = _seed_with_guardrail_offence("Expected placement", "missing")
+
+        with pytest.raises(CreateError, match=r"`## Expected placement`"):
+            classify_file_backed_source(seed)
+        with pytest.raises(CreateError, match=r"`## Expected placement`"):
+            validate_from_existing_seed(seed)
+
+    def test_none_guardrail_body_is_accepted_and_written_verbatim(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _patch_direct_route_metadata(monkeypatch)
+        monkeypatch.setattr(
+            create_module,
+            "assess_direct_source_split_from_claude",
+            lambda *_args, **_kwargs: DirectSplitAssessment(),
+        )
+        raw_source = _direct_ready_file_source(
+            steps="## Steps\n\n### 1. Keep the None answers\n"
+        )
+
+        result = create_plan(
+            "none-guardrails",
+            repo_root=tmp_path,
+            output_dir_override=tmp_path / "plans",
+            manifest_path=tmp_path / "manifest.json",
+            from_description=raw_source,
+            from_existing_path=tmp_path / "source.md",
+            yes=True,
+            resume=False,
+            offer_intents=False,
+            claude_invoker=lambda _prompt: pytest.fail("unexpected model call"),
+        )
+
+        assert result.plan_path is not None
+        body = result.plan_path.read_text(encoding="utf-8")
+        for title in REQUIRED_GUARDRAIL_HEADINGS:
+            assert f"## {title}\n\nNone\n" in body
+
+    def test_stack_heading_stays_optional(self) -> None:
+        # Deliberate carve-out: only the three guardrail headings are required.
+        seed = _seed_with_guardrail_offence(None, "missing")
+        assert "## Stack" not in seed
+
+        intake = classify_file_backed_source(seed)
+
+        assert intake.references_ready is True
+
+    def test_guardrail_shape_text_is_required_and_stack_stays_conditional(
+        self,
+    ) -> None:
+        shapes = create_module.OPTIONAL_PLAN_BODY_SECTION_SHAPES
+
+        for title in REQUIRED_GUARDRAIL_HEADINGS:
+            assert shapes[title].startswith("Required, source-backed")
+            assert "Conditional" not in shapes[title]
+            assert "`None`" in shapes[title]
+        assert shapes["Stack"].startswith("Conditional, source-backed")
 
 
 class TestUnusableConceptHeadingRefusal:
@@ -9743,6 +9954,7 @@ class TestFileBackedSourceIntake:
             "---\n## References\n---\n\n```markdown\n"
             "## References\n\n- [Example](https://example.test/example)\n```\n\n"
             "## References\n\n- [Real](https://example.test/real)\n"
+            + NONE_GUARDRAILS
         )
 
         assert intake.references_ready is True
@@ -9780,6 +9992,7 @@ class TestFileBackedSourceIntake:
 
         intake = classify_file_backed_source(
             "## References\n\n- [API](https://example.test/api)\n"
+            + NONE_GUARDRAILS
         )
 
         assert intake.needs_preparation is True
@@ -9919,7 +10132,7 @@ class TestFileBackedSourceIntake:
         source.write_text(
             "Build the file-backed routing contract.\n\n"
             "## References\n\n"
-            "- [Contract](https://example.test/contract)\n",
+            "- [Contract](https://example.test/contract)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         preparation_calls: list[str] = []
@@ -9980,7 +10193,7 @@ class TestFileBackedSourceIntake:
         source.write_text(
             "Build the file-backed routing contract.\n\n"
             "## References\n\n"
-            "- [Contract](https://example.test/contract)\n",
+            "- [Contract](https://example.test/contract)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         normalized = _normalized_outcome_for_test()
@@ -10045,7 +10258,7 @@ class TestFileBackedSourceIntake:
         source.write_text(
             "Build the file-backed routing contract.\n\n"
             "## References\n\n"
-            "- [Contract](https://example.test/contract)\n",
+            "- [Contract](https://example.test/contract)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         normalized = _normalized_outcome_for_test()
@@ -10098,7 +10311,7 @@ class TestFileBackedSourceIntake:
         source.write_text(
             "Build the file-backed routing contract.\n\n"
             "## References\n\n"
-            "- [Contract](https://example.test/contract)\n",
+            "- [Contract](https://example.test/contract)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         normalized = _normalized_outcome_for_test()
@@ -10199,6 +10412,8 @@ class TestFileBackedSourceIntake:
         evidence_bodies["Scope guardrails"] = (
             "AUTH-23 supplies the sibling prerequisite; do not implement auth here."
         )
+        evidence_bodies["Audit guardrails"] = "AUDIT-41 keeps the audit boundary."
+        evidence_bodies["Expected placement"] = "PLACE-42 names the destination."
         source_text = "Build the file-backed routing contract.\n\n" + "\n\n".join(
             f"## {section_name}\n\n{body}"
             for section_name, body in evidence_bodies.items()
@@ -10414,7 +10629,7 @@ class TestFileBackedSourceIntake:
     ) -> None:
         source = tmp_path / "source.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         normalized = _normalized_outcome_for_test()
@@ -10528,7 +10743,7 @@ class TestFileBackedSourceIntake:
         (tmp_path / ".git").mkdir()
         source = tmp_path / "source.md"
         source.write_text(
-            "## References\n\n- [Real](https://example.test/real)\n",
+            "## References\n\n- [Real](https://example.test/real)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         monkeypatch.setattr("plan_tool.cli.authoring._read_seed_body", lambda *_: "")
@@ -12069,7 +12284,7 @@ class TestCmdCreateSeedResolution:
             "# Old Plan\n\n"
             "## Overview\n\nSeed overview marker-fa72.\n\n"
             "## Architecture\n\nSeed architecture marker-fa72.\n\n"
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         # Canonical with provenance pointing at the seed.
@@ -17726,6 +17941,7 @@ _FREE_FORM_SEED = (
     "## References\n"
     "\n"
     "- [Webhook API](https://example.test/webhook)\n"
+    + NONE_GUARDRAILS
 )
 
 
@@ -17781,6 +17997,7 @@ _CANONICAL_FULL_SEED = (
     "## Deferred\n"
     "\n"
     "- Canonical deferred bullet.\n"
+    + NONE_GUARDRAILS
 )
 
 
@@ -24059,7 +24276,7 @@ def test_from_existing_reference_eligibility_ignores_fenced_example() -> None:
 
     validate_from_existing_seed(
         "## References\n\n"
-        "- [Real](https://example.test/reference)\n"
+        "- [Real](https://example.test/reference)\n" + NONE_GUARDRAILS
     )
 
 
@@ -24079,12 +24296,12 @@ def test_create_rejects_unmatched_seed_before_authoring_work(tmp_path: Path) -> 
     ("seed_body", "from_description"),
     [
         (
-            "## References\n\n- [Real](https://example.test/reference)\n",
+            "## References\n\n- [Real](https://example.test/reference)\n" + NONE_GUARDRAILS,
             "## Summary\n\n```\n",
         ),
         (
             "## References\n\n```\n",
-            "## References\n\n- [Real](https://example.test/reference)\n",
+            "## References\n\n- [Real](https://example.test/reference)\n" + NONE_GUARDRAILS,
         ),
     ],
 )
@@ -24234,7 +24451,8 @@ def normalized_reference_create(tmp_path, monkeypatch):
             f"## {key}\n\n{key} source proof."
             for key in _PREPARATION_EVIDENCE_KEYS
         )
-        + "\n\n## References\n\n- `current.py#proof` — CURRENT-SOURCE\n",
+        + "\n\n## References\n\n- `current.py#proof` — CURRENT-SOURCE\n"
+        + NONE_GUARDRAILS,
         encoding="utf-8",
     )
     state = {"preparations": 0, "research": 0, "fail_steps": False}

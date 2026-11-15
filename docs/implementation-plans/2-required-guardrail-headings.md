@@ -205,6 +205,8 @@ steps:
     5: live seeds already pass, so turning the refusal on breaks no current input
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/06-turn-on-refusal-create-py-classify-file.md
   status: current
+  status_note: 'test-authoring gate failed: feature step created or modified no test
+    file; step not advanced.'
   description: Turn on the refusal in `create.py:classify_file_backed_source`. `validate_from_existing_seed`
     and the CLI's pre-slug call in `plan_tool/cli/authoring.py` both reach it, and
     so does the `create_plan` intake. It calls the step 1 predicate and raises one

@@ -11,9 +11,10 @@ from pathlib import Path
 
 import pytest
 import yaml
+from tests.seed_fixtures import NONE_GUARDRAILS
 
 import plan_tool.scope_out as scope_out
-from plan_tool.create import validate_from_existing_seed
+from plan_tool.create import CreateError, validate_from_existing_seed
 from plan_tool.detail_artifacts import DetailFormatError
 from plan_tool.parser import _coerce_enums, parse_plan
 from plan_tool.concept_tree import (
@@ -470,17 +471,27 @@ def test_seed_is_create_from_existing_input():
 
 
 def test_single_and_region_scope_out_fallbacks_pass_create_preflight():
-    single_step_seed = _render()
+    single_step_seed = _render(source_body=NONE_GUARDRAILS)
     region_seed = render_carved_region_seed(
         plan_title="Spinning Plan",
         carved_steps=[_step(id=2), _step(id=3)],
         detail_bodies=[None, None],
         detail_missings=[False, False],
         source_path=SOURCE,
+        source_body=NONE_GUARDRAILS,
     )
 
     validate_from_existing_seed(single_step_seed)
     validate_from_existing_seed(region_seed)
+
+
+def test_deterministic_renderer_todo_guardrail_is_refused():
+    # A source without the headings yields `_(TODO)_` bodies; the operator must
+    # fill them, so `create --from-existing` refuses the seed as written.
+    seed = _render()
+
+    with pytest.raises(CreateError, match=r"`## Scope guardrails`.*`## Expected placement`"):
+        validate_from_existing_seed(seed)
 
 
 def test_seed_preserves_source_reference_body():
@@ -1633,6 +1644,9 @@ def _raise_prompt(_msg: str) -> str:
     raise AssertionError("prompt_fn should not be called")
 
 
+_GUARDED_BODY = "Plan prose body that survives narrowing.\n" + NONE_GUARDRAILS
+
+
 def _safe_four_step_plan() -> Plan:
     # Carving step 2 is safe: no survivor depends on it, no downstream DONE
     # (the gate is DONE-only; a downstream CURRENT would not block either).
@@ -2104,7 +2118,9 @@ def test_yes_bypasses_confirm(tmp_path, monkeypatch):
 
 
 def test_applied_scope_out_frontmatter_reference_uses_body_fallback(tmp_path):
-    path = _write_plan_file(tmp_path, _safe_four_step_plan())
+    path = _write_plan_file(
+        tmp_path, _safe_four_step_plan(), body=_GUARDED_BODY
+    )
     original = path.read_text(encoding="utf-8")
     frontmatter_end = original.index("---\n", len("---\n"))
     path.write_text(
@@ -2123,7 +2139,9 @@ def test_applied_scope_out_frontmatter_reference_uses_body_fallback(tmp_path):
 
 
 def test_applied_scope_out_fenced_reference_uses_body_fallback(tmp_path):
-    path = _write_plan_file(tmp_path, _safe_four_step_plan())
+    path = _write_plan_file(
+        tmp_path, _safe_four_step_plan(), body=_GUARDED_BODY
+    )
     original = path.read_text(encoding="utf-8")
     path.write_text(
         original.replace(
@@ -2632,14 +2650,14 @@ def test_scope_out_result_is_frozen():
 # --------------------------------------------------------------------------
 
 
-def _register_plan(tmp_path: Path, plan: Plan, name: str = "2-spin.md"):
+def _register_plan(tmp_path: Path, plan: Plan, name: str = "2-spin.md", **write_kwargs):
     """Write ``plan`` and a one-entry manifest so ``main`` can resolve it.
 
     Builds the repo + manifest by hand (the ``registered_plan`` /
     ``tmp_repo`` fixtures live in ``tests/cli/conftest.py`` and are out of
     scope here). Returns ``(plan_path, manifest_path)``.
     """
-    path = _write_plan_file(tmp_path, plan, name=name)
+    path = _write_plan_file(tmp_path, plan, name=name, **write_kwargs)
     manifest = tmp_path / "m.json"
     manifest.write_text(json.dumps({"plans": [name]}), encoding="utf-8")
     return path, manifest
@@ -2678,7 +2696,12 @@ class TestScopeOutCLI:
         from plan_tool.cli.app import main
         from plan_tool.create import create_plan, read_existing_description
 
-        path, manifest = _register_plan(tmp_path, _safe_four_step_plan())
+        # The source plan states each guardrail, so the carved seed is create-ready.
+        path, manifest = _register_plan(
+            tmp_path,
+            _safe_four_step_plan(),
+            body="Plan prose body that survives narrowing.\n" + NONE_GUARDRAILS,
+        )
 
         rc = main(
             _scope_out_argv(
