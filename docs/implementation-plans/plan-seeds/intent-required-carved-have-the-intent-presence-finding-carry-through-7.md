@@ -154,8 +154,16 @@ Added to the existing `TestCheckIntentPresence`:
 
 ## References
 
+**Step 6**
+
 - [dataclasses — Data Classes — Python 3 documentationhttps: — Field defaults and `frozen=True` semantics for the `IntentAction` record, matching how `MergeAction` is declared.
 - [re — Regular expression operations — Python 3 documentationhttps: — Group and alternation semantics for the two-arm marker pattern, including how an unmatched group reads back as `None`.
+
+**Step 7**
+
+- [Run Claude Code programmatically (headless mode)https: — The non-interactive invocation and result envelope behind the `shell_claude_invoker` seam this dispatcher resolves and hands to the bridge.
+- [Claude Code CLI referencehttps: — Flag list for the `claude` binary the invoker shells out to, for reading what a real dispatch would spend.
+- [dataclasses — Data Classes — Python 3 documentationhttps: — `frozen=True` semantics for the `IntentAction` this step consumes and the `StructuralOutcomeEffects` records it constructs.
 
 ## Applicable guardrails
 
@@ -347,12 +355,6 @@ Approx. 21 new cases. **Green-before-done gate:** the plan sets `enforce_step_te
 - `rg 'intent' plan_tool/review.py` shows `INTENT_PRESENCE_SOURCE` still absent from `APPLY_ELIGIBLE_SOURCES` and `STRUCTURAL_SOURCES`; `tests/test_review.py::TestCheckIntentPresence::test_source_is_in_no_routing_set` passes unchanged.
 - `uv run pytest tests/test_review_walk.py tests/cli/test_review_actions.py tests/test_review.py tests/test_duplication.py -q` is green.
 - `git status` shows changes only in the four declared files.
-
-## References
-
-- [Run Claude Code programmatically (headless mode)https: — The non-interactive invocation and result envelope behind the `shell_claude_invoker` seam this dispatcher resolves and hands to the bridge.
-- [Claude Code CLI referencehttps: — Flag list for the `claude` binary the invoker shells out to, for reading what a real dispatch would spend.
-- [dataclasses — Data Classes — Python 3 documentationhttps: — `frozen=True` semantics for the `IntentAction` this step consumes and the `StructuralOutcomeEffects` records it constructs.
 
 ## Applicable guardrails
 
