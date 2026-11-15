@@ -282,6 +282,29 @@ needs to change.
   itself — this seed only adds a reader of the `TerminationReason` it already
   produces.
 
+## Scope guardrails
+
+- The only observable is a `socket.create_connection` attempt to a fixed
+  IP:port pair succeeding or failing within a short timeout; no cause, latency
+  or quality judgment.
+- The poll interval, cap and probe targets stay code-level constants with no
+  CLI configuration.
+- `backend_runner.py`, `_KILL_AFTER_SILENCE_S`, `_STALL_THRESHOLD_S` and the
+  kill ladder are unchanged, and no historical run-log data is migrated.
+
+## Audit guardrails
+
+- BACKLOG #119 and #120 are independent and out of scope.
+- Anything the iteration loop surfaces outside this fence goes to `BACKLOG.md` /
+  `BUG_BACKLOG.md`, never to plan expansion.
+
+## Expected placement
+
+- `plan_tool/rate_limit_loop.py`, `plan_tool/claude_errors.py`,
+  `plan_tool/shell.py` and the two candidate invokers in
+  `roadmap_candidate_run.py` and `roadmap_candidate_review.py`, plus the named
+  docs and `tests/`; not `plan_tool/backend_runner.py`.
+
 ## Risks
 
 - **False-positive probe (captive portal / proxy)** — a raw TCP connect can

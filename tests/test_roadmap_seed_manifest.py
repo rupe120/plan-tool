@@ -74,6 +74,8 @@ def _seed_text(*component_ids: str) -> str:
     components = "\n".join(f"  - {component_id}" for component_id in component_ids)
     return (
         f"---\nroadmap_components:\n{components}\n---\n# Seed\n\n"
+        "## Scope guardrails\n\nNone\n\n## Audit guardrails\n\nNone\n\n"
+        "## Expected placement\n\nNone\n\n"
         "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
         "## References\n\n"
         f"- `{DOMAIN_FILENAME}`\n"

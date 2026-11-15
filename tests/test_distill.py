@@ -18,6 +18,7 @@ from typing import Callable, Optional
 import pytest
 
 from plan_tool import create as create_module
+from tests.seed_fixtures import NONE_GUARDRAILS
 from plan_tool.create import (
     CreateError,
     DirectSplitAssessment,
@@ -599,13 +600,14 @@ class TestProposeDistilledSeed:
 _SEED = (
     "Add a feature in `src/app.py`.\n\n# Messy\n\n" * 4
     + "\n## References\n\n- [App API](https://example.test/app-api)\n"
+    + NONE_GUARDRAILS
 )
 
 
 def _direct_file_seed() -> str:
     return "\n".join(
         f"## {section}\n\n{section} source text.\n" for section in _SECTION_KEYS
-    ) + "\n## References\n\n- [App API](https://example.test/app-api)\n"
+    ) + "\n## References\n\n- [App API](https://example.test/app-api)\n" + NONE_GUARDRAILS
 
 
 class TestFindDroppedReferences:
@@ -1180,7 +1182,7 @@ class TestCmdCreateDistillCli:
         seed = repo / "notes.md"
         seed.write_text(
             "l1\nl2\nl3\nl4\nl5\nl6\n\n"
-            "## References\n\n- [App API](https://example.test/app-api)\n",
+            "## References\n\n- [App API](https://example.test/app-api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         _patch_fake_claude(monkeypatch, _router(_split_json(_TWO_PLANS)))

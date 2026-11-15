@@ -27,6 +27,8 @@ from pathlib import Path
 
 from plan_tool.annotate import AnnotateError, AnnotationStatus, PlanAnnotation, SectionAnnotation
 from plan_tool.scope_fence import (
+    REQUIRED_GUARDRAIL_HEADINGS,
+    guardrail_headings_block,
     _fenced_code_spans,
     _is_placeholder_section,
     _strip_frontmatter,
@@ -215,6 +217,8 @@ def render_create_seed(annotation: PlanAnnotation, *, report_path: Path) -> str:
             lines.append(_done_context_bullet(section))
     lines.append("")
 
+    lines.extend(_guardrail_decision(annotation)[0])
+
     source_references = extract_h2_sections(
         _strip_frontmatter(annotation.source_text), ignore_fenced_code=True
     ).get("references")
@@ -235,6 +239,31 @@ def render_create_seed(annotation: PlanAnnotation, *, report_path: Path) -> str:
     lines.append("")
 
     return "\n".join(lines)
+
+
+def _guardrail_decision(
+    annotation: PlanAnnotation,
+) -> tuple[list[str], tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    """Seed lines plus (inherited, model_written, unfilled) heading titles.
+
+    Source heading wins, then a usable model body, else ``_(TODO)_``.
+    """
+    lines, inherited, unfilled = guardrail_headings_block(
+        _strip_frontmatter(annotation.source_text), annotation.guardrail_bodies
+    )
+    model_written = tuple(
+        title
+        for title in REQUIRED_GUARDRAIL_HEADINGS
+        if title not in inherited and title not in unfilled
+    )
+    return lines, inherited, model_written, unfilled
+
+
+def guardrail_states(
+    annotation: PlanAnnotation,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    """(inherited, model_written, unfilled) titles, as :func:`render_create_seed` wrote them."""
+    return _guardrail_decision(annotation)[1:]
 
 
 def _carryover_entry(section: SectionAnnotation) -> list[str]:

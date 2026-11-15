@@ -118,6 +118,26 @@ No other `roadmap`, `create`, or audit behavior changes.
 
 None.
 
+## Scope guardrails
+
+- No change to the completeness audit or its prompts, and no new check that a
+  quoted passage matches its cited file.
+- Legacy seed text is not rewritten in place; promotion does not rewrite the
+  top-level `0N-*.md` files, and leftover top-level files are not deleted.
+- No new `create` behavior for prose the model writes during synthesis.
+
+## Audit guardrails
+
+- Sibling-plan problems filed in `BUG_BACKLOG.md` and plans already created
+  from bare-name seeds are out of scope.
+- Stop and surface to the user if resolving a citation needs a new link record,
+  a change to the immutable version layout, or a plans directory outside the
+  repository; file adjacent findings in `BUG_BACKLOG.md` or `BACKLOG.md`.
+
+## Expected placement
+
+None.
+
 ## Architecture
 
 - **Settled: the seed writer owns the fix.** Promotion changes only the

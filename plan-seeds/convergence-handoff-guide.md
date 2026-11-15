@@ -55,6 +55,20 @@ for proof of progress.
   mechanisms. Mention the withdrawn work only as dated provenance explaining
   why judgment stays with the operator.
 
+## Audit guardrails
+
+- A new convergence command, telemetry field, causal-provenance store,
+  automatic split/scope-out/re-seed route, or automated multi-agent workflow is
+  out of scope.
+- Rewriting historical plans, run logs, reports or handoffs is out of scope.
+
+## Expected placement
+
+- `docs/CONVERGENCE_HANDOFF.md`, with navigation from the existing developer
+  entry points.
+- `RUNBOOK.md` changes only by a narrowly necessary link or stale-pointer
+  correction.
+
 ## Design decisions
 
 - The guide starts with an evidence hierarchy: source plan/detail and explicit

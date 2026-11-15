@@ -6,6 +6,8 @@ the autouse ``tests/conftest.py`` gate never fires; no real claude.
 
 from __future__ import annotations
 
+from plan_tool.scope_fence import is_acceptable_guardrail_body
+
 import json
 from pathlib import Path
 
@@ -971,3 +973,154 @@ def test_heading_less_source_classified_as_one_section(tmp_path: Path) -> None:
         src, repo_root=tmp_path, invoker=_stub(response)
     )
     assert len(result.sections) == 1
+
+
+# --- guardrails element -----------------------------------------------------
+
+_ONE_SECTION = {"heading": "Overview", "status": "NOT-IMPLEMENTED", "evidence": "absent"}
+
+
+def _classify_with(tmp_path: Path, response_items: list[dict]) -> PlanAnnotation:
+    src = _write_notes(tmp_path, "notes.md", "# Overview\n\nSome notes.\n")
+    return classify_plan_implementation(
+        src, repo_root=tmp_path, invoker=_stub(_canned(response_items))
+    )
+
+
+def test_response_with_guardrails_element_populates_the_annotation(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path,
+        [_ONE_SECTION, {"guardrails": {"scope": "keep it small", "audit": "None"}}],
+    )
+    assert result.guardrail_bodies == {
+        "Scope guardrails": "keep it small",
+        "Audit guardrails": "None",
+    }
+
+
+def test_guardrails_element_does_not_count_as_a_section(tmp_path: Path) -> None:
+    result = _classify_with(tmp_path, [{"guardrails": {"scope": "x"}}, _ONE_SECTION])
+    assert [s.heading for s in result.sections] == ["Overview"]
+
+
+def test_older_response_shape_without_guardrails_still_parses(tmp_path: Path) -> None:
+    result = _classify_with(tmp_path, [_ONE_SECTION])
+    assert [s.heading for s in result.sections] == ["Overview"]
+    assert result.guardrail_bodies == {}
+
+
+def test_response_with_only_a_guardrails_element_still_raises_empty(tmp_path: Path) -> None:
+    with pytest.raises(AnnotateError, match="empty"):
+        _classify_with(tmp_path, [{"guardrails": {"scope": "x"}}])
+
+
+def test_blank_or_non_string_guardrail_value_is_treated_as_absent(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path,
+        [_ONE_SECTION, {"guardrails": {"scope": "  ", "audit": 3, "placement": None}}],
+    )
+    assert result.guardrail_bodies == {}
+
+
+def test_multiple_guardrails_elements_merge_first_body_wins(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path,
+        [
+            {"guardrails": {"scope": "first"}},
+            _ONE_SECTION,
+            {"guardrails": {"scope": "second", "audit": "None"}},
+        ],
+    )
+    assert result.guardrail_bodies == {
+        "Scope guardrails": "first",
+        "Audit guardrails": "None",
+    }
+
+
+def test_first_acceptable_guardrail_body_wins_over_an_earlier_placeholder(
+    tmp_path: Path,
+) -> None:
+    result = _classify_with(
+        tmp_path,
+        [
+            {"guardrails": {"audit": "_(TODO)_"}},
+            _ONE_SECTION,
+            {"guardrails": {"audit": "real fence"}},
+        ],
+    )
+    assert result.guardrail_bodies == {"Audit guardrails": "real fence"}
+
+
+def test_contract_says_no_fence_is_the_string_none_not_json_null() -> None:
+    from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT
+
+    prompt = (Path(__file__).resolve().parent.parent / "plan_tool" / "prompts" / "annotate.md").read_text(encoding="utf-8")
+    assert 'JSON string `"None"`' in prompt and "never JSON `null`" in prompt
+
+
+def test_every_example_guardrail_value_in_the_contract_is_rejected_as_a_body() -> None:
+    """An echoed example must ship nothing: the example values are placeholders."""
+    from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT
+
+    (element,) = [e for e in _ANNOTATE_RESPONSE_CONTRACT.example if "guardrails" in e]
+    assert element["guardrails"]
+    for value in element["guardrails"].values():
+        assert not is_acceptable_guardrail_body(value)
+
+
+def test_annotate_guardrail_key_titles_equal_the_required_headings() -> None:
+    from plan_tool.annotate import GUARDRAIL_RESPONSE_KEYS
+    from plan_tool.scope_fence import REQUIRED_GUARDRAIL_HEADINGS
+
+    assert tuple(GUARDRAIL_RESPONSE_KEYS.values()) == REQUIRED_GUARDRAIL_HEADINGS
+    assert set(GUARDRAIL_RESPONSE_KEYS) == {"scope", "audit", "placement"}
+
+
+def test_contract_example_guardrail_keys_come_from_the_key_map() -> None:
+    from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT, GUARDRAIL_RESPONSE_KEYS
+
+    (element,) = [e for e in _ANNOTATE_RESPONSE_CONTRACT.example if "guardrails" in e]
+    assert set(element["guardrails"]) == set(GUARDRAIL_RESPONSE_KEYS)
+
+
+def test_a_null_heading_beside_guardrails_is_split_out_not_parsed_as_a_section() -> None:
+    from plan_tool.annotate import _split_guardrails_element
+
+    sections, bodies = _split_guardrails_element(
+        [{"heading": None, "guardrails": {"scope": "None"}}, {"heading": "  ", "guardrails": {}}]
+    )
+    assert sections == []
+    assert bodies == {"Scope guardrails": "None"}
+
+
+def test_a_null_heading_guardrails_element_does_not_fail_the_run(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path, [_ONE_SECTION, {"heading": None, "guardrails": {"scope": "None"}}]
+    )
+    assert result.guardrail_bodies == {"Scope guardrails": "None"}
+
+
+def test_a_real_heading_beside_guardrails_stays_a_section() -> None:
+    from plan_tool.annotate import _split_guardrails_element
+
+    item = {"heading": "Real", "guardrails": {"scope": "None"}}
+    assert _split_guardrails_element([item]) == ([item], {})
+
+
+def test_classify_makes_one_invoker_call_with_guardrails_requested(tmp_path: Path) -> None:
+    src = _write_notes(tmp_path, "notes.md", "# Overview\n\nSome notes.\n")
+    prompts: list[str] = []
+
+    def invoker(prompt: str) -> str:
+        prompts.append(prompt)
+        return _canned([_ONE_SECTION, {"guardrails": {"scope": "None"}}])
+
+    classify_plan_implementation(src, repo_root=tmp_path, invoker=invoker)
+    assert len(prompts) == 1
+
+
+def test_annotate_prompt_contains_the_guardrail_fence_instruction() -> None:
+    prompt = render_annotate_prompt("# Doc\n", "", "")
+    assert "only when the document already implies that fence" in prompt
+    assert "add no scope, mechanism or requirement" in prompt
+    assert '"guardrails"' in prompt

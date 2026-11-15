@@ -44,6 +44,7 @@ from plan_tool.annotate import (
 from plan_tool.annotate_render import (
     reject_unmatched_annotation_fence,
     render_annotated_report,
+    guardrail_states,
     render_create_seed,
 )
 from plan_tool.create import CreateError, archive_existing_source
@@ -281,6 +282,14 @@ def _annotate_one(
 
     success(f"annotated {_short_path(paths.report, repo_root)}")
     detail(f"seed {_short_path(paths.seed, repo_root)}")
+    inherited, model_written, unfilled = guardrail_states(annotation)
+    for titles, note in (
+        (inherited, "inherited from the source"),
+        (model_written, "model-written (review before `create`)"),
+        (unfilled, "unfilled (fill in by hand; `_(TODO)_` in the seed)"),
+    ):
+        for title in titles:
+            detail(f"guardrail ## {title}: {note}")
     detail(
         "grounding "
         f"grounded_files={len(annotation.grounded_files)} "

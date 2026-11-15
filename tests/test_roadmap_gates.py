@@ -114,6 +114,7 @@ from plan_tool.roadmap_gates import (
     VIOLATION_INVALID_PLAN_ID_SLUG,
     VIOLATION_MISSING_HOSTING_FACET,
     VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE,
+    VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING,
     VIOLATION_MISSING_DRAFT_SEED_RISKS,
     VIOLATION_MISSING_ORDERING_PLAN_ID,
     VIOLATION_NO_ASSUMPTION_CONSUMER,
@@ -589,6 +590,18 @@ def draft_seed_text(
         [
             "---",
             "# Draft seed",
+            "",
+            "## Scope guardrails",
+            "",
+            "None",
+            "",
+            "## Audit guardrails",
+            "",
+            "None",
+            "",
+            "## Expected placement",
+            "",
+            "None",
             "",
             "## Risks",
             "",
@@ -1129,6 +1142,18 @@ sources:
 ---
 # Draft seed
 
+## Scope guardrails
+
+None
+
+## Audit guardrails
+
+None
+
+## Expected placement
+
+None
+
 ## Risks
 
 - A risk the accepted roadmap already states.
@@ -1210,12 +1235,119 @@ def test_draft_seed_with_any_nonempty_risks_text_passes() -> None:
     assert _risks_violations(text) == []
 
 
+_GUARDRAIL_TITLES = ("Scope guardrails", "Audit guardrails", "Expected placement")
+
+
+def _guardrail_violations(text: str) -> list:
+    return [
+        violation
+        for violation in validate_draft_seed_content(text, plan=PLAN_ONE)
+        if violation.kind == VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING
+    ]
+
+
+def _without_guardrail(title: str) -> str:
+    return draft_seed_text().replace(f"## {title}\n\nNone\n\n", "")
+
+
+def test_draft_seed_missing_guardrail_heading_is_a_violation() -> None:
+    (violation,) = _guardrail_violations(_without_guardrail("Audit guardrails"))
+
+    assert violation.row_id == PLAN_ONE.id
+    assert "## Audit guardrails" in violation.message
+
+
+def test_every_offending_guardrail_heading_is_reported_not_the_first() -> None:
+    text = draft_seed_text()
+    for title in _GUARDRAIL_TITLES:
+        text = text.replace(f"## {title}\n\nNone\n\n", "")
+
+    violations = _guardrail_violations(text)
+
+    assert [
+        next(t for t in _GUARDRAIL_TITLES if f"## {t}" in v.message) for v in violations
+    ] == list(_GUARDRAIL_TITLES)
+
+
+def test_duplicated_guardrail_heading_is_a_violation() -> None:
+    text = draft_seed_text().replace(
+        "## Scope guardrails\n\nNone\n\n",
+        "## Scope guardrails\n\nNone\n\n## Scope guardrails\n\nNone\n\n",
+    )
+
+    (violation,) = _guardrail_violations(text)
+
+    assert "## Scope guardrails" in violation.message
+
+
+def test_empty_guardrail_heading_is_a_violation() -> None:
+    text = draft_seed_text().replace("## Expected placement\n\nNone\n\n", "## Expected placement\n\n")
+
+    (violation,) = _guardrail_violations(text)
+
+    assert "## Expected placement" in violation.message
+
+
+def test_todo_placeholder_guardrail_heading_is_a_violation() -> None:
+    text = draft_seed_text().replace(
+        "## Scope guardrails\n\nNone\n\n", "## Scope guardrails\n\n_(TODO)_\n\n"
+    )
+
+    (violation,) = _guardrail_violations(text)
+
+    assert "## Scope guardrails" in violation.message
+
+
+def test_none_guardrail_body_is_accepted_as_content() -> None:
+    # Deliberately: `None` is how a plan row says it sets no fence; it must
+    # never be treated as a placeholder.
+    text = draft_seed_text()
+    assert "## Scope guardrails\n\nNone\n" in text
+
+    assert _guardrail_violations(text) == []
+    assert validate_draft_seed_content(text, plan=PLAN_ONE) == []
+
+
+def test_guardrail_heading_inside_a_code_fence_does_not_count() -> None:
+    text = draft_seed_text().replace(
+        "## Audit guardrails\n\nNone\n\n",
+        "```markdown\n## Audit guardrails\n\nNone\n```\n\n",
+    )
+
+    (violation,) = _guardrail_violations(text)
+
+    assert "## Audit guardrails" in violation.message
+
+
+def test_guardrail_violation_message_names_refresh_seeds_route() -> None:
+    # The retry loop pastes the message as a bare bullet and the refusals show
+    # it verbatim, so it must carry the heading and the remedy by itself.
+    (violation,) = _guardrail_violations(_without_guardrail("Scope guardrails"))
+
+    assert "--refresh-seeds" in violation.message
+    assert "## Scope guardrails" in violation.message
+    # Model-facing text: no unfilled placeholder the model cannot resolve.
+    assert "<slug>" not in violation.message
+
+
 def test_validate_draft_seed_content_does_not_count_fenced_references() -> None:
     text = """---
 roadmap_components:
 - component-1
 ---
 # Draft seed
+
+## Scope guardrails
+
+None
+
+## Audit guardrails
+
+None
+
+## Expected placement
+
+None
 
 ## Risks
 
@@ -1249,6 +1381,18 @@ roadmap_components:
 - component-1
 ---
 # Draft seed
+
+## Scope guardrails
+
+None
+
+## Audit guardrails
+
+None
+
+## Expected placement
+
+None
 
 ## Risks
 

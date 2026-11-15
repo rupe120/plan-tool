@@ -87,6 +87,25 @@ already the natural sole owner of a piece of state for its whole lifetime (e.g.
 the convergence-loop-local accumulators, which never escape the loop today and
 shouldn't need to escape their extracted function either).
 
+## Scope guardrails
+
+- Zero behavior change: every phase's inputs, outputs, side effects, ordering
+  and error conditions are identical before and after.
+- `resume`/`force`/checkpoint semantics stay unchanged, and the Trigger 2 and
+  Phase B split mechanisms stay distinct.
+- Ordering constraints documented in the functions' comments carry over with
+  the code.
+
+## Audit guardrails
+
+- Unifying the two apply-loops, and decomposing `cmd_run`, are out of scope and
+  are candidates for their own future seeds.
+
+## Expected placement
+
+- Named phase functions within the same file (`create.py` / `detail.py`), with
+  no cross-file moves.
+
 ## Architecture
 
 Both functions already delegate every Claude round-trip to a named top-level

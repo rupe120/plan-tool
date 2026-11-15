@@ -39,6 +39,24 @@ and arm-clustering core.
 - No implementation by extending BACKLOG #224 without a new scoped plan and
   explicit user review of the observable contract.
 
+## Scope guardrails
+
+- No gate, exit-code change, automatic carve, automatic apply or threshold
+  tuning.
+- No prose matcher that claims a producer is missing or an edit is causal.
+- No implementation by extending BACKLOG #224 without a new scoped plan and
+  explicit user review of the observable contract.
+
+## Audit guardrails
+
+- Changed cited regions are provenance candidates, never causal proof, and
+  insufficient or ambiguous evidence leaves a candidate silent.
+- Keeping either shape `judgment_only` is a successful outcome.
+
+## Expected placement
+
+None.
+
 ## Completion condition
 
 The follow-up plan states a binary observable for each proposed emitter and a

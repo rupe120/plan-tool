@@ -146,6 +146,20 @@ large enough to make a flag clearly cheaper.
   adds no new audit of the code.
 - **Mutating source plans.** Read-only over plans + reports.
 
+## Scope guardrails
+
+- The digest classifies and prints; it never edits code, writes a backlog
+  entry, or authors a plan.
+- Read-only over plans and reports, with no new audit of the code.
+
+## Audit guardrails
+
+None.
+
+## Expected placement
+
+None.
+
 ## Risks
 
 - **Dedup misses → re-listing triaged work.** Severity: UX / convergence. Fuzzy

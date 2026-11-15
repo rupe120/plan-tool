@@ -22,6 +22,24 @@ designed separately from the non-executable advisory payload.
 - Audit serial, parallel, generic-walk, and direct-review entrypoints together
   before selecting a routing change.
 
+## Scope guardrails
+
+- Advisory data is not reused as a recommendation target or generic action.
+- The source-snapshot freshness rule holds, and stale presentation is
+  suppressed.
+- The user-visible override policy holds, with no automatic gate added.
+
+## Audit guardrails
+
+- Serial, parallel, generic-walk and direct-review entrypoints are audited
+  together before any routing change is selected.
+- A routing change is designed separately from the non-executable advisory
+  payload.
+
+## Expected placement
+
+None.
+
 ## References
 
 - `plan_tool/review_walk.py` — shared generic walk that currently bypasses the

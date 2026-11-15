@@ -114,6 +114,17 @@ Decisions a later reader must not re-litigate:
   add content-quality judgments, prose-agreement checks, caps, or exit-code
   changes beyond the failed-commit result.
 
+## Audit guardrails
+
+- Content-quality judgments, prose-agreement checks, size or count caps, and
+  exit-code changes beyond the failed-commit result are out of scope.
+- Widening `--commit` to more verbs (BACKLOG #89) and a concurrent process
+  editing a written file are out of scope.
+
+## Expected placement
+
+None.
+
 ## Allowed behavior changes
 
 Only the commit's contents change: unrelated dirty files are no longer

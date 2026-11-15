@@ -143,6 +143,25 @@ follow-up, not part of this plan.
 - **Tuning the two classifiers** beyond shipping them behind gates — they
   were discovered by reading agent output, so calibration is follow-up work.
 
+## Scope guardrails
+
+- Read-only: no local `export_state` change, Jira write-back, plan mutation or
+  code edit.
+- The verdict is a third record, not a resolution of which side wins.
+- Opt-in subcommand only; it never runs by default on `reconcile`, `status` or
+  `sweep`.
+- `reconcile-code`, `verify` and the criteria-fulfillment prompt's behavior are
+  unchanged.
+
+## Audit guardrails
+
+- In-process parallel fan-out needs its own sign-off and is out of scope.
+- Rebuilding the sweep (#142) and tuning the two classifiers are out of scope.
+
+## Expected placement
+
+None.
+
 ## Risks
 
 - **False confidence** — an agent claiming "confirmed" without reading what

@@ -52,6 +52,25 @@ findings when passed. `reconcile-plan`'s behavior with no flag is unchanged.
 None beyond adding the new driver alongside `_iterate_reconcile_loop` in
 `plan_tool/cli/reconcile.py`.
 
+## Scope guardrails
+
+- `reconcile-plan`'s default (no-flag) interactive behavior is unchanged.
+- `run --mode reconcile` and `_iterate_reconcile_loop` are not changed or
+  reused directly; a new driver follows its shape.
+- No auto-apply without the explicit opt-in flag.
+
+## Audit guardrails
+
+- The convergence scope (`--step` vs. `--all` vs. whole-plan) and the
+  stop/budget criteria are open design questions for decomposition; surface
+  them to the user rather than guessing.
+
+## Expected placement
+
+- The new driver sits alongside `_iterate_reconcile_loop` in
+  `plan_tool/cli/reconcile.py`, with the flag in `plan_tool/cli/review_cmd.py`
+  and `docs/cli/` regenerated.
+
 ## Verification
 
 - A fixture plan with apply-eligible reconcile findings converges to no

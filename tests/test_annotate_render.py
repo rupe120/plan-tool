@@ -11,6 +11,7 @@ import difflib
 from pathlib import Path
 
 import pytest
+from tests.seed_fixtures import NONE_GUARDRAILS
 
 from plan_tool.annotate import AnnotationStatus, PlanAnnotation, SectionAnnotation
 from plan_tool.annotate_render import (
@@ -18,7 +19,7 @@ from plan_tool.annotate_render import (
     render_annotated_report,
     render_create_seed,
 )
-from plan_tool.create import validate_from_existing_seed
+from plan_tool.create import CreateError, validate_from_existing_seed
 
 
 def _annotation(
@@ -477,11 +478,32 @@ def test_seed_preserves_source_references_or_uses_source_fallback():
     assert "- Annotated report: `docs/orig.annotated.md`" in fallback
 
 
+def test_seed_without_source_guardrails_is_refused_by_create():
+    # The source states no guardrails, so the seed carries `_(TODO)_` bodies
+    # that the operator must fill before `create --from-existing` accepts it.
+    seed = _seed(
+        _annotation(
+            source_text="# Source\n\n## Overview\n\nBody.\n",
+            sections=(
+                SectionAnnotation(
+                    heading="A", status=AnnotationStatus.NOT_IMPLEMENTED, evidence=""
+                ),
+            ),
+        )
+    )
+
+    with pytest.raises(CreateError, match=r"`## Scope guardrails`"):
+        validate_from_existing_seed(seed)
+
+
 def test_seed_frontmatter_only_references_uses_source_fallback():
     seed = _seed(
         _annotation(
             source_path=Path("docs/orig.md"),
-            source_text="---\n## References\n---\n# Source\n\n## Overview\n\nBody.\n",
+            source_text=(
+                "---\n## References\n---\n# Source\n\n## Overview\n\nBody.\n"
+                + NONE_GUARDRAILS
+            ),
             sections=(
                 SectionAnnotation(
                     heading="A", status=AnnotationStatus.NOT_IMPLEMENTED, evidence=""
@@ -503,6 +525,7 @@ def test_seed_fenced_only_references_uses_source_fallback():
             source_path=Path("docs/orig.md"),
             source_text=(
                 "```markdown\n## References\n- https://example.test/api\n```\n"
+                + NONE_GUARDRAILS
             ),
             sections=(
                 SectionAnnotation(
@@ -525,6 +548,7 @@ def test_seed_preserves_body_references_after_frontmatter():
             source_text=(
                 "---\n## References\n---\n# Source\n\n## References\n\n"
                 "- `plan_tool/annotate_render.py`\n"
+                + NONE_GUARDRAILS
             ),
             sections=(
                 SectionAnnotation(
@@ -745,3 +769,116 @@ def test_renderers_are_pure_no_side_effects():
     assert render_annotated_report(ann) == render_annotated_report(ann)
     rp = Path("docs/x.annotated.md")
     assert render_create_seed(ann, report_path=rp) == render_create_seed(ann, report_path=rp)
+
+
+# --- guardrail headings in the seed -----------------------------------------
+
+_GUARDRAIL_TITLES = ("Scope guardrails", "Audit guardrails", "Expected placement")
+
+
+def _guardrail_seed(source_text: str = "# Plan\n", bodies: dict | None = None) -> str:
+    ann = _annotation(source_text=source_text)
+    if bodies is not None:
+        ann = PlanAnnotation(**{**ann.__dict__, "guardrail_bodies": bodies})
+    return render_create_seed(ann, report_path=Path("r.md"))
+
+
+def _body_of(seed: str, title: str) -> str:
+    after = seed.split(f"## {title}\n", 1)[1]
+    return after.split("\n## ", 1)[0].strip()
+
+
+def test_inherited_guardrail_heading_is_copied_verbatim():
+    seed = _guardrail_seed("# P\n\n## Scope guardrails\n\n- keep `a`\n- keep `b`\n")
+    assert _body_of(seed, "Scope guardrails") == "- keep `a`\n- keep `b`"
+
+
+def test_inherited_guardrail_beats_model_written_body_for_the_same_heading():
+    """The source is the authority: a model body never replaces an operator's fence."""
+    seed = _guardrail_seed(
+        "# P\n\n## Scope guardrails\n\nsource fence\n",
+        {"Scope guardrails": "model fence"},
+    )
+    assert _body_of(seed, "Scope guardrails") == "source fence"
+    assert "model fence" not in seed
+
+
+def test_model_written_guardrail_fills_a_heading_the_source_lacks():
+    seed = _guardrail_seed(bodies={"Audit guardrails": "stay within the module"})
+    assert _body_of(seed, "Audit guardrails") == "stay within the module"
+
+
+def test_model_body_none_is_rendered_as_none_not_todo():
+    seed = _guardrail_seed(bodies={"Expected placement": "None"})
+    assert _body_of(seed, "Expected placement") == "None"
+
+
+def test_missing_guardrail_bodies_render_todo_for_all_three_headings():
+    seed = _guardrail_seed()
+    assert [_body_of(seed, t) for t in _GUARDRAIL_TITLES] == ["_(TODO)_"] * 3
+
+
+def test_seed_carries_all_three_headings_exactly_once():
+    seed = _guardrail_seed(bodies={"Scope guardrails": "None"})
+    lines = seed.splitlines()
+    positions = []
+    for title in _GUARDRAIL_TITLES:
+        assert lines.count(f"## {title}") == 1
+        positions.append(lines.index(f"## {title}"))
+    assert positions == sorted(positions)
+    assert lines.index("## References") > positions[-1]
+
+
+def test_duplicated_or_placeholder_source_heading_is_not_inherited():
+    dup = "## Scope guardrails\n\nA\n\n## Scope guardrails\n\nB\n\n## Audit guardrails\n\n_(TODO)_\n"
+    seed = _guardrail_seed("# P\n\n" + dup, {"Scope guardrails": "model"})
+    assert _body_of(seed, "Scope guardrails") == "model"
+    assert _body_of(seed, "Audit guardrails") == "_(TODO)_"
+    assert seed.splitlines().count("## Scope guardrails") == 1
+
+
+def test_mixed_source_inherits_its_accepted_heading_and_takes_model_bodies_for_the_rest():
+    seed = _guardrail_seed(
+        "# P\n\n## Scope guardrails\n\nsource\n",
+        {"Scope guardrails": "ignored", "Audit guardrails": "model audit"},
+    )
+    assert _body_of(seed, "Scope guardrails") == "source"
+    assert _body_of(seed, "Audit guardrails") == "model audit"
+    assert _body_of(seed, "Expected placement") == "_(TODO)_"
+
+
+def test_partial_model_response_fills_only_the_headings_it_supplies():
+    seed = _guardrail_seed(bodies={"Scope guardrails": "s", "Expected placement": "p"})
+    assert [_body_of(seed, t) for t in _GUARDRAIL_TITLES] == ["s", "_(TODO)_", "p"]
+
+
+@pytest.mark.parametrize("bad", ["", "   ", "_(TODO)_", "TODO", "x\n\n## Injected\n\ny"])
+def test_unusable_model_body_is_not_written(bad):
+    seed = _guardrail_seed(bodies={"Scope guardrails": bad})
+    assert _body_of(seed, "Scope guardrails") == "_(TODO)_"
+    assert "## Injected" not in seed
+    assert seed.splitlines().count("## Scope guardrails") == 1
+
+
+def test_existing_seed_sections_unchanged_by_guardrail_headings():
+    lines = _guardrail_seed().splitlines()
+    for heading in (
+        "## Carryover scope (remaining work)",
+        "## Already implemented (done-context — do not re-plan)",
+        "## References",
+        "## Provenance",
+    ):
+        assert heading in lines
+
+
+def test_model_body_with_an_h1_is_written_as_todo_so_the_seed_is_complete_only_once_filled():
+    """An H1 body would make create read the section as empty; it must not ship."""
+    from plan_tool.scope_fence import missing_required_guardrail_headings
+
+    seed = _guardrail_seed(
+        bodies={t: "Stay small.\n\n# Scope\n\nmore" for t in _GUARDRAIL_TITLES}
+    )
+    assert [_body_of(seed, t) for t in _GUARDRAIL_TITLES] == ["_(TODO)_"] * 3
+    assert len(missing_required_guardrail_headings(seed)) == 3
+    filled = seed.replace("_(TODO)_", "None")
+    assert missing_required_guardrail_headings(filled) == ()

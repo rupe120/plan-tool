@@ -177,6 +177,24 @@ norm: concise docs).
 - **No always-on auto-advice.** Chat is opt-in per rec via the key; the
   walk never volunteers advice unprompted.
 
+## Scope guardrails
+
+- Chat is advisory only: it steers no apply, records no note, invokes no
+  `action_fn`, and edits no plan or code.
+- No new CLI flag or subcommand, and no saved-review schema or `Annotation`
+  change.
+- One shared implementation for all walk callers, and no always-on auto-advice.
+
+## Audit guardrails
+
+None.
+
+## Expected placement
+
+- Loop wiring in `review_walk.py`, the advisor builder at the CLI seam near
+  `_build_review_action_fn` in `review_actions.py`, tests in
+  `tests/test_review_walk.py`, and docs in `RUNBOOK.md` and `TESTING.md`.
+
 ## Acceptance criteria (plan-level)
 
 - In any walk (`completeness-apply`, `review`, `reconcile-plan-walk`),

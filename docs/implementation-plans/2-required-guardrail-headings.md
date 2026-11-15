@@ -4,7 +4,7 @@ title: Required Guardrail Headings
 intent: '`create --from-existing` refuses, before any model call, a seed missing any
   of the three guardrail headings or carrying one that is duplicated, empty or a placeholder,
   and accepts a heading whose body is an explicit `None`.'
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -22,7 +22,7 @@ steps:
   complexity: low
   change_type: feature
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/01-one-shared-check-three-guardrail.md
-  status: current
+  status: done
   description: 'Add one shared check for the three guardrail headings to `plan_tool/scope_fence.py`.
     Add a constant naming exactly `## Scope guardrails`, `## Audit guardrails` and
     `## Expected placement`. `GUARDRAIL_BODY_SECTIONS` stays as it is, because it
@@ -51,6 +51,7 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/02-make-scope-out-reground-write-all-three.md
+  status: done
   description: 'Make `scope-out` and `reground` write all three guardrail headings
     into the seeds they render. `scope_out.render_carved_seed`, `scope_out.render_carved_region_seed`
     and `reground.render_rebaseline_seed` copy each heading''s body verbatim from
@@ -90,22 +91,28 @@ steps:
   depends_on_notes:
     2: the shared copy-or-_(TODO)_ guardrail block helper in scope_fence.py
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md
+  status: done
   description: 'Make `annotate` write all three guardrail headings into its carryover
     seed. When the source plan or document has a guardrail heading the step 1 predicate
     accepts, `annotate_render.render_create_seed` copies it verbatim through the step
-    2 block helper, under the same source-state rule. For each heading the source lacks an accepted body for, the existing single `annotate` call also returns that heading''s body (the decision is per heading, and a model body never replaces an inherited one),
-    which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT` and `PlanAnnotation`
-    in `plan_tool/annotate.py`. Existing section-verdict parsing and the existing
-    response stay valid unchanged. Each model-written body is used only when step 1''s single-body rule accepts it, through the step 2 helper; a missing or unusable body renders `_(TODO)_` rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`:
-    write only fences the source already implies, use `None` when it implies none,
-    and add no scope, mechanism or requirement. That line carries the proportionality
-    rule from `synthesize-body.md`. The printed result in `plan_tool/cli/annotate_cmd.py`
-    names each model-written or inherited heading for review before `create`. The
-    destructive operations stay as they are: the refusal to overwrite an existing
-    default seed, replacement only through an explicit `--seed`, and the opt-in `--archive`
-    move. Tests in `tests/test_annotate.py`, `tests/test_annotate_render.py` and `tests/cli/test_annotate_cmd.py`
-    use canned responses and cover verbatim copy, a model-written guardrail, an older
-    response shape with no guardrails, and that the prompt contains the instruction.'
+    2 block helper, under the same source-state rule. For each heading the source
+    lacks an accepted body for, the existing single `annotate` call also returns that
+    heading''s body (the decision is per heading, and a model body never replaces
+    an inherited one), which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT`
+    and `PlanAnnotation` in `plan_tool/annotate.py`. Existing section-verdict parsing
+    and the existing response stay valid unchanged. Each model-written body is used
+    only when step 1''s single-body rule accepts it, through the step 2 helper; a
+    missing or unusable body renders `_(TODO)_` rather than failing the annotation.
+    Add one line to `plan_tool/prompts/annotate.md`: write only fences the source
+    already implies, use `None` when it implies none, and add no scope, mechanism
+    or requirement. That line carries the proportionality rule from `synthesize-body.md`.
+    The printed result in `plan_tool/cli/annotate_cmd.py` names each model-written
+    or inherited heading for review before `create`. The destructive operations stay
+    as they are: the refusal to overwrite an existing default seed, replacement only
+    through an explicit `--seed`, and the opt-in `--archive` move. Tests in `tests/test_annotate.py`,
+    `tests/test_annotate_render.py` and `tests/cli/test_annotate_cmd.py` use canned
+    responses and cover verbatim copy, a model-written guardrail, an older response
+    shape with no guardrails, and that the prompt contains the instruction.'
 - id: 4
   intent: Roadmap-derived seeds are checked against the same guardrail rule at materialization
     time, so a seed the roadmap accepts is never one `create` refuses.
@@ -122,21 +129,26 @@ steps:
   depends_on_notes:
     1: the shared guardrail-presence predicate
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/04-make-roadmap-materialize-refresh-seeds.md
+  status: done
   description: 'Make `roadmap --materialize` and `--refresh-seeds` produce draft seeds
     that carry all three guardrail headings. In `plan_tool/prompts/roadmap-seed.md`,
     add `Scope guardrails`, `Audit guardrails` and `Expected placement` to the required
-    section list. The prompt says to write `Scope guardrails` from the plan row''s `non_goals` and the settled decisions and constraints its components own, to write the other two only from accepted content that states them, to write only fences those sources imply and add no scope (the step 3 rule), and to put `None` where they set none. `roadmap_gates.validate_draft_seed_content`
-    calls the step 1 predicate and returns one violation per offending heading. That
-    makes a draft missing a heading consume an attempt in `materialize_plan_seed`''s
-    existing retry loop, with the violation message as the correction. The operator
-    still reviews the draft at `--accept-seed`. The same gate also runs on `--accept-seed`,
-    on seed promotion and in `roadmap_seed_manifest` classification, so a draft materialized
-    before this change and lacking the headings is reported malformed there; its one
-    stated route is `--refresh-seeds`, which re-materializes it with the headings,
-    and the refusal message names that route. The destructive operations stay as they
-    are: the draft-seed write and the sidecar that commits last, so an interrupted
-    write is still detectable. Tests: gate cases in `tests/test_roadmap_gates.py`
-    for missing, duplicated, empty, `_(TODO)_` and `None` headings; in `tests/test_roadmap.py`,
+    section list. The prompt says to write `Scope guardrails` from the plan row''s
+    `non_goals` and the settled decisions and constraints its components own, to write
+    the other two only from accepted content that states them, to write only fences
+    those sources imply and add no scope (the step 3 rule), and to put `None` where
+    they set none. `roadmap_gates.validate_draft_seed_content` calls the step 1 predicate
+    and returns one violation per offending heading. That makes a draft missing a
+    heading consume an attempt in `materialize_plan_seed`''s existing retry loop,
+    with the violation message as the correction. The operator still reviews the draft
+    at `--accept-seed`. The same gate also runs on `--accept-seed`, on seed promotion
+    and in `roadmap_seed_manifest` classification, so a draft materialized before
+    this change and lacking the headings is reported malformed there; its one stated
+    route is `--refresh-seeds`, which re-materializes it with the headings, and the
+    refusal message names that route. The destructive operations stay as they are:
+    the draft-seed write and the sidecar that commits last, so an interrupted write
+    is still detectable. Tests: gate cases in `tests/test_roadmap_gates.py` for missing,
+    duplicated, empty, `_(TODO)_` and `None` headings; in `tests/test_roadmap.py`,
     a retry on a missing heading, plus the existing canned seed replies updated to
     carry the headings; a prompt-containment test that the template names all three
     headings; and an existing-draft case in which a pre-change draft without the headings
@@ -155,6 +167,7 @@ steps:
   depends_on_notes:
     1: the predicate used to confirm every swept seed passes
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/05-three-guardrail-headings-hand-every.md
+  status: done
   description: Add the three guardrail headings by hand to every live seed in `docs/implementation-plans/plan-seeds/`
     and `plan-seeds/` that lacks one; the step 1 predicate, run over both directories,
     defines which seeds lack a heading. Write each body from that seed's own content
@@ -191,6 +204,7 @@ steps:
     4: roadmap draft seeds already carry the headings
     5: live seeds already pass, so turning the refusal on breaks no current input
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/06-turn-on-refusal-create-py-classify-file.md
+  status: done
   description: Turn on the refusal in `create.py:classify_file_backed_source`. `validate_from_existing_seed`
     and the CLI's pre-slug call in `plan_tool/cli/authoring.py` both reach it, and
     so does the `create_plan` intake. It calls the step 1 predicate and raises one
@@ -227,6 +241,7 @@ steps:
   depends_on_notes:
     6: the shipped refusal and its message that the docs describe
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/07-update-docs-say-three-guardrail.md
+  status: done
   description: 'Update the docs to say the three guardrail headings are required,
     that `None` is a valid body, and that `_(TODO)_` is refused. The pages are `SEED_FORMAT.md`,
     `PLAN_FORMAT.md` § "Scope fence", `docs/how-to/pipeline/create-from-existing.md`,
@@ -313,7 +328,7 @@ command for the operator.
 - `None` must pass. Do not add `None`, `N/A` or similar to the placeholder
   pattern.
 - Do not require `## Stack`, `## Outcome` or `## In scope`, and do not touch
-  inline `--from`, `--from-plan` or archived seeds.
+  inline `--from` or archived seeds.
 - Seed-writing tools populate guardrails only from a source they already read
   or a model call they already make; none gains a new model call.
 
@@ -348,7 +363,7 @@ See the `steps:` block in the frontmatter.
 - The tool-written `## Stack` heading, which only `roadmap` writes.
 - Requiring `## Outcome` or `## In scope`, which have no guardrail capture; that
   is a separate decision.
-- Inline `--from` and `--from-plan`, which have no seed file to hold a heading.
+- Inline `--from`, which has no seed file to hold a heading.
 - Archived seeds, which are not inputs to a future `create`.
 - A new model call in any tool to compose guardrails.
 - Any check of what a guardrail says beyond presence: deliberately no quality

@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import ast
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
@@ -46,6 +46,10 @@ from plan_tool.prompt_excerpt import build_prompt_excerpt
 from plan_tool.renderer import prompts_dir
 from plan_tool.response_contract import JSON_ROOT_ARRAY, JsonResponseContract
 from plan_tool.schema import Plan
+from plan_tool.scope_fence import (
+    REQUIRED_GUARDRAIL_HEADINGS,
+    is_acceptable_guardrail_body,
+)
 from plan_tool.shell import claude_invoke
 
 
@@ -60,6 +64,12 @@ _MAX_GROUNDING_SYMBOL_CANDIDATES = 80
 _CODE_REF_RE = re.compile(
     r"^(?P<path>[^:\s]+):(?P<anchor>\d+|[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)$"
 )
+# Keys of the optional ``guardrails`` element, one per required seed heading.
+GUARDRAIL_RESPONSE_KEYS: dict[str, str] = dict(
+    zip(("scope", "audit", "placement"), REQUIRED_GUARDRAIL_HEADINGS, strict=True)
+)
+
+
 _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
     root=JSON_ROOT_ARRAY,
     # Show every model-emittable status; NEEDS-REVIEW remains parser-derived.
@@ -87,6 +97,11 @@ _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
         "remaining": "",
         "confidence_low": False,
         "is_step": False,
+    }, {
+        # Optional; omit when unsure. Values are placeholders the parser
+        # rejects, so an echoed example ships nothing; the "None"-not-null
+        # rule lives in prompts/annotate.md. Not a section.
+        "guardrails": dict.fromkeys(GUARDRAIL_RESPONSE_KEYS, "TODO"),
     }],
 )
 
@@ -129,7 +144,7 @@ class SectionAnnotation:
     expected non-empty for IMPLEMENTED/PARTIAL, empty for NOT-IMPLEMENTED,
     and allowed for NEEDS-REVIEW. An IMPLEMENTED/PARTIAL verdict without
     resolvable refs is demoted to ``low_confidence`` (see
-    :func:`_parse_annotation_response`), not rejected. For PARTIAL the refs
+    :func:`_parse_annotation_result`), not rejected. For PARTIAL the refs
     name the already-implemented portion and ``remaining_work`` states the
     not-yet-implemented remainder (the only part step 2's seed renderer
     scopes forward). ``is_step`` is ``True`` when the section is a
@@ -175,6 +190,9 @@ class PlanAnnotation:
     grounding_candidate_count: int = 0
     grounding_skipped_count: int = 0
     grounding_skip_reasons: tuple[str, ...] = ()
+    # Model-written guardrail bodies keyed by heading title; empty when the
+    # response carried none (older shape). The renderer decides whether to use them.
+    guardrail_bodies: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -528,9 +546,47 @@ def _unresolved_code_refs(repo_root: Path, code_refs: tuple[str, ...]) -> tuple[
     return tuple(ref for ref in code_refs if not _code_ref_resolves(repo_root, ref))
 
 
-def _parse_annotation_response(
+def _split_guardrails_element(
+    items: list,
+) -> tuple[list, dict[str, str]]:
+    """Pull ``guardrails`` elements (no ``heading``, or a null/blank one) out of the array.
+
+    An element with a real non-blank ``heading`` stays a section.
+
+    Multiple elements merge, the first acceptable body per heading winning
+    (a placeholder never shadows a later real body). A missing key,
+    non-string, ``null`` or unacceptable value means no body, never an error.
+    """
+    sections: list = []
+    bodies: dict[str, str] = {}
+    for item in items:
+        if (
+            isinstance(item, dict)
+            and "guardrails" in item
+            and (
+                "heading" not in item
+                or item["heading"] is None
+                or (isinstance(item["heading"], str) and not item["heading"].strip())
+            )
+        ):
+            raw_bodies = item["guardrails"]
+            if isinstance(raw_bodies, dict):
+                for key, title in GUARDRAIL_RESPONSE_KEYS.items():
+                    value = raw_bodies.get(key)
+                    if (
+                        isinstance(value, str)
+                        and title not in bodies
+                        and is_acceptable_guardrail_body(value)
+                    ):
+                        bodies[title] = value.strip()
+            continue
+        sections.append(item)
+    return sections, bodies
+
+
+def _parse_annotation_result(
     raw: str, *, repo_root: Path
-) -> tuple[SectionAnnotation, ...]:
+) -> tuple[tuple[SectionAnnotation, ...], dict[str, str]]:
     """Lift the JSON array out of a Claude response into section verdicts.
 
     Same extraction shape as
@@ -547,6 +603,7 @@ def _parse_annotation_response(
     items = _ANNOTATE_RESPONSE_CONTRACT.decode(raw)
     if not isinstance(items, list):
         raise AnnotateError("annotate response contained no JSON array")
+    items, guardrail_bodies = _split_guardrails_element(items)
     if not items:
         raise AnnotateError("annotate response JSON array was empty or not a list")
 
@@ -627,7 +684,7 @@ def _parse_annotation_response(
                 contradiction_review=contradiction_review,
             )
         )
-    return tuple(sections)
+    return tuple(sections), guardrail_bodies
 
 
 def _has_incomplete_grounding(
@@ -750,9 +807,10 @@ def classify_plan_implementation(
     )
     raw = invoker(prompt)
     low_grounding = _has_incomplete_grounding(grounding)
-    sections = _apply_grounding_floor(
-        _parse_annotation_response(raw, repo_root=grounding.repo_root), grounding
+    parsed_sections, guardrail_bodies = _parse_annotation_result(
+        raw, repo_root=grounding.repo_root
     )
+    sections = _apply_grounding_floor(parsed_sections, grounding)
     return PlanAnnotation(
         source_path=source_path,
         source_text=source_text,
@@ -764,4 +822,5 @@ def classify_plan_implementation(
         grounding_candidate_count=grounding.candidate_count,
         grounding_skipped_count=grounding.skipped_count,
         grounding_skip_reasons=grounding.skip_reasons,
+        guardrail_bodies=guardrail_bodies,
     )

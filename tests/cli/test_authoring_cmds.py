@@ -42,6 +42,7 @@ from plan_tool.cli import (
 )
 from plan_tool.cli.authoring import _SPLIT_PROPOSAL_ROADMAP_GUIDANCE
 from plan_tool.cli.gitcommit import branch_exists
+from tests.seed_fixtures import NONE_GUARDRAILS
 from plan_tool.create import (
     CreateResult,
     FileBackedSourceRoute,
@@ -119,6 +120,15 @@ class TestRenderSplitProposalMarkdown:
         assert "**Why its own plan:** own deploy cadence" in md
         assert "**Seed lines:** 1–20" in md
         assert "sed -n '1,20p' seed.md > auth-rework.md" in md
+
+    def test_worksheet_says_each_piece_needs_the_three_guardrail_headings(
+        self,
+    ) -> None:
+        md = _render_split_proposal_markdown("seed", [], "seed.md")
+        for title in ("Scope guardrails", "Audit guardrails", "Expected placement"):
+            assert f"`## {title}`" in md or title in md
+        assert "or write `None`" in md
+        assert "create --from-existing` refuses it" in md
 
     def test_entry_without_range_omits_carve_command(self) -> None:
         entries = [
@@ -294,7 +304,7 @@ class TestCmdCreateFileBackedRoutes:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         plan_path = tmp_repo.add_plan("1-demo")
@@ -377,7 +387,7 @@ class TestCmdCreateFileBackedRoutes:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         result = CreateResult(
@@ -428,7 +438,7 @@ class TestCmdCreateFileBackedRoutes:
         shutil.rmtree(tmp_repo.root / ".git")
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         default = _branch_aware_repo(tmp_repo.root)
@@ -520,7 +530,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         plan_path = tmp_repo.add_plan("1-demo")
@@ -557,7 +567,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         plan_path = tmp_repo.add_plan("1-demo")
@@ -594,7 +604,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         stale = tmp_repo.root / "seed.distilled.md"
@@ -636,7 +646,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         dangling = tmp_repo.root / "seed.distilled.md"
@@ -680,7 +690,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         stale = tmp_repo.root / "seed.distilled.md"
@@ -746,7 +756,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         plan_path = tmp_repo.add_plan("1-demo")
@@ -788,7 +798,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         plan_path = tmp_repo.add_plan("1-demo")
@@ -828,7 +838,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         stale = tmp_repo.root / "seed.distilled.md"
@@ -881,7 +891,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "canonical.md"
         seed = tmp_repo.root / "seed.md"
-        source.write_text("## References\n\n- [API](https://example.test/api)\n", encoding="utf-8")
+        source.write_text("## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS, encoding="utf-8")
         seed.write_text("original seed\n", encoding="utf-8")
         plan_path = tmp_repo.add_plan("1-demo")
         monkeypatch.setattr(
@@ -933,7 +943,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         monkeypatch.setattr(
@@ -971,7 +981,7 @@ class TestCmdCreateRouteArtifacts:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "## References\n\n- [API](https://example.test/api)\n",
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         plan_path = tmp_repo.add_plan("1-demo")
@@ -1064,6 +1074,78 @@ class TestConfirmRepoRoot:
         assert _confirm_repo_root(root, yes=False, input_fn=lambda _p: "c") == cwd
 
 
+class TestCreateGuardrailHeadingPreflight:
+    """`create --from-existing` refuses a seed lacking a guardrail heading before the slug resolves."""
+
+    @staticmethod
+    def _seed(offence: str) -> str:
+        heading = "Audit guardrails"
+        parts = ["## References\n\n- [API](https://example.test/api)\n"]
+        for title in ("Scope guardrails", "Audit guardrails", "Expected placement"):
+            if title != heading:
+                parts.append(f"## {title}\n\nNone\n")
+            elif offence == "duplicated":
+                parts.append(f"## {title}\n\nNone\n\n## {title}\n\nNone\n")
+            elif offence == "empty":
+                parts.append(f"## {title}\n\n")
+            elif offence == "placeholder":
+                parts.append(f"## {title}\n\n_(TODO)_\n")
+        return "\n".join(parts)
+
+    @pytest.mark.parametrize("offence", ["missing", "duplicated", "empty", "placeholder"])
+    def test_cli_refuses_seed_with_bad_guardrail_heading_before_slug_resolution(
+        self,
+        tmp_repo,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+        offence: str,
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        source = tmp_repo.root / "seed.md"
+        source.write_text(self._seed(offence), encoding="utf-8")
+
+        def must_not_run(*_args: object, **_kwargs: object) -> None:
+            pytest.fail("a refused seed must not reach create_plan or any invoker")
+
+        monkeypatch.setattr(authoring, "create_plan", must_not_run)
+
+        # No slug argument: the refusal precedes slug resolution.
+        rc = main(tmp_repo.argv("create", "--from-existing", str(source)))
+
+        assert rc != 0
+        err = capsys.readouterr().err
+        assert "`## Audit guardrails`" in err
+        assert "no authoring model was invoked" in err
+
+    def test_cli_accepts_none_guardrail_bodies_past_the_preflight(
+        self,
+        tmp_repo,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        source = tmp_repo.root / "seed.md"
+        source.write_text(
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
+            encoding="utf-8",
+        )
+        reached: list[bool] = []
+
+        def create_reached(*_args: object, **_kwargs: object) -> None:
+            reached.append(True)
+            raise RuntimeError("stop: the preflight was passed")
+
+        monkeypatch.setattr(authoring, "create_plan", create_reached)
+
+        try:
+            main(tmp_repo.argv("create", "demo", "--from-existing", str(source)))
+        except RuntimeError:
+            pass
+
+        assert reached == [True]
+
+
 class TestCreateReprocessRouting:
     def test_reprocess_without_slug_is_usage_error(
         self, tmp_repo, capsys: pytest.CaptureFixture[str]
@@ -1130,7 +1212,7 @@ class TestCreateReprocessRouting:
             encoding="utf-8",
         )
         (tmp_path / "raw.md").write_text(
-            "## References\n\n- [Real](https://example.test/reference)\n",
+            "## References\n\n- [Real](https://example.test/reference)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -4001,7 +4083,7 @@ class TestCreateRiskProfileSummary:
         _enable_branch_awareness_config(tmp_repo.root)
         seed_path = tmp_repo.root / "seed.md"
         seed_path.write_text(
-            "an idea\n\n## References\n\n- [API](https://example.test/api)\n",
+            "an idea\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         _git_commit_all(tmp_repo.root, "init")
@@ -4157,7 +4239,7 @@ class TestCreateRecoveryCommandBoundaries:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n",
+            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         retained = _write_created_plan(tmp_repo, slug="demo")
@@ -4193,7 +4275,7 @@ class TestCreateRecoveryCommandBoundaries:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n",
+            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -4392,7 +4474,7 @@ class TestCreateRiskProfileSummary:
         _enable_branch_awareness_config(tmp_repo.root)
         seed_path = tmp_repo.root / "seed.md"
         seed_path.write_text(
-            "an idea\n\n## References\n\n- [API](https://example.test/api)\n",
+            "an idea\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         _git_commit_all(tmp_repo.root, "init")
@@ -4548,7 +4630,7 @@ class TestCreateRecoveryCommandBoundaries:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n",
+            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
         retained = _write_created_plan(tmp_repo, slug="demo")
@@ -4584,7 +4666,7 @@ class TestCreateRecoveryCommandBoundaries:
 
         source = tmp_repo.root / "seed.md"
         source.write_text(
-            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n",
+            "recoverable source\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
             encoding="utf-8",
         )
 
@@ -5136,6 +5218,8 @@ def _write_tracked_draft(
         )
     text = (
         "---\nroadmap_components:\n  - component-a\n---\n# Seed\n\n"
+        "## Scope guardrails\n\nNone\n\n## Audit guardrails\n\nNone\n\n"
+        "## Expected placement\n\nNone\n\n"
         "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
         "## References\n\n"
         f"- `{DOMAIN_FILENAME}`\n"
@@ -5353,7 +5437,7 @@ def test_tracked_seed_location_is_resolved_once_before_confirmation_and_create(
 
     source = tmp_path / "promoted-seed.md"
     source.write_text(
-        "# Seed\n\n## References\n\n- [API](https://example.test/api)\n",
+        "# Seed\n\n## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
         encoding="utf-8",
     )
     location = TrackedSeedLocation(
@@ -5648,7 +5732,7 @@ class TestAuthoringRunEndResult:
         import plan_tool.cli.authoring as authoring
 
         source = tmp_repo.root / "seed.md"
-        source.write_text("## References\n\n- [API](https://example.test/api)\n", encoding="utf-8")
+        source.write_text("## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS, encoding="utf-8")
         monkeypatch.setattr(
             authoring,
             "create_plan",
@@ -5695,7 +5779,7 @@ class TestAuthoringRunEndResult:
 
         plan_path = tmp_repo.add_plan("1-demo")
         source = tmp_repo.root / "seed.md"
-        source.write_text("## References\n\n- [API](https://example.test/api)\n", encoding="utf-8")
+        source.write_text("## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS, encoding="utf-8")
         monkeypatch.setattr(
             authoring,
             "create_plan",

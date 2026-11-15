@@ -29,7 +29,11 @@ import pytest
 
 from plan_tool import backend_runner, claude_errors, roadmap, roadmap_gates, shell
 from plan_tool import model_response_sidecar
-from plan_tool.scope_fence import extract_h2_sections, h2_section_spans
+from plan_tool.scope_fence import (
+    REQUIRED_GUARDRAIL_HEADINGS,
+    extract_h2_sections,
+    h2_section_spans,
+)
 from plan_tool import roadmap_impact_snapshot
 from plan_tool.create import validate_from_existing_seed
 from plan_tool.renderer import prompts_dir
@@ -5863,6 +5867,18 @@ def _seed_text(
         lines.append("")
     lines.extend(
         [
+            "## Scope guardrails",
+            "",
+            "None",
+            "",
+            "## Audit guardrails",
+            "",
+            "None",
+            "",
+            "## Expected placement",
+            "",
+            "None",
+            "",
             "## Risks",
             "",
             "- A risk the accepted roadmap already states.",
@@ -6705,6 +6721,19 @@ class TestMaterializePlanSeed:
             "published": False,
         }
 
+    def test_materialized_draft_seed_passes_create_from_existing_preflight(
+        self, env: _Env
+    ) -> None:
+        # The draft carries all three guardrail headings, so `create
+        # --from-existing` accepts it without an operator edit.
+        from plan_tool.create import validate_from_existing_seed
+
+        _prepare_seed_materialization(env)
+
+        _materialize(env, _StubInvoker(_seed_text()))
+
+        validate_from_existing_seed(_written_draft(env))
+
     def test_materialize_accepts_a_bare_outer_reply_fence(self, env: _Env) -> None:
         _prepare_seed_materialization(env)
         candidate = _seed_text(marker="WRAPPED")
@@ -6851,6 +6880,67 @@ class TestMaterializePlanSeed:
         assert message in invoker.prompts[1]
         assert target.read_text(encoding="utf-8") == _stacked(env, _seed_text())
 
+    @staticmethod
+    def _without_guardrail(title: str) -> str:
+        text = _seed_text().replace(f"## {title}\n\nNone\n\n", "")
+        assert f"## {title}" not in text
+        return text
+
+    def test_materialize_retries_when_a_guardrail_heading_is_missing(
+        self, env: _Env
+    ) -> None:
+        _prepare_seed_materialization(env)
+        invalid = self._without_guardrail("Audit guardrails")
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[
+            0
+        ].message
+        invoker = _StubInvoker(invalid, _seed_text())
+
+        result = _materialize(env, invoker)
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_APPLIED
+        assert invoker.calls == 2
+        assert "## Audit guardrails" in message
+        assert message in invoker.prompts[1]
+        assert _written_draft(env) == _stacked(env, _seed_text())
+
+    def test_materialize_exhausts_budget_on_persistently_missing_heading(
+        self, env: _Env
+    ) -> None:
+        _prepare_seed_materialization(env)
+        invoker = _StubInvoker(self._without_guardrail("Expected placement"))
+        target = resolve_draft_seed_path(
+            env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path
+        )
+
+        result = _materialize(env, invoker, max_attempts=2)
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
+        assert result.failure_kind == FAILURE_GATES
+        assert invoker.calls == 2
+        assert not target.exists()
+        assert not seed_state_path(roadmap_dir(env.plans_dir, SLUG)).exists()
+
+    def test_roadmap_seed_prompt_names_all_three_guardrail_headings(self) -> None:
+        # Containment against the shared constant, so a rename turns this red.
+        prompt = _seed_prompt_text()
+
+        for title in REQUIRED_GUARDRAIL_HEADINGS:
+            assert f"`{title}`" in prompt
+        assert "bare word `None`" in prompt
+
+    def test_roadmap_seed_prompt_has_no_unresolved_placeholder(
+        self, shipped_env: _Env
+    ) -> None:
+        # Guards the `$$` rule: a stray `${...}` in the template would survive
+        # rendering as literal text in the model's prompt.
+        shipped_env.publish_accepted(plans=_plans_artifact_text())
+        invoker = _StubInvoker(_seed_text())
+
+        _materialize(shipped_env, invoker)
+
+        assert "${" not in invoker.prompts[0]
+
     def test_materialize_exhausted_writes_nothing_on_a_first_time_attempt(
         self, env: _Env
     ) -> None:
@@ -6915,6 +7005,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         from plan_tool import create as create_module
         from plan_tool.schema import Step
+        from tests.seed_fixtures import NONE_GUARDRAILS
         from tests.test_create import _direct_ready_file_source, _patch_direct_route_metadata
 
         _prepare_seed_materialization(env)
@@ -6925,8 +7016,11 @@ class TestMaterializePlanSeed:
             "AUTH-23 is a sibling prerequisite; do not implement auth here.",
             "PROOF-31 requires an observed checkout result.",
         )
+        # _seed_text already carries the guardrail headings; drop the helper's
+        # copy so each appears exactly once.
         candidate = _seed_text(marker="MATERIALIZED") + _direct_ready_file_source().replace(
-            "## References\n\n- [API](https://example.test/api)\n", ""
+            "## References\n\n- [API](https://example.test/api)\n" + NONE_GUARDRAILS,
+            "",
         )
         candidate = candidate.replace("Overview body.", obligations[0]).replace(
             "Architecture body.", obligations[1]
@@ -8679,6 +8773,60 @@ class TestAcceptRoadmapSeed:
         assert result.violations == ()
         assert sidecar.read_bytes() == before
         assert not promoted.exists()
+
+    def test_pre_change_draft_without_guardrail_headings_is_malformed_and_refresh_clears_it(
+        self, tmp_path: Path
+    ) -> None:
+        # A draft materialized before the guardrail rule: its sidecar digest
+        # matches, so only the gate can see it is malformed. `--accept-seed`
+        # must not promote it; `--refresh-seeds` is the one route that clears it.
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        old_auth = _seed_text(components=(), cross_cutting=True)
+        for title in REQUIRED_GUARDRAIL_HEADINGS:
+            old_auth = old_auth.replace(f"## {title}\n\nNone\n\n", "")
+        assert "guardrails" not in old_auth
+        source = env.write_draft(
+            _PLAN_AUTH.draft_seed_path, old_auth, plan_id=_PLAN_AUTH.id
+        )
+
+        def classify() -> DraftSeedClassification:
+            artifact = roadmap.load_accepted_plans_artifact(
+                plans_dir=env.plans_dir, slug=env.slug
+            )
+            return roadmap.classify_draft_seeds(
+                artifact, plans_dir=env.plans_dir, slug=env.slug
+            )[_PLAN_AUTH.id]
+
+        classification = classify()
+        assert classification.state == DRAFT_SEED_STATE_MALFORMED
+        assert "--refresh-seeds" in classification.detail
+
+        refused = accept_roadmap_seed(
+            env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+        assert refused.outcome == ACCEPT_OUTCOME_REFUSED
+        assert refused.state == DRAFT_SEED_STATE_MALFORMED
+        assert refused.detail == classification.detail
+        assert not (env.plan_seeds_dir / f"{_PLAN_AUTH.id}.md").exists()
+        assert source.read_text(encoding="utf-8") == old_auth
+
+        refreshed = refresh_roadmap_seeds(
+            env.slug,
+            repo_root=env.repo_root,
+            plans_dir=env.plans_dir,
+            invoker=_StubInvoker(
+                _seed_text(components=("component-checkout",), marker="BODY-MARKER"),
+                _seed_text(components=(), cross_cutting=True, marker="REFRESHED"),
+            ),
+        )
+
+        assert refreshed.outcome == SEED_REFRESH_OUTCOME_APPLIED
+        text = source.read_text(encoding="utf-8")
+        assert "REFRESHED" in text
+        for title in REQUIRED_GUARDRAIL_HEADINGS:
+            assert f"## {title}" in text
+        assert classify().state == DRAFT_SEED_STATE_CURRENT
 
     def test_accept_refuses_a_hand_edit_that_fails_validation(
         self, tmp_path: Path

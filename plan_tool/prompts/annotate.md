@@ -53,6 +53,11 @@ Rules:
   `remaining` states the not-yet-implemented remainder — the only part a
   follow-up plan should scope. Set `remaining` to `""` for `IMPLEMENTED`
   and `NOT-IMPLEMENTED`.
+- The optional `guardrails` element is not a section. Write a guardrail
+  only when the document already implies that fence, use `None` when it
+  implies none (write the JSON string `"None"`, never JSON `null`, which
+  means no body supplied), and add no scope, mechanism or requirement of your own.
+  Omit the element when unsure.
 - Set `confidence_low` to `true` when grounding is uncertain — too few
   files resolved, or a verdict rests on a file marked truncated.
 

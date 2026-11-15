@@ -28,6 +28,7 @@ shared ``scope_`` prefix — they share no code and no concern.
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -335,6 +336,130 @@ def extract_h2_sections(
         if first_nonempty is not None:
             sections[key] = first_nonempty
     return sections
+
+
+# The three seed headings every ``create --from-existing`` seed must carry.
+# Bare titles in canonical case; messages render them as ``## <title>``.
+# ``Stack`` stays out: it is tool-written and only ``roadmap`` emits it.
+REQUIRED_GUARDRAIL_HEADINGS: tuple[str, ...] = tuple(
+    h for h in GUARDRAIL_BODY_SECTIONS if h != "Stack"
+)
+
+
+def is_acceptable_guardrail_body(body: str) -> bool:
+    """The one definition of an acceptable guardrail body.
+
+    Non-empty, not a ``_(TODO)_``-style placeholder, no unclosed fence, and no
+    line-starting H1/H2 outside fenced code (the section splitter's boundary).
+    An explicit ``None`` is content, by design.
+    """
+    if not body.strip() or _is_placeholder_section(body):
+        return False
+    scan = _fenced_code_spans(body)
+    if scan.unmatched_opening is not None:
+        return False
+    return not any(
+        not any(start <= m.start() < end for start, end in scan.spans)
+        for m in _H2_HEADING_RE.finditer(body)
+    )
+
+
+def _single_acceptable_body(occurrences: Mapping[str, list[str]], title: str) -> str | None:
+    """The one accepted body for ``title``, or ``None`` if missing, duplicated or unacceptable."""
+    bodies = occurrences.get(title.lower(), [])
+    if len(bodies) == 1 and is_acceptable_guardrail_body(bodies[0]):
+        return bodies[0]
+    return None
+
+
+def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
+    """Required headings that are missing, duplicated, empty or placeholders.
+
+    Same presence rule as ``## References`` in ``create.classify_file_backed_source``
+    (exactly one fence-safe H2, non-empty, not a placeholder), except a fenced-only
+    guardrail body counts as content and a ``## References`` one does not. Pure; reports every
+    offender in :data:`REQUIRED_GUARDRAIL_HEADINGS` order.
+    """
+    stripped = _strip_frontmatter(text)
+    scan = _fenced_code_spans(stripped)
+    # ignore_fenced_code (not strip): a fenced-only body is content.
+    occurrences = extract_h2_section_occurrences(
+        stripped, ignore_fenced_code=True, fenced_spans=scan.spans
+    )
+    offenders: list[str] = []
+    for title in REQUIRED_GUARDRAIL_HEADINGS:
+        if _single_acceptable_body(occurrences, title) is None:
+            offenders.append(title)
+    return tuple(offenders)
+
+
+def guardrail_headings_block(
+    source_body: str | None,
+    model_bodies: Mapping[str, str] | None = None,
+) -> tuple[list[str], tuple[str, ...], tuple[str, ...]]:
+    """Seed lines for the three required guardrail headings, copy-or-``_(TODO)_``.
+
+    Returns ``(lines, inherited, unfilled)`` with bare heading titles in
+    :data:`REQUIRED_GUARDRAIL_HEADINGS` order. A heading the source carries
+    acceptably (exactly one fence-safe occurrence, body accepted by
+    :func:`is_acceptable_guardrail_body`; ``None`` included) is copied verbatim,
+    fences intact, and listed as inherited. Otherwise a ``model_bodies`` entry
+    (``annotate`` passes them; ``scope-out`` and ``reground`` pass none) fills it only
+    if it is acceptable too; any other state writes ``_(TODO)_`` and is unfilled.
+    Presence only: no judgment of what a body says. ``source_body`` must already
+    have its frontmatter removed (a second strip would eat a leading ``---`` rule).
+    """
+    stripped = source_body or ""
+    scan = _fenced_code_spans(stripped)
+    # ignore_fenced_code: a fenced-only body is content.
+    occurrences = extract_h2_section_occurrences(
+        stripped, ignore_fenced_code=True, fenced_spans=scan.spans
+    )
+    lines: list[str] = []
+    inherited: list[str] = []
+    unfilled: list[str] = []
+    for title in REQUIRED_GUARDRAIL_HEADINGS:
+        body = "_(TODO)_"
+        accepted = _single_acceptable_body(occurrences, title)
+        if accepted is not None:
+            body = accepted
+            inherited.append(title)
+        else:
+            model_body = (model_bodies or {}).get(title)
+            if model_body is not None and is_acceptable_guardrail_body(model_body):
+                body = model_body.strip()
+            else:
+                unfilled.append(title)
+        lines.extend([f"## {title}", "", body, ""])
+    return lines, tuple(inherited), tuple(unfilled)
+
+
+def guardrail_next_step_lines(
+    inherited: Sequence[str], unfilled: Sequence[str], *, rebaseline: bool = False
+) -> list[str]:
+    """Printed next steps naming inherited and unfilled headings; empty groups omitted.
+
+    ``rebaseline`` words the inherited note for a re-baseline seed (same plan,
+    re-planned) rather than a narrower carved-out plan.
+    """
+    out: list[str] = []
+    if inherited:
+        reason = (
+            "re-check the inherited fence against the plan's current scope"
+            if rebaseline
+            else "inherited from the parent plan; its fence can be wrong for "
+            "the narrower plan"
+        )
+        out.append(
+            f"review before `create` ({reason}): "
+            + ", ".join(f"## {t}" for t in inherited)
+        )
+    if unfilled:
+        out.append(
+            "fill in by hand before `create` (`_(TODO)_` in the seed): "
+            + ", ".join(f"## {t}" for t in unfilled)
+        )
+    return out
 
 
 def _strip_frontmatter(text: str) -> str:

@@ -124,6 +124,34 @@ ever rendered. Use the reserved heading verbatim, as a standalone `##`
 section, whenever a boundary must survive into every downstream prompt rather
 than only into the plan's own prose.
 
+**The three author-supplied guardrail headings are required in every
+`--from-existing` seed.** `## Scope guardrails`, `## Audit guardrails`, and
+`## Expected placement` must each appear exactly once, outside fenced code,
+with a non-empty body. `create` checks this in the same preflight as
+`## References` and refuses the seed before any model call, naming each
+offending heading; a refusal writes no run record. The check is presence only:
+it never judges what a guardrail says.
+
+- **`None` is a valid body.** It states that the seed deliberately sets no such
+  fence. Write `None` rather than omit the heading: a missing heading cannot be
+  told apart from a forgotten fence, while an explicit `None` records that the
+  question was asked.
+- **`_(TODO)_` is refused**, the same as an empty body, a missing heading, or a
+  duplicated heading.
+- `## Stack`, `## Outcome`, and `## In scope` are unchanged by this rule. It
+  also does not apply to inline `--from`. Archived seeds were not swept:
+  re-running `create --from-existing` on one requires adding the three
+  headings first.
+
+Each seed-writing tool fills the headings from a source it already reads. None
+makes a new model call for them.
+
+| Tool | Source of the headings | When the source has none |
+| --- | --- | --- |
+| `roadmap --materialize`, `--refresh-seeds` | The model writes them from the accepted plan row, per `plan_tool/prompts/roadmap-seed.md` | `None` where the row sets no fence |
+| `annotate` | Copied from the source plan when it carries acceptable guardrails | Its existing model call supplies a fence the source supports; no response renders `_(TODO)_` |
+| `scope-out`, `reground` | Copied verbatim from the source plan | `_(TODO)_` for the operator to fill |
+
 A backlog-derived seed **inherits the source entry's contract verbatim** and
 elaborates it — it never invents a different fence — and names its source
 entry (and its Jira ticket key, once promoted) plus the requirement that the

@@ -20,6 +20,7 @@ from plan_tool.cli import context as cli_context
 from plan_tool.cli import reconcile as reconcile_module
 from plan_tool.cli import review_actions as review_actions_module
 from plan_tool.convergence import DEFAULT_MAX_ITERATIONS
+from tests.seed_fixtures import NONE_GUARDRAILS
 
 
 def _find_subparser(parser, name: str):
@@ -14642,7 +14643,8 @@ class TestAnnotateEndToEnd:
     ) -> None:
         repo = self._repo(tmp_path)
         src = repo / "legacy.md"
-        src.write_text(_ANNOTATE_SOURCE, encoding="utf-8")
+        # The source states each guardrail so the seed annotate writes is create-ready.
+        src.write_text(_ANNOTATE_SOURCE + NONE_GUARDRAILS, encoding="utf-8")
         monkeypatch.setattr(
             "plan_tool.cli.annotate_cmd.shell_annotate_invoker",
             lambda prompt: _annotate_sections(),

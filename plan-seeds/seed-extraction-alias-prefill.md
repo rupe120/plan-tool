@@ -59,6 +59,28 @@ their canonical section. Every other `create` behavior — synthesis, the
 None. The alias map is additive to the existing matcher; it does not move or
 rename existing functions.
 
+## Scope guardrails
+
+- Heading identity against an explicit, small map only: no fuzzy or
+  similarity-based matching.
+- The ladder's precedence, the `--iterate` loop, and
+  `create.py:_find_placeholder_body_sections` are unchanged.
+- Backlog #41's approach (threading seed text into `apply_finding`
+  re-synthesis) is not reopened.
+
+## Audit guardrails
+
+- A canonical section the seed never wrote is a true gap and stays the loop's
+  job.
+- Stop and surface to the user if an alias's scope is unclear; prefer a gap
+  over a low-confidence match.
+
+## Expected placement
+
+- The alias map is additive to the matcher in
+  `plan_tool/scope_fence.py:extract_h2_sections`, consumed at `create.py`'s
+  rung-2 `seed_sections` call site; no existing function is moved or renamed.
+
 ## Verification
 
 - New fixtures in `TestExtractH2Sections` show each aliased near-miss heading

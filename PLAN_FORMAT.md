@@ -345,7 +345,14 @@ always did.
 
 The first four guardrail sections are author-supplied: `create` captures them
 from the seed verbatim and they override synthesized prose (they are absent from
-the plan unless the seed carried the literal heading). `## Stack` carries the
+the plan unless the seed carried the literal heading). A `--from-existing`
+seed must carry the first three exactly once each with a non-empty body, or
+`create` refuses it before any model call. A body of `None` is valid and means
+the seed deliberately sets no such fence; `_(TODO)_` is refused. The captured
+text reaches `detail` and `run` unchanged, and `None` is carried like any other
+body. The check is presence only; [`SEED_FORMAT.md`](SEED_FORMAT.md) owns the
+seed-side rule and the table of which source each seed-writing tool fills the
+headings from. `## Stack` carries the
 settled hosting and store choices of a roadmap-derived seed (see
 `ROADMAP_FORMAT.md` § "Stack section"); the plan audit treats it as
 authoritative. `## Out of scope` is part

@@ -153,6 +153,30 @@ is preserved, and every non-qualifying history behaves byte-for-byte as today.
 None. `should_continue` gains a caller-supplied input; no caller is restructured
 and no logic is re-homed.
 
+## Scope guardrails
+
+- Part 1's window rule, pass de-duplication, eligibility, verdict record and
+  recommendation arms are consumed as-is; no call site re-implements them.
+- Only the completeness and reconcile loops are wired; `create` and `detail`
+  are not, and no loop applies a structural mutation.
+- The exit code stays 0, and every non-qualifying history behaves as today.
+
+## Audit guardrails
+
+- Out-of-scope discoveries become `BACKLOG.md` / `BUG_BACKLOG.md` entries, not
+  plan expansion.
+- `recurring_regions`, `diagnose_convergence`, `classify_fork` and
+  `convergence.is_blocking_impact` semantics are not changed.
+
+## Expected placement
+
+- `should_continue` in `plan_tool/convergence.py` gains the caller-supplied
+  `structural_stop` input, and the two loop sites live in
+  `cli/completeness_cmd.py`, `cli/completeness_phases.py` and
+  `cli/reconcile.py`.
+- Telemetry recording and read-only resolution live in
+  `plan_tool/telemetry.py` and `plan_tool/telemetry_analysis.py`.
+
 ## Verification
 
 - **Reachability:** a test in the exact state that made the replaced design

@@ -14,7 +14,12 @@ shows the operator flow; it does not duplicate this table.
 2. Unmatched-fence protection and
    `plan_tool/create.py:validate_from_existing_seed` are distinct preflight
    refusals. The latter requires exactly one usable `## References` section
-   and rejects a missing, duplicate, empty, or placeholder section. Both stop
+   and rejects a missing, duplicate, empty, or placeholder section. The same
+   preflight applies the same presence rule (exactly one, non-empty, not a
+   placeholder) to `## Scope guardrails`, `## Audit guardrails`, and
+   `## Expected placement`, with two differences: an explicit `None` body is
+   accepted, and a fenced-only body counts as content (it does not under
+   `## References`). Both stop
    before slug resolution, a run record, routing checkpoint, model call, plan,
    or manifest entry. They are not selected routes.
 3. The other canonical body headings are not universal preflight

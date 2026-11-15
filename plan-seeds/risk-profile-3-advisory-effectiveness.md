@@ -67,6 +67,29 @@ Any implementation plan must state the failed property, select one outcome,
 and include a common-route test that proves the selected mechanic preserves
 that property. It must not revive the reference document wholesale.
 
+## Scope guardrails
+
+- Named files, symbols, tests, compatibility work and concrete safety
+  requirements stay independent of the declared risk tier.
+- No ceremony taxonomy, audit suppression, custom finding grammar or
+  cross-pipeline policy engine without evidence that a smaller boundary cannot
+  preserve the invariant.
+- A model never silently changes the declaration; authority and explanation
+  stay separate decisions.
+
+## Audit guardrails
+
+- Authoring context stays isolated from completeness-audit behavior and cache
+  reuse.
+- Behavior stays byte-identical for plans without an explicit declaration and
+  for non-detail `apply_finding` callers.
+- Concerns outside declaration authority, targeted escalation or
+  authoring/audit isolation go to their own backlog item.
+
+## Expected placement
+
+None.
+
 ## Stop / defer
 
 Do not author implementation details until the evidence identifies a concrete

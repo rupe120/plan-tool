@@ -686,6 +686,33 @@ def test_explicit_seed_retains_replacement_behavior(tmp_path):
     assert seed.read_text() != "old bytes"
 
 
+def test_printed_result_names_inherited_model_written_and_unfilled_headings(
+    tmp_path, capsys
+):
+    src = _write_source(tmp_path)
+    src.write_text(
+        src.read_text() + "\n## Scope guardrails\n\nsource fence\n", encoding="utf-8"
+    )
+    sections = _canned_sections() + [{"guardrails": {"audit": "None"}}]
+    assert cmd_annotate(_ns(src), invoker=_recording_stub(sections)) == 0
+    out = capsys.readouterr()
+    text = out.out + out.err
+    assert "guardrail ## Scope guardrails: inherited from the source" in text
+    assert "guardrail ## Audit guardrails: model-written" in text
+    assert "guardrail ## Expected placement: unfilled" in text
+
+
+def test_older_response_without_guardrails_exits_zero_and_prints_unfilled(
+    tmp_path, capsys
+):
+    src = _write_source(tmp_path)
+    assert cmd_annotate(_ns(src), invoker=_recording_stub()) == 0
+    out = capsys.readouterr()
+    assert (out.out + out.err).count(": unfilled") == 3
+    seed = tmp_path / "docs/implementation-plans/plan-seeds/plan.seed.md"
+    assert seed.read_text().count("_(TODO)_") >= 3
+
+
 def test_same_named_sources_in_shared_default_fail_before_any_backend(tmp_path):
     first = tmp_path / "a"
     second = tmp_path / "b"
