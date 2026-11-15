@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple
 
-from plan_tool.git_state import status_records_or_none
+from plan_tool.git_state import status_records_or_none, toplevel_or_none
 
 
 def working_tree_dirty(repo_root: Path) -> bool:
@@ -105,8 +105,7 @@ def path_is_gitignored(repo_root: Path, path: Path) -> bool:
 
     Lets a ``--commit`` verb warn when a file it means to commit — e.g. the
     saved-audit JSON the walker annotates in place — sits on an ignored path,
-    so ``git add -A`` would silently skip it and the annotations would never
-    land. ``check-ignore`` exits 0 when one or more paths match an ignore
+    which ``commit_all`` skips, so the annotations would never land. ``check-ignore`` exits 0 when one or more paths match an ignore
     rule, 1 when none do, 128 on a fatal error (not a work tree, …); only an
     exit of 0 is a positive "ignored", so any other rc returns False rather
     than false-warning.
@@ -199,13 +198,23 @@ def _git_literal(
 def _dirty_footprint_paths(
     repo_root: Path, entries: Sequence[str]
 ) -> "list[str] | None":
-    """Dirty paths (either side of a rename) covered by ``entries``; ``None``
-    when git status cannot be read."""
+    """Dirty paths (either side of a rename) covered by ``entries``, which are
+    relative to ``repo_root``; ``None`` when git status cannot be read."""
     records = status_records_or_none(repo_root)
-    if records is None:
+    toplevel = toplevel_or_none(repo_root)
+    if records is None or toplevel is None:
         return None
+    # Status paths are relative to the top level, which can sit above repo_root.
+    try:
+        prefix = repo_root.resolve().relative_to(toplevel.resolve()).as_posix()
+    except ValueError:
+        return None
+    prefix = "" if prefix == "." else prefix + "/"
 
     def covered(rel: str) -> bool:
+        if not rel.startswith(prefix):
+            return False
+        rel = rel[len(prefix):]
         return any(
             exp == "." or rel == exp or rel.startswith(exp + "/") for exp in entries
         )
@@ -283,9 +292,12 @@ def commit_all(
             continue  # not under repo_root — nothing here to commit
         absolute = repo_root.resolve() / rel
         on_disk_or_index = os.path.lexists(absolute) or _in_index(repo_root, rel)
-        if not on_disk_or_index and not _in_head(repo_root, rel):
+        in_head = not on_disk_or_index and _in_head(repo_root, rel)
+        if not on_disk_or_index and not in_head:
             continue  # nothing there to commit, ignored or not
-        if rel != "." and path_is_gitignored(repo_root, absolute):
+        # A staged delete of a tracked file is committed even if its name now
+        # matches an ignore rule (check-ignore sees it once it leaves the index).
+        if not in_head and rel != "." and path_is_gitignored(repo_root, absolute):
             print(
                 f"warning: not committing gitignored path: {rel}",
                 file=sys.stderr,
@@ -316,7 +328,17 @@ def commit_all(
     if not changed:
         return nothing
 
-    commit = _git_literal(repo_root, "commit", "-m", subject, "--", *changed)
+    # Literal pathspecs by magic prefix, not GIT_LITERAL_PATHSPECS: commit runs
+    # hooks, which would inherit the variable and read their own globs literally.
+    commit = subprocess.run(
+        ["git", "commit", "-m", subject, "--",
+         *(f":(literal){entry}" for entry in changed)],
+        cwd=repo_root,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        errors="surrogateescape",
+    )
     if commit.returncode != 0:
         return CommitOutcome(commit.returncode, commit.stderr.strip(), False)
 

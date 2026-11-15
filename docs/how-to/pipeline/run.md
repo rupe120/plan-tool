@@ -351,6 +351,12 @@ it is given.
   | only in `HEAD` (`git rm`, origin of `git mv`) | committed as a delete, not passed to `git add` |
   | gitignored | skipped with a warning |
   | relative path | read relative to the current directory |
+  | staged delete of a force-tracked file matching an ignore rule | committed, no warning |
+
+  `git status` paths are relative to the git top level, which can sit above a
+  project root that holds `.plan-tool/plans.json`; the delta and the clean check
+  translate them. `git commit` gets literal pathspecs through the `:(literal)`
+  prefix, so hooks keep their own glob matching.
 
 - **Result:** `CommitOutcome(rc, tail, committed)`. No change in the footprint is
   `rc 0` with no commit. A footprint path still dirty after the commit (a hook

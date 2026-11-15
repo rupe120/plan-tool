@@ -98,7 +98,11 @@ from plan_tool.cli.gitcommit import (
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
 from plan_tool.cli.parser import Handler, make_yes_parent
 from plan_tool.cli.commit_footprint import plan_commit_footprint
-from plan_tool.git_state import changed_paths_or_none, status_records_or_none
+from plan_tool.git_state import (
+    changed_paths_or_none,
+    status_records_or_none,
+    toplevel_or_none,
+)
 from plan_tool.review_persistence import plan_reports_dir
 
 # Reconcile engine (step-15 leaf). ``cmd_run`` forward-calls
@@ -557,7 +561,8 @@ def _step_footprint(
     if baseline is None:
         return None, "git state was unreadable at the baseline (before the step)"
     records = status_records_or_none(root)
-    if records is None:
+    toplevel = toplevel_or_none(root)
+    if records is None or toplevel is None:
         return None, "git state was unreadable after the step"
     after = {path for path, _origin in records}
     origins = {path: origin for path, origin in records if origin is not None}
@@ -568,18 +573,14 @@ def _step_footprint(
     fixed: list[Path] = [plan_path, plan_reports_dir(plan_path).parent]
     plan_file = plan_path
     if archive_outcome is not None:
-        fixed.extend(
-            p for p in (archive_outcome.plan_path, archive_outcome.archived_to)
-            if p is not None
-        )
-        for old, new in archive_outcome.plan_details_moved:
-            fixed.extend((old, new))
+        fixed.extend(archive_outcome.touched_paths())
         if archive_outcome.archived_to is not None:
             plan_file = archive_outcome.archived_to
         if manifest_path is not None:
             fixed.append(manifest_path)
     fixed.extend(plan_commit_footprint(root, plan_file))
-    return fixed + [root / rel for rel in sorted(rels)], ""
+    # Status paths are relative to the work tree's top level, not ``root``.
+    return fixed + [toplevel / rel for rel in sorted(rels)], ""
 
 
 def _commit_step_footprint(

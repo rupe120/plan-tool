@@ -194,6 +194,62 @@ class TestCommitAll:
         assert rc == 0 and committed, tail
         assert _head_files(tmp_path) == ["m.json"]
 
+    def test_hook_globs_are_not_made_literal(self, tmp_path: Path) -> None:
+        # A pre-commit hook that lints ``*.py`` must still see the staged file.
+        self._repo(tmp_path)
+        hook = tmp_path / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text(
+            "#!/bin/sh\n"
+            "n=$(git diff --cached --name-only -- '*.py' | wc -l)\n"
+            "[ \"$n\" -gt 0 ] || { echo 'hook saw no .py files' >&2; exit 1; }\n"
+        )
+        hook.chmod(0o755)
+        (tmp_path / "a.py").write_text("x = 1\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "a.py"])
+
+        assert rc == 0 and committed, tail
+
+    def test_staged_delete_of_force_tracked_ignored_file_is_committed(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text("pinned/\n")
+        (tmp_path / "pinned").mkdir()
+        (tmp_path / "pinned" / "fixture.bin").write_text("f\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "add", "-f", "pinned/fixture.bin")
+        _git(tmp_path, "commit", "-q", "-m", "pin")
+        _git(tmp_path, "rm", "-q", "pinned/fixture.bin")
+
+        rc, tail, committed = commit_all(
+            tmp_path, "s", [tmp_path / "pinned" / "fixture.bin"]
+        )
+
+        assert rc == 0 and committed, tail
+        assert "gitignored" not in capsys.readouterr().err
+        assert _porcelain(tmp_path) == ""
+
+    def test_project_root_below_git_top_level_still_checks_its_paths(
+        self, tmp_path: Path
+    ) -> None:
+        # A project root holding .plan-tool/plans.json can sit below the git
+        # top level; status paths are top-level-relative, entries are not.
+        self._repo(tmp_path)
+        svc = tmp_path / "svc"
+        svc.mkdir()
+        hook = tmp_path / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text("#!/bin/sh\necho rewritten >> svc/a.txt\n")
+        hook.chmod(0o755)
+        (svc / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(svc, "s", [svc / "a.txt"])
+
+        assert committed
+        assert rc != 0 and "a.txt" in tail
+
     def test_absent_ignored_entry_is_skipped_without_a_warning(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:

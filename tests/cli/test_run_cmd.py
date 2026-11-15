@@ -2130,6 +2130,31 @@ class TestRunCommitFootprint:
         assert rc == 0 and committed, tail
         assert "step_work.txt" in _git_head_files(tmp_path)
 
+    def test_step_edit_is_committed_when_project_root_is_below_git_top_level(
+        self, tmp_path: Path
+    ) -> None:
+        """git status paths are relative to the top level; joining them onto a
+        nested project root would name files that do not exist."""
+        _init_git_repo(tmp_path)
+        svc = tmp_path / "svc"
+        svc.mkdir()
+        plan_path = _pending_plan(svc, detail=None)
+        (svc / "src").mkdir()
+        _commit_baseline(tmp_path)
+        (svc / "src" / "x.py").write_text("x = 1\n", encoding="utf-8")
+        rc, tail, committed = run_cmd._commit_step_footprint(
+            _ctx(svc),
+            plan_path=plan_path,
+            step_id=1,
+            step_title="only step",
+            slug="feature",
+            baseline=set(),
+            archive_outcome=None,
+            manifest_path=None,
+        )
+        assert rc == 0 and committed, tail
+        assert "svc/src/x.py" in _git_head_files(tmp_path)
+
     def test_unrelated_file_outside_delta_is_excluded(self, tmp_path: Path) -> None:
         plan_path = self._repo(tmp_path)
         (tmp_path / "tracked.txt").write_text("dirty before", encoding="utf-8")

@@ -127,6 +127,16 @@ class ArchiveOutcome:
     plan_details_moved: list[tuple[Path, Path]] = field(default_factory=list)
     skipped: list[str] = field(default_factory=list)
 
+    def touched_paths(self) -> list[Path]:
+        """Both sides of every move this archive made, for a ``--commit``
+        footprint (the source is a delete, the destination an add)."""
+        paths = [self.plan_path]
+        if self.archived_to is not None:
+            paths.append(self.archived_to)
+        for src, dest in self.plan_details_moved:
+            paths.extend((src, dest))
+        return paths
+
 
 @dataclass
 class SweepReport:

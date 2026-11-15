@@ -102,6 +102,20 @@ def changed_paths(repo_root: Path) -> set[str]:
     return changed if changed is not None else set()
 
 
+def toplevel_or_none(repo_root: Path) -> Optional[Path]:
+    """The work tree's top level, which ``git status`` paths are relative to;
+    it can sit above a project root that holds ``.plan-tool/plans.json``."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True, errors="surrogateescape",
+        )
+    except OSError:
+        return None
+    return Path(proc.stdout.strip()) if proc.returncode == 0 else None
+
+
 def head_revision(repo_root: Path) -> Optional[str]:
     """Return the pre-call commit, or None for unreadable/unborn repositories."""
     try:

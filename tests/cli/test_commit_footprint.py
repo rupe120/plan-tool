@@ -7,11 +7,15 @@ from pathlib import Path
 from plan_tool.cli.commit_footprint import plan_commit_footprint
 
 
-def test_unreadable_plan_still_yields_plan_details_and_lessons(tmp_path: Path) -> None:
+def test_unreadable_plan_still_yields_plan_details_and_lessons(
+    tmp_path: Path, capsys
+) -> None:
     plan = tmp_path / "plans" / "1-demo.md"
     plan.parent.mkdir()
     plan.write_bytes(b"\xff not a plan")
     footprint = plan_commit_footprint(tmp_path, plan)
+    # Says what it dropped, so a dirty tree afterwards has an explanation.
+    assert "could not read 1-demo.md" in capsys.readouterr().err
     assert footprint == [
         plan,
         plan.parent / "plan-details" / "demo",

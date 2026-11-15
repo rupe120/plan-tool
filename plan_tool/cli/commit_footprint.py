@@ -6,6 +6,7 @@ footprints cannot drift. Leaf helper: no business logic, no git calls.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from plan_tool.lessons import PROJECT_LESSONS_REL
@@ -28,7 +29,13 @@ def plan_commit_footprint(repo_root: Path, plan_path: Path) -> list[Path]:
     ]
     try:
         plan = parse_plan(plan_path)
-    except Exception:  # noqa: BLE001 — the footprint must never abort a commit
+    except Exception as exc:  # noqa: BLE001 — the footprint must never abort a commit
+        if plan_path.exists():
+            print(
+                f"warning: could not read {plan_path.name} ({exc.__class__.__name__}); "
+                "committing without its declared detail files and lessons log",
+                file=sys.stderr,
+            )
         return footprint
     footprint.extend(repo_root / step.detail for step in plan.steps if step.detail)
     if plan.lessons:

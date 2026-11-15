@@ -722,11 +722,7 @@ def _sweep_commit_footprint(
     """
     paths: list[Path] = [manifest_path]
     for outcome in report.archived:
-        paths.append(outcome.plan_path)
-        if outcome.archived_to is not None:
-            paths.append(outcome.archived_to)
-        for src, dest in outcome.plan_details_moved:
-            paths.extend((src, dest))
+        paths.extend(outcome.touched_paths())
     for src, dest in duplicate_archive_results:
         paths.extend((src, dest))
     return paths
