@@ -249,7 +249,7 @@ def _guardrail_decision(
     Source heading wins, then a usable model body, else ``_(TODO)_``.
     """
     lines, inherited, unfilled = guardrail_headings_block(
-        annotation.source_text, annotation.guardrail_bodies
+        _strip_frontmatter(annotation.source_text), annotation.guardrail_bodies
     )
     model_written = tuple(
         title

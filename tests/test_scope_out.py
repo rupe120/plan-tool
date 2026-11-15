@@ -3370,3 +3370,15 @@ def test_scope_out_narrowing_and_detail_archival_unchanged_by_guardrail_copy(
     fenced = narrowed(tmp_path / "b", _guardrail_source())
     assert "Plan prose body that survives narrowing." in plain
     assert plain.split("---", 2)[1] == fenced.split("---", 2)[1]
+
+
+def test_carved_seed_copies_a_body_opening_with_a_thematic_break_without_losing_text():
+    # The caller strips frontmatter once; a second strip would treat the leading
+    # `---` rule and the later one as frontmatter and drop the text between them.
+    source = (
+        "---\n\n## Scope guardrails\n\nscope body\n\n## Audit guardrails\n\n"
+        "audit body\n\n## Expected placement\n\nplacement body\n\n---\n\ntail\n"
+    )
+    seed = _render(source_body=source)
+    assert _section(seed, "Scope guardrails") == "scope body"
+    assert _section(seed, "Audit guardrails") == "audit body"

@@ -753,7 +753,12 @@ def _plan_context_sections(body_text: str) -> dict[str, str]:
 
 def _has_scope_or_placement_context(body_text: str) -> bool:
     sections = _plan_context_sections(body_text)
-    return any(name.lower() in sections for name in _SCOPE_OR_PLACEMENT_SECTION_NAMES)
+    # A body of exactly ``None`` is the seeds' explicit "no fence" answer.
+    return any(
+        sections[name.lower()].strip() != "None"
+        for name in _SCOPE_OR_PLACEMENT_SECTION_NAMES
+        if name.lower() in sections
+    )
 
 
 def _render_plan_context(body_text: str) -> list[str]:

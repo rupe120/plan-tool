@@ -1076,6 +1076,37 @@ def test_annotate_guardrail_key_titles_equal_the_required_headings() -> None:
     assert set(GUARDRAIL_RESPONSE_KEYS) == {"scope", "audit", "placement"}
 
 
+def test_contract_example_guardrail_keys_come_from_the_key_map() -> None:
+    from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT, GUARDRAIL_RESPONSE_KEYS
+
+    (element,) = [e for e in _ANNOTATE_RESPONSE_CONTRACT.example if "guardrails" in e]
+    assert set(element["guardrails"]) == set(GUARDRAIL_RESPONSE_KEYS)
+
+
+def test_a_null_heading_beside_guardrails_is_split_out_not_parsed_as_a_section() -> None:
+    from plan_tool.annotate import _split_guardrails_element
+
+    sections, bodies = _split_guardrails_element(
+        [{"heading": None, "guardrails": {"scope": "None"}}, {"heading": "  ", "guardrails": {}}]
+    )
+    assert sections == []
+    assert bodies == {"Scope guardrails": "None"}
+
+
+def test_a_null_heading_guardrails_element_does_not_fail_the_run(tmp_path: Path) -> None:
+    result = _classify_with(
+        tmp_path, [_ONE_SECTION, {"heading": None, "guardrails": {"scope": "None"}}]
+    )
+    assert result.guardrail_bodies == {"Scope guardrails": "None"}
+
+
+def test_a_real_heading_beside_guardrails_stays_a_section() -> None:
+    from plan_tool.annotate import _split_guardrails_element
+
+    item = {"heading": "Real", "guardrails": {"scope": "None"}}
+    assert _split_guardrails_element([item]) == ([item], {})
+
+
 def test_classify_makes_one_invoker_call_with_guardrails_requested(tmp_path: Path) -> None:
     src = _write_notes(tmp_path, "notes.md", "# Overview\n\nSome notes.\n")
     prompts: list[str] = []

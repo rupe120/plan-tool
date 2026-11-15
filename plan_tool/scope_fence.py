@@ -375,8 +375,9 @@ def _single_acceptable_body(occurrences: Mapping[str, list[str]], title: str) ->
 def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
     """Required headings that are missing, duplicated, empty or placeholders.
 
-    Same rule as ``## References`` in ``create.classify_file_backed_source``:
-    exactly one fence-safe H2 with an acceptable body. Pure; reports every
+    Same presence rule as ``## References`` in ``create.classify_file_backed_source``
+    (exactly one fence-safe H2, non-empty, not a placeholder), except a fenced-only
+    guardrail body counts as content and a ``## References`` one does not. Pure; reports every
     offender in :data:`REQUIRED_GUARDRAIL_HEADINGS` order.
     """
     stripped = _strip_frontmatter(text)
@@ -405,9 +406,10 @@ def guardrail_headings_block(
     fences intact, and listed as inherited. Otherwise a ``model_bodies`` entry
     (``annotate`` passes them; ``scope-out`` and ``reground`` pass none) fills it only
     if it is acceptable too; any other state writes ``_(TODO)_`` and is unfilled.
-    Presence only: no judgment of what a body says.
+    Presence only: no judgment of what a body says. ``source_body`` must already
+    have its frontmatter removed (a second strip would eat a leading ``---`` rule).
     """
-    stripped = _strip_frontmatter(source_body or "")
+    stripped = source_body or ""
     scan = _fenced_code_spans(stripped)
     # ignore_fenced_code: a fenced-only body is content.
     occurrences = extract_h2_section_occurrences(

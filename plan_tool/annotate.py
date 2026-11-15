@@ -64,6 +64,12 @@ _MAX_GROUNDING_SYMBOL_CANDIDATES = 80
 _CODE_REF_RE = re.compile(
     r"^(?P<path>[^:\s]+):(?P<anchor>\d+|[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)$"
 )
+# Keys of the optional ``guardrails`` element, one per required seed heading.
+GUARDRAIL_RESPONSE_KEYS: dict[str, str] = dict(
+    zip(("scope", "audit", "placement"), REQUIRED_GUARDRAIL_HEADINGS, strict=True)
+)
+
+
 _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
     root=JSON_ROOT_ARRAY,
     # Show every model-emittable status; NEEDS-REVIEW remains parser-derived.
@@ -95,17 +101,8 @@ _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
         # Optional; omit when unsure. Values are placeholders the parser
         # rejects, so an echoed example ships nothing; the "None"-not-null
         # rule lives in prompts/annotate.md. Not a section.
-        "guardrails": {
-            "scope": "TODO",
-            "audit": "TODO",
-            "placement": "TODO",
-        },
+        "guardrails": dict.fromkeys(GUARDRAIL_RESPONSE_KEYS, "TODO"),
     }],
-)
-
-# Keys of the optional ``guardrails`` element, one per required seed heading.
-GUARDRAIL_RESPONSE_KEYS: dict[str, str] = dict(
-    zip(("scope", "audit", "placement"), REQUIRED_GUARDRAIL_HEADINGS, strict=True)
 )
 
 
@@ -552,7 +549,9 @@ def _unresolved_code_refs(repo_root: Path, code_refs: tuple[str, ...]) -> tuple[
 def _split_guardrails_element(
     items: list,
 ) -> tuple[list, dict[str, str]]:
-    """Pull ``guardrails`` elements (no ``heading``) out of the response array.
+    """Pull ``guardrails`` elements (no ``heading``, or a null/blank one) out of the array.
+
+    An element with a real non-blank ``heading`` stays a section.
 
     Multiple elements merge, the first acceptable body per heading winning
     (a placeholder never shadows a later real body). A missing key,
@@ -561,7 +560,15 @@ def _split_guardrails_element(
     sections: list = []
     bodies: dict[str, str] = {}
     for item in items:
-        if isinstance(item, dict) and "guardrails" in item and "heading" not in item:
+        if (
+            isinstance(item, dict)
+            and "guardrails" in item
+            and (
+                "heading" not in item
+                or item["heading"] is None
+                or (isinstance(item["heading"], str) and not item["heading"].strip())
+            )
+        ):
             raw_bodies = item["guardrails"]
             if isinstance(raw_bodies, dict):
                 for key, title in GUARDRAIL_RESPONSE_KEYS.items():

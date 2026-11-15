@@ -271,6 +271,33 @@ def test_handoff_scope_and_expected_placement_override_suggested_route() -> None
     )
 
 
+_PRIORITY_NOTE_MARKER = (
+    "Scope guardrails and Expected placement in this plan's captured "
+    "context win over this suggested route"
+)
+
+
+def test_a_none_guardrail_body_is_no_fence_and_raises_no_priority_note() -> None:
+    plan = _plan(_step(1, "Ship the widget"))
+    committed = (CommittedStepRenderInput(id=1, detail=_present_detail()),)
+    body_text = "## Scope guardrails\n\nNone\n\n## Expected placement\n\nNone\n"
+    body = render_handoff_body(
+        _render_input(plan=plan, committed_steps=committed, body_text=body_text)
+    )
+    assert _PRIORITY_NOTE_MARKER not in body
+    # The sections themselves stay visible.
+    assert "### Scope guardrails" in body
+
+    real = render_handoff_body(
+        _render_input(
+            plan=plan,
+            committed_steps=committed,
+            body_text=body_text.replace("## Expected placement\n\nNone", "## Expected placement\n\nsrc/x.py"),
+        )
+    )
+    assert _PRIORITY_NOTE_MARKER in real
+
+
 # --- binding-input errors -------------------------------------------------------
 
 
