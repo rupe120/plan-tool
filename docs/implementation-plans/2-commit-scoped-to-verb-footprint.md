@@ -165,7 +165,7 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all` that `_commit_green_step` delegates to
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/05-make-paths-required-on-commit-green.md
-  status: current
+  status: done
   description: 'Make `paths` required on `_commit_green_step` in `plan_tool/cli/run_cmd.py`
     and have it delegate staging and committing to `commit_all`, so `run --commit`
     uses the same ignored-path warning and post-commit clean check. The `--accept`
@@ -225,6 +225,7 @@ steps:
   depends_on_notes:
     5: which part of `run --commit` stays deferred, and why
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/06-rewrite-how-statements-that-say-commit.md
+  status: current
   description: 'Rewrite the how-to statements that say `--commit` stages the whole
     tree. In `docs/how-to/pipeline/detail.md`, retire the ''per-step `git add -A`
     is only safe while no prior step left the tree dirty'' safety invariant and its
