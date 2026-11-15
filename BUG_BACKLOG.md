@@ -814,42 +814,29 @@ Durable re-open conditions for retired items are recorded in
   14,725 passed, 67 skipped in 70.48 seconds. The trace records
   `assert 99 == 100` at `tests/test_run_log.py:161`.
 
-### `--commit` stages the whole working tree with `git add -A`, so a file another process changes during the run lands in the verb's commit
+### `run --commit` can still commit a file another process writes during the backend call
 
-- **Files:** `plan_tool/cli/gitcommit.py:commit_all` (runs a bare
-  `git add -A`); its call sites in `plan_tool/cli/authoring.py`,
-  `plan_tool/cli/completeness_cmd.py` and `plan_tool/cli/manifest.py`.
-  Precedent for a caller-supplied path set: `gitcommit.py:unexpected_dirty_paths`
-  and `launcher._git_changed_paths_or_none`.
-- **Symptom:** `--commit` requires a clean tree up front, which makes
-  "everything in the tree is this verb's output" true only at the start.
-  Anything written during a multi-step run (a concurrent session, an editor
-  sidecar, a hook) is swept into the next commit under a subject describing the
-  verb's work. Near-miss 2026-07-31: a `detail --commit` run on
-  `roadmap-01-domain-constraints` was one step from committing four unrelated
-  `plan_tool/` source files, edited by a second session in the same worktree,
-  under `plan(roadmap-01-domain-constraints): detail step 6 — …`.
-- **Fix:** give `commit_all` the verb's touched-path set and stage
-  `git add -A -- <paths>`, which keeps deletes and renames inside the set (the
-  seed-archive move). Two decisions to settle rather than discover: after
-  committing, assert no expected path is still dirty (the change inverts the
-  failure mode from over-staging to silent under-staging); and decide the
-  behavior for a gitignored expected path, which an explicit pathspec rejects
-  where `git add -A` skips it. Deliberately not changed: the clean-tree
-  precondition, commit subjects, which verbs accept `--commit`, per-step commit
-  granularity, and `launcher.py`'s test-authoring delta. If a caller cannot
-  enumerate its footprint without new bookkeeping, ship the surfaces that can
-  and file the rest.
-- **Approach:** `plan-tool` — mechanical per call site, but "what did this verb
-  touch" is a per-verb question across several modules, and the under-staging
-  and gitignore branches are decisions worth auditing.
-- **Verification:** per surface, an unrelated dirty file present at commit time
-  is not committed; deletes and renames inside the touched set still stage;
-  every expected path is clean after the commit; an ignored expected path takes
-  the decided branch.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-07-31, caught mid-run; moved from BACKLOG #209, 2026-11-14.
-  Lands before any widening of `--commit` to more verbs (BACKLOG #89).
+- **Files:** `plan_tool/cli/run_cmd.py:_step_footprint` (builds the footprint
+  from `after - baseline`); `plan_tool/git_state.py` (the path-name git delta).
+- **Symptom:** `run` records the backend's writes only as a git delta of path
+  names, so it cannot tell a backend edit from a concurrent write made during
+  the same call. A concurrent write to a path that was clean at the baseline
+  appears in the delta and lands in the step's commit. A path already dirty at
+  the baseline is not part of this residual: it is excluded from the commit and
+  `run` names it in a warning at run time.
+- **Other unconverted surfaces:** none. `detail`, `completeness-audit`,
+  `manifest sweep` and `run` all commit a footprint. A concurrent edit to a file
+  the verb itself wrote is out of scope and is committed with the verb's change.
+- **Fix:** a record of the paths the backend itself wrote would close it.
+  Deliberately not specified here; it needs new footprint bookkeeping, which the
+  scope fence of `commit-scoped-to-verb-footprint` excludes.
+- **Approach:** `plan-tool` — the record's shape is a design decision.
+- **Verification:** a path written by another process during the backend call is
+  not in the step's commit.
+- **Route:** plan · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** deferred from `commit-scoped-to-verb-footprint`, 2026-11-14 (from
+  BACKLOG #209). Lands before any widening of `--commit` to more verbs
+  (BACKLOG #89).
 
 ### A `create --iterate` re-proposal that reuses a done or current step's id for a different step drops the executed step from the plan, and a reworded title resets a finished step
 

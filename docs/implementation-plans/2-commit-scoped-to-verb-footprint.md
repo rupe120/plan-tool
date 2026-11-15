@@ -3,7 +3,7 @@ format_version: 1
 title: Commit Scoped To Verb Footprint
 intent: Every `--commit` surface commits only the paths its verb wrote, so a file
   that another process changes during the run is never swept into the verb's commit.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -225,7 +225,7 @@ steps:
   depends_on_notes:
     5: which part of `run --commit` stays deferred, and why
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/06-rewrite-how-statements-that-say-commit.md
-  status: current
+  status: done
   description: 'Rewrite the how-to statements that say `--commit` stages the whole
     tree. In `docs/how-to/pipeline/detail.md`, retire the ''per-step `git add -A`
     is only safe while no prior step left the tree dirty'' safety invariant and its

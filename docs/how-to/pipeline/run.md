@@ -144,9 +144,9 @@ when the condition holds.
      └─ success (step green):
           ├─ --archive & plan_completed? . move plan → archive/, deregister manifest, print undo hint
           │     SKIP-if not complete / no --archive       (runs BEFORE the commit so it's captured)
-          ├─ --commit & step done? ...... git add -A + one commit per green step   (clean-tree precheck
-          │     SKIP-if no --commit            commit fails → return its rc          ran pre-run; dirty → rc=2)
-          │                                    (captures the archive move when the step completed + archived)
+          ├─ --commit & step done? ...... commit the step's footprint + clean check   (clean-tree precheck
+          │     SKIP-if no --commit            commit or clean check fails → return its rc   ran pre-run; dirty → rc=2)
+          │                                    (footprint includes the archive move when the step completed + archived)
           ├─ advanced_to set ............ "✓ step N done — advanced to step M"
           ├─ plan_completed ............. "✓ plan complete" (archived above when --archive)
           └─ neither .................... "✓ step N done — no next runnable step"
@@ -176,7 +176,7 @@ once; then `run_step()` repeats until no runnable step remains or a gate halts.
           │     ├─ --dry-run → rc=0 (first iteration's prompt only)
           │     └─ exit_code ≠ 0 → record halt in lessons:, return that rc  (gate halted the sweep)
           ├─ --archive & plan_completed? . move plan → archive/ + deregister (BEFORE the commit)
-          ├─ --commit & step done? ...... git add -A + one commit per green step (captures the
+          ├─ --commit & step done? ...... commit the step's footprint + clean check (includes the
           │     SKIP-if no --commit           archive move); commit fails → return its rc (left dirty)
           └─ --archive & plan_completed? . print "sweep complete", rc=0 (sweep done)
 ```
@@ -317,10 +317,13 @@ config), or set `PLAN_TOOL_REQUIRE_MERGED_PLAN=0`. Implementation:
    with a `status_note`, so a re-run resumes exactly there.
 3. **`--commit` after gates pass** — the per-step commit captures a state that
    already cleared every blocking gate, so any later failure leaves precisely
-   one step's work dirty (`git reset` to recover).
+   one step's work dirty (`git reset` to recover). The commit stages only the
+   step's footprint; a footprint path still dirty after the commit gives a
+   non-zero exit and names the path. If git state is unreadable before or after
+   the step, the commit fails closed.
 4. **`--archive` before `--commit`** — on the completing step the plan move +
-   manifest deregister run first, so the green commit's `git add -A` captures
-   them in one commit. The tree is clean afterward, so a follow-up `--commit`
+   manifest deregister run first, so the green commit's footprint (which names
+   the archive outputs and the manifest) captures them in one commit. The tree is clean afterward, so a follow-up `--commit`
    run isn't blocked by the clean-tree precheck. (A failed commit still leaves
    the move dirty for `git reset` recovery, same as the step's edits.)
 5. **Sweep halts self-record** — a run failure or a refused gate appends
@@ -466,8 +469,8 @@ Every backend call appends its raw stdout lines, verbatim and live, to
 file). `tail -f` follows a running call.
 
 - **Unredacted.** The file holds whatever the backend emitted. The directory
-  carries its own `.gitignore` (`*`), so `run --commit`'s `git add -A` cannot
-  stage it. There is no size cap and nothing prunes automatically;
+  carries its own `.gitignore` (`*`), and `run --commit` skips gitignored
+  footprint entries with a warning, so it never stages the file. There is no size cap and nothing prunes automatically;
   `plan-tool runs clear` (`--all`, `<slug>`, or `--older-than <DURATION>`)
   removes `<run_id>.streams/` directories by their newest file's age
   (`run_log.prune_stream_logs`). Each call's `backend_spawn` event names its
