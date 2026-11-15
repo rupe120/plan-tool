@@ -124,6 +124,7 @@ steps:
   - 1
   depends_on_notes:
     1: the path-scoped `commit_all`
+  detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/04-give-manifest-sweep-commit-plan-tool.md
   description: 'Give `manifest sweep --commit` in `plan_tool/cli/manifest.py` its
     footprint from records the sweep already returns: the manifest path, and each
     `ArchiveOutcome`''s original `plan_path` (a delete) and `archived_to` (an add).
