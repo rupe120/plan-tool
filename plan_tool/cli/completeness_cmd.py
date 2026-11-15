@@ -76,6 +76,17 @@ from plan_tool.completeness_report import (
 )
 
 
+def _completeness_commit_footprint(repo_root: Path, plan_path: Path) -> "list[Path]":
+    """Paths ``completeness-audit --commit`` may stage: the plan file, its
+    ``plan-details/<slug>/`` directory (saved report and sidecar included),
+    declared ``steps[].detail`` pointers, and the project lessons directory.
+    Same footprint as ``detail --commit``, so it delegates to that builder.
+    """
+    from plan_tool.cli.authoring import _detail_commit_footprint
+
+    return _detail_commit_footprint(repo_root, plan_path)
+
+
 def _completeness_commit_subject(slug: str) -> str:
     """Commit subject for a ``completeness-audit --commit --iterate`` run
     (pure, so a test can assert the format without shelling out)."""
@@ -662,7 +673,7 @@ def finalize_completeness_run(
         commit_rc, tail = commit_all(
             ctx.repo_root,
             _completeness_commit_subject(_detail_plan_slug(path)),
-            [ctx.repo_root],
+            _completeness_commit_footprint(ctx.repo_root, path),
         )
         if commit_rc == 0:
             success("committed completeness edits")
@@ -1676,8 +1687,10 @@ def register(subparsers) -> dict[str, Handler]:
         action="store_true",
         dest="commit",
         help=(
-            "after a clean --iterate run that applied findings, stage all "
-            "changes (git add -A) and create one commit with subject "
+            "after a clean --iterate run that applied findings, stage only "
+            "the plan file, its plan-details/<slug>/ directory, the detail "
+            "files the plan declares and the project lessons directory, and "
+            "create one commit with subject "
             "'plan(<slug>): completeness — applied audit findings'. Requires "
             "--iterate (an audit-only run makes no plan edits) and a clean "
             "working tree up front; off by default; ignored with --json."

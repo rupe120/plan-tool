@@ -6764,6 +6764,158 @@ class TestCompletenessCommitGates:
         assert "clean working tree" in capsys.readouterr().err
 
 
+class TestCompletenessCommitFootprint:
+    """``completeness-audit --commit`` stages only its own footprint."""
+
+    @staticmethod
+    def _setup(tmp_repo, monkeypatch, *, with_detail=False, during_run=None):
+        import shutil
+
+        from plan_tool import review as review_module
+
+        shutil.rmtree(tmp_repo.root / ".git")
+        _init_git_repo(tmp_repo.root)
+        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
+        if with_detail:
+            _attach_minimal_detail(tmp_repo, plan_path)
+        tmp_repo.write_manifest()
+        (tmp_repo.root / ".gitignore").write_text(
+            ".plan-tool/runs/\n", encoding="utf-8"
+        )
+        _git_commit_all(tmp_repo.root, "init")
+
+        def fake_audit(*_a, budget_report=None, **_kw):
+            if budget_report is not None:
+                budget_report.update(
+                    {
+                        "budget_limited": False,
+                        "passes_used": 1,
+                        "cap": 1,
+                        "recommendation_kind": None,
+                        "recommended_passes": None,
+                        "recommendation_advice": None,
+                        "confirmation_kind": "confirmed-dry",
+                        "conforming_pass_count": 1,
+                        "failed_or_malformed_pass_count": 0,
+                    }
+                )
+            if during_run is not None:
+                during_run(tmp_repo.root)
+            return []
+
+        monkeypatch.setattr(
+            review_module, "collect_deterministic_findings", lambda *_a, **_kw: []
+        )
+        monkeypatch.setattr(
+            review_module, "collect_self_consistency_findings", lambda *_a, **_kw: []
+        )
+        monkeypatch.setattr(review_module, "audit_plan_until_stable", fake_audit)
+        return plan_path
+
+    @staticmethod
+    def _run(tmp_repo):
+        from plan_tool.cli import main
+
+        return main(
+            tmp_repo.argv(
+                "completeness-audit", "demo", "--iterate", "--yes", "--commit"
+            )
+        )
+
+    @staticmethod
+    def _git(root, *args) -> str:
+        import subprocess
+
+        return subprocess.run(
+            ["git", *args], cwd=root, check=True, capture_output=True, text=True
+        ).stdout
+
+    def test_audit_commit_leaves_unrelated_file_dirtied_during_run_uncommitted(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        def dirty(root):
+            (root / "unrelated.txt").write_text("other process\n", encoding="utf-8")
+
+        self._setup(tmp_repo, monkeypatch, during_run=dirty)
+        assert self._run(tmp_repo) == 0
+        committed = self._git(
+            tmp_repo.root, "show", "--name-only", "--format=", "HEAD"
+        )
+        assert "unrelated.txt" not in committed
+        assert "?? unrelated.txt" in self._git(tmp_repo.root, "status", "--porcelain")
+
+    def test_audit_commit_includes_report_and_sidecar(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        self._setup(tmp_repo, monkeypatch)
+        assert self._run(tmp_repo) == 0
+        committed = self._git(
+            tmp_repo.root, "show", "--name-only", "--format=", "HEAD"
+        ).splitlines()
+        reports = [p for p in committed if "/plan-details/demo/reports/" in p]
+        assert any(p.endswith(".md") for p in reports), committed
+        assert any(p.endswith("-completeness.json") for p in reports), committed
+
+    def test_audit_commit_footprint_paths_clean_afterwards(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        plan_path = self._setup(tmp_repo, monkeypatch, with_detail=True)
+        assert self._run(tmp_repo) == 0
+        status = self._git(
+            tmp_repo.root, "status", "--porcelain", "--untracked-files=all",
+            "--", str(plan_path), str(plan_path.parent / "plan-details"),
+            "plans/details",
+        )
+        assert status == ""
+
+    def test_audit_commit_covers_detail_file_declared_outside_plan_details(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        """A ``steps[].detail`` pointer outside ``plan-details/<slug>/`` is still
+        in the footprint; an edit to that file lands in the audit commit."""
+
+        def edit_detail(root):
+            (root / "plans/details/01-only-step.md").write_text(
+                "# Step 1\n\n## Summary\n\nEdited.\n", encoding="utf-8"
+            )
+
+        self._setup(tmp_repo, monkeypatch, with_detail=True, during_run=edit_detail)
+        assert self._run(tmp_repo) == 0
+        committed = self._git(
+            tmp_repo.root, "show", "--name-only", "--format=", "HEAD"
+        )
+        assert "plans/details/01-only-step.md" in committed
+
+    def test_audit_commit_footprint_excludes_stray_pre_staged_file(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        def stage_stray(root):
+            (root / "stray.txt").write_text("x\n", encoding="utf-8")
+            self._git(root, "add", "stray.txt")
+
+        self._setup(tmp_repo, monkeypatch, during_run=stage_stray)
+        assert self._run(tmp_repo) == 0
+        committed = self._git(
+            tmp_repo.root, "show", "--name-only", "--format=", "HEAD"
+        )
+        assert "stray.txt" not in committed
+        assert "A  stray.txt" in self._git(tmp_repo.root, "status", "--porcelain")
+
+    def test_completeness_commit_footprint_helper_lists_plan_dir_and_declared_details(
+        self, tmp_repo
+    ) -> None:
+        from plan_tool.cli.completeness_cmd import _completeness_commit_footprint
+
+        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
+        _attach_minimal_detail(tmp_repo, plan_path)
+        footprint = _completeness_commit_footprint(tmp_repo.root, plan_path)
+        assert plan_path in footprint
+        assert plan_path.parent / "plan-details" / "demo" in footprint
+        assert tmp_repo.root / "plans/details/01-only-step.md" in footprint
+        assert tmp_repo.root / ".plan-tool" / "lessons" in footprint
+        assert tmp_repo.root not in footprint
+
+
 class TestBareAuditManualCorrectionGuidance:
 
 
