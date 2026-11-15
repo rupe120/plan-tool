@@ -72,7 +72,7 @@ steps:
     1: the path-scoped `commit_all` with the ignored-path warning and the post-commit
       clean check
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/02-give-detail-commit-its-own-footprint.md
-  status: current
+  status: done
   description: 'Give `detail --commit` its own footprint at all three commit sites
     in `plan_tool/cli/authoring.py`: the per-step commit (`_commit_detail_step`),
     the `--jobs>1` batch commit and the residual sweep after a per-step run. The footprint
@@ -108,6 +108,7 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all`
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/03-give-completeness-audit-commit-plan.md
+  status: current
   description: 'Give `completeness-audit --commit` in `plan_tool/cli/completeness_cmd.py`
     its own footprint: the plan file, the plan''s `plan-details/<slug>/` directory
     (the saved report and sidecar from `write_completeness_report`, plus detail files
