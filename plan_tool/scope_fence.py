@@ -341,25 +341,35 @@ def extract_h2_sections(
 # The three seed headings every ``create --from-existing`` seed must carry.
 # Bare titles in canonical case; messages render them as ``## <title>``.
 # ``Stack`` stays out: it is tool-written and only ``roadmap`` emits it.
-REQUIRED_GUARDRAIL_HEADINGS: tuple[str, ...] = (
-    "Scope guardrails",
-    "Audit guardrails",
-    "Expected placement",
+REQUIRED_GUARDRAIL_HEADINGS: tuple[str, ...] = tuple(
+    h for h in GUARDRAIL_BODY_SECTIONS if h != "Stack"
 )
 
 
 def is_acceptable_guardrail_body(body: str) -> bool:
     """The one definition of an acceptable guardrail body.
 
-    Non-empty, not a ``_(TODO)_``-style placeholder, and no line-starting H2
-    outside fenced code. An explicit ``None`` is content, by design.
+    Non-empty, not a ``_(TODO)_``-style placeholder, no unclosed fence, and no
+    line-starting H1/H2 outside fenced code (the section splitter's boundary).
+    An explicit ``None`` is content, by design.
     """
     if not body.strip() or _is_placeholder_section(body):
         return False
     scan = _fenced_code_spans(body)
-    return not extract_h2_section_occurrences(
-        body, strip_fenced_code=True, fenced_spans=scan.spans
+    if scan.unmatched_opening is not None:
+        return False
+    return not any(
+        not any(start <= m.start() < end for start, end in scan.spans)
+        for m in _H2_HEADING_RE.finditer(body)
     )
+
+
+def _single_acceptable_body(occurrences: Mapping[str, list[str]], title: str) -> str | None:
+    """The one accepted body for ``title``, or ``None`` if missing, duplicated or unacceptable."""
+    bodies = occurrences.get(title.lower(), [])
+    if len(bodies) == 1 and is_acceptable_guardrail_body(bodies[0]):
+        return bodies[0]
+    return None
 
 
 def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
@@ -377,8 +387,7 @@ def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
     )
     offenders: list[str] = []
     for title in REQUIRED_GUARDRAIL_HEADINGS:
-        bodies = occurrences.get(title.lower(), [])
-        if len(bodies) != 1 or not is_acceptable_guardrail_body(bodies[0]):
+        if _single_acceptable_body(occurrences, title) is None:
             offenders.append(title)
     return tuple(offenders)
 
@@ -400,25 +409,18 @@ def guardrail_headings_block(
     """
     stripped = _strip_frontmatter(source_body or "")
     scan = _fenced_code_spans(stripped)
-    # ignore_fenced_code: a fenced-only body is content, so one map serves
-    # both the acceptability check and the verbatim copy.
-    checked = verbatim = extract_h2_section_occurrences(
+    # ignore_fenced_code: a fenced-only body is content.
+    occurrences = extract_h2_section_occurrences(
         stripped, ignore_fenced_code=True, fenced_spans=scan.spans
     )
     lines: list[str] = []
     inherited: list[str] = []
     unfilled: list[str] = []
     for title in REQUIRED_GUARDRAIL_HEADINGS:
-        key = title.lower()
-        checked_bodies = checked.get(key, [])
-        verbatim_bodies = verbatim.get(key, [])
         body = "_(TODO)_"
-        if (
-            len(checked_bodies) == 1
-            and is_acceptable_guardrail_body(checked_bodies[0])
-            and len(verbatim_bodies) == 1
-        ):
-            body = verbatim_bodies[0]
+        accepted = _single_acceptable_body(occurrences, title)
+        if accepted is not None:
+            body = accepted
             inherited.append(title)
         else:
             model_body = (model_bodies or {}).get(title)

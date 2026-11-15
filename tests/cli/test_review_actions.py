@@ -1751,11 +1751,34 @@ class TestRegroundRemedyDispatch:
         result = action(_reground_rec(step_ids=(3, 4, 5)))
         assert "fill in ## Scope guardrails" in result
         assert result.index("fill in") < result.index("create --from-existing")
-        assert "## Audit guardrails" not in result
+        fill_clause = result.split("fill in", 1)[1].split(", then", 1)[0]
+        assert "## Audit guardrails" not in fill_clause
 
         seed.write_text(seed.read_text().replace("_(TODO)_", "None"), encoding="utf-8")
         result = action(_reground_rec(step_ids=(3, 4, 5)))
         assert "fill in" not in result
+
+    def test_rebaseline_message_carries_recheck_advisory_when_all_guardrails_inherited(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # With -y the confirm notice is skipped, so the completion message is
+        # the only place the operator is told to re-check inherited fences.
+        seed = tmp_path / "demo-reground-3-5.md"
+        seed.write_text(
+            "## Scope guardrails\n\nNone\n\n## Audit guardrails\n\nNone\n\n"
+            "## Expected placement\n\nNone\n",
+            encoding="utf-8",
+        )
+        _stub_reground_bridge(
+            monkeypatch,
+            _reground_result("applied", marked_ids=(3, 4, 5), seed_path=seed),
+        )
+        action = self._build(tmp_path, allow_structural_remedy=True)
+        result = action(_reground_rec(step_ids=(3, 4, 5)))
+        assert "fill in" not in result
+        assert "re-check the inherited fence against the plan's current scope" in result
+        for heading in ("Scope guardrails", "Audit guardrails", "Expected placement"):
+            assert f"## {heading}" in result
 
     def test_matching_target_signature_actuates_despite_plan_edit(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

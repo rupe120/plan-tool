@@ -869,3 +869,16 @@ def test_existing_seed_sections_unchanged_by_guardrail_headings():
         "## Provenance",
     ):
         assert heading in lines
+
+
+def test_model_body_with_an_h1_is_written_as_todo_so_the_seed_is_complete_only_once_filled():
+    """An H1 body would make create read the section as empty; it must not ship."""
+    from plan_tool.scope_fence import missing_required_guardrail_headings
+
+    seed = _guardrail_seed(
+        bodies={t: "Stay small.\n\n# Scope\n\nmore" for t in _GUARDRAIL_TITLES}
+    )
+    assert [_body_of(seed, t) for t in _GUARDRAIL_TITLES] == ["_(TODO)_"] * 3
+    assert len(missing_required_guardrail_headings(seed)) == 3
+    filled = seed.replace("_(TODO)_", "None")
+    assert missing_required_guardrail_headings(filled) == ()

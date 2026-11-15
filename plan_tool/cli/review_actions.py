@@ -45,7 +45,11 @@ from plan_tool.review_walk import (
     structural_apply_allowed,
 )
 from plan_tool.run_log import RunLogWriter
-from plan_tool.scope_fence import missing_required_guardrail_headings
+from plan_tool.scope_fence import (
+    REQUIRED_GUARDRAIL_HEADINGS,
+    guardrail_next_step_lines,
+    missing_required_guardrail_headings,
+)
 from plan_tool.style import colorize_diff, warn
 
 
@@ -1208,6 +1212,15 @@ def _build_review_action_fn(
                     )
                 except OSError:
                     unfilled = ()
+                    inherited = ()
+                else:
+                    # Reground passes no model bodies: every filled heading is inherited.
+                    inherited = tuple(
+                        h for h in REQUIRED_GUARDRAIL_HEADINGS if h not in unfilled
+                    )
+                recheck = "; ".join(
+                    guardrail_next_step_lines(inherited, (), rebaseline=True)
+                )
                 fill_first = (
                     "fill in "
                     + ", ".join(f"## {t}" for t in unfilled)
@@ -1222,6 +1235,8 @@ def _build_review_action_fn(
                     f"it (plan-tool create --from-existing {result.seed_path}) "
                     f"and archive/retire this plan once the re-decompose lands"
                 )
+                if recheck:
+                    msg += f"; {recheck}"
             return msg
 
         if result.outcome == "noop":

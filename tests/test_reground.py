@@ -1307,3 +1307,40 @@ def test_reground_mark_done_unchanged_when_seed_gains_guardrails(tmp_path):
     assert reloaded.step_by_id(1).status is StepStatus.DONE
     assert reloaded.step_by_id(2).status is StepStatus.DONE
     assert result.seed_path.exists()
+
+
+def test_rebaseline_reads_the_plan_file_once_more_than_mark_done_not_twice(
+    tmp_path, monkeypatch
+):
+    """Notice and seed share one body read, so they cannot describe different text."""
+    original = Path.read_text
+
+    def count_reads(disposition: str, sub: str) -> int:
+        root = tmp_path / sub
+        root.mkdir()
+        path = _write_plan_file(
+            root,
+            _plan([_step(1, status=StepStatus.CURRENT), _step(2), _step(3)]),
+            body="Plan prose body.\n" + NONE_GUARDRAILS,
+        )
+        reads: list[Path] = []
+
+        def counting(self, *args, **kwargs):
+            if self == path:
+                reads.append(self)
+            return original(self, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "read_text", counting)
+        result = reground_bridge(
+            path,
+            step_ids=[1, 2],
+            allow_reground=True,
+            yes=True,
+            disposition=disposition,
+            repo_root=root,
+        )
+        monkeypatch.setattr(Path, "read_text", original)
+        assert result.outcome == "applied"
+        return len(reads)
+
+    assert count_reads("re-baseline", "a") - count_reads("mark-done", "b") == 1

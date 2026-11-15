@@ -6,6 +6,8 @@ the autouse ``tests/conftest.py`` gate never fires; no real claude.
 
 from __future__ import annotations
 
+from plan_tool.scope_fence import is_acceptable_guardrail_body
+
 import json
 from pathlib import Path
 
@@ -1052,11 +1054,26 @@ def test_first_acceptable_guardrail_body_wins_over_an_earlier_placeholder(
 def test_contract_says_no_fence_is_the_string_none_not_json_null() -> None:
     from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT
 
-    block = _ANNOTATE_RESPONSE_CONTRACT.render_prompt_block()
-    assert 'the string \\"None\\"' in block or 'the string "None"' in block
-    assert "not JSON null" in block
     prompt = (Path(__file__).resolve().parent.parent / "plan_tool" / "prompts" / "annotate.md").read_text(encoding="utf-8")
     assert 'JSON string `"None"`' in prompt and "never JSON `null`" in prompt
+
+
+def test_every_example_guardrail_value_in_the_contract_is_rejected_as_a_body() -> None:
+    """An echoed example must ship nothing: the example values are placeholders."""
+    from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT
+
+    (element,) = [e for e in _ANNOTATE_RESPONSE_CONTRACT.example if "guardrails" in e]
+    assert element["guardrails"]
+    for value in element["guardrails"].values():
+        assert not is_acceptable_guardrail_body(value)
+
+
+def test_annotate_guardrail_key_titles_equal_the_required_headings() -> None:
+    from plan_tool.annotate import GUARDRAIL_RESPONSE_KEYS
+    from plan_tool.scope_fence import REQUIRED_GUARDRAIL_HEADINGS
+
+    assert tuple(GUARDRAIL_RESPONSE_KEYS.values()) == REQUIRED_GUARDRAIL_HEADINGS
+    assert set(GUARDRAIL_RESPONSE_KEYS) == {"scope", "audit", "placement"}
 
 
 def test_classify_makes_one_invoker_call_with_guardrails_requested(tmp_path: Path) -> None:

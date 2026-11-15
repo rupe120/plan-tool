@@ -232,10 +232,10 @@ def reground_bridge(
     # 7. Confirm gate.
     flagged = [plan.step_by_id(sid) for sid in to_mark]
     guardrail_notice: list[str] = []
+    source_body = ""
     if disposition == DISPOSITION_REBASELINE:
-        _, inherited, unfilled = guardrail_headings_block(
-            _strip_frontmatter(plan_path.read_text(encoding="utf-8"))
-        )
+        source_body = _strip_frontmatter(plan_path.read_text(encoding="utf-8"))
+        _, inherited, unfilled = guardrail_headings_block(source_body)
         guardrail_notice = guardrail_next_step_lines(
             inherited, unfilled, rebaseline=True
         )
@@ -257,7 +257,6 @@ def reground_bridge(
     seed_path: Optional[Path] = None
     if disposition == DISPOSITION_REBASELINE:
         assert repo_root is not None  # validated above
-        source_body = _strip_frontmatter(plan_path.read_text(encoding="utf-8"))
         source_references = extract_h2_sections(
             source_body, ignore_fenced_code=True
         ).get("references")

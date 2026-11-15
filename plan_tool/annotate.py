@@ -46,7 +46,10 @@ from plan_tool.prompt_excerpt import build_prompt_excerpt
 from plan_tool.renderer import prompts_dir
 from plan_tool.response_contract import JSON_ROOT_ARRAY, JsonResponseContract
 from plan_tool.schema import Plan
-from plan_tool.scope_fence import is_acceptable_guardrail_body
+from plan_tool.scope_fence import (
+    REQUIRED_GUARDRAIL_HEADINGS,
+    is_acceptable_guardrail_body,
+)
 from plan_tool.shell import claude_invoke
 
 
@@ -89,22 +92,21 @@ _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
         "confidence_low": False,
         "is_step": False,
     }, {
-        # Optional; omit when unsure. "No fence" is the string "None"; null means
-        # no body supplied. Not a section.
+        # Optional; omit when unsure. Values are placeholders the parser
+        # rejects, so an echoed example ships nothing; the "None"-not-null
+        # rule lives in prompts/annotate.md. Not a section.
         "guardrails": {
-            "scope": "fence the source implies, or the string \"None\" (not JSON null)",
-            "audit": "fence the source implies, or the string \"None\" (not JSON null)",
-            "placement": "fence the source implies, or the string \"None\" (not JSON null)",
+            "scope": "TODO",
+            "audit": "TODO",
+            "placement": "TODO",
         },
     }],
 )
 
 # Keys of the optional ``guardrails`` element, one per required seed heading.
-GUARDRAIL_RESPONSE_KEYS: dict[str, str] = {
-    "scope": "Scope guardrails",
-    "audit": "Audit guardrails",
-    "placement": "Expected placement",
-}
+GUARDRAIL_RESPONSE_KEYS: dict[str, str] = dict(
+    zip(("scope", "audit", "placement"), REQUIRED_GUARDRAIL_HEADINGS, strict=True)
+)
 
 
 class AnnotateError(Exception):

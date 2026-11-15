@@ -943,3 +943,37 @@ class TestMissingRequiredGuardrailHeadings:
         assert seed.read_bytes() == before
         assert sorted(p.name for p in tmp_path.iterdir()) == ["seed.md"]
 
+
+
+class TestAcceptableGuardrailBodyBreaksNoSeed:
+    def test_line_starting_h1_is_rejected_because_the_section_splitter_breaks_there(
+        self,
+    ) -> None:
+        assert not is_acceptable_guardrail_body("Stay small.\n\n# Scope\n\nmore")
+
+    def test_unclosed_fence_is_rejected_because_it_swallows_later_sections(
+        self,
+    ) -> None:
+        assert not is_acceptable_guardrail_body("Stay small.\n\n```\nnever closed\n")
+
+    def test_fenced_block_containing_a_heading_is_still_accepted(self) -> None:
+        assert is_acceptable_guardrail_body("Stay small.\n\n```\n# x\n## y\n```\n")
+
+    def test_required_headings_are_derived_from_body_sections_without_stack(
+        self,
+    ) -> None:
+        from plan_tool.scope_fence import (
+            GUARDRAIL_BODY_SECTIONS,
+            REQUIRED_GUARDRAIL_HEADINGS,
+        )
+
+        assert REQUIRED_GUARDRAIL_HEADINGS == GUARDRAIL_BODY_SECTIONS[:3]
+        assert "Stack" not in REQUIRED_GUARDRAIL_HEADINGS
+
+    def test_block_and_missing_check_agree_on_which_headings_are_accepted(
+        self,
+    ) -> None:
+        text = _seed(scope="_(TODO)_", audit="None") + "\n## Audit guardrails\n\ndup\n"
+        _, inherited, unfilled = guardrail_headings_block(text)
+        assert set(unfilled) == set(missing_required_guardrail_headings(text))
+        assert set(inherited).isdisjoint(unfilled)
