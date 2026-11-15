@@ -1,7 +1,7 @@
 {
   "plan_slug": "commit-scoped-to-verb-footprint",
-  "grounded_at": "2026-11-15T01:58:31Z",
-  "plan_fingerprint": "9bf805923cb830d55b88b0724f73356300b605e201e652cecbb42f265caf2262",
+  "grounded_at": "2026-11-15T02:09:17Z",
+  "plan_fingerprint": "9f8afb6142b0f48e3d2c40b822bdf2048d3284a4b77c7088c7ad61a503223f53",
   "code_fingerprint": {
     "BUG_BACKLOG.md": "b619125b2f407fa8cb988b0e0823b0a0e047c73aa4ec4e02ef6271f88a0fa2ca",
     "docs/cli/completeness-audit.md": "fdcf24834b72936f7be2e85c402d486b44cfc0e43677fb2cf3bd715f14df1a1d",
@@ -15,12 +15,21 @@
     "plan_tool/cli/gitcommit.py": "106a581c7dae4e2126505469c6aa8383c87762f8f48a9b18db2b4a2c482f1d43",
     "plan_tool/cli/manifest.py": "a535ee9f3db5967cef448f28f17acfa2bf54408ec933b344487bbf10379a1828",
     "plan_tool/cli/run_cmd.py": "52f52e0cbcfb3ad94b0ecbbd1ea7618e3f97cf2848bf5f9d05c38ada57871f93",
+    "plan_tool/git_state.py": "fff2febba7e7a033532891fcef6215692a9cc9dc8d2a3861b8a8d3abd53d7ab3",
     "tests/cli/test_authoring_cmds.py": "04a0b93a968f012feadf49fad0e6399c87571b10aaa2406ddf5ebaa24c466d16",
     "tests/cli/test_completeness_cmd.py": "367ceef296c080eb61d6500b13084907c11117b2cc88959dc10af21a9527d350",
     "tests/cli/test_gitcommit.py": "7d557cd90082b684ba599ac797ac36b0f7559bead9b13a38a33b10cd843b7216",
     "tests/cli/test_manifest_cmds.py": "8100ba050b64e974625ce71c4b451b863940841968321634259614661b7eddd0",
-    "tests/cli/test_run_cmd.py": "5dd53a7a3ba74a11104c715b93fe30488703ed0dd8a25fe88466b4323f3e5658"
+    "tests/cli/test_run_cmd.py": "5dd53a7a3ba74a11104c715b93fe30488703ed0dd8a25fe88466b4323f3e5658",
+    "tests/test_git_state.py": "6145ad377c2003880300bebe8d15f77a0f583acb6b8b9a0dc0254e56a07cf38e"
   },
-  "step_authoring_fingerprints": {},
+  "step_authoring_fingerprints": {
+    "1": "11e421fc0273920ed893648770691f32b28c0fcc1457bc05f6f1a75cd8efe901",
+    "2": "85da1d893d6866a69dd06dfd8b5a417524739bb93de24d62f9d9d5260896846f",
+    "3": "2e2e1e0abfc79e684f024a2ef433278c802f4c3ba1573b531707de115519db7a",
+    "4": "621eccead6558a21e209fa4c7b37707e3c79cbb7f61eee01d1bead6e194001c7",
+    "5": "bcc2354408b64d087ca4a6288ab14ffa35d2447f601dd586a2cf9fc9ad2f796f",
+    "6": "9fb6a83080c452570df563affc37d2c022b0387fb4f3da1aa2273db5a3e650ca"
+  },
   "schema_version": 1
 }
