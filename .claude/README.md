@@ -2,6 +2,8 @@
 
 Tracked skills describe reusable procedures. Organization targets belong in
 ignored `.claude/local/project-context.json`, not in a skill or shared directive.
+plan-tool's own skill is not tracked here: `plan-tool install-skill` installs it
+from `integrations/` (`README.md` § Install), so it cannot drift from its source.
 Copy `.claude/project-context.example.json` there and fill in the local values.
 Never place credentials in this file; use the configured tools' authentication.
 
