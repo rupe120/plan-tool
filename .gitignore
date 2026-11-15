@@ -50,6 +50,10 @@ docs/standards/*.pdf
 # Machine-local organization context and contributor identity mappings.
 .claude/local/
 
+# plan-tool's own skill is installed locally by `plan-tool install-skill` from
+# integrations/; a tracked copy drifted by 87 lines and loaded stale guidance.
+.claude/skills/plan-tool/
+
 # AI-DLC workflow hook state (heartbeat files under aidlc/spaces/*/intents/
 # .aidlc-engine/); machine-local, not repo content.
 aidlc/

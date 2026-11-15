@@ -120,3 +120,8 @@ legacy and retained-data artifacts, including the settled-decision refusal.
 If real artifact growth requires caps, pruning, restoration, structured row
 snapshots, or a richer historical view, record a separate evidence-backed
 request. BACKLOG #242 owns only the additive retained facts above.
+
+## References
+
+- `ROADMAP_FORMAT.md` — the immutable-artifact and accepted-head contract that the retained facts extend and that legacy artifacts must keep satisfying.
+- BACKLOG #242 — the retention entry this seed implements; it owns only the additive retained facts above.

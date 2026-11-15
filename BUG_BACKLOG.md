@@ -557,35 +557,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
 
-### `BACKLOG.md` `Iterate:` recipes run `detail` straight after `create`, skipping the bare-plan gate
-
-- **Files:** `BACKLOG.md` (four `Iterate:` or `Iteration:` command blocks remain: the
-  `incremental-completeness-audit`, `partial-mutation-snapshot-restore`,
-  `roadmap-05-framework-lenses` and `artifact-contention-handoff` recipes; the
-  other seven found on 2026-11-13 left with their entries); authority
-  `integrations/shared/DIRECTIVES.md` Gate 1.
-- **Symptom:** each block runs `detail` straight after `create` and audits only
-  after it, so an operator who copies it skips the bare-plan audit that Gate 1
-  runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
-  in the tracked documents for a `plan-tool detail` command that follows a
-  `plan-tool create` within 80 lines with no `plan-tool completeness-audit`
-  between; its 24 hits included eleven such blocks, two real gaps in `docs/how-to/roadmap.md`
-  (since corrected), and independent syntax or opt-in examples. The routers carry
-  both gates, so this reaches only an operator who copies a queue entry's recipe.
-  One of the entries (`roadmap-05-framework-lenses`) tells the reader to follow
-  the current directives directly above a recipe that skips Gate 1.
-- **Fix:** insert `plan-tool completeness-audit <slug> --iterate --commit -y`
-  after `create` in each block, as each entry is next touched, with the routers'
-  caveat to commit the plan first (`--commit` refuses a dirty working tree).
-  Deliberately not done: a script that rewrites the queue, because the recipes are part of
-  entries that are edited when picked up.
-- **Approach:** `direct` — documentation only.
-- **Verification:** no `BACKLOG.md` recipe block has a `plan-tool detail` line
-  without a `plan-tool completeness-audit` line before it in the same block
-  (a `detail --reconcile` or `--dry-run` line is exempt).
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
-
 ### The loop-stop resume hints print a command that does not change the run: `--iterate` is omitted for `detail` and `completeness-audit`, and `--max-iterations 5` is fixed
 
 - **Files:** `plan_tool/detail.py` (the `deadline_exceeded`, `max_iterations` and
@@ -620,92 +591,39 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed (the `detail` remedy) · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the `--iteration-budget` hints fix.
 
-### `completeness_report.py` keeps `WHY["open"]` and `_HEADINGS["open"]`, which no report path renders
+### `detail --split --commit` leaves an out-of-tree downstream detail file's rename uncommitted
 
-- **Files:** `plan_tool/completeness_report.py` (`WHY`, `_HEADINGS`, and the
-  `open` return of `deferred_kind`).
-- **Symptom:** the report builder states that `open` "is no longer a section of
-  its own" (the comment above the "Other deferred buckets" loop), and that loop
-  reads `WHY` and `_HEADINGS` only for `concept-link`, `diagnostic`, `triage` and
-  `info`. The `open` text is therefore never printed, and `deferred_kind` still
-  sorts findings into a bucket nothing renders. Found 2026-11-13 while fixing the
-  iteration-budget hints, whose removed entry had assumed operators saw that text.
-- **Fix:** delete the two unused entries, and either drop the `open` return or
-  say in a comment why it stays. Deliberately not done: re-adding an `open`
-  section.
-- **Approach:** `direct` — deletion plus a check that nothing reads the key.
-- **Verification:** `grep -n '"open"' plan_tool/completeness_report.py` shows no
-  `WHY` or `_HEADINGS` entry, and the report tests pass.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
-
-### `detail --commit` leaves an out-of-tree detail file's moves and archive writes uncommitted
-
-- **Files:** `plan_tool/cli/commit_footprint.py:plan_commit_footprint`;
-  `plan_tool/detail.py` (the `--force` predecessor archive and
-  `_archive_orphan_details`, which write beside the detail file).
-- **Symptom:** a `steps[].detail` pointer may name a file outside
-  `plan-details/<slug>/` (e.g. `docs/specs/03-x.md`). The footprint includes
-  that file but not the `archive/` directory detail writes next to it, so
-  `detail --force --commit` leaves `docs/specs/archive/…` uncommitted and the
-  next `--commit` is refused by its clean-tree gate. `detail --split` has the
-  same gap: it renames downstream detail files before the commit, and the
+- **Files:** `plan_tool/detail.py:_migrate_downstream_details_after_split` (the
+  rename at the `old_path.rename(new_path)` line) and
+  `plan_tool/cli/commit_footprint.py:plan_commit_footprint`.
+- **Symptom:** a downstream step whose `steps[].detail` names a file outside
+  `plan-details/<slug>/` is renamed in place when a split renumbers it. The
   footprint, rebuilt from the post-split plan, lists only the new pointer, so
-  the old out-of-tree path's deletion stays in the tree.
-- **Fix:** have detail report the archive and rename paths it wrote (both
-  sides) and add those exact paths to the footprint. Deliberately not done: adding each pointer's
-  `archive/` directory, which another plan may share, so its unrelated
-  changes would join the commit.
+  the old path's deletion stays in the tree and the next `--commit` is refused
+  by its clean-tree gate. The same shape holds in `merge_steps`, which has no
+  `--commit`.
+- **Refuted 2026-11-15 (part of the original entry):** `detail --force --commit`
+  is not affected. `detail` authors at `derive_detail_path`, always
+  `<plan dir>/plan-details/<slug>/NN-*.md`, and `_archive_existing_detail` at
+  the write site archives that in-tree file, never an out-of-tree pointer.
+- **Evidence gate:** none of the 1,033 `detail:` pointers across the 295 plans
+  in this repo (live and archived) sits outside `plan-details/`, and
+  `PLAN_FORMAT.md` shows only the in-tree form. A fix needs `split` to report
+  both sides of each rename, or the format to restrict pointers to
+  `plan-details/`; either is larger than the gap warrants until a plan declares
+  an out-of-tree pointer.
+- **Fix:** have `_migrate_downstream_details_after_split` return the renamed
+  paths (both sides) to the `--commit` footprint, or reject out-of-tree
+  pointers at `validate`. Deliberately not done: adding each pointer's parent
+  directory, which another plan may share.
 - **Approach:** `direct`.
-- **Verification:** with an out-of-tree pointer, `detail --force --commit`
-  ends on a clean tree and the commit holds only this plan's archive files.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Verification:** with an out-of-tree downstream pointer, `detail --split
+  --commit` ends on a clean tree and the commit holds the old path's deletion.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  **Unpark when:** a real plan declares a `steps[].detail` pointer outside
+  `plan-details/`, or `validate` is asked to allow one.
 - **Origin:** 2026-11-15, round 4 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
-
-### `--accept`'s clean-tree check misreads quoted and renamed paths
-
-- **Files:** `plan_tool/cli/gitcommit.py:unexpected_dirty_paths`.
-- **Symptom:** it parses `git status --porcelain` without `-z` (`line[3:]`), so
-  a name with a space or non-ASCII character comes back quoted (`"a b.txt"`) and
-  a rename as `old -> new`. Neither matches the expected plan or lessons path,
-  so `run --step N --accept` refuses a tree whose only dirt is those expected
-  files. It also relativizes the expected paths to the project root while
-  status paths are relative to the git top level, so under a project root
-  nested below the top level the plan file always reads as unexpected.
-  `commit_all`'s own clean check handles both through
-  `git_state.status_records_or_none` and the top level. Predates
-  `commit-scoped-to-verb-footprint`.
-- **Fix:** build `unexpected_dirty_paths` on `status_records_or_none` and share
-  one equals-or-nested-under matcher with `_dirty_footprint_paths`.
-- **Approach:** `direct`.
-- **Verification:** `--accept` succeeds when the plan file's name contains a
-  space and it is the only dirty path.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-15, round 5 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
-
-### `--commit`'s post-commit clean check fails on a path git always reports as modified
-
-- **Files:** `plan_tool/cli/gitcommit.py` (`_dirty_footprint_paths`, the
-  post-commit check in `_commit_footprint`).
-- **Symptom:** a footprint path that still reads as modified after it is
-  committed, with no hook involved, makes the check return non-zero although
-  the commit landed: a submodule with untracked content (` M vendor/lib`), or a
-  file whose clean or line-ending filter keeps it showing as modified. `run
-  --all --commit` then halts after every such step.
-- **Fix:** run the check with `--ignore-submodules=untracked`, and decide
-  whether a path that `git diff` shows no content change for should count.
-  Deliberately not done: dropping the check, which is what catches a hook that
-  rewrote a committed file.
-- **Approach:** `direct`.
-- **Verification:** a step whose delta includes a submodule with untracked
-  files commits and the sweep continues.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-15, round 6 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
-
-## RISK
+  `commit-scoped-to-verb-footprint`; narrowed the same day by the drain.
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
 
@@ -797,53 +715,6 @@ Durable re-open conditions for retired items are recorded in
   `run/roadmap-candidate-row-prose-amendments` (commit range through
   `efb78f0a`).
 
-### `create --from-existing` reads several seed sections without first removing the seed's YAML frontmatter, so a `## <Section>` comment line there replaces the real section
-
-- **Files:** `plan_tool/create.py` (`_preserve_source_optional_sections`,
-  `_extract_supplied_guardrails`, the `_canonical_seed_covers_all` input in the
-  file-backed route, the `seed_sections` read from `body_source`,
-  `_restore_materialized_evidence_sections`) and `plan_tool/reprocess.py` (the
-  archive's `extract_h2_sections` read).
-- **Symptom:** a column-0 `##` YAML comment is legal in frontmatter and parses
-  as a section when the reader does not strip the frontmatter first
-  (`scope_fence._strip_frontmatter`'s docstring describes the failure). The
-  duplicate rule keeps the first non-empty body, so that comment shadows the
-  real section. Reproduced 2026-10-08 at `bfc8b261`: for a seed whose
-  frontmatter holds a `## Scope guardrails` comment,
-  `_extract_supplied_guardrails` returns `{'Scope guardrails': '---'}` while
-  `_intent_from_seed_outcome` returns the real Outcome for the same text.
-- **Sites, enumerated 2026-10-08** (every call of `extract_h2_sections`,
-  `extract_h2_section_occurrences`, `_fenced_code_spans`, and `h2_section_spans`
-  in `plan_tool/` by identifier; `_H2_HEADING_RE`, `_STRICT_STEPS_H2_RE`, and
-  `^##` regex readers by vocabulary): 6 readers of a seed or seed-like source do
-  not strip; 12 do (`create.py` at `_strip_frontmatter` call sites,
-  `roadmap_gates.py` twice, `roadmap.py:_replace_stack_section`,
-  `annotate_render.py` twice, `reprocess.py` for its fence check, and
-  `canonical.py`, which uses the strict splitter).
-- **Fix:** read the sections of the frontmatter-stripped text at the 6 sites,
-  as `_intent_from_seed_outcome` already does. Strip only the text handed to the
-  section reader, never the `source_text` that distillation's evidence spans
-  index by line.
-- **Do not merge:** the lenient `scope_fence._strip_frontmatter` and the strict
-  `parser._split_frontmatter` stay separate (the lenient one's docstring says
-  why). `read_canonical_provenance` and the draft-seed state readers read the
-  frontmatter on purpose. `_patch_plan_body_section` locates the body by the
-  exact `\n---\n` literal. The plan and detail readers that already split first
-  are not in the class.
-- **Verification:** one test parametrized over the 6 readers, with a seed whose
-  frontmatter holds `## Scope guardrails`, `## Outcome`, and a body-section
-  comment, showing the real section wins (following `TestIntentPredicateConsumers`);
-  revert each strip and watch its case go red; the full suite passes.
-- **Out of scope:** merging the two frontmatter splitters or adding a shared
-  "read seed sections" helper (consolidation needs its own evidence), changing
-  the first-occurrence duplicate rule, and changing what `create` does with a
-  section once read.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `beginner`.
-- **Approach:** direct, small: the same wrap at 6 sites plus one parametrized test.
-- **Origin:** 2026-10-08, `/code-review high` on the `roadmap-stack-propagation`
-  change, which noted `_extract_supplied_guardrails` reading the raw seed while
-  its sibling strips. The enumeration and reproduction were done the same day.
-
 ### Run-log call pairing has open gaps around `plan_audit` and the sink-installing proposal sites
 
 - **Files:** `plan_tool/review.py:_error_tracking_invoker`, `plan_tool/launcher.py:_invoke_and_log_end`,
@@ -859,26 +730,6 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct. The three start/sink blocks in `gates.py`, `intent_proposal.py` and `create.py`
   are also near-identical and could share one scoped helper; that consolidation needs AST-verified
   identity before anyone merges them.
-
-### Run IDs can collide within one second because their random suffix has only 24 bits
-
-- **Files:** `plan_tool/run_log.py:new_run_id`,
-  `tests/test_run_log.py:test_new_run_id_is_unique_per_call`.
-- **Symptom / evidence:** a full parallel suite on 2026-11-04, worker `gw8`,
-  produces only 99 distinct IDs from 100 calls. IDs share the seconds-precision
-  prefix; `secrets.token_hex(3)` supplies just six hex characters. Both the
-  generator and test are unchanged by the feature-field diagnostic branch.
-- **Fix:** increase collision resistance while preserving filename safety and
-  existing run-log readers. Replace a probabilistic-only regression check with
-  deterministic coverage of the selected generation contract; do not suppress
-  the observed collision by weakening the uniqueness assertion alone.
-- **Approach:** direct; select the narrow generation remedy and verify its
-  consumers and filename contract before implementation.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** post-Claude feature-field diagnostic validation,
-  `/private/tmp/feature-field-diagnostics.claude-final-tests.log`: 1 failed,
-  14,725 passed, 67 skipped in 70.48 seconds. The trace records
-  `assert 99 == 100` at `tests/test_run_log.py:161`.
 
 ### `run --commit` can still commit a file another process writes during the backend call
 
@@ -933,27 +784,6 @@ Durable re-open conditions for retired items are recorded in
   different step).
 
 ## MINOR
-
-### Four live seeds are refused by `create --from-existing` because their `## References` section is missing or duplicated
-
-- **Files:** `docs/implementation-plans/plan-seeds/impact-recurrence-01-classifier.md`,
-  `impact-recurrence-02-loop-stop.md` and `roadmap-revision-retention.md` (no
-  `## References`), and
-  `intent-required-carved-have-the-intent-presence-finding-carry-through-7.md`
-  (two `## References` sections). The check is
-  `plan_tool/create.py:classify_file_backed_source`.
-- **Symptom:** each seed fails the existing `References` preflight, so
-  `create --from-existing` exits 2 before any model call. All four already
-  failed it on `main` before the guardrail-heading change; they now pass the
-  guardrail check and fail only this one. Deliberately not listed: the two
-  seed-directory `README.md` files, which are not seeds.
-- **Fix:** give each seed exactly one non-placeholder `## References` section
-  from its own source content (merge the duplicate pair). Edit the seeds only;
-  the preflight rule stays as it is.
-- **Verification:** `validate_from_existing_seed` accepts each of the four.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-15, found by a code review of the required-guardrail-
-  headings branch while checking every live seed against `create`'s intake.
 
 ### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
 
@@ -1183,35 +1013,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-09-22, `/code-review high` round 3 of the
   `code-review-loop` pass on the roadmap model-failure receipts, after rounds 1 and 2 each narrowed but did not
   close the same collision.
-
-### `CLAUDE.md`, `TESTING.md`, and backlog entry #190 cite a reconcile prompt, `prompts/reconcile.md`, that has never existed in this repository, so readers cannot find the rules they describe
-
-- **Files:** `CLAUDE.md:178`; `TESTING.md:229` (the "Impact-weighted apply
-  triage" row); `BACKLOG.md:3410` and `:3458` (entry #190).
-- **Symptom:** each cites `prompts/reconcile.md`. No file has that name, and git
-  history shows none at that path. What the citations describe lives elsewhere.
-  The refusal of scope-narrowing and criterion-softening edits that `CLAUDE.md`
-  and #190 name is in `plan_tool/prompts/detail-reconcile.md` (lines 107-112;
-  the `status`/`status_note` flip is at line 78). `TESTING.md`'s row says the
-  prompt asks for "Impact/Complexity Decision-block fields", but the triage tags
-  are an inline `(impact=..., complexity=...)` parenthetical asked for by
-  `plan-audit.md` (line 344) and `run-reconcile.md` (line 116). The same row
-  also cites a test class, `TestDecisionImpactComplexity`, that does not exist
-  (`TestApplyTriage` is at `tests/test_review.py:13825`). Backlog entry #189
-  already lists `TESTING.md`'s citation among its dead citations.
-- **Fix:** point each citation at the file that holds the text, checking each
-  against that file before editing: `detail-reconcile.md` for the refusal list,
-  `plan-audit.md` and `run-reconcile.md` for the triage tag. In the `TESTING.md`
-  row, also replace "Decision-block fields" with the inline tag and the missing
-  test class with one that exists. `CLAUDE.md` is architect-reviewed (its own
-  header), so that edit goes through pull-request review. If #189 lands first,
-  drop the `TESTING.md` part here.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced` — the
-  `TESTING.md` fix changes what the row says about how triage behaves, not only
-  a path.
-- **Approach:** `direct` — four sites; no test pins these strings.
-- **Origin:** 2026-09-24, found while writing the IPPT-6 ticket, whose fence
-  cites `detail-reconcile.md` because `CLAUDE.md`'s file does not exist.
 
 ### Six code comments say the reconcile prompts ask for a `## Decision` block and put the triage tags in it, but no prompt does either
 

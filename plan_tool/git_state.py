@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, Literal, Optional
 
 from plan_tool.rate_limit_loop import ALWAYS_RETRY, RetryDecision, RetryPolicy
 
@@ -53,12 +53,16 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
 
 def status_records_or_none(
     repo_root: Path,
+    *,
+    ignore_submodules: Optional[Literal["untracked", "dirty", "all"]] = None,
 ) -> Optional[list[tuple[str, Optional[str]]]]:
     """``(path, origin)`` per ``git status`` record (``origin`` set only for a
-    rename/copy), or ``None`` when git can't be read."""
+    rename/copy), or ``None`` when git can't be read. ``ignore_submodules`` is
+    git's ``--ignore-submodules`` value (``"untracked"``, ``"dirty"``, ``"all"``)."""
+    extra = [f"--ignore-submodules={ignore_submodules}"] if ignore_submodules else []
     try:
         proc = subprocess.run(
-            ["git", "status", "--porcelain", "-z", "--untracked-files=all"],
+            ["git", "status", "--porcelain", "-z", "--untracked-files=all", *extra],
             cwd=str(repo_root),
             stdin=subprocess.DEVNULL,
             capture_output=True,

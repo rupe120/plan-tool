@@ -1419,16 +1419,22 @@ def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
+# Random bytes in a run ID's tail. 3 bytes (24 bits) collided once in 100
+# same-second IDs in a parallel suite run; 8 bytes puts it at ~1e-16.
+RUN_ID_RANDOM_BYTES = 8
+
+
 def new_run_id() -> str:
     """Return an ID safe to use as a filename component.
 
-    Format: ``<UTC ISO with colons replaced by dashes>-<6 hex chars>``,
-    e.g. ``2026-05-14T12-34-56+00-00-9f3a1c``. The hex tail comes from
-    ``secrets.token_hex(3)`` so two runs started in the same second
-    don't collide.
+    Format: ``<UTC ISO with colons replaced by dashes>-<16 hex chars>``,
+    e.g. ``2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68``. The 64-bit hex tail
+    comes from ``secrets.token_hex`` so runs started in the same second
+    don't collide; ``RUN_ID_RANDOM_BYTES`` states the width. Logs written
+    with the earlier 6-hex tail stay readable: no reader parses the tail.
     """
     ts = utc_now_iso().replace(":", "-")
-    return f"{ts}-{secrets.token_hex(3)}"
+    return f"{ts}-{secrets.token_hex(RUN_ID_RANDOM_BYTES)}"
 
 
 # ---------- I/O primitives ----------

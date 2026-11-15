@@ -440,11 +440,13 @@ def test_skill_frontmatter_is_valid_yaml_for_a_strict_parser(skill_md: Path) -> 
 
 
 def test_skill_file_discovery_finds_every_router_and_the_tracked_skill() -> None:
-    """The glob must not silently match nothing and pass vacuously."""
+    """The glob must not silently match nothing and pass vacuously. plan-tool's
+    own skill is installed locally, never tracked, so the tracked one is
+    jira-ticket."""
     names = {str(p.relative_to(_REPO_ROOT)) for p in _SKILL_FILES}
     assert {
         "integrations/claude/SKILL.md",
         "integrations/codex/SKILL.md",
         "integrations/cursor/SKILL.md",
-        ".claude/skills/plan-tool/SKILL.md",
+        ".claude/skills/jira-ticket/SKILL.md",
     } <= names

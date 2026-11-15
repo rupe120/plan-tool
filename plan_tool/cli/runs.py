@@ -309,7 +309,7 @@ def _parse_runs_target(target: str) -> tuple[Optional[str], Optional[str], Optio
     if "/" not in target:
         return None, None, (
             "target requires <slug>/<run_id> (e.g. "
-            "my-plan/2026-05-14T12-34-56-9f3a1c)"
+            "my-plan/2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68)"
         )
     slug, run_id = target.split("/", 1)
     if run_id.endswith(".jsonl"):
@@ -1331,7 +1331,7 @@ def register(subparsers) -> dict[str, Handler]:
         "target",
         help=(
             "run identifier in the form <slug>/<run_id> "
-            "(e.g. my-plan/2026-05-14T12-34-56-9f3a1c)"
+            "(e.g. my-plan/2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68)"
         ),
     )
 

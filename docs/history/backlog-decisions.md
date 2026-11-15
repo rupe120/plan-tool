@@ -116,6 +116,43 @@ coverage. Records marked **Retired** are not behavior fixes; their retained
 re-open condition identifies the evidence or scope change that will justify a
 new entry.
 
+### `BACKLOG.md` recipes that run `detail` straight after `create`
+
+Retired 2026-11-15. The four recipe blocks the entry named left `BACKLOG.md`
+with their entries, and the file now holds no fenced block, so there is no
+recipe to correct. A repo-wide sweep of tracked documents for a fenced
+`plan-tool create` followed by `plan-tool detail` with no
+`plan-tool completeness-audit` between finds six pairs: the headless syntax
+examples in `integrations/shared/DIRECTIVES.md` and the three router
+`SKILL.md` files (and their `.claude/skills/plan-tool/` copies), each labelled
+"independent syntax examples, not a stage sequence" next to the two audit
+gates. Reopen when a `BACKLOG.md` entry carries a copyable recipe that runs
+`plan-tool detail` after `create` with no `completeness-audit` before it.
+
+### `--commit`'s post-commit clean check on paths git keeps reporting as modified
+
+Resolved 2026-11-15, in two halves. **Fixed:** untracked content inside a
+committed submodule shows as ` M vendor/lib` after the parent commits, though
+the commit could not have held it; the check now reads status with
+`--ignore-submodules=untracked` (`commit_all`'s `_dirty_footprint_paths`), while
+a tracked change in a submodule still counts. **Retired, by design:** a path
+that a non-idempotent clean filter keeps reporting as modified. Git itself says
+the commit did not absorb it, which is the same state as a hook rewriting a
+committed file, so the check keeps counting it and the commit is reported as
+committed with the remaining dirt named. Both are pinned in
+`tests/cli/test_gitcommit.py`. Reopen the second half only if git offers a way
+to tell a filter's re-modification from a hook's rewrite.
+
+### The tracked `.claude/skills/plan-tool/` copy of the skill
+
+Resolved 2026-11-15 (owner decision). The copy was untracked and ignored: it had
+drifted 87 lines from `integrations/` and an assistant in this checkout loaded the
+stale text. `plan-tool install-skill` installs the skill from `integrations/`, so
+nothing tracked can drift from its source. Reopen only if a fresh clone or CI must
+carry the skill without running the installer; then regenerate it with
+`plan-tool install-skill --copy` and add a test that fails when it differs from
+`integrations/`.
+
 ### Roadmap evidence-storage hardening
 
 Retired 2026-09-01. No current roadmap consumer requires the configured tree
@@ -344,7 +381,11 @@ Closed 2026-08-11. `plan-tool convergence` and completeness stderr report a
 recommend-only pause when the same open, explicit high-impact seam persists
 without shrinking across compatible audit history. It neither stops iteration
 nor mutates a plan. Do not restore the older structural-stop design; #231's
-causal-provenance proposal is retired.
+causal-provenance proposal is retired. The two seeds that still specified that
+design, `impact-recurrence-01-classifier.md` and `impact-recurrence-02-loop-stop.md`,
+were deleted 2026-11-15 (owner decision): `create --from-existing` refused both
+for a missing `## References`, and adding one would have made the retired design
+executable.
 
 ### #261 — Convergence policy-channel ownership
 

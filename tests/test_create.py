@@ -14015,11 +14015,14 @@ class TestCmdCreateRunLog:
         files = list(runs_dir.glob("*.jsonl"))
         assert len(files) == 1
         run_id = files[0].stem
-        # ``new_run_id`` shape: timestamp-with-dashes + 6 hex chars.
-        # We don't pin the timestamp, just the trailing "-<6 hex>" tail.
+        # ``new_run_id`` shape: timestamp-with-dashes + a random hex tail.
+        # We don't pin the timestamp, just the trailing "-<hex>" tail.
         assert len(run_id) >= 7
-        assert run_id[-7] == "-"
-        assert all(c in "0123456789abcdef" for c in run_id[-6:])
+        from plan_tool.run_log import RUN_ID_RANDOM_BYTES
+
+        tail = 2 * RUN_ID_RANDOM_BYTES  # hex chars of the random suffix
+        assert run_id[-(tail + 1)] == "-"
+        assert all(c in "0123456789abcdef" for c in run_id[-tail:])
 
 
 # --- Post-write iteration loop (step 2 of the iterative-completeness plan) ---
@@ -18014,6 +18017,141 @@ _CANONICAL_FULL_SEED = (
     "- Canonical deferred bullet.\n"
     + NONE_GUARDRAILS
 )
+
+
+def test_find_dropped_references_reads_the_distilled_text_past_echoed_frontmatter() -> None:
+    """A model may echo the seed's frontmatter into its distilled text. A
+    column-0 ``## Acceptance criteria`` comment there has the closing ``---``
+    as its body; read raw, it hides the real section and flags a deliverable
+    the real acceptance criteria already pin."""
+    from plan_tool.create import find_dropped_references
+
+    distilled = (
+        "---\ntitle: demo\n## Acceptance criteria\n---\n# Plan\n\n"
+        "## Risks\n\nThe runbook in step 3 sequences this.\n\n"
+        "## Acceptance criteria\n\nThe runbook exists and is reviewed.\n"
+    )
+    assert find_dropped_references(distilled) == []
+
+
+class TestFrontmatterCommentNeverShadowsASeedSection:
+    """A column-0 ``## <Section>`` YAML comment is legal in seed frontmatter, and
+    its body is the closing ``---``. Every reader of a seed's sections must read
+    the frontmatter-stripped text, or that comment wins as the first non-empty
+    occurrence of the section. One case per reader (the class-wide pin)."""
+
+    @staticmethod
+    def _seed(comment: str, body: str) -> str:
+        return f"---\ntitle: demo\n## {comment}\n---\n# Seed\n\n{body}"
+
+    def test_supplied_guardrails(self) -> None:
+        seed = self._seed("Scope guardrails", "## Scope guardrails\n\nReal fence.\n")
+        assert create_module._extract_supplied_guardrails(seed) == {
+            "Scope guardrails": "Real fence."
+        }
+
+    def test_optional_source_sections(self) -> None:
+        seed = self._seed("Input", "## Input\n\nReal input.\n")
+        preserved, err, _ = create_module._preserve_source_optional_sections(
+            {"Input": "distilled"}, source_text=seed
+        )
+        assert err is None and preserved is not None
+        assert preserved["Input"] == "Real input."
+
+    def test_protected_references_restore(self, tmp_path: Path) -> None:
+        local = "- `local.py#proof` — SOURCE-3"
+        path = tmp_path / "plan.md"
+        text = f"---\ntitle: Test\n## References\n---\n## References\n\n{local}\n"
+        path.write_text(text, encoding="utf-8")
+        # The real References already holds the protected block: nothing to do.
+        assert not create_module._restore_materialized_evidence_sections(
+            path, {"References": local}
+        )
+        assert path.read_text(encoding="utf-8") == text
+
+    @pytest.mark.integration
+    def test_body_source_reads_the_real_section(self, tmp_path: Path) -> None:
+        """Risks is missing from the body and only named by a frontmatter comment.
+        Read raw, that comment fills it with ``---``, the seed then reads as
+        canonical, and synthesis is skipped; stripped, synthesis runs and the
+        section stays a placeholder."""
+        (tmp_path / ".git").mkdir()
+        out_dir = tmp_path / "plans"
+        out_dir.mkdir()
+        without_risks = _CANONICAL_FULL_SEED.replace(
+            "## Risks\n\n- Canonical risk bullet.\n\n", ""
+        )
+        assert "## Risks" not in without_risks
+        seed = "---\ntitle: demo\n## Risks\n---\n" + without_risks
+        prompts_seen: list[str] = []
+        result = create_plan(
+            "demo",
+            repo_root=tmp_path,
+            output_dir_override=out_dir,
+            manifest_path=tmp_path / "m.json",
+            from_description=seed,
+            seed_body=seed,
+            input_fn=_queue_input(_basic_metadata_answers()),
+            claude_invoker=_synthesis_invoker("{}", prompts_seen=prompts_seen),
+        )
+        body = result.plan_path.read_text(encoding="utf-8")
+        assert any(_SYNTHESIS_PROMPT_MARKER in p for p in prompts_seen)
+        assert "## Risks\n\n---" not in body
+
+    @pytest.mark.integration
+    def test_distill_gate_reads_the_real_sections(self, tmp_path: Path) -> None:
+        """The gate that skips distillation for an already-canonical seed counts
+        sections. Read raw, a frontmatter comment names the missing Risks and the
+        seed reads as canonical, so ``distill=True`` quietly does nothing."""
+        (tmp_path / ".git").mkdir()
+        out_dir = tmp_path / "plans"
+        out_dir.mkdir()
+        without_risks = _CANONICAL_FULL_SEED.replace(
+            "## Risks\n\n- Canonical risk bullet.\n\n", ""
+        )
+        seed = "---\ntitle: demo\n## Risks\n---\n" + without_risks
+        prompts_seen: list[str] = []
+        create_plan(
+            "demo",
+            repo_root=tmp_path,
+            output_dir_override=out_dir,
+            manifest_path=tmp_path / "m.json",
+            from_description=seed,
+            seed_body=seed,
+            distill=True,
+            input_fn=_queue_input(_basic_metadata_answers()),
+            claude_invoker=_synthesis_invoker("{}", prompts_seen=prompts_seen),
+        )
+        assert any("Distill a free-form seed" in p for p in prompts_seen)
+
+    @pytest.mark.integration
+    def test_prepared_source_carries_its_real_local_references(
+        self, tmp_path: Path
+    ) -> None:
+        (tmp_path / ".git").mkdir()
+        out_dir = tmp_path / "plans"
+        out_dir.mkdir()
+        seed = (
+            "---\ntitle: demo\n## References\n---\n# Seed\n\n"
+            "## References\n\n- `src/local.py#proof` — LOCAL-PROOF\n"
+            + NONE_GUARDRAILS
+        )
+        source = tmp_path / "source.md"
+        source.write_text(seed, encoding="utf-8")
+        result = create_plan(
+            "demo",
+            repo_root=tmp_path,
+            output_dir_override=out_dir,
+            manifest_path=tmp_path / "m.json",
+            from_existing_path=source,
+            seed_body=seed,
+            from_description=seed,
+            input_fn=_queue_input(_basic_metadata_answers()),
+            claude_invoker=_synthesis_invoker("{}"),
+        )
+        body = result.plan_path.read_text(encoding="utf-8")
+        assert "LOCAL-PROOF" in body
+        assert "## References\n\n---" not in body
 
 
 @pytest.mark.integration

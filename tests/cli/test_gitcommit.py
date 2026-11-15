@@ -334,6 +334,64 @@ class TestCommitAll:
         assert _head_files(tmp_path) == [".plan-tool/plans.json"]
         assert "gitignored" not in capsys.readouterr().err
 
+    def _repo_with_submodule(self, tmp_path: Path) -> Path:
+        lib = tmp_path / "lib"
+        lib.mkdir()
+        _init_git_repo(lib)
+        (lib / "code.txt").write_text("c\n")
+        _git(lib, "add", ".")
+        _git(lib, "commit", "-q", "-m", "lib")
+        main = tmp_path / "main"
+        main.mkdir()
+        self._repo(main)
+        _git(main, "-c", "protocol.file.allow=always", "submodule", "add", "-q", str(lib), "vendor/lib")
+        _git(main, "commit", "-q", "-m", "add submodule")
+        return main
+
+    def test_untracked_content_in_a_submodule_is_not_a_dirty_footprint_path(
+        self, tmp_path: Path
+    ) -> None:
+        # The commit cannot hold content untracked inside a submodule, and git
+        # keeps reporting `` M vendor/lib`` for it: not a hook rewrite.
+        main = self._repo_with_submodule(tmp_path)
+        (main / "vendor" / "lib" / "scratch.txt").write_text("build output\n")
+        (main / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(main, "s", [main / "a.txt", main / "vendor" / "lib"])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(main) == ["a.txt"]
+
+    def test_tracked_change_in_a_submodule_still_fails_the_check(
+        self, tmp_path: Path
+    ) -> None:
+        main = self._repo_with_submodule(tmp_path)
+        (main / "vendor" / "lib" / "code.txt").write_text("edited\n")
+        (main / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(main, "s", [main / "a.txt", main / "vendor" / "lib"])
+
+        assert committed and rc != 0
+        assert "vendor/lib" in tail
+
+    def test_a_non_idempotent_clean_filter_still_fails_the_check(
+        self, tmp_path: Path
+    ) -> None:
+        # Git itself reports the file as changed after the commit, which is
+        # indistinguishable from a hook rewriting it: the check keeps counting it.
+        self._repo(tmp_path)
+        _git(tmp_path, "config", "filter.stamp.clean", "sed \"s/$/ $(date +%N)/\"")
+        _git(tmp_path, "config", "filter.stamp.smudge", "cat")
+        (tmp_path / ".gitattributes").write_text("*.log filter=stamp\n")
+        _git(tmp_path, "add", ".gitattributes")
+        _git(tmp_path, "commit", "-q", "-m", "attrs")
+        (tmp_path / "b.log").write_text("x\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "b.log"])
+
+        assert committed and rc != 0
+        assert "b.log" in tail
+
     def test_absent_ignored_entry_is_skipped_without_a_warning(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
@@ -1211,6 +1269,58 @@ class TestUnexpectedDirtyPaths:
         # An out-of-repo expected path is ignored, not an error; the in-repo
         # stranger is still reported.
         assert unexpected_dirty_paths(repo, [outside]) == ["stranger.txt"]
+
+    def test_expected_path_with_a_space_is_matched(self, tmp_path: Path) -> None:
+        # Non-``-z`` porcelain quotes such a name (``"my plan.md"``), which never
+        # equals the expected path, so ``--accept`` refused its own plan file.
+        _init_git_repo(tmp_path)
+        _commit_initial(tmp_path)
+        plan = tmp_path / "my plan.md"
+        plan.write_text("edited\n", encoding="utf-8")
+        (tmp_path / "caf\u00e9.txt").write_text("x\n", encoding="utf-8")
+        assert unexpected_dirty_paths(tmp_path, [plan]) == ["caf\u00e9.txt"]
+
+    def test_staged_rename_reports_each_side_not_an_arrow_string(
+        self, tmp_path: Path
+    ) -> None:
+        _init_git_repo(tmp_path)
+        (tmp_path / "old.txt").write_text("line one\nline two\nline three\n", encoding="utf-8")
+        _git(tmp_path, "add", "old.txt")
+        _git(tmp_path, "commit", "-q", "-m", "init")
+        _git(tmp_path, "mv", "old.txt", "new.txt")
+        assert unexpected_dirty_paths(tmp_path, []) == ["new.txt", "old.txt"]
+        # Expecting both sides covers a rename of an expected file.
+        assert unexpected_dirty_paths(
+            tmp_path, [tmp_path / "old.txt", tmp_path / "new.txt"]
+        ) == []
+
+    def test_project_root_below_the_git_top_level_matches_expected_paths(
+        self, tmp_path: Path
+    ) -> None:
+        # Status paths are top-level-relative; the expected paths are under the
+        # project root, which here sits one level below the top.
+        _init_git_repo(tmp_path)
+        _commit_initial(tmp_path)
+        svc = tmp_path / "svc"
+        svc.mkdir()
+        plan = svc / "plan.md"
+        plan.write_text("p\n", encoding="utf-8")
+        (svc / "stranger.txt").write_text("s\n", encoding="utf-8")
+        assert unexpected_dirty_paths(svc, [plan]) == ["svc/stranger.txt"]
+
+    def test_symlinked_repo_root_matches_expected_paths(self, tmp_path: Path) -> None:
+        # git reports the real top level; the caller may hold a symlink to it
+        # (macOS /tmp and /var are symlinks), and both spellings must match.
+        real = tmp_path / "real"
+        real.mkdir()
+        _init_git_repo(real)
+        _commit_initial(real)
+        link = tmp_path / "link"
+        link.symlink_to(real, target_is_directory=True)
+        plan = real / "plan.md"
+        plan.write_text("edited\n", encoding="utf-8")
+        assert unexpected_dirty_paths(link, [link / "plan.md"]) == []
+        assert unexpected_dirty_paths(real, [link / "plan.md"]) == []
 
     def test_non_repo_returns_none(self, tmp_path: Path) -> None:
         assert unexpected_dirty_paths(tmp_path, []) is None

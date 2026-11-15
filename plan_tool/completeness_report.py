@@ -821,12 +821,6 @@ WHY: dict[str, str] = {
         "the cost. Make a session-directed edit if warranted, or re-run with "
         "`--no-triage`."
     ),
-    "open": (
-        "Eligible to apply, but the loop stopped early (the stop reason is on "
-        "the run's final banner) before reaching them. Re-run to continue; "
-        "`--max-iterations`, `--iteration-budget` (a no-progress deadline), "
-        "`--max-stall-rounds` and `--time-budget` tune the matching stops."
-    ),
 }
 
 # Human-facing heading per disposition code.
@@ -836,7 +830,6 @@ _HEADINGS: dict[str, str] = {
     "diagnostic": "Deferred — structural diagnostics (resolve directly)",
     "info": "Deferred — info-severity advisories",
     "triage": "Deferred — low payoff (complexity > impact)",
-    "open": "Open — eligible but not reached",
 }
 
 # Conceptual findings require judged edits; the audit reports them unchanged.
@@ -888,6 +881,10 @@ def deferred_kind(rec: Recommendation) -> str:
         return "info"
     if not should_apply_by_triage(rec):
         return "triage"
+    # Eligible and ungated: counted by the loop's deferral summary, but it has
+    # no section of its own. A plan-correctness finding renders under
+    # ``## Conceptual correctness``; any other source is listed by the embedded
+    # grouped report (``completeness_phases._render_grouped_report``).
     return "open"
 
 
@@ -2200,9 +2197,11 @@ def build_report_md(
         lines.append("")
 
     # --- Other deferred buckets ---------------------------------------
-    # ``open`` (eligible-but-not-reached) is no longer a section of its own —
-    # it was always plan-correctness-only, now owned by the dedicated
-    # ``## Conceptual correctness`` section above. Any deferred (info/triage)
+    # ``open`` (eligible-but-not-reached) is not a section of its own: a
+    # plan-correctness finding renders in the dedicated ``## Conceptual
+    # correctness`` section above, and any other source is listed by the
+    # embedded grouped report, which renders every deterministic detector's
+    # findings. Any deferred (info/triage)
     # correctness is likewise rendered there, so filter it out here to avoid
     # double-listing; non-correctness deferrals (the common case) render
     # unchanged.

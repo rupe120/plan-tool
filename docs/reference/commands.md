@@ -175,7 +175,7 @@ every subcommand:
 | `<name>` | **Existing** registered plan, resolved by slug (`my-feature`), filename stem (`1-my-feature`), or filename (`my-feature.md`). Priority prefixes are tried automatically. | `status`, `validate`, `run`, `reconcile-plan`, `reconcile-plan-walk`, `verify-all`, `completeness-audit`, `data-contract-apply`, `jira`, `detail` |
 | `<slug>` | Canonical lowercase-dashes plan slug (no priority prefix, no `.md` suffix). Used when there's no other form to resolve from — either the plan doesn't exist yet, or the on-disk directory is keyed by slug. | `create <slug>`, `checkpoint clear <slug>`, `runs clear <slug>`, `--slug` filter on `runs list` / `runs profile` |
 | `<slug>/<checkpoint>` | Checkpoint identifier. `<slug>` is the plan slug; `<checkpoint>` is the per-plan name shown in the `name` column of `plan-tool checkpoint list` (e.g. `detail-step-02`, `create-initial-steps`). | `checkpoint show` |
-| `<slug>/<run_id>` | Run identifier. `<slug>` is the plan slug; `<run_id>` is the timestamp-derived id shown by `plan-tool runs list` (e.g. `2026-05-14T12-34-56-9f3a1c`). | `runs show`, `runs diff` |
+| `<slug>/<run_id>` | Run identifier. `<slug>` is the plan slug; `<run_id>` is the timestamp-derived id shown by `plan-tool runs list` (e.g. `2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68`). | `runs show`, `runs diff` |
 | `<path>` | Filesystem path, absolute or repo-relative. | `register <path-or-slug>`, `create --from-existing <path>`, `annotate <path>`, `--output <path>` |
 
 ### `plan-tool detail`
