@@ -43,7 +43,7 @@ plan-tool runs show [-h] [-y] target
 
 | Argument | Description |
 | --- | --- |
-| `target` | run identifier in the form <slug>/<run_id> (e.g. my-plan/2026-05-14T12-34-56-9f3a1c) |
+| `target` | run identifier in the form <slug>/<run_id> (e.g. my-plan/2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68) |
 
 ### Options
 

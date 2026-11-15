@@ -200,7 +200,7 @@ exit until it's enabled.
   `detail-step-02`, `create-initial-steps`).
 - `<slug>/<run_id>` — run identifier. `<slug>` is the plan slug;
   `<run_id>` is the timestamp-derived id shown by
-  `plan-tool runs list` (e.g. `2026-05-14T12-34-56-9f3a1c`).
+  `plan-tool runs list` (e.g. `2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68`).
 - `<path>` — filesystem path (absolute or repo-relative). Used by
   `register`, `create --from-existing`, and `annotate` (the positional
   is a path, not a registered plan slug).
@@ -2034,7 +2034,7 @@ Sample output during a slow `cmd_run`:
 ```json
 {
   "schema_version": 1,
-  "run_id": "2026-05-14T12-34-56-9f3a1c",
+  "run_id": "2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68",
   "command": "run",
   "plan_slug": "my-plan",
   "current_phase": "claude_call",
@@ -2064,7 +2064,7 @@ render it with phase / claude-call indentation:
 plan-tool runs list --slug my-plan
 
 # Render it.
-plan-tool runs show my-plan/2026-05-14T12-34-56-9f3a1c
+plan-tool runs show my-plan/2026-05-14T12-34-56+00-00-9f3a1c07b2d45e68
 ```
 
 Read the `phase_end.duration_ms` field to find the slow phase. Read

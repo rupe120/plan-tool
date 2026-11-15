@@ -136,14 +136,25 @@ they resolve.
   `detail --split` renames and `evidence-gated` (`detail --force` never writes
   outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
   tree).
-- 2026-11-15 — four live seeds refused for `## References`: `pending`. Two fixed
-  (`18438c1a9`); the two impact-recurrence seeds describe a design closed on
-  2026-08-11 and wait for a delete-or-keep decision.
-- 2026-11-15 — review of the drain branch, closed as converged (two consecutive
-  low-yield passes; every finding low or nit). Pass 1: eight findings, three
-  refuted with evidence, two declined, three fixed in `20e85619d`. Pass 2: eight
-  findings, five repeats or declines, two fixed (`find_dropped_references` also
-  strips echoed frontmatter; the `open` comment says only what was verified).
+- 2026-11-15 — four live seeds refused for `## References`: `fixed 18438c1a9`
+  for `roadmap-revision-retention.md` and the carved intent seed; the two
+  impact-recurrence seeds described a design closed on 2026-08-11 and were
+  deleted (`0038319ae`, owner decision, recorded in `backlog-decisions.md`).
+- 2026-11-15 — the tracked `.claude/skills/plan-tool/` copy had drifted 87 lines
+  from `integrations/`: untracked and ignored (`e12e7e019`, owner decision,
+  recorded in `backlog-decisions.md`).
+- 2026-11-15 — review of the drain branch, closed as converged (three
+  consecutive low-yield passes; every finding low or nit). Pass 1: eight
+  findings, three refuted with evidence, two declined, three fixed in `20e85619d`.
+  Pass 2: eight findings, five repeats or declines, two fixed
+  (`find_dropped_references` also strips echoed frontmatter; the `open` comment
+  says only what was verified). Pass 3, over the range plus the two decision
+  commits: seven findings, five repeats or declines, two fixed (the two `open`
+  comments agree and name `_render_grouped_report`; the example run ID in the
+  `runs` help, `RUNBOOK.md` and `commands.md` has the current shape). Declined
+  every time: `unexpected_dirty_paths` and the post-commit check treat
+  submodules differently on purpose (one asks "clean before I start?", the other
+  "did the commit absorb what it could?").
 
 ## Deliberately not in this handoff
 

@@ -883,8 +883,8 @@ def deferred_kind(rec: Recommendation) -> str:
         return "triage"
     # Eligible and ungated: counted by the loop's deferral summary, but it has
     # no section of its own. A plan-correctness finding renders under
-    # ``## Conceptual correctness``; any other source is listed only in the
-    # embedded grouped report.
+    # ``## Conceptual correctness``; any other source is listed by the embedded
+    # grouped report (``completeness_phases._render_grouped_report``).
     return "open"
 
 
@@ -2197,9 +2197,11 @@ def build_report_md(
         lines.append("")
 
     # --- Other deferred buckets ---------------------------------------
-    # ``open`` (eligible-but-not-reached) is no longer a section of its own —
-    # it was always plan-correctness-only, now owned by the dedicated
-    # ``## Conceptual correctness`` section above. Any deferred (info/triage)
+    # ``open`` (eligible-but-not-reached) is not a section of its own: a
+    # plan-correctness finding renders in the dedicated ``## Conceptual
+    # correctness`` section above, and any other source is listed by the
+    # embedded grouped report, which renders every deterministic detector's
+    # findings. Any deferred (info/triage)
     # correctness is likewise rendered there, so filter it out here to avoid
     # double-listing; non-correctness deferrals (the common case) render
     # unchanged.
