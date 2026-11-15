@@ -100,6 +100,7 @@
 All in `tests/cli/test_authoring_cmds.py`. Reuse the helpers in `TestDetailCommitHelpers` and `TestDetailCommitCmd` (`_git_commit_all`, the `tmp_repo` fixture). The three sites run at different times against different dirt, so each gets its own cases and no case is shared across sites.
 
 **Helper-level (`TestDetailCommitHelpers`):**
+- `test_detail_commit_includes_a_declared_detail_path_outside_the_canonical_directory` — a step whose `detail:` pointer names a file outside `plan-details/<slug>/` has that file committed and clean after `detail --commit`.
 - `test_commit_if_dirty_returns_none_when_only_unrelated_file_is_dirty` — dirt outside the footprint yields `None` and makes no commit. This pins the empty-commit failure mode.
 - `test_commit_if_dirty_commits_footprint_and_leaves_unrelated_dirty` — the footprint edit is committed and the unrelated file stays modified and unstaged.
 - `test_commit_if_dirty_never_raises_on_git_error` — the existing `boom` test, updated to the new signature, still gets a non-zero `(rc, tail)` instead of an exception.
