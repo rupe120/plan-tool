@@ -131,7 +131,9 @@ steps:
     allows, and record the limit that remains.
   files:
   - plan_tool/cli/run_cmd.py
+  - plan_tool/git_state.py
   - tests/cli/test_run_cmd.py
+  - tests/test_git_state.py
   - docs/cli/run.md
   complexity: medium
   change_type: feature
@@ -146,12 +148,11 @@ steps:
     the shared one-line warning, which is an allowed change. The single-step and `--all`
     sweep callers pass: the plan file, the plan''s `plan-details/<slug>/` directory,
     the archived plan and manifest when `--archive` completed the plan, and the paths
-    changed since a baseline taken just before `run_step`. That baseline reuses `launcher._git_changed_paths_or_none`
-    / `git_state.changed_paths_or_none`. The backend writes arbitrary code and nothing
+    changed since a baseline taken just before `run_step`. That baseline uses `git_state.changed_paths_or_none` for the changed paths. Rename origins come from a separate, additive rename-aware read of the same `git status --porcelain -z` output, added beside it in `git_state.py`; `changed_paths_or_none` keeps its current return value, so the test-authoring gate in `launcher.py` sees exactly what it sees today. The backend writes arbitrary code and nothing
     records those writes except this git delta. As a result, a file another process
     writes during the backend call is still indistinguishable from the step''s own
     work. The residual is filed in BUG_BACKLOG.md in step 6 and is not tracked further
-    here. Dirt left between steps, or dirt from before the baseline, is excluded. The git delta holds path names only, so it cannot tell whether the step edited a path that was already dirty at the baseline. Such a path is not in the footprint and stays uncommitted, and `run` names each path that was dirty at the baseline and is still dirty after the commit in a one-line warning (left uncommitted because it was dirty before the step; the step may also have edited it), so the exclusion is never silent and the warning claims no more than the record shows. When `changed_paths_or_none` returns `None` (git state unreadable) at the baseline or after the step, `run --commit` fails closed for that step. It makes no commit, exits non-zero naming the unreadable snapshot, and leaves the step work in the tree for `git reset` recovery. It never falls back to the whole tree. Both sides of a rename in the delta are footprint entries. The footprint reads the origin path of each rename record from the same `git status --porcelain -z` output, so a staged `git mv a b` commits the deletion of `a` with `b`.
+    here. Dirt left between steps, or dirt from before the baseline, is excluded. The git delta holds path names only, so it cannot tell whether the step edited a path that was already dirty at the baseline. Such a path is not in the footprint and stays uncommitted, and `run` names each path that was dirty at the baseline and is still dirty after the commit in a one-line warning (left uncommitted because it was dirty before the step; the step may also have edited it), so the exclusion is never silent and the warning claims no more than the record shows. When `changed_paths_or_none` returns `None` (git state unreadable) at the baseline or after the step, `run --commit` fails closed for that step. It makes no commit, exits non-zero naming the unreadable snapshot, and leaves the step work in the tree for `git reset` recovery. It never falls back to the whole tree. Both sides of a rename in the delta are footprint entries. The footprint takes the origin path of each rename record from that rename-aware read, so a staged `git mv a b` commits the deletion of `a` with `b`.
     `launcher.py`''s test-authoring delta gate is not touched. Destructive-operation
     disposition: an archive move during a completing step is still staged inside the
     footprint, and a failed commit still leaves that step''s work for `git reset`
@@ -328,8 +329,7 @@ See the `steps:` block in the frontmatter.
 Per converted surface, in a real temporary git repository: an unrelated dirty
 file present at commit time is not committed; a delete and a rename inside the
 footprint still stage; every expected path is clean after the commit; an ignored
-expected path warns and takes the decided branch; a path the verb wrote but left
-out of its footprint is reported by the post-commit assertion. Break the
+expected path warns and takes the decided branch; a path the verb wrote but left out of its footprint is caught by the per-verb tests in steps 2–5 that compare the commit with the verb's real writes, not by the post-commit assertion, which checks only the paths the footprint names. Break the
 footprint code and confirm each of these goes red. Cover the three `detail`
 sites separately, since they run at different times against different dirt.
 
