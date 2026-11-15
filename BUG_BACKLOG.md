@@ -639,7 +639,7 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
-### `detail --commit` leaves an out-of-tree detail file's `archive/` writes uncommitted
+### `detail --commit` leaves an out-of-tree detail file's moves and archive writes uncommitted
 
 - **Files:** `plan_tool/cli/commit_footprint.py:plan_commit_footprint`;
   `plan_tool/detail.py` (the `--force` predecessor archive and
@@ -648,9 +648,12 @@ Durable re-open conditions for retired items are recorded in
   `plan-details/<slug>/` (e.g. `docs/specs/03-x.md`). The footprint includes
   that file but not the `archive/` directory detail writes next to it, so
   `detail --force --commit` leaves `docs/specs/archive/…` uncommitted and the
-  next `--commit` is refused by its clean-tree gate.
-- **Fix:** have detail report the archive paths it wrote and add those exact
-  paths to the footprint. Deliberately not done: adding each pointer's
+  next `--commit` is refused by its clean-tree gate. `detail --split` has the
+  same gap: it renames downstream detail files before the commit, and the
+  footprint, rebuilt from the post-split plan, lists only the new pointer, so
+  the old out-of-tree path's deletion stays in the tree.
+- **Fix:** have detail report the archive and rename paths it wrote (both
+  sides) and add those exact paths to the footprint. Deliberately not done: adding each pointer's
   `archive/` directory, which another plan may share, so its unrelated
   changes would join the commit.
 - **Approach:** `direct`.

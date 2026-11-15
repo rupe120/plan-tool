@@ -5137,10 +5137,9 @@ working straight down the tiers.
   flag), medium overall.
 - **Approach:** `plan-tool` (a flag + commit-unit decision per verb) or `direct`
   one verb at a time.
-- **Dependencies:** land the BUG_BACKLOG.md entry "`--commit` stages the whole working tree with
-  `git add -A` ..." first (`commit_all` stages with a bare
-  `git add -A`; extending `--commit` to more verbs would spread its
-  over-staging hazard). Complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
+- **Dependencies:** none outstanding: `commit_all` commits only the footprint
+  each verb passes it (`commit-scoped-to-verb-footprint`, 2026-11-15), so a new
+  `--commit` verb names its own footprint. Complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
 - **Origin:** 2026-07-05 — user, after `create` had to be hand-committed while
   building the auto-bridge-structural-remedies plan; narrowed 2026-11-14.
 
@@ -6203,8 +6202,9 @@ working straight down the tiers.
   returns empty today only because nothing has collided yet, not because
   anything tracked protects a fresh clone. Any other contributor (or this
   user on another machine) has zero built-in protection against
-  `git add -A`/`run --commit` sweeping Claude Code session/runtime state into
-  a commit. Evaluate folding the repo-relevant subset of those patterns into
+  `git add -A` sweeping Claude Code session/runtime state into a commit
+  (`run --commit` commits the step's git delta, which includes any such file
+  the session writes during the step). Evaluate folding the repo-relevant subset of those patterns into
   the tracked root `.gitignore` (or a new tracked `.claude/.gitignore` that
   travels with the directory) so the guarantee is explicit and portable
   instead of living in per-machine config.
@@ -6213,7 +6213,8 @@ working straight down the tiers.
   or clone-local excludes is exactly the fact that should be stated once,
   explicitly, in the tracked repo rather than left to be inferred from
   "nothing has broken yet." The risk is not hypothetical — `run --commit` is
-  standing policy for this tool's own pipeline and stages via `git add -A`.
+  standing policy for this tool's own pipeline and commits every file the step
+  changed, which includes session state written during it.
 - **Effort:** small — auditing and editing existing ignore files; no code
   changes.
 - **Risks:** low. Worst case is over-broadly ignoring a path that should stay
