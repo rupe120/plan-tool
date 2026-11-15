@@ -687,6 +687,27 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-14, round 3 of the `/code-review` of
   `commit-scoped-to-verb-footprint`.
 
+### `detail --commit` leaves an out-of-tree detail file's `archive/` writes uncommitted
+
+- **Files:** `plan_tool/cli/commit_footprint.py:plan_commit_footprint`;
+  `plan_tool/detail.py` (the `--force` predecessor archive and
+  `_archive_orphan_details`, which write beside the detail file).
+- **Symptom:** a `steps[].detail` pointer may name a file outside
+  `plan-details/<slug>/` (e.g. `docs/specs/03-x.md`). The footprint includes
+  that file but not the `archive/` directory detail writes next to it, so
+  `detail --force --commit` leaves `docs/specs/archive/…` uncommitted and the
+  next `--commit` is refused by its clean-tree gate.
+- **Fix:** have detail report the archive paths it wrote and add those exact
+  paths to the footprint. Deliberately not done: adding each pointer's
+  `archive/` directory, which another plan may share, so its unrelated
+  changes would join the commit.
+- **Approach:** `direct`.
+- **Verification:** with an out-of-tree pointer, `detail --force --commit`
+  ends on a clean tree and the commit holds only this plan's archive files.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-15, round 4 of the `/code-review` of
+  `commit-scoped-to-verb-footprint`.
+
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
