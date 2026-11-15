@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-required-guardrail-headings.md`.
+> Preserved here for history; do not edit.
+
 # Plan seed: A `--from-existing` seed must state its guardrails, even as `None`
 
 ## Outcome
