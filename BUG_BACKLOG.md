@@ -591,29 +591,39 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed (the `detail` remedy) · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the `--iteration-budget` hints fix.
 
-### `detail --commit` leaves an out-of-tree detail file's moves and archive writes uncommitted
+### `detail --split --commit` leaves an out-of-tree downstream detail file's rename uncommitted
 
-- **Files:** `plan_tool/cli/commit_footprint.py:plan_commit_footprint`;
-  `plan_tool/detail.py` (the `--force` predecessor archive and
-  `_archive_orphan_details`, which write beside the detail file).
-- **Symptom:** a `steps[].detail` pointer may name a file outside
-  `plan-details/<slug>/` (e.g. `docs/specs/03-x.md`). The footprint includes
-  that file but not the `archive/` directory detail writes next to it, so
-  `detail --force --commit` leaves `docs/specs/archive/…` uncommitted and the
-  next `--commit` is refused by its clean-tree gate. `detail --split` has the
-  same gap: it renames downstream detail files before the commit, and the
+- **Files:** `plan_tool/detail.py:_migrate_downstream_details_after_split` (the
+  rename at the `old_path.rename(new_path)` line) and
+  `plan_tool/cli/commit_footprint.py:plan_commit_footprint`.
+- **Symptom:** a downstream step whose `steps[].detail` names a file outside
+  `plan-details/<slug>/` is renamed in place when a split renumbers it. The
   footprint, rebuilt from the post-split plan, lists only the new pointer, so
-  the old out-of-tree path's deletion stays in the tree.
-- **Fix:** have detail report the archive and rename paths it wrote (both
-  sides) and add those exact paths to the footprint. Deliberately not done: adding each pointer's
-  `archive/` directory, which another plan may share, so its unrelated
-  changes would join the commit.
+  the old path's deletion stays in the tree and the next `--commit` is refused
+  by its clean-tree gate. The same shape holds in `merge_steps`, which has no
+  `--commit`.
+- **Refuted 2026-11-15 (part of the original entry):** `detail --force --commit`
+  is not affected. `detail` authors at `derive_detail_path`, always
+  `<plan dir>/plan-details/<slug>/NN-*.md`, and `_archive_existing_detail` at
+  the write site archives that in-tree file, never an out-of-tree pointer.
+- **Evidence gate:** none of the 1,033 `detail:` pointers across the 295 plans
+  in this repo (live and archived) sits outside `plan-details/`, and
+  `PLAN_FORMAT.md` shows only the in-tree form. A fix needs `split` to report
+  both sides of each rename, or the format to restrict pointers to
+  `plan-details/`; either is larger than the gap warrants until a plan declares
+  an out-of-tree pointer.
+- **Fix:** have `_migrate_downstream_details_after_split` return the renamed
+  paths (both sides) to the `--commit` footprint, or reject out-of-tree
+  pointers at `validate`. Deliberately not done: adding each pointer's parent
+  directory, which another plan may share.
 - **Approach:** `direct`.
-- **Verification:** with an out-of-tree pointer, `detail --force --commit`
-  ends on a clean tree and the commit holds only this plan's archive files.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Verification:** with an out-of-tree downstream pointer, `detail --split
+  --commit` ends on a clean tree and the commit holds the old path's deletion.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  **Unpark when:** a real plan declares a `steps[].detail` pointer outside
+  `plan-details/`, or `validate` is asked to allow one.
 - **Origin:** 2026-11-15, round 4 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
+  `commit-scoped-to-verb-footprint`; narrowed the same day by the drain.
 
 ### `--accept`'s clean-tree check misreads quoted and renamed paths
 
