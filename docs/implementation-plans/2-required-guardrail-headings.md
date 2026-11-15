@@ -4,7 +4,7 @@ title: Required Guardrail Headings
 intent: '`create --from-existing` refuses, before any model call, a seed missing any
   of the three guardrail headings or carrying one that is duplicated, empty or a placeholder,
   and accepts a heading whose body is an explicit `None`.'
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -241,7 +241,7 @@ steps:
   depends_on_notes:
     6: the shipped refusal and its message that the docs describe
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/07-update-docs-say-three-guardrail.md
-  status: current
+  status: done
   description: 'Update the docs to say the three guardrail headings are required,
     that `None` is a valid body, and that `_(TODO)_` is refused. The pages are `SEED_FORMAT.md`,
     `PLAN_FORMAT.md` § "Scope fence", `docs/how-to/pipeline/create-from-existing.md`,

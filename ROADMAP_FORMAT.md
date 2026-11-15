@@ -595,6 +595,18 @@ An unmatched opening code fence in a draft body is a materialization refusal
 from `validate_draft_seed_content`; add its matching closing fence before the
 draft can become a seed.
 
+**Guardrail headings.** A draft must carry `## Scope guardrails`,
+`## Audit guardrails` and `## Expected placement` exactly once each with a
+non-empty body. A missing, duplicated, empty or `_(TODO)_` heading is a gate
+violation from `validate_draft_seed_content`
+(`VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING`), so a draft the roadmap accepts
+cannot be refused later by `create --from-existing`. `None` is a valid body and
+is what the model writes where the plan row sets no fence; the check is presence
+only. The model writes the headings from the accepted plan row per
+`plan_tool/prompts/roadmap-seed.md` (see the source table in `SEED_FORMAT.md`).
+A draft written without them is classified malformed; `--refresh-seeds`
+rewrites it.
+
 **Provenance frontmatter** — materialization and classification validate this
 shape after a draft reaches disk:
 

@@ -12,9 +12,17 @@ For checkpoint recovery, see
 
 - File-backed intake is source-led, not size-led. It selects `seed_body` when
   present, even when empty, and otherwise selects `from_description`.
-- An unmatched fence and the usable-References check are separate no-run-record
-  preflights. They write no checkpoint, call no model, publish no plan, and do
-  not select a route.
+- An unmatched fence and the usable-References and guardrail-heading checks are
+  separate no-run-record preflights. They write no checkpoint, call no model,
+  publish no plan, and do not select a route.
+- The guardrail check requires `## Scope guardrails`, `## Audit guardrails` and
+  `## Expected placement` exactly once each with a non-empty body. `None` is a
+  valid body; `_(TODO)_` is refused. It sits in the same function as the
+  `## References` check, so every route reaches it, and one error names every
+  failing heading plus a `## References` problem when both fail. Which source
+  each seed-writing tool fills the headings from is tabulated in
+  [`SEED_FORMAT.md`](../../../SEED_FORMAT.md); the exact route contract stays in
+  [`seed-ingestion.md`](../../reference/contracts/seed-ingestion.md).
 - A direct-ready source is assessed for a split against its raw content. It
   then selects `direct`, `split`, or `refused`.
 - A source that is not direct-ready takes one preparation decision and selects
@@ -33,7 +41,7 @@ plan-tool create <slug> --from-existing <path>
   select seed_body when present, else from_description
                      |
                      v
-  unmatched-fence protection + usable ## References preflight
+  unmatched-fence + usable ## References + guardrail-headings preflight
                      |                 |
                      |                 +-- refuse: no run record, no route, exit 2
                      v
