@@ -151,14 +151,14 @@ steps:
     records those writes except this git delta. As a result, a file another process
     writes during the backend call is still indistinguishable from the step''s own
     work. The residual is filed in BUG_BACKLOG.md in step 6 and is not tracked further
-    here. Dirt left between steps, or dirt from before the baseline, is excluded. A path that was already dirty at the baseline and that the step then edits is therefore not in the footprint and stays uncommitted; `run` names each such path in a one-line warning after the commit (left uncommitted because it was dirty before the step), so the exclusion is never silent.
+    here. Dirt left between steps, or dirt from before the baseline, is excluded. The git delta holds path names only, so it cannot tell whether the step edited a path that was already dirty at the baseline. Such a path is not in the footprint and stays uncommitted, and `run` names each path that was dirty at the baseline and is still dirty after the commit in a one-line warning (left uncommitted because it was dirty before the step; the step may also have edited it), so the exclusion is never silent and the warning claims no more than the record shows. When `changed_paths_or_none` returns `None` (git state unreadable) at the baseline or after the step, `run --commit` fails closed for that step. It makes no commit, exits non-zero naming the unreadable snapshot, and leaves the step work in the tree for `git reset` recovery. It never falls back to the whole tree. Both sides of a rename in the delta are footprint entries. The footprint reads the origin path of each rename record from the same `git status --porcelain -z` output, so a staged `git mv a b` commits the deletion of `a` with `b`.
     `launcher.py`''s test-authoring delta gate is not touched. Destructive-operation
     disposition: an archive move during a completing step is still staged inside the
     footprint, and a failed commit still leaves that step''s work for `git reset`
     recovery. Rewrite the `--commit` help text (''stage all changes (git add -A)'')
     and regenerate `docs/cli/run.md`. Tests go in `tests/cli/test_run_cmd.py`: an
     unrelated file dirtied after the baseline is excluded only when it is outside
-    the delta (pinning the known residual), a file dirty before the step is not committed, a file dirty before the step and then edited by it is left uncommitted and named in the warning,
+    the delta (pinning the known residual), a file dirty before the step is not committed, a file dirty before the step and still dirty after is left uncommitted and named in the warning, an unreadable git state at either snapshot makes no commit and exits non-zero, a staged rename inside the step commits both paths and leaves both clean,
     the archive move is committed, an `--accept` ignored path warns, and the plan
     file is clean after each green commit.'
 - id: 6
@@ -342,8 +342,9 @@ sites separately, since they run at different times against different dirt.
   backend call is a named residual, filed in BUG_BACKLOG.md.
 - A footprint entry that is absent and untracked, or unchanged, never fails the
   commit, and a footprint with no changes makes no commit and succeeds.
-- A path dirty before a `run` step and edited by it is left uncommitted and named
-  in a warning.
+- A path dirty at a `run` step's baseline and still dirty after it is left
+  uncommitted and named in a warning; an unreadable git state makes that step's
+  commit fail closed, never fall back to the whole tree.
 - Deletes and renames inside the footprint stage.
 - A footprint path still dirty after the commit makes the verb exit non-zero and
   names the path.
