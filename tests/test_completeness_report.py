@@ -171,6 +171,17 @@ def test_deferred_kind_open_when_eligible_and_no_gate_trips() -> None:
     assert deferred_kind(rec) == "open"
 
 
+def test_open_kind_has_no_report_text_and_every_rendered_kind_does() -> None:
+    """``open`` is counted but never rendered, so it carries no WHY or heading
+    text; each kind the report does render has both. Assert keys, not words."""
+    from plan_tool.completeness_report import WHY, _HEADINGS
+
+    rendered = {"concept-link", "diagnostic", "triage", "info", "advisory-conceptual"}
+    assert "open" not in WHY and "open" not in _HEADINGS
+    assert rendered <= set(WHY) and rendered <= set(_HEADINGS)
+    assert set(WHY) == set(_HEADINGS)
+
+
 def test_finding_lines_render_stored_legacy_confidence() -> None:
     rec = _rec("legacy", "plan-completeness", confidence=None)
 

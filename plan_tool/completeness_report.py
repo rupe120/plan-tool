@@ -821,12 +821,6 @@ WHY: dict[str, str] = {
         "the cost. Make a session-directed edit if warranted, or re-run with "
         "`--no-triage`."
     ),
-    "open": (
-        "Eligible to apply, but the loop stopped early (the stop reason is on "
-        "the run's final banner) before reaching them. Re-run to continue; "
-        "`--max-iterations`, `--iteration-budget` (a no-progress deadline), "
-        "`--max-stall-rounds` and `--time-budget` tune the matching stops."
-    ),
 }
 
 # Human-facing heading per disposition code.
@@ -836,7 +830,6 @@ _HEADINGS: dict[str, str] = {
     "diagnostic": "Deferred — structural diagnostics (resolve directly)",
     "info": "Deferred — info-severity advisories",
     "triage": "Deferred — low payoff (complexity > impact)",
-    "open": "Open — eligible but not reached",
 }
 
 # Conceptual findings require judged edits; the audit reports them unchanged.
@@ -888,6 +881,9 @@ def deferred_kind(rec: Recommendation) -> str:
         return "info"
     if not should_apply_by_triage(rec):
         return "triage"
+    # Eligible and ungated: counted by the loop's deferral summary, but it has
+    # no report section or text (it was plan-correctness-only, which
+    # ``## Conceptual correctness`` now renders).
     return "open"
 
 
