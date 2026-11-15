@@ -494,6 +494,18 @@ def test_deterministic_renderer_todo_guardrail_is_refused():
         validate_from_existing_seed(seed)
 
 
+def test_fenced_only_source_guardrail_is_copied_verbatim_into_carved_seed():
+    fenced = "```\nplan_tool/foo.py\n```"
+    source = (
+        f"## Scope guardrails\n\n{fenced}\n\n"
+        "## Audit guardrails\n\nNone\n\n## Expected placement\n\nNone\n"
+    )
+    out = _render(source_body=source)
+    assert f"## Scope guardrails\n\n{fenced}\n" in out
+    assert "_(TODO)_" not in out
+    validate_from_existing_seed(out)
+
+
 def test_seed_preserves_source_reference_body():
     out = _render(source_references="- [API](https://example.test/api)")
     references = out.split("## References", 1)[1].split("## Provenance", 1)[0]

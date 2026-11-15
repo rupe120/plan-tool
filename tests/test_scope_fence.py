@@ -28,6 +28,7 @@ from plan_tool.scope_fence import (
     is_placeholder_intent,
     extract_h2_sections,
     extract_plan_guardrails,
+    guardrail_headings_block,
     render_scope_fence,
 )
 
@@ -908,6 +909,31 @@ class TestMissingRequiredGuardrailHeadings:
         assert not is_acceptable_guardrail_body("text\n## Other\nmore")
         assert is_acceptable_guardrail_body("None")
         assert is_acceptable_guardrail_body("text\n```\n## Other\n```\n")
+
+    def test_fenced_only_guardrail_body_is_content_not_empty(self) -> None:
+        """A body that is only a fenced block counts; a heading inside the
+        fence is not a heading, so it neither splits nor spoils the body."""
+        body = "```\nplan_tool/foo.py\n## Inside fence\n```"
+        assert is_acceptable_guardrail_body(body)
+        text = (
+            "## Scope guardrails\n\n" + body + "\n\n"
+            "## Audit guardrails\n\nNone\n\n## Expected placement\n\nNone\n"
+        )
+        assert missing_required_guardrail_headings(text) == ()
+        lines, inherited, unfilled = guardrail_headings_block(text)
+        assert "Scope guardrails" in inherited and unfilled == ()
+        assert body in "\n".join(lines)
+
+    def test_rebaseline_notice_says_recheck_scope_not_narrower_plan(self) -> None:
+        from plan_tool.scope_fence import guardrail_next_step_lines
+
+        (carved,) = guardrail_next_step_lines(["Scope guardrails"], [])
+        (rebase,) = guardrail_next_step_lines(
+            ["Scope guardrails"], [], rebaseline=True
+        )
+        assert "narrower plan" in carved
+        assert "narrower plan" not in rebase
+        assert "current scope" in rebase
 
     def test_check_is_pure_and_does_not_write(self, tmp_path: Path) -> None:
         seed = tmp_path / "seed.md"

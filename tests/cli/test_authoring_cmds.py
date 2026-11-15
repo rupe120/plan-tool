@@ -121,6 +121,15 @@ class TestRenderSplitProposalMarkdown:
         assert "**Seed lines:** 1–20" in md
         assert "sed -n '1,20p' seed.md > auth-rework.md" in md
 
+    def test_worksheet_says_each_piece_needs_the_three_guardrail_headings(
+        self,
+    ) -> None:
+        md = _render_split_proposal_markdown("seed", [], "seed.md")
+        for title in ("Scope guardrails", "Audit guardrails", "Expected placement"):
+            assert f"`## {title}`" in md or title in md
+        assert "or write `None`" in md
+        assert "create --from-existing` refuses it" in md
+
     def test_entry_without_range_omits_carve_command(self) -> None:
         entries = [
             SplitProposalEntry(

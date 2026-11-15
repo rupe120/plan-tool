@@ -139,7 +139,9 @@ it never judges what a guardrail says.
 - **`_(TODO)_` is refused**, the same as an empty body, a missing heading, or a
   duplicated heading.
 - `## Stack`, `## Outcome`, and `## In scope` are unchanged by this rule. It
-  also does not apply to inline `--from`, `--from-plan`, or archived seeds.
+  also does not apply to inline `--from`. Archived seeds were not swept:
+  re-running `create --from-existing` on one requires adding the three
+  headings first.
 
 Each seed-writing tool fills the headings from a source it already reads. None
 makes a new model call for them.

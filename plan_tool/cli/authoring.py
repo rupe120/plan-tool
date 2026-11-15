@@ -1390,6 +1390,10 @@ def _render_split_proposal_markdown(
         "own plan: carve the seed using the line ranges, then run "
         "`plan-tool create <slug> --from-existing <file>` for each.",
         "",
+        "Each piece must carry the `## Scope guardrails`, `## Audit "
+        "guardrails` and `## Expected placement` headings (copy them from the "
+        "seed, or write `None`), or `create --from-existing` refuses it.",
+        "",
         _SPLIT_PROPOSAL_ROADMAP_GUIDANCE,
         "",
     ]

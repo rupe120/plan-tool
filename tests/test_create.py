@@ -6916,18 +6916,23 @@ class TestTestingStrategyEnumeration:
         assert "existing contract" in input_bullet
         assert "Omit this section" in input_bullet
 
-    def test_guardrail_shapes_say_required_under_the_conditional_tag(self) -> None:
-        """Deliberately still tagged ``[conditional]``: the prompts define only
-        that tag's "emit for a supplied heading, verbatim" rule, which holds now
-        that every seed supplies the three headings. The shape text says required."""
+    def test_guardrail_shapes_are_required_only_for_seeds_and_never_invented(
+        self,
+    ) -> None:
+        """Deliberately still tagged ``[conditional]``: required only in a
+        ``--from-existing`` seed; inline ``--from`` emits the heading only when
+        the source supplies it, verbatim, never invented."""
         from plan_tool.scope_fence import REQUIRED_GUARDRAIL_HEADINGS
 
         lines = _render_section_shapes_block().splitlines()
         for title in REQUIRED_GUARDRAIL_HEADINGS:
             bullet = next(ln for ln in lines if ln.startswith(f"- **{title}**"))
             assert "_[conditional]_" in bullet
-            assert "Required" in bullet
+            assert "Required in a `--from-existing` seed" in bullet
             assert "`None` is a valid body" in bullet
+            assert "only when the source supplies" in bullet
+            assert "verbatim" in bullet
+            assert "never invent" in bullet
 
     def test_section_shapes_block_tags_each_bullet_with_policy(self) -> None:
         """Every catalog bullet carries its derive/evidence policy tag, keyed
@@ -9644,6 +9649,16 @@ class TestRequiredGuardrailHeadingRefusal:
         for title in REQUIRED_GUARDRAIL_HEADINGS:
             assert f"## {title}\n\nNone\n" in body
 
+    def test_fenced_only_guardrail_body_passes_create_intake(self) -> None:
+        """A body that is only a fenced block is content, not empty."""
+        seed = _seed_with_guardrail_offence("Scope guardrails", "missing") + (
+            "\n## Scope guardrails\n\n```\nplan_tool/foo.py\n## Not a heading\n```\n"
+        )
+
+        intake = classify_file_backed_source(seed)
+
+        assert intake.references_ready is True
+
     def test_stack_heading_stays_optional(self) -> None:
         # Deliberate carve-out: only the three guardrail headings are required.
         seed = _seed_with_guardrail_offence(None, "missing")
@@ -9659,7 +9674,7 @@ class TestRequiredGuardrailHeadingRefusal:
         shapes = create_module.OPTIONAL_PLAN_BODY_SECTION_SHAPES
 
         for title in REQUIRED_GUARDRAIL_HEADINGS:
-            assert shapes[title].startswith("Required, source-backed")
+            assert shapes[title].startswith("Required in a `--from-existing` seed")
             assert "Conditional" not in shapes[title]
             assert "`None`" in shapes[title]
         assert shapes["Stack"].startswith("Conditional, source-backed")

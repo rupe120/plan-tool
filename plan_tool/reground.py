@@ -236,7 +236,9 @@ def reground_bridge(
         _, inherited, unfilled = guardrail_headings_block(
             _strip_frontmatter(plan_path.read_text(encoding="utf-8"))
         )
-        guardrail_notice = guardrail_next_step_lines(inherited, unfilled)
+        guardrail_notice = guardrail_next_step_lines(
+            inherited, unfilled, rebaseline=True
+        )
     if not _confirm_reground(
         prompt_fn,
         plan_path=plan_path,

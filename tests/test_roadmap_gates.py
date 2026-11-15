@@ -1326,6 +1326,8 @@ def test_guardrail_violation_message_names_refresh_seeds_route() -> None:
 
     assert "--refresh-seeds" in violation.message
     assert "## Scope guardrails" in violation.message
+    # Model-facing text: no unfilled placeholder the model cannot resolve.
+    assert "<slug>" not in violation.message
 
 
 def test_validate_draft_seed_content_does_not_count_fenced_references() -> None:

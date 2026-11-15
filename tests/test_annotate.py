@@ -1035,6 +1035,30 @@ def test_multiple_guardrails_elements_merge_first_body_wins(tmp_path: Path) -> N
     }
 
 
+def test_first_acceptable_guardrail_body_wins_over_an_earlier_placeholder(
+    tmp_path: Path,
+) -> None:
+    result = _classify_with(
+        tmp_path,
+        [
+            {"guardrails": {"audit": "_(TODO)_"}},
+            _ONE_SECTION,
+            {"guardrails": {"audit": "real fence"}},
+        ],
+    )
+    assert result.guardrail_bodies == {"Audit guardrails": "real fence"}
+
+
+def test_contract_says_no_fence_is_the_string_none_not_json_null() -> None:
+    from plan_tool.annotate import _ANNOTATE_RESPONSE_CONTRACT
+
+    block = _ANNOTATE_RESPONSE_CONTRACT.render_prompt_block()
+    assert 'the string \\"None\\"' in block or 'the string "None"' in block
+    assert "not JSON null" in block
+    prompt = (Path(__file__).resolve().parent.parent / "plan_tool" / "prompts" / "annotate.md").read_text(encoding="utf-8")
+    assert 'JSON string `"None"`' in prompt and "never JSON `null`" in prompt
+
+
 def test_classify_makes_one_invoker_call_with_guardrails_requested(tmp_path: Path) -> None:
     src = _write_notes(tmp_path, "notes.md", "# Overview\n\nSome notes.\n")
     prompts: list[str] = []

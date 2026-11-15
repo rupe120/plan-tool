@@ -45,6 +45,7 @@ from plan_tool.review_walk import (
     structural_apply_allowed,
 )
 from plan_tool.run_log import RunLogWriter
+from plan_tool.scope_fence import missing_required_guardrail_headings
 from plan_tool.style import colorize_diff, warn
 
 
@@ -1201,9 +1202,23 @@ def _build_review_action_fn(
                 # re-plan, so it supersedes this plan's remaining scope. Point
                 # the operator at re-creating from it and retiring this plan so
                 # two live plans never claim the same unbuilt work.
+                try:
+                    unfilled = missing_required_guardrail_headings(
+                        result.seed_path.read_text(encoding="utf-8")
+                    )
+                except OSError:
+                    unfilled = ()
+                fill_first = (
+                    "fill in "
+                    + ", ".join(f"## {t}" for t in unfilled)
+                    + " (`_(TODO)_`), then "
+                    if unfilled
+                    else ""
+                )
                 msg += (
                     f"; re-baseline seed written to {result.seed_path} — it "
-                    f"supersedes this plan's remaining scope, so re-create from "
+                    f"supersedes this plan's remaining scope, so {fill_first}"
+                    f"re-create from "
                     f"it (plan-tool create --from-existing {result.seed_path}) "
                     f"and archive/retire this plan once the re-decompose lands"
                 )

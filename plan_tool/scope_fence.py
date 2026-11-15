@@ -371,8 +371,9 @@ def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
     """
     stripped = _strip_frontmatter(text)
     scan = _fenced_code_spans(stripped)
+    # ignore_fenced_code (not strip): a fenced-only body is content.
     occurrences = extract_h2_section_occurrences(
-        stripped, strip_fenced_code=True, fenced_spans=scan.spans
+        stripped, ignore_fenced_code=True, fenced_spans=scan.spans
     )
     offenders: list[str] = []
     for title in REQUIRED_GUARDRAIL_HEADINGS:
@@ -393,16 +394,15 @@ def guardrail_headings_block(
     acceptably (exactly one fence-safe occurrence, body accepted by
     :func:`is_acceptable_guardrail_body`; ``None`` included) is copied verbatim,
     fences intact, and listed as inherited. Otherwise a ``model_bodies`` entry
-    (step 3's ``annotate``; ``scope-out``/``reground`` pass none) fills it only
+    (``annotate`` passes them; ``scope-out`` and ``reground`` pass none) fills it only
     if it is acceptable too; any other state writes ``_(TODO)_`` and is unfilled.
     Presence only: no judgment of what a body says.
     """
     stripped = _strip_frontmatter(source_body or "")
     scan = _fenced_code_spans(stripped)
-    checked = extract_h2_section_occurrences(
-        stripped, strip_fenced_code=True, fenced_spans=scan.spans
-    )
-    verbatim = extract_h2_section_occurrences(
+    # ignore_fenced_code: a fenced-only body is content, so one map serves
+    # both the acceptability check and the verbatim copy.
+    checked = verbatim = extract_h2_section_occurrences(
         stripped, ignore_fenced_code=True, fenced_spans=scan.spans
     )
     lines: list[str] = []
@@ -431,14 +431,23 @@ def guardrail_headings_block(
 
 
 def guardrail_next_step_lines(
-    inherited: Sequence[str], unfilled: Sequence[str]
+    inherited: Sequence[str], unfilled: Sequence[str], *, rebaseline: bool = False
 ) -> list[str]:
-    """Printed next steps naming inherited and unfilled headings; empty groups omitted."""
+    """Printed next steps naming inherited and unfilled headings; empty groups omitted.
+
+    ``rebaseline`` words the inherited note for a re-baseline seed (same plan,
+    re-planned) rather than a narrower carved-out plan.
+    """
     out: list[str] = []
     if inherited:
+        reason = (
+            "re-check the inherited fence against the plan's current scope"
+            if rebaseline
+            else "inherited from the parent plan; its fence can be wrong for "
+            "the narrower plan"
+        )
         out.append(
-            "review before `create` (inherited from the parent plan; its fence "
-            "can be wrong for the narrower plan): "
+            f"review before `create` ({reason}): "
             + ", ".join(f"## {t}" for t in inherited)
         )
     if unfilled:

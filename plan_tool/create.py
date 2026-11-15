@@ -368,19 +368,19 @@ OPTIONAL_PLAN_BODY_SECTION_SHAPES: dict[str, str] = {
         "plan does not consume an existing contract."
     ),
     "Scope guardrails": (
-        "Required, source-backed boundary section: every seed carries it "
-        "(an explicit `None` is a valid body). Preserve the supplied body "
-        "verbatim; do not invent or revise scope decisions."
+        "Required in a `--from-existing` seed (an explicit `None` is a valid "
+        "body); otherwise emit only when the source supplies this heading. "
+        "Preserve the supplied scope body verbatim; never invent or revise it."
     ),
     "Audit guardrails": (
-        "Required, source-backed audit boundary section: every seed carries "
-        "it (an explicit `None` is a valid body). Preserve the supplied body "
-        "verbatim; do not invent or revise audit decisions."
+        "Required in a `--from-existing` seed (an explicit `None` is a valid "
+        "body); otherwise emit only when the source supplies this heading. "
+        "Preserve the supplied audit body verbatim; never invent or revise it."
     ),
     "Expected placement": (
-        "Required, source-backed placement section: every seed carries it "
-        "(an explicit `None` is a valid body). Preserve the supplied body "
-        "verbatim; do not invent or revise placement decisions."
+        "Required in a `--from-existing` seed (an explicit `None` is a valid "
+        "body); otherwise emit only when the source supplies this heading. "
+        "Preserve the supplied placement body verbatim; never invent or revise it."
     ),
     "Stack": (
         "Conditional, source-backed hosting and store section. Preserve the "

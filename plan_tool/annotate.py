@@ -46,6 +46,7 @@ from plan_tool.prompt_excerpt import build_prompt_excerpt
 from plan_tool.renderer import prompts_dir
 from plan_tool.response_contract import JSON_ROOT_ARRAY, JsonResponseContract
 from plan_tool.schema import Plan
+from plan_tool.scope_fence import is_acceptable_guardrail_body
 from plan_tool.shell import claude_invoke
 
 
@@ -88,11 +89,12 @@ _ANNOTATE_RESPONSE_CONTRACT = JsonResponseContract(
         "confidence_low": False,
         "is_step": False,
     }, {
-        # Optional; omit when the document implies no fence. Not a section.
+        # Optional; omit when unsure. "No fence" is the string "None"; null means
+        # no body supplied. Not a section.
         "guardrails": {
-            "scope": "fence the source implies, or None",
-            "audit": "fence the source implies, or None",
-            "placement": "fence the source implies, or None",
+            "scope": "fence the source implies, or the string \"None\" (not JSON null)",
+            "audit": "fence the source implies, or the string \"None\" (not JSON null)",
+            "placement": "fence the source implies, or the string \"None\" (not JSON null)",
         },
     }],
 )
@@ -143,7 +145,7 @@ class SectionAnnotation:
     expected non-empty for IMPLEMENTED/PARTIAL, empty for NOT-IMPLEMENTED,
     and allowed for NEEDS-REVIEW. An IMPLEMENTED/PARTIAL verdict without
     resolvable refs is demoted to ``low_confidence`` (see
-    :func:`_parse_annotation_response`), not rejected. For PARTIAL the refs
+    :func:`_parse_annotation_result`), not rejected. For PARTIAL the refs
     name the already-implemented portion and ``remaining_work`` states the
     not-yet-implemented remainder (the only part step 2's seed renderer
     scopes forward). ``is_step`` is ``True`` when the section is a
@@ -550,8 +552,9 @@ def _split_guardrails_element(
 ) -> tuple[list, dict[str, str]]:
     """Pull ``guardrails`` elements (no ``heading``) out of the response array.
 
-    Multiple elements merge, the first usable body per heading winning. A
-    missing key, non-string or blank value means no body, never an error.
+    Multiple elements merge, the first acceptable body per heading winning
+    (a placeholder never shadows a later real body). A missing key,
+    non-string, ``null`` or unacceptable value means no body, never an error.
     """
     sections: list = []
     bodies: dict[str, str] = {}
@@ -561,18 +564,15 @@ def _split_guardrails_element(
             if isinstance(raw_bodies, dict):
                 for key, title in GUARDRAIL_RESPONSE_KEYS.items():
                     value = raw_bodies.get(key)
-                    if isinstance(value, str) and value.strip():
-                        bodies.setdefault(title, value.strip())
+                    if (
+                        isinstance(value, str)
+                        and title not in bodies
+                        and is_acceptable_guardrail_body(value)
+                    ):
+                        bodies[title] = value.strip()
             continue
         sections.append(item)
     return sections, bodies
-
-
-def _parse_annotation_response(
-    raw: str, *, repo_root: Path
-) -> tuple[SectionAnnotation, ...]:
-    """Section verdicts only; see :func:`_parse_annotation_result` for guardrails."""
-    return _parse_annotation_result(raw, repo_root=repo_root)[0]
 
 
 def _parse_annotation_result(

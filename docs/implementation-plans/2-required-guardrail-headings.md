@@ -328,7 +328,7 @@ command for the operator.
 - `None` must pass. Do not add `None`, `N/A` or similar to the placeholder
   pattern.
 - Do not require `## Stack`, `## Outcome` or `## In scope`, and do not touch
-  inline `--from`, `--from-plan` or archived seeds.
+  inline `--from` or archived seeds.
 - Seed-writing tools populate guardrails only from a source they already read
   or a model call they already make; none gains a new model call.
 
@@ -363,7 +363,7 @@ See the `steps:` block in the frontmatter.
 - The tool-written `## Stack` heading, which only `roadmap` writes.
 - Requiring `## Outcome` or `## In scope`, which have no guardrail capture; that
   is a separate decision.
-- Inline `--from` and `--from-plan`, which have no seed file to hold a heading.
+- Inline `--from`, which has no seed file to hold a heading.
 - Archived seeds, which are not inputs to a future `create`.
 - A new model call in any tool to compose guardrails.
 - Any check of what a guardrail says beyond presence: deliberately no quality

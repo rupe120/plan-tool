@@ -2764,8 +2764,8 @@ def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
                     f"'{basename}' has a '## {heading}' section that is "
                     "missing, duplicated, empty or a placeholder — write the "
                     "section once, or write `None` if the plan row sets no "
-                    "fence; run `plan-tool roadmap <slug> --refresh-seeds` to "
-                    "rewrite this draft"
+                    "fence; an existing draft is rewritten with `plan-tool "
+                    "roadmap` `--refresh-seeds`"
                 ),
             )
         )

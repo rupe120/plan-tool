@@ -703,6 +703,30 @@ def test_rebaseline_recommended_when_confirm_declined(tmp_path, monkeypatch):
     assert path.read_text(encoding="utf-8") == before
 
 
+def test_rebaseline_confirm_notice_says_recheck_inherited_fence_not_narrower_plan(
+    tmp_path, monkeypatch
+):
+    # A re-baseline re-plans the same plan, so "narrower plan" would be wrong.
+    monkeypatch.setattr("sys.stdin.isatty", lambda: True)
+    path = _write_plan_file(
+        tmp_path,
+        _plan([_step(1, status=StepStatus.CURRENT), _step(2), _step(3)]),
+        body="Plan prose.\n" + NONE_GUARDRAILS,
+    )
+    captured = {}
+
+    def _prompt(msg: str) -> str:
+        captured["msg"] = msg
+        return "n"
+
+    reground_bridge(
+        path, step_ids=[1, 2], allow_reground=True, yes=False, prompt_fn=_prompt,
+        disposition="re-baseline", repo_root=tmp_path,
+    )
+    assert "current scope" in captured["msg"]
+    assert "narrower plan" not in captured["msg"]
+
+
 def test_rebaseline_recommended_when_non_tty_without_yes(tmp_path, monkeypatch):
     monkeypatch.setattr("sys.stdin.isatty", lambda: False)
     path = _built_plan_file(tmp_path)
