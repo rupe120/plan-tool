@@ -2126,8 +2126,8 @@ working straight down the tiers.
 - **Why:** after a step runs, the code exists *because of* the plan. Point a
   code-canonical audit at it and the implementation gains authority over the
   intent that produced it — under-delivery reads as an over-promising plan, and
-  the proposed remedy is to edit the plan toward the code. `prompts/reconcile.md`
-  already fences the worst of it (refuses scope-narrowing and
+  the proposed remedy is to edit the plan toward the code.
+  `plan_tool/prompts/detail-reconcile.md` already fences the worst of it (refuses scope-narrowing and
   criterion-softening edits, routes a shortfall to a `status`/`status_note`
   flip), but that is a guardrail on a verb pointed the wrong way, and the
   `status`-flip escape does nothing for a step a green run already marked
@@ -2174,7 +2174,7 @@ working straight down the tiers.
     `tests/cli/test_review_cmds.py`, regenerated `docs/cli/`, and any
     `RUNBOOK.md` recipe that currently points the verb the wrong way.
   - **Out of scope / Non-goals:** `reconcile-code`'s direction and its own
-    preflight; `annotate`; `prompts/reconcile.md`'s refusal list (the guard
+    preflight; `annotate`; `detail-reconcile.md`'s refusal list (the guard
     makes the prompt fence redundant in this case, it does not replace it); any
     new run-log field or schema; extending the guard to `verify-all` or
     `run --mode <review>`.
@@ -5788,7 +5788,6 @@ working straight down the tiers.
     file does not exist; `plan_tool/repo_lock.py` is the likely successor.
     Determine whether it is, then fix the citation. Highest-value item here.
   - Other dead citations: `reformat.py` (`TESTING.md:235`) and
-    `prompts/reconcile.md` (`TESTING.md:229`),
     `plan-seeds/escalate-structural-findings-to-split-redecomposed.md`
     (`RUNBOOK.md`).
   - Change-narration to rewrite as current-state, ~8 sites, mostly
