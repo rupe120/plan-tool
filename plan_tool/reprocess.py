@@ -146,7 +146,7 @@ def reprocess_plan(
     parse_plan(plan_path)
 
     archive_sections = extract_h2_sections(
-        archive_text, ignore_fenced_code=True
+        _strip_frontmatter(archive_text), ignore_fenced_code=True
     )
 
     frontmatter, body = _split_frontmatter_for_rewrite(plan_text)

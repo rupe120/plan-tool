@@ -310,6 +310,29 @@ class TestReprocessPlan:
 
 
 @pytest.mark.integration
+class TestReprocessFrontmatterComment:
+    def test_archive_frontmatter_comment_does_not_shadow_its_real_section(
+        self, tmp_path: Path
+    ) -> None:
+        """A column-0 ``## Overview`` YAML comment in the archive's frontmatter
+        has the closing ``---`` as its body; read raw it filled the plan's
+        Overview with that line instead of the archive's real prose."""
+        plan = tmp_path / "2-demo.md"
+        archive = tmp_path / "demo.replaced.md"
+        _write_plan_with_todos(plan)
+        archive.write_text(
+            "---\nsource: demo\n## Overview\n---\n\n## Overview\n\n"
+            "Real archived overview.\n",
+            encoding="utf-8",
+        )
+
+        result = reprocess_plan(plan, archive)
+
+        assert "Overview" in result.filled
+        body = plan.read_text(encoding="utf-8")
+        assert "Real archived overview." in body
+
+
 class TestCmdCreateReprocess:
     """End-to-end through ``main()``: ``create <slug> --reprocess``
     resolves the registered plan, finds the archive, runs the

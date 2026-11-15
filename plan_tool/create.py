@@ -5116,7 +5116,9 @@ def _preserve_source_optional_sections(
     sections: dict[str, Optional[str]], *, source_text: str
 ) -> tuple[Optional[dict[str, Optional[str]]], Optional[str], bool]:
     """Retain source optional context and mark prose-backed Input for citation."""
-    source_sections = extract_h2_sections(source_text, ignore_fenced_code=True)
+    source_sections = extract_h2_sections(
+        _strip_frontmatter(source_text), ignore_fenced_code=True
+    )
     preserved = sections.copy()
     input_needs_evidence = False
     for section in _OPTIONAL_PLAN_BODY_SECTIONS:
@@ -8252,7 +8254,8 @@ def _restore_materialized_evidence_sections(
         if body is None:
             continue
         current = extract_h2_sections(
-            plan_path.read_text(encoding="utf-8"), ignore_fenced_code=True
+            _strip_frontmatter(plan_path.read_text(encoding="utf-8")),
+            ignore_fenced_code=True,
         ).get(section_name.lower())
         if section_name == "References" and current and current != "_(TODO)_":
             if _references_present(body, current):
@@ -8296,7 +8299,9 @@ def _restore_materialized_evidence_and_sync_concepts(
 
 def _extract_supplied_guardrails(seed_text: Optional[str]) -> dict[str, str]:
     """Return recognized guardrail bodies supplied by the original seed only."""
-    sections = extract_h2_sections(seed_text or "", ignore_fenced_code=True)
+    sections = extract_h2_sections(
+        _strip_frontmatter(seed_text or ""), ignore_fenced_code=True
+    )
     return {
         section: sections[section.lower()]
         for section in GUARDRAIL_BODY_SECTIONS
@@ -9493,7 +9498,9 @@ def _prepare_create_plan(
         seed_bytes = len(raw_seed.encode("utf-8"))
         already_canonical_small = (
             _canonical_seed_covers_all(
-                extract_h2_sections(raw_seed, ignore_fenced_code=True)
+                extract_h2_sections(
+                    _strip_frontmatter(raw_seed), ignore_fenced_code=True
+                )
             )
             and seed_bytes < DISTILL_SKIP_BELOW_BYTES
         )
@@ -9595,7 +9602,7 @@ def _prepare_create_plan(
                     )
                     if file_preparation_required:
                         local_references = extract_h2_sections(
-                            raw_seed, ignore_fenced_code=True
+                            _strip_frontmatter(raw_seed), ignore_fenced_code=True
                         ).get("references")
                         if local_references:
                             distilled_markdown = (
@@ -10045,7 +10052,9 @@ def _prepare_create_plan(
     seed_sections = (
         direct_source_authority.seed_sections.copy()
         if direct_source_authority is not None
-        else extract_h2_sections(body_source, ignore_fenced_code=True)
+        else extract_h2_sections(
+            _strip_frontmatter(body_source), ignore_fenced_code=True
+        )
         if body_source is not None
         else {}
     )
