@@ -108,6 +108,41 @@ they resolve.
   exit codes, pinned by a drift test. Pass-by-pass record and closure (stopped at
   exit 2); the pass-by-pass record was retired 2026-11-13.
 
+- 2026-11-15 — `completeness_report.py` kept `WHY["open"]` and `_HEADINGS["open"]`,
+  which no report path renders: `fixed ed32f3f77`, entry removed in `0805402b8`.
+  `deferred_kind` still returns `open` (the loop's deferral summary counts it).
+- 2026-11-15 — `--accept`'s clean-tree check misread quoted and renamed paths:
+  `fixed 3ab6d153f`, entry removed in `6d5001351`. It now reads `git status -z`
+  from the git top level, so spaces, non-ASCII names, renames and a nested
+  project root match.
+- 2026-11-15 — the post-commit clean check on paths git keeps reporting as
+  modified: `fixed ae5956a9c` for untracked content in a committed submodule;
+  the filter-modified half is retired by design (record in
+  `docs/history/backlog-decisions.md`). Entry removed in `cfd3b2ed7`.
+- 2026-11-15 — `create --from-existing` read seed sections without stripping
+  frontmatter: `fixed cc09f31ad`, entry removed in `67f8947be`. Seven readers,
+  one test each, plus a test for the distill gate that had none. Two further
+  readers stay unstripped on purpose (the distiller's own output, the tool's
+  rendered plan body); each says so in a comment.
+- 2026-11-15 — run IDs collided within a second (24-bit tail): `fixed 49ff32c94`,
+  entry removed in `e9c43949b`. The tail is `token_hex(8)`; a deterministic test
+  replaces the sampling one.
+- 2026-11-15 — `CLAUDE.md`, `TESTING.md` and backlog #190 cited the missing
+  `prompts/reconcile.md`: `fixed 3d35705c5`, entry removed in `fe72a5791`. The
+  `CLAUDE.md` edit is architect-tier (its own header): it needs review in the
+  pull request. `lessons/general.md` still names the old path as a record of
+  past plans and is left alone.
+- 2026-11-15 — out-of-tree detail archive writes: `pending`, narrowed to
+  `detail --split` renames and `evidence-gated` (`detail --force` never writes
+  outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
+  tree).
+- 2026-11-15 — four live seeds refused for `## References`: `pending`. Two fixed
+  (`18438c1a9`); the two impact-recurrence seeds describe a design closed on
+  2026-08-11 and wait for a delete-or-keep decision.
+- 2026-11-15 — review of the drain branch: pass 1 returned eight findings (three
+  refuted with evidence, two declined, three fixed in `20e85619d`). Pass 2 is
+  recorded below once it returns.
+
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read
