@@ -5132,6 +5132,18 @@ roadmap_components:
 
 {body.rstrip()}
 
+## Scope guardrails
+
+None
+
+## Audit guardrails
+
+None
+
+## Expected placement
+
+None
+
 ## Risks
 
 - A risk the accepted roadmap already states.

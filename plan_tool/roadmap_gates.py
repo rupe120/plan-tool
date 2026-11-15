@@ -52,6 +52,7 @@ from plan_tool.scope_fence import (
     _is_placeholder_section,
     _strip_frontmatter,
     extract_h2_sections,
+    missing_required_guardrail_headings,
 )
 
 from plan_tool.roadmap_artifacts import (
@@ -170,6 +171,7 @@ VIOLATION_DRAFT_SEED_UNMATCHED_FENCE = "draft-seed-unmatched-fence"
 VIOLATION_UNDEFINED_SEED_COMPONENT_REFERENCE = "undefined-seed-component-reference"
 VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE = "missing-draft-seed-artifact-reference"
 VIOLATION_MISSING_DRAFT_SEED_RISKS = "missing-draft-seed-risks"
+VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING = "bad-draft-seed-guardrail-heading"
 VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME = "duplicate-draft-seed-basename"
 VIOLATION_INVALID_PLAN_ID_SLUG = "invalid-plan-id-slug"
 VIOLATION_ORDERING_PLAN_ID_DUPLICATE = "ordering-plan-id-duplicate"
@@ -2748,6 +2750,22 @@ def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
                     "(its 'Stop / defer' conditions, provisional decisions, open "
                     "stack concerns, inter-plan assumptions); when it states "
                     "none, write one line saying so rather than inventing one"
+                ),
+            )
+        )
+    for heading in missing_required_guardrail_headings(text):
+        violations.append(
+            Violation(
+                kind=VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING,
+                artifact=PLANS_FILENAME,
+                row_id=plan.id,
+                message=(
+                    f"plan '{plan.id}' in {PLANS_FILENAME} draft seed "
+                    f"'{basename}' has a '## {heading}' section that is "
+                    "missing, duplicated, empty or a placeholder — write the "
+                    "section once, or write `None` if the plan row sets no "
+                    "fence; run `plan-tool roadmap <slug> --refresh-seeds` to "
+                    "rewrite this draft"
                 ),
             )
         )

@@ -66,6 +66,9 @@ derived seed. Use these sections exactly:
 - `Testing`
 - `Acceptance criteria`
 - `Stop / defer`
+- `Scope guardrails`
+- `Audit guardrails`
+- `Expected placement`
 - `Risks`
 - `References`
 
@@ -96,6 +99,15 @@ Do not execute application work or live provider calls while drafting this seed;
 that drafting restriction must not weaken eventual proof into document inspection
 or a simulated result. Keep proof at seed level, without fixture lists,
 source-file inventories, or implementation mechanics.
+
+`Scope guardrails` comes from the plan row's `non_goals` and the settled
+decisions and constraints its components own. `Audit guardrails` and
+`Expected placement` come only from accepted content that states an audit
+boundary or a placement for this row; the roadmap has no field for either, so
+they are usually `None`. Write only fences those sources already imply, and add
+no scope, mechanism, or requirement. Where the sources set no fence, write the
+bare word `None` as the section body; never omit a heading, and never write
+`N/A` or `_(TODO)_`.
 
 `Risks` must be non-empty, and every risk in it needs source text, because
 `create` refuses a seed whose risks cite none. Write only risks this plan row's

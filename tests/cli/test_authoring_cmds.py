@@ -5136,6 +5136,8 @@ def _write_tracked_draft(
         )
     text = (
         "---\nroadmap_components:\n  - component-a\n---\n# Seed\n\n"
+        "## Scope guardrails\n\nNone\n\n## Audit guardrails\n\nNone\n\n"
+        "## Expected placement\n\nNone\n\n"
         "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
         "## References\n\n"
         f"- `{DOMAIN_FILENAME}`\n"
