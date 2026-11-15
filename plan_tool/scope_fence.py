@@ -337,6 +337,50 @@ def extract_h2_sections(
     return sections
 
 
+# The three seed headings every ``create --from-existing`` seed must carry.
+# Bare titles in canonical case; messages render them as ``## <title>``.
+# ``Stack`` stays out: it is tool-written and only ``roadmap`` emits it.
+REQUIRED_GUARDRAIL_HEADINGS: tuple[str, ...] = (
+    "Scope guardrails",
+    "Audit guardrails",
+    "Expected placement",
+)
+
+
+def is_acceptable_guardrail_body(body: str) -> bool:
+    """The one definition of an acceptable guardrail body.
+
+    Non-empty, not a ``_(TODO)_``-style placeholder, and no line-starting H2
+    outside fenced code. An explicit ``None`` is content, by design.
+    """
+    if not body.strip() or _is_placeholder_section(body):
+        return False
+    scan = _fenced_code_spans(body)
+    return not extract_h2_section_occurrences(
+        body, strip_fenced_code=True, fenced_spans=scan.spans
+    )
+
+
+def missing_required_guardrail_headings(text: str) -> tuple[str, ...]:
+    """Required headings that are missing, duplicated, empty or placeholders.
+
+    Same rule as ``## References`` in ``create.classify_file_backed_source``:
+    exactly one fence-safe H2 with an acceptable body. Pure; reports every
+    offender in :data:`REQUIRED_GUARDRAIL_HEADINGS` order.
+    """
+    stripped = _strip_frontmatter(text)
+    scan = _fenced_code_spans(stripped)
+    occurrences = extract_h2_section_occurrences(
+        stripped, strip_fenced_code=True, fenced_spans=scan.spans
+    )
+    offenders: list[str] = []
+    for title in REQUIRED_GUARDRAIL_HEADINGS:
+        bodies = occurrences.get(title.lower(), [])
+        if len(bodies) != 1 or not is_acceptable_guardrail_body(bodies[0]):
+            offenders.append(title)
+    return tuple(offenders)
+
+
 def _strip_frontmatter(text: str) -> str:
     """Return ``text`` with a leading ``---`` YAML frontmatter block removed.
 

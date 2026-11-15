@@ -19,6 +19,8 @@ from plan_tool.review import _body_section_is_placeholder
 from plan_tool.scope_fence import (
     PLAN_INTENT_HEADING,
     STEP_INTENT_HEADING,
+    is_acceptable_guardrail_body,
+    missing_required_guardrail_headings,
     _fenced_code_spans,
     _is_placeholder_section,
     extract_h2_section_occurrences,
@@ -828,4 +830,90 @@ class TestH2SectionSpans:
 
         assert len(h2_section_spans(text, "Stack")) == 1
         assert h2_section_spans(text, "references") == []
+
+
+def _seed(**bodies: str | None) -> str:
+    """Seed text with the three required headings; ``None`` drops a heading."""
+    names = {
+        "scope": "Scope guardrails",
+        "audit": "Audit guardrails",
+        "placement": "Expected placement",
+    }
+    defaults = {"scope": "Stay small.", "audit": "None", "placement": "None"}
+    parts = ["# Seed\n\n## Outcome\n\nShip it.\n"]
+    for key, title in names.items():
+        body = bodies.get(key, defaults[key])
+        if body is not None:
+            parts.append(f"\n## {title}\n\n{body}\n")
+    return "".join(parts)
+
+
+class TestMissingRequiredGuardrailHeadings:
+    def test_complete_seed_reports_nothing(self) -> None:
+        assert missing_required_guardrail_headings(_seed()) == ()
+
+    def test_missing_heading_is_reported(self) -> None:
+        assert missing_required_guardrail_headings(_seed(audit=None)) == (
+            "Audit guardrails",
+        )
+
+    def test_duplicated_heading_is_reported(self) -> None:
+        text = _seed() + "\n## Scope guardrails\n\nMore.\n"
+        assert missing_required_guardrail_headings(text) == ("Scope guardrails",)
+
+    def test_empty_body_is_reported(self) -> None:
+        assert missing_required_guardrail_headings(_seed(scope="")) == (
+            "Scope guardrails",
+        )
+
+    def test_todo_placeholder_body_is_reported(self) -> None:
+        assert missing_required_guardrail_headings(
+            _seed(placement="_(TODO)_")
+        ) == ("Expected placement",)
+
+    def test_heading_inside_fenced_code_does_not_count(self) -> None:
+        text = _seed(audit=None) + "\n```\n## Audit guardrails\n\nQuoted.\n```\n"
+        assert missing_required_guardrail_headings(text) == ("Audit guardrails",)
+
+    def test_seed_missing_two_headings_reports_both_in_constant_order(
+        self,
+    ) -> None:
+        assert missing_required_guardrail_headings(
+            _seed(scope=None, placement=None)
+        ) == ("Scope guardrails", "Expected placement")
+
+    def test_none_body_passes_the_presence_check(self) -> None:
+        # Deliberate: an explicit ``None`` is a valid answer, not a placeholder.
+        text = _seed(scope="None", audit="None", placement="None")
+        assert missing_required_guardrail_headings(text) == ()
+
+    def test_none_na_and_lowercase_none_are_outside_the_placeholder_pattern(
+        self,
+    ) -> None:
+        # Pins the carve-out: widening _SECTION_PLACEHOLDER_RE breaks explicit None.
+        for body in ("None", "N/A", "none"):
+            assert not _is_placeholder_section(body)
+
+    def test_render_scope_fence_carries_a_none_guardrail_body_verbatim(
+        self, tmp_path: Path
+    ) -> None:
+        plan_path = _write_plan(tmp_path, "\n## Audit guardrails\n\nNone\n")
+        assert "## Audit guardrails\n\nNone" in render_scope_fence(plan_path)
+
+    def test_single_body_rule_rejects_empty_placeholder_and_embedded_h2(
+        self,
+    ) -> None:
+        assert not is_acceptable_guardrail_body("")
+        assert not is_acceptable_guardrail_body("_(TODO)_")
+        assert not is_acceptable_guardrail_body("text\n## Other\nmore")
+        assert is_acceptable_guardrail_body("None")
+        assert is_acceptable_guardrail_body("text\n```\n## Other\n```\n")
+
+    def test_check_is_pure_and_does_not_write(self, tmp_path: Path) -> None:
+        seed = tmp_path / "seed.md"
+        seed.write_text(_seed(audit=None), encoding="utf-8")
+        before = seed.read_bytes()
+        missing_required_guardrail_headings(seed.read_text(encoding="utf-8"))
+        assert seed.read_bytes() == before
+        assert sorted(p.name for p in tmp_path.iterdir()) == ["seed.md"]
 
