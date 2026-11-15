@@ -5,6 +5,19 @@ Retire Jira Grade Detail (BACKLOG #308 / IPPT-17). This file is not an active
 authoring input. Run-grade detail is the sole supported input; Jira export
 produces concise stories and the paired developer handoff.
 
+## Scope guardrails
+
+- This file is not an active authoring input; run-grade detail is the sole
+  supported input.
+
+## Audit guardrails
+
+None.
+
+## Expected placement
+
+None.
+
 ## References
 
 - `DETAIL_FORMAT.md` — the sole supported run-grade detail input contract.

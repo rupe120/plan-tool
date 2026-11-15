@@ -61,6 +61,27 @@ describes more than live review.
 - A new rendering design; this work adds the retained data that existing readers
   may use and leaves expanded presentation to a separately evidenced request.
 
+## Scope guardrails
+
+- Every retention field stays optional indefinitely, so legacy roadmaps keep
+  parsing.
+- No revision numbers, timestamps, Git reads, restoration, retention cap, new
+  artifact/stage, or second feedback collection.
+- `--from-stage` behavior and exit-code conventions are unchanged.
+
+## Audit guardrails
+
+- A new rendering design is out of scope; expanded presentation waits for a
+  separately evidenced request.
+- Stop if typed restoration of removed rows becomes necessary; the snapshot
+  stores rendered content only.
+
+## Expected placement
+
+- The existing roadmap artifact schema, existing prompts, `ROADMAP_FORMAT.md`
+  and the history-mode compatibility surface.
+- Mutation-based regression tests for legacy and new artifacts.
+
 ## Risks
 
 - **Compatibility break:** required parsing would invalidate every legacy

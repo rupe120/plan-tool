@@ -154,6 +154,22 @@ signal; don't skip").
 - **New finding sources or detector heuristics** — this reclassifies existing
   conceptual-audit findings; it adds no new check.
 
+## Scope guardrails
+
+- Existing conceptual-audit findings are reclassified; no new finding source or
+  detector heuristic is added.
+- Design-gap findings are never auto-applied; only stale-spec findings get the
+  collapsed-weight / known-direction treatment.
+
+## Audit guardrails
+
+- The prompt's prose guidance and the interactive meta-line impact/complexity
+  display already shipped and are not redone.
+
+## Expected placement
+
+None.
+
 ## Risks
 
 - **Auditor over-tags `stale-spec`.** Severity: correctness/UX. A finding

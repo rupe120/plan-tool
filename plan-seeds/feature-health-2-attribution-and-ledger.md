@@ -212,6 +212,23 @@ mark them tunable.
 - **A cross-plan feature-health view** (which features churn across the whole
   backlog) — start per-plan.
 
+## Scope guardrails
+
+- Recommend-only: no auto-extracting or auto-cutting a brittle feature; the
+  decision stays the operator's.
+- No retrofitting attribution onto pre-existing reports, and no fabricated
+  history.
+- Per-plan only: no cross-plan feature-health view.
+
+## Audit guardrails
+
+- The feature layer (registry, `step.features` tag) and the deterministic smell
+  checks belong to part 1 and are assumed to exist.
+
+## Expected placement
+
+None.
+
 ## Risks
 
 - **Residual reliance on Claude for unplaceable findings.** The deterministic

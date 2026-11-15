@@ -152,6 +152,25 @@ reply re-prompts with the violation named:
 - The telemetry *scoring* loop (analysis-side outcome resolution for reseed
   events beyond the recorded event itself).
 
+## Scope guardrails
+
+- The advisor never runs `create`, archives the source plan, or mutates it.
+- `convergence_diagnosis` verdict logic and completeness-audit surfaces are
+  unchanged.
+- No fence is auto-amended: fence conflicts are surfaced as decisions, never
+  applied.
+
+## Audit guardrails
+
+- Speculative taxonomy extensions are out of scope; the four folds ship as-is.
+- The telemetry scoring loop beyond the recorded event is out of scope.
+
+## Expected placement
+
+- Four steps: an assembly leaf, a prompt + gates step, a CLI + persistence step
+  (`plan-tool reseed`, with `docs/cli/` regenerated), and a telemetry + docs
+  step.
+
 ## Risks and mitigations
 
 - **Closed-world taxonomy:** a novel contradiction shape gets nearest-bucket

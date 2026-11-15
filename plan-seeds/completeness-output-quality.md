@@ -144,6 +144,22 @@ distinct concerns (rendering vs. a new advisory action).
 - Forcing the re-audit automatically — it is *recommended*, never auto-run
   (would spend Claude unattended against the minimize-Claude posture).
 
+## Scope guardrails
+
+- Rendering plus one advisory next-step only: no change to what the audit
+  finds, how it samples, or what it auto-applies.
+- Color applies only to completeness/convergence output, with no broad
+  re-theming.
+- The re-audit is recommended, never auto-run.
+
+## Audit guardrails
+
+None.
+
+## Expected placement
+
+None.
+
 ## Risks
 
 - **Color leaking into pipes/CI.** Severity: medium (garbles logs / breaks

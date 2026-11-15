@@ -56,6 +56,24 @@ other audit behavior changes.
 
 None.
 
+## Scope guardrails
+
+- Plan-body half only: no verification of an individual step's detail-body
+  claims (that depends on unbuilt BACKLOG #312).
+- No new fetch dependency; `plan_tool/fetch.py` is reused exclusively.
+- Verification runs only in a `reconcile-plan` audit run, with no background
+  job and no `create`-time re-check.
+
+## Audit guardrails
+
+- Stop and surface to the user if `create`'s synthesis grounding does not hold
+  on a real plan.
+
+## Expected placement
+
+- A finding-producing primitive in `plan_tool/review.py`, a new prompt under
+  `plan_tool/prompts/`, and wiring into `review_plan_full` / `cmd_review`.
+
 ## Verification
 
 - The primitive emits a finding for a plan section whose claim contradicts a

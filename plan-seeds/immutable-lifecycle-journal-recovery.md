@@ -87,6 +87,25 @@ or unrecognized member remains a refusal with no mutation.
 None beyond narrow shared recovery validation that prevents the named lifecycle
 entry points from duplicating one exact generation predicate.
 
+## Scope guardrails
+
+- No generic journal ownership, repair, inspection or operator-repair
+  framework.
+- Legacy, unrecorded, malformed or forged member sets continue to fail closed
+  without mutation.
+- Roadmap admission, candidate semantics, accepted-head authority, direct-reader
+  migration, model invocation and raw-response retention are unchanged.
+
+## Audit guardrails
+
+- Root-enrollment recovery, the deferred #329 hardening, and lifecycle writer
+  migration beyond the four named writer-produced shapes are out of scope.
+
+## Expected placement
+
+- Only narrow shared recovery validation, so the named lifecycle entry points
+  do not duplicate one exact generation predicate.
+
 ## Testing
 
 - Run focused recovery and lifecycle tests in `tests/test_roadmap_revision_publish.py`,

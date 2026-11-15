@@ -392,3 +392,27 @@ The carved step was left **attempted/partial** (status `pending`) — account fo
 
 - Source plan: docs/implementation-plans/2-intent-required.md
 - Carved steps: 6, 7
+
+## Scope guardrails
+
+- No validation past presence: the directive and the dispatcher carry ids and a
+  target token, and never inspect, score, cap or compare intent text.
+- No parse-time requirement, migration, sweep or batch arm, and no new
+  parallel surface; dispatch is serial, one bridge call per applied finding.
+- The intent directive is not wired into `split`, `merge`, `scope-out` or
+  `reground`, and the shipped merge/re-ground directive grammar is not extended.
+- The proposer stays a remedy on the existing finding: no new subcommand,
+  `Recommendation` or finding source.
+
+## Audit guardrails
+
+- A finding asking either step to grade or judge an intent is invalid, not
+  deferrable.
+- Severity and the blocking bucket stay where step 8 owns them, and the
+  deferred items above stay deferred.
+
+## Expected placement
+
+- Step 6 lands in `plan_tool/review.py` with `tests/test_review.py`.
+- Step 7 lands in `plan_tool/review_walk.py` and `plan_tool/cli/review_actions.py`
+  with `tests/test_review_walk.py` and `tests/cli/test_review_actions.py`.

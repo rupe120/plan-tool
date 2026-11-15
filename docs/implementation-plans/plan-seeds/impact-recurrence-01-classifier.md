@@ -137,6 +137,28 @@ Only the consumer-driven privacy change in decision 7 — a helper becomes publi
 because a named new call site needs it, in that call site's step. No moves, no
 re-homing, no `convergence_diagnosis.py` restructuring.
 
+## Scope guardrails
+
+- No loop wiring: `convergence.py:should_continue`, `cli/completeness_cmd.py`,
+  `cli/completeness_phases.py` and `cli/reconcile.py` stay untouched.
+- Existing `recurring_regions`, `diagnose_convergence` and `classify_fork`
+  verdicts stay unchanged, and no structural mutation is applied.
+
+## Audit guardrails
+
+- Loop wiring belongs to part 2, and any out-of-scope discovery becomes a
+  `BACKLOG.md` / `BUG_BACKLOG.md` entry rather than plan expansion.
+- `convergence.is_blocking_impact` and the calibrated impact policy gain no
+  new caller.
+
+## Expected placement
+
+- `plan_tool/impact_recurrence.py` (new) holds the classifier, and
+  `tests/test_impact_recurrence.py` holds its tests.
+- Only a consumer-driven public promotion of `convergence_diagnosis.py`
+  helpers moves elsewhere; the `structural-stop` telemetry constants live in
+  `plan_tool/telemetry.py`.
+
 ## Verification
 
 Synthetic persisted histories drive every case, with no Claude and no loop:

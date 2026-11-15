@@ -75,6 +75,23 @@ the transition contract above — no other behavior change.
 
 None beyond what the transition contract requires in `parser.py`.
 
+## Scope guardrails
+
+- The scorer uses deterministic signals only, with no LLM-based scoring.
+- `detail --reconcile` behavior is unchanged when an operator invokes it
+  directly.
+- No rescore command for existing plans, and no schema break without the
+  format-version transition contract.
+
+## Audit guardrails
+
+- The overlap with `review`'s low-confidence-hint dispatch is surfaced as an
+  explicit design decision, neither silently merged nor silently ignored.
+
+## Expected placement
+
+- Only what the transition contract requires in `parser.py`.
+
 ## Verification
 
 - A plan written at every prior supported format version round-trips through

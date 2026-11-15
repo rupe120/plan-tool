@@ -84,6 +84,26 @@ Only a small shared selector or caller-local adapter may be extracted if it
 prevents a caller from defaulting to the wrong policy channel. Do not merge the
 three channels into a universal predicate.
 
+## Scope guardrails
+
+- The settled bare-plan bar is unchanged, and no multi-pass clean streak is
+  required.
+- No new `Recommendation.domain` field, source-taxonomy redesign, or new
+  quality gate over agreement between plan prose and code.
+- The three policy channels are not merged into a universal predicate.
+
+## Audit guardrails
+
+- Retired #231 bad-fix provenance, generic `detail --commit` readiness/exit
+  policy (#262) and new reporting work are out of scope; #260 is discarded.
+
+## Expected placement
+
+- A confirmed caller selects the correct existing policy channel or renders its
+  stop/handoff state more accurately.
+- At most a small shared selector or caller-local adapter is extracted; if no
+  code change is needed, documentation and tests are the sole delivery.
+
 ## Risks
 
 - Calling a domain classifier on a bare finding risks false precision and

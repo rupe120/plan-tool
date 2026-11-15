@@ -218,6 +218,30 @@ these is a finding that is **invalid, not deferrable**:
 - Auto-proposing premises by classifying the seed, and any calibration corpus.
 - Migrating existing plans.
 
+## Scope guardrails
+
+- The only checked fact is the binary observable: an `open` premise row names
+  at least one step id in `blocks`.
+- Every item enumerated under "Not allowed" in the scope contract is invalid,
+  not deferrable: no semantic judgment of claims or evidence, no inferred
+  `blocks`, no caps, no exit-code or gate change, and no model-driven row
+  edits.
+- No consumer other than `detail`'s skip, and no migration of existing plans.
+
+## Audit guardrails
+
+- Anything the iteration loop surfaces outside this fence goes to `BACKLOG.md` /
+  `BUG_BACKLOG.md`, never to plan expansion.
+- The `convergence` trajectory signal and the stale-arm sweep trigger are out
+  of scope here.
+
+## Expected placement
+
+- `plan_tool/schema.py`, `plan_tool/parser.py`, `plan_tool/review.py`,
+  `plan_tool/cli/completeness_phases.py`, `plan_tool/create.py`,
+  `plan_tool/detail.py`, `PLAN_FORMAT.md`, `SEED_FORMAT.md`,
+  `DATA_CONTRACT.md` and `tests/`.
+
 ## Risks
 
 - **Ledger theater** — rows minted for everything until operators skim the

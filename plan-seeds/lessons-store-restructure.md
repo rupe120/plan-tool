@@ -193,6 +193,25 @@ of the few load-bearing cross-file invariants in the tool.
   plan halts and the user decides whether to expand the vocabulary
   before resuming.
 
+## Scope guardrails
+
+- `project.md` project lessons keep the flat append-only shape and are not
+  changed.
+- No automated promotion or consolidation in `detail` or `review` runs; both
+  stay manual CLI invocations.
+- No backward-compat shim for the old Markdown bullet format, and no new
+  surfaces beyond the fixed five.
+
+## Audit guardrails
+
+- `docs/explanations/lessons-learned.md` changes are out of scope.
+- If a need for a new surface appears during migration, the plan halts and the
+  user decides.
+
+## Expected placement
+
+None.
+
 ## Acceptance criteria (plan-level)
 
 - `plan-tool detail` on any step injects a lessons block that is
