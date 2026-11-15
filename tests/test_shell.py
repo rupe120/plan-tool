@@ -725,6 +725,23 @@ class TestUnsinkedCallWarning:
     def test_caller_lookup_returns_a_non_shell_frame(self) -> None:
         assert shell._caller_outside_shell().startswith("test_shell.py:")
 
+    def test_call_routed_through_the_retry_loop_names_its_caller_not_the_loop(
+        self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # The warning fires from a shell closure the retry loop calls back
+        # into, so the nearest non-shell frame is rate_limit_loop.py. It must
+        # name the code that asked for the call instead.
+        monkeypatch.setattr(shell, "_warned_no_sink", False)
+        monkeypatch.setattr(shell.shutil, "which", lambda _n: "/usr/bin/claude")
+        monkeypatch.setattr(
+            backend_runner.subprocess, "Popen", _fake_popen_factory(stdout="ok", returncode=0)
+        )
+        shell.claude_invoke("hello")
+        err = capsys.readouterr().err
+        assert "claude call at test_shell.py:" in err
+        assert "rate_limit_loop.py" not in err
+        assert "backend_runner.py" not in err
+
 
 # ---------- claude_invoke: failure recovery ----------
 

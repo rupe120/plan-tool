@@ -953,8 +953,15 @@ def _effective_subprocess_timeout() -> Optional[float]:
 _warned_no_sink = False
 
 
+# Sibling leaves that sit between a caller and the shell closure that emits
+# the warning (the retry loop calls back into shell; the streaming supervisor
+# calls observers). The warning names the first frame *above* them.
+_TRANSPORT_FRAME_FILES = ("rate_limit_loop.py", "backend_runner.py")
+
+
 def _caller_outside_shell() -> str:
-    """``file.py:lineno`` of the nearest frame outside this module.
+    """``file.py:lineno`` of the nearest frame outside this module and its
+    retry/transport leaves (:data:`_TRANSPORT_FRAME_FILES`).
 
     Names the actual call site in the unsinked-call warning — ``phase`` alone
     is too weak (most unsinked callers never pass one). Only runs on the
@@ -964,10 +971,14 @@ def _caller_outside_shell() -> str:
     try:
         import traceback
 
-        here = __file__
+        here = Path(__file__).resolve()
         for frame in reversed(traceback.extract_stack()[:-1]):
-            if frame.filename != here:
-                return f"{Path(frame.filename).name}:{frame.lineno}"
+            path = Path(frame.filename).resolve()
+            if path == here:
+                continue
+            if path.parent == here.parent and path.name in _TRANSPORT_FRAME_FILES:
+                continue
+            return f"{path.name}:{frame.lineno}"
     except Exception:  # noqa: BLE001 — best-effort
         pass
     return "unknown"
