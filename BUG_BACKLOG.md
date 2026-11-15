@@ -740,53 +740,6 @@ Durable re-open conditions for retired items are recorded in
   `run/roadmap-candidate-row-prose-amendments` (commit range through
   `efb78f0a`).
 
-### `create --from-existing` reads several seed sections without first removing the seed's YAML frontmatter, so a `## <Section>` comment line there replaces the real section
-
-- **Files:** `plan_tool/create.py` (`_preserve_source_optional_sections`,
-  `_extract_supplied_guardrails`, the `_canonical_seed_covers_all` input in the
-  file-backed route, the `seed_sections` read from `body_source`,
-  `_restore_materialized_evidence_sections`) and `plan_tool/reprocess.py` (the
-  archive's `extract_h2_sections` read).
-- **Symptom:** a column-0 `##` YAML comment is legal in frontmatter and parses
-  as a section when the reader does not strip the frontmatter first
-  (`scope_fence._strip_frontmatter`'s docstring describes the failure). The
-  duplicate rule keeps the first non-empty body, so that comment shadows the
-  real section. Reproduced 2026-10-08 at `bfc8b261`: for a seed whose
-  frontmatter holds a `## Scope guardrails` comment,
-  `_extract_supplied_guardrails` returns `{'Scope guardrails': '---'}` while
-  `_intent_from_seed_outcome` returns the real Outcome for the same text.
-- **Sites, enumerated 2026-10-08** (every call of `extract_h2_sections`,
-  `extract_h2_section_occurrences`, `_fenced_code_spans`, and `h2_section_spans`
-  in `plan_tool/` by identifier; `_H2_HEADING_RE`, `_STRICT_STEPS_H2_RE`, and
-  `^##` regex readers by vocabulary): 6 readers of a seed or seed-like source do
-  not strip; 12 do (`create.py` at `_strip_frontmatter` call sites,
-  `roadmap_gates.py` twice, `roadmap.py:_replace_stack_section`,
-  `annotate_render.py` twice, `reprocess.py` for its fence check, and
-  `canonical.py`, which uses the strict splitter).
-- **Fix:** read the sections of the frontmatter-stripped text at the 6 sites,
-  as `_intent_from_seed_outcome` already does. Strip only the text handed to the
-  section reader, never the `source_text` that distillation's evidence spans
-  index by line.
-- **Do not merge:** the lenient `scope_fence._strip_frontmatter` and the strict
-  `parser._split_frontmatter` stay separate (the lenient one's docstring says
-  why). `read_canonical_provenance` and the draft-seed state readers read the
-  frontmatter on purpose. `_patch_plan_body_section` locates the body by the
-  exact `\n---\n` literal. The plan and detail readers that already split first
-  are not in the class.
-- **Verification:** one test parametrized over the 6 readers, with a seed whose
-  frontmatter holds `## Scope guardrails`, `## Outcome`, and a body-section
-  comment, showing the real section wins (following `TestIntentPredicateConsumers`);
-  revert each strip and watch its case go red; the full suite passes.
-- **Out of scope:** merging the two frontmatter splitters or adding a shared
-  "read seed sections" helper (consolidation needs its own evidence), changing
-  the first-occurrence duplicate rule, and changing what `create` does with a
-  section once read.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `beginner`.
-- **Approach:** direct, small: the same wrap at 6 sites plus one parametrized test.
-- **Origin:** 2026-10-08, `/code-review high` on the `roadmap-stack-propagation`
-  change, which noted `_extract_supplied_guardrails` reading the raw seed while
-  its sibling strips. The enumeration and reproduction were done the same day.
-
 ### Run-log call pairing has open gaps around `plan_audit` and the sink-installing proposal sites
 
 - **Files:** `plan_tool/review.py:_error_tracking_invoker`, `plan_tool/launcher.py:_invoke_and_log_end`,
