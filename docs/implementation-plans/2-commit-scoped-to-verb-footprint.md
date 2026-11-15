@@ -3,7 +3,7 @@ format_version: 1
 title: Commit Scoped To Verb Footprint
 intent: Every `--commit` surface commits only the paths its verb wrote, so a file
   that another process changes during the run is never swept into the verb's commit.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -24,7 +24,7 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/01-change-commit-all-plan-tool-cli.md
-  status: current
+  status: done
   description: 'Change `commit_all` in `plan_tool/cli/gitcommit.py` so it takes a
     required `paths` argument. It stages with `git add -A -- <literal pathspecs>`
     and commits with `git commit -m <subject> -- <pathspecs>`, so only those paths
@@ -37,22 +37,26 @@ steps:
     gitignored path skipped this way does not fail the commit. A footprint entry that
     is neither on disk nor tracked is skipped before staging (it names nothing to
     commit), and is outside the post-commit check. A tracked path deleted on disk
-    is still staged by `-A`. An entry with no change is staged harmlessly. After staging, `commit_all` commits only the entries git knows (tracked, or newly staged by the add), so an entry that matches nothing git knows, such as an empty directory or one holding only ignored files, is skipped like an absent one instead of failing `git commit -- <pathspec>`. When no
-    entry has a change, `commit_all` makes no commit and returns success with a tail
-    saying nothing changed, rather than the non-zero ''nothing to commit'' git would
-    give. Existing callers keep their whole-tree behaviour for now by passing `[repo_root]`
-    as the footprint; steps 2–5 replace that. Destructive-operation disposition: `commit_all`
-    deletes nothing itself. Through `-A`, a delete or rename inside the footprint
-    is still staged, and a delete outside it is no longer staged. Update the module
-    docstring, which describes `--commit` as staging the produced edits. Unit tests
-    go in `tests/cli/test_gitcommit.py` against a real temporary repo: an unrelated
-    dirty file is not committed, a pre-staged unrelated file is not committed, a delete
-    and a rename inside the footprint are staged, a directory entry stages its new
-    nested files, an ignored path warns and the commit still succeeds, an expected
-    path left dirty (for example when a hook rewrites it) is reported by name with
-    a non-zero rc, an absent untracked entry is skipped without failing, an empty directory entry beside a changed entry does not fail the commit, a tracked
-    deleted entry is staged, and a footprint with no changes returns success with
-    no commit.'
+    is still staged by `-A`. An entry with no change is staged harmlessly. After staging,
+    `commit_all` commits only the entries git knows (tracked, or newly staged by the
+    add), so an entry that matches nothing git knows, such as an empty directory or
+    one holding only ignored files, is skipped like an absent one instead of failing
+    `git commit -- <pathspec>`. When no entry has a change, `commit_all` makes no
+    commit and returns success with a tail saying nothing changed, rather than the
+    non-zero ''nothing to commit'' git would give. Existing callers keep their whole-tree
+    behaviour for now by passing `[repo_root]` as the footprint; steps 2–5 replace
+    that. Destructive-operation disposition: `commit_all` deletes nothing itself.
+    Through `-A`, a delete or rename inside the footprint is still staged, and a delete
+    outside it is no longer staged. Update the module docstring, which describes `--commit`
+    as staging the produced edits. Unit tests go in `tests/cli/test_gitcommit.py`
+    against a real temporary repo: an unrelated dirty file is not committed, a pre-staged
+    unrelated file is not committed, a delete and a rename inside the footprint are
+    staged, a directory entry stages its new nested files, an ignored path warns and
+    the commit still succeeds, an expected path left dirty (for example when a hook
+    rewrites it) is reported by name with a non-zero rc, an absent untracked entry
+    is skipped without failing, an empty directory entry beside a changed entry does
+    not fail the commit, a tracked deleted entry is staged, and a footprint with no
+    changes returns success with no commit.'
 - id: 2
   intent: Stop `detail --commit` from committing files another process changed during
     a multi-step authoring run, which is the incident behind this plan.
@@ -68,22 +72,29 @@ steps:
     1: the path-scoped `commit_all` with the ignored-path warning and the post-commit
       clean check
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/02-give-detail-commit-its-own-footprint.md
+  status: done
   description: 'Give `detail --commit` its own footprint at all three commit sites
     in `plan_tool/cli/authoring.py`: the per-step commit (`_commit_detail_step`),
-    the `--jobs>1` batch commit and the residual sweep after a per-step run. The footprint is the plan file, the plan''s `plan-details/<slug>/` directory (detail files, `archive/` moves from `_archive_orphan_details`, saved reports from the completeness tail), every `steps[].detail` path the plan declares (the same rule as step 3 and step 5, since a pointer can name a file outside the canonical directory), and the lesson files the run appends under `.plan-tool/lessons/`. Confirm
-    the exact set in detail against the write sites in `plan_tool/detail.py`. Pass
-    the footprint to `commit_all` in place of the transitional `[repo_root]`. Change
-    `_commit_if_dirty` so it decides ''nothing to commit'' from dirt inside the footprint,
-    not from a dirty tree. The check decides only whether a commit is reported; step 1 already makes an empty footprint a successful no-op, so it no longer prevents a failure. Keep its never-raises contract and the stop-after-first-failure
-    rule. The rule still matters because a failed commit leaves footprint paths staged.
-    Rewrite the `--commit` help text, which says it stages everything, and regenerate
-    `docs/cli/detail.md` with `python -m plan_tool.cli_reference --write`. Tests go
-    in `tests/cli/test_authoring_cmds.py`, written separately for each site because
-    the sites run at different times against different dirt. Each site needs a case
-    where an unrelated file dirtied mid-run is left out of the commit, a case where
-    an archive rename inside the plan-details directory is staged, and a case where
-    every footprint path is clean after the commit. A test that patches `authoring._commit_all`
-    follows the new signature.'
+    the `--jobs>1` batch commit and the residual sweep after a per-step run. The footprint
+    is the plan file, the plan''s `plan-details/<slug>/` directory (detail files,
+    `archive/` moves from `_archive_orphan_details`, saved reports from the completeness
+    tail), every `steps[].detail` path the plan declares (the same rule as step 3
+    and step 5, since a pointer can name a file outside the canonical directory),
+    and the lesson files the run appends under `.plan-tool/lessons/`. Confirm the
+    exact set in detail against the write sites in `plan_tool/detail.py`. Pass the
+    footprint to `commit_all` in place of the transitional `[repo_root]`. Change `_commit_if_dirty`
+    so it decides ''nothing to commit'' from dirt inside the footprint, not from a
+    dirty tree. The check decides only whether a commit is reported; step 1 already
+    makes an empty footprint a successful no-op, so it no longer prevents a failure.
+    Keep its never-raises contract and the stop-after-first-failure rule. The rule
+    still matters because a failed commit leaves footprint paths staged. Rewrite the
+    `--commit` help text, which says it stages everything, and regenerate `docs/cli/detail.md`
+    with `python -m plan_tool.cli_reference --write`. Tests go in `tests/cli/test_authoring_cmds.py`,
+    written separately for each site because the sites run at different times against
+    different dirt. Each site needs a case where an unrelated file dirtied mid-run
+    is left out of the commit, a case where an archive rename inside the plan-details
+    directory is staged, and a case where every footprint path is clean after the
+    commit. A test that patches `authoring._commit_all` follows the new signature.'
 - id: 3
   intent: Make an audit commit carry only the plan and report edits the audit produced.
   files:
@@ -97,6 +108,7 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all`
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/03-give-completeness-audit-commit-plan.md
+  status: done
   description: 'Give `completeness-audit --commit` in `plan_tool/cli/completeness_cmd.py`
     its own footprint: the plan file, the plan''s `plan-details/<slug>/` directory
     (the saved report and sidecar from `write_completeness_report`, plus detail files
@@ -121,6 +133,7 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all`
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/04-give-manifest-sweep-commit-plan-tool.md
+  status: done
   description: 'Give `manifest sweep --commit` in `plan_tool/cli/manifest.py` its
     footprint from records the sweep already returns: the manifest path, and each
     `ArchiveOutcome`''s original `plan_path` (a delete) and `archived_to` (an add).
@@ -152,14 +165,17 @@ steps:
   depends_on_notes:
     1: the path-scoped `commit_all` that `_commit_green_step` delegates to
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/05-make-paths-required-on-commit-green.md
+  status: done
   description: 'Make `paths` required on `_commit_green_step` in `plan_tool/cli/run_cmd.py`
     and have it delegate staging and committing to `commit_all`, so `run --commit`
     uses the same ignored-path warning and post-commit clean check. The `--accept`
     caller keeps its existing `expected` set. Its silent skip of an ignored path becomes
     the shared one-line warning, which is an allowed change. The single-step and `--all`
-    sweep callers pass: the plan file, the plan''s `plan-details/<slug>/` directory, every `steps[].detail` path the plan declares, the archived plan and manifest when `--archive` completed the plan, and the paths
-    changed since a baseline taken just before `run_step`. That baseline uses `git_state.changed_paths_or_none`
-    for the changed paths. Rename origins come from a separate, additive rename-aware
+    sweep callers pass: the plan file, the plan''s `plan-details/<slug>/` directory,
+    every `steps[].detail` path the plan declares, the archived plan and manifest
+    when `--archive` completed the plan, and the paths changed since a baseline taken
+    just before `run_step`. That baseline uses `git_state.changed_paths_or_none` for
+    the changed paths. Rename origins come from a separate, additive rename-aware
     read of the same `git status --porcelain -z` output, added beside it in `git_state.py`;
     `changed_paths_or_none` keeps its current return value, so the test-authoring
     gate in `launcher.py` sees exactly what it sees today. The backend writes arbitrary
@@ -209,6 +225,7 @@ steps:
   depends_on_notes:
     5: which part of `run --commit` stays deferred, and why
   detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/06-rewrite-how-statements-that-say-commit.md
+  status: done
   description: 'Rewrite the how-to statements that say `--commit` stages the whole
     tree. In `docs/how-to/pipeline/detail.md`, retire the ''per-step `git add -A`
     is only safe while no prior step left the tree dirty'' safety invariant and its
@@ -217,11 +234,13 @@ steps:
     notes so they describe footprint staging and the post-commit clean check. In BUG_BACKLOG.md,
     reduce the originating "`--commit` stages the whole working tree with `git add
     -A`…" entry to the deferred residual: under `run --commit`, a concurrent write
-    during the backend call still lands in the step''s commit, because the backend''s writes are recorded only as a git delta. Only that undetected case goes in the entry; a path already dirty at the step''s baseline is not a residual, since `run` names it in a warning at run time. Also name any other surface that steps
-    2–5 could not convert, with its reason. Remove the entry outright if nothing is
-    deferred. Verify with `rg ''git add -A'' docs/how-to plan_tool/cli`, which should
-    return no claim that `--commit` stages everything, and with a clean `uv run pytest
-    tests/cli/test_cli_reference.py`.'
+    during the backend call still lands in the step''s commit, because the backend''s
+    writes are recorded only as a git delta. Only that undetected case goes in the
+    entry; a path already dirty at the step''s baseline is not a residual, since `run`
+    names it in a warning at run time. Also name any other surface that steps 2–5
+    could not convert, with its reason. Remove the entry outright if nothing is deferred.
+    Verify with `rg ''git add -A'' docs/how-to plan_tool/cli`, which should return
+    no claim that `--commit` stages everything, and with a clean `uv run pytest tests/cli/test_cli_reference.py`.'
 ---
 # Commit Scoped To Verb Footprint
 

@@ -39,8 +39,8 @@ __pycache__
 **/reports/in-progress-sampler-checkpoint.json
 
 # Third-party standards kept locally for reference only. Copyrighted and not
-# ours to redistribute; `run --commit`'s `git add -A` would otherwise sweep
-# them into a commit. Repo-authored notes in docs/standards/ stay tracked.
+# ours to redistribute; a `run --commit` step that wrote one would otherwise
+# commit it with the step. Repo-authored notes in docs/standards/ stay tracked.
 docs/standards/*.pdf
 
 # Roadmap revision checkpoint: transient per-run recovery state, discarded

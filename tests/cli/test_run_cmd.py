@@ -690,6 +690,35 @@ def _commit_baseline(repo: Path) -> None:
     )
 
 
+class TestGreenCommitFailureMsg:
+    def test_commit_that_landed_gets_no_reset_advice(self) -> None:
+        msg = run_cmd._green_commit_failure_msg(
+            run_cmd.CommitOutcome(1, "still dirty: a.txt", True), 3, swept=True
+        )
+        assert "was committed" in msg and "sweep halted" in msg
+        assert "git reset" not in msg and "a.txt" in msg
+
+    def test_commit_that_did_not_land_keeps_reset_advice(self) -> None:
+        msg = run_cmd._green_commit_failure_msg(
+            run_cmd.CommitOutcome(1, "hook rejected", False), 3, swept=False
+        )
+        assert "did not commit green step 3" in msg and "git reset" in msg
+        assert "hook rejected" in msg and "sweep halted" not in msg
+
+    def test_unreadable_git_state_is_not_reported_as_a_failed_git_commit(
+        self,
+    ) -> None:
+        msg = run_cmd._green_commit_failure_msg(
+            run_cmd.CommitOutcome(
+                1, "no commit made: git state was unreadable after the step", False
+            ),
+            3,
+            swept=False,
+        )
+        assert "git commit failed" not in msg
+        assert "unreadable" in msg
+
+
 class TestCommitGreenStep:
     """The per-step commit helpers ``--commit`` builds on."""
 
@@ -714,8 +743,9 @@ class TestCommitGreenStep:
         (tmp_path / "f.txt").write_text("v1", encoding="utf-8")
         _commit_baseline(tmp_path)
         (tmp_path / "f.txt").write_text("v2", encoding="utf-8")
-        rc, _tail = _commit_green_step(
-            tmp_path, slug="demo", step_id=3, step_title="My step"
+        rc, _tail, _ = _commit_green_step(
+            tmp_path, slug="demo", step_id=3, step_title="My step",
+            paths=[tmp_path / "f.txt"],
         )
         assert rc == 0
         assert _git_log_subject(tmp_path) == "plan(demo): step 3 green — My step"
@@ -729,8 +759,9 @@ class TestCommitGreenStep:
         _commit_baseline(tmp_path)
         # A brand-new untracked file present before the commit call.
         (tmp_path / "new.txt").write_text("fresh", encoding="utf-8")
-        rc, _tail = _commit_green_step(
-            tmp_path, slug="demo", step_id=1, step_title="t"
+        rc, _tail, _ = _commit_green_step(
+            tmp_path, slug="demo", step_id=1, step_title="t",
+            paths=[tmp_path / "new.txt"],
         )
         assert rc == 0
         listing = subprocess.run(
@@ -740,17 +771,26 @@ class TestCommitGreenStep:
         )
         assert "new.txt" in listing.stdout
 
-    def test_commit_returns_nonzero_when_nothing_to_commit(
+    def test_clean_footprint_is_success_with_no_commit(
         self, tmp_path: Path
     ) -> None:
         _init_git_repo(tmp_path)
         (tmp_path / "f.txt").write_text("v1", encoding="utf-8")
         _commit_baseline(tmp_path)
-        # Tree is clean — git refuses to make an empty commit.
-        rc, _tail = _commit_green_step(
-            tmp_path, slug="demo", step_id=1, step_title="t"
+        # Nothing changed in the footprint: ``commit_all`` succeeds, no commit.
+        rc, _tail, _ = _commit_green_step(
+            tmp_path, slug="demo", step_id=1, step_title="t",
+            paths=[tmp_path / "f.txt"],
         )
-        assert rc != 0
+        assert rc == 0
+        assert _git_log_subject(tmp_path) == "baseline"
+
+    def test_commit_green_step_requires_paths(self, tmp_path: Path) -> None:
+        """No whole-tree default: omitting ``paths`` is a TypeError."""
+        with pytest.raises(TypeError):
+            _commit_green_step(  # type: ignore[call-arg]
+                tmp_path, slug="demo", step_id=1, step_title="t"
+            )
 
     def test_working_tree_dirty_detects_modification(
         self, tmp_path: Path
@@ -1630,7 +1670,12 @@ class TestRunResumeCommand:
         set_active_backend(CODEX_BACKEND)
         monkeypatch.setattr(run_cmd, "run_step", fake_run_step)
         monkeypatch.setattr(run_cmd, "_working_tree_dirty", lambda *_args: False)
-        monkeypatch.setattr(run_cmd, "_commit_green_step", lambda *a, **k: (0, ""))
+        # tmp_path is not a git repo, so the real footprint commit fails closed;
+        # this test pins the resume command, not the commit.
+        monkeypatch.setattr(
+            run_cmd, "_commit_step_footprint",
+            lambda *a, **k: run_cmd.CommitOutcome(0, "", True),
+        )
 
         rc = run_cmd.cmd_run(
             TestPreflightBranchGuardCallSite()._args(
@@ -2012,6 +2057,286 @@ def _accept_args(**overrides) -> argparse.Namespace:
     return _sweep_args(**{"accept": True, "step": 1, **overrides})
 
 
+def _git_status_porcelain(repo: Path) -> str:
+    return subprocess.run(
+        ["git", "status", "--porcelain"], cwd=repo, stdin=subprocess.DEVNULL,
+        capture_output=True, text=True, check=True,
+    ).stdout
+
+
+def _git_head_files(repo: Path) -> list[str]:
+    return subprocess.run(
+        # ``--no-renames`` so a committed rename lists its origin as well.
+        ["git", "show", "--name-only", "--no-renames", "--format=", "HEAD"], cwd=repo,
+        stdin=subprocess.DEVNULL, capture_output=True, text=True, check=True,
+    ).stdout.split()
+
+
+def _git_head(repo: Path) -> str:
+    return subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, stdin=subprocess.DEVNULL,
+        capture_output=True, text=True, check=True,
+    ).stdout.strip()
+
+
+class TestRunCommitFootprint:
+    """``run --commit`` commits the plan, its details, archive outputs and the
+    git delta since the baseline — never the whole tree."""
+
+    def _repo(self, tmp_path: Path) -> Path:
+        _init_git_repo(tmp_path)
+        plan_path = _pending_plan(tmp_path, detail=None)
+        (tmp_path / "tracked.txt").write_text("v1", encoding="utf-8")
+        _commit_baseline(tmp_path)
+        return plan_path
+
+    def _commit(self, tmp_path: Path, plan_path: Path, baseline, **kw):
+        return run_cmd._commit_step_footprint(
+            _ctx(tmp_path),
+            plan_path=plan_path,
+            slug="feature",
+            step_id=1,
+            step_title="only step",
+            baseline=baseline,
+            archive_outcome=kw.get("archive_outcome"),
+            manifest_path=kw.get("manifest_path"),
+            plan_footprint=kw.get("plan_footprint"),
+        )
+
+    def test_file_dirtied_after_baseline_is_in_delta_and_committed_known_residual(
+        self, tmp_path: Path
+    ) -> None:
+        """Known residual: the git delta cannot tell a file another process
+        wrote during the step from the step's own work, so both are committed."""
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+        (tmp_path / "other_process.txt").write_text("b", encoding="utf-8")
+        rc, _, _ = self._commit(tmp_path, plan_path, set())
+        assert rc == 0
+        assert {"step_work.txt", "other_process.txt"} <= set(_git_head_files(tmp_path))
+
+    def test_plan_that_fails_to_parse_any_way_still_commits_the_step(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Re-reading the plan for detail pointers must never abort the commit,
+        whatever it raises."""
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+
+        def bad_bytes(*_a, **_k):
+            raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid start byte")
+
+        import plan_tool.cli.commit_footprint as commit_footprint
+
+        monkeypatch.setattr(commit_footprint, "parse_plan", bad_bytes)
+        rc, tail, committed = self._commit(tmp_path, plan_path, set())
+        assert rc == 0 and committed, tail
+        assert "step_work.txt" in _git_head_files(tmp_path)
+
+    def test_step_edit_is_committed_when_project_root_is_below_git_top_level(
+        self, tmp_path: Path
+    ) -> None:
+        """git status paths are relative to the top level; joining them onto a
+        nested project root would name files that do not exist."""
+        _init_git_repo(tmp_path)
+        svc = tmp_path / "svc"
+        svc.mkdir()
+        plan_path = _pending_plan(svc, detail=None)
+        (svc / "src").mkdir()
+        _commit_baseline(tmp_path)
+        (svc / "src" / "x.py").write_text("x = 1\n", encoding="utf-8")
+        rc, tail, committed = run_cmd._commit_step_footprint(
+            _ctx(svc),
+            plan_path=plan_path,
+            step_id=1,
+            step_title="only step",
+            slug="feature",
+            baseline=set(),
+            archive_outcome=None,
+            manifest_path=None,
+        )
+        assert rc == 0 and committed, tail
+        assert "svc/src/x.py" in _git_head_files(tmp_path)
+
+    def test_rename_origin_dirty_before_the_step_is_left_out(
+        self, tmp_path: Path
+    ) -> None:
+        """The operator's edit to a file the step then renames is not folded
+        into the step's commit through the rename origin."""
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "tracked.txt").write_text("operator edit", encoding="utf-8")
+        baseline = {"tracked.txt"}
+        subprocess.run(
+            ["git", "mv", "tracked.txt", "moved.txt"], cwd=tmp_path,
+            stdin=subprocess.DEVNULL, capture_output=True, check=True,
+        )
+        paths, _ = run_cmd._step_footprint(
+            _ctx(tmp_path), plan_path=plan_path, baseline=baseline,
+            archive_outcome=None, manifest_path=None,
+        )
+        assert tmp_path / "moved.txt" in paths
+        assert tmp_path / "tracked.txt" not in paths
+
+    def test_unrelated_file_outside_delta_is_excluded(self, tmp_path: Path) -> None:
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "tracked.txt").write_text("dirty before", encoding="utf-8")
+        baseline = {"tracked.txt"}
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+        rc, _, _ = self._commit(tmp_path, plan_path, baseline)
+        assert rc == 0
+        assert _git_head_files(tmp_path) == ["step_work.txt"]
+        assert " M tracked.txt" in _git_status_porcelain(tmp_path)
+
+    def test_file_dirty_before_step_is_not_committed(self, tmp_path: Path) -> None:
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "untracked_before.txt").write_text("x", encoding="utf-8")
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+        rc, _, _ = self._commit(tmp_path, plan_path, {"untracked_before.txt"})
+        assert rc == 0
+        assert "untracked_before.txt" not in _git_head_files(tmp_path)
+        assert "?? untracked_before.txt" in _git_status_porcelain(tmp_path)
+
+    def test_file_dirty_before_and_after_is_left_uncommitted_and_named_in_warning(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "tracked.txt").write_text("dirty before", encoding="utf-8")
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+        rc, _, _ = self._commit(tmp_path, plan_path, {"tracked.txt"})
+        assert rc == 0
+        err = capsys.readouterr().err
+        assert "tracked.txt" in err
+        assert "dirty before the step" in err
+        assert "may also have edited" in err
+
+    def test_unreadable_baseline_makes_no_commit_and_exits_nonzero(
+        self, tmp_path: Path
+    ) -> None:
+        plan_path = self._repo(tmp_path)
+        head = _git_head(tmp_path)
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+        rc, tail, _ = self._commit(tmp_path, plan_path, None)
+        assert rc != 0
+        assert "baseline" in tail
+        assert _git_head(tmp_path) == head
+        assert "?? step_work.txt" in _git_status_porcelain(tmp_path)
+
+    def test_unreadable_after_snapshot_makes_no_commit_and_exits_nonzero(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        plan_path = self._repo(tmp_path)
+        head = _git_head(tmp_path)
+        (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+        monkeypatch.setattr(run_cmd, "status_records_or_none", lambda _r: None)
+        rc, tail, _ = self._commit(tmp_path, plan_path, set())
+        assert rc != 0
+        assert "after the step" in tail
+        assert _git_head(tmp_path) == head
+        assert "?? step_work.txt" in _git_status_porcelain(tmp_path)
+
+    def test_unreadable_git_state_never_falls_back_to_whole_tree(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        plan_path = self._repo(tmp_path)
+        head = _git_head(tmp_path)
+        (tmp_path / "unrelated.txt").write_text("u", encoding="utf-8")
+        assert self._commit(tmp_path, plan_path, None)[0] != 0
+        monkeypatch.setattr(run_cmd, "status_records_or_none", lambda _r: None)
+        assert self._commit(tmp_path, plan_path, set())[0] != 0
+        assert _git_head(tmp_path) == head
+        assert "?? unrelated.txt" in _git_status_porcelain(tmp_path)
+
+    def test_staged_rename_in_step_commits_both_paths_and_leaves_both_clean(
+        self, tmp_path: Path
+    ) -> None:
+        plan_path = self._repo(tmp_path)
+        subprocess.run(
+            ["git", "mv", "tracked.txt", "moved.txt"], cwd=tmp_path,
+            stdin=subprocess.DEVNULL, capture_output=True, check=True,
+        )
+        rc, _, _ = self._commit(tmp_path, plan_path, set())
+        assert rc == 0
+        assert {"tracked.txt", "moved.txt"} <= set(_git_head_files(tmp_path))
+        assert _git_status_porcelain(tmp_path) == ""
+
+    def test_archive_move_is_committed_with_the_step(self, tmp_path: Path) -> None:
+        _init_git_repo(tmp_path)
+        plan_path, manifest_path = _completed_plan_and_manifest(tmp_path)
+        _commit_baseline(tmp_path)
+        outcome = run_cmd._archive_on_completion(
+            plan_path, ctx=_ctx(tmp_path), manifest_path=manifest_path
+        )
+        assert outcome is not None and outcome.archived_to is not None
+        rc, _, _ = self._commit(
+            tmp_path, plan_path, set(),
+            archive_outcome=outcome, manifest_path=manifest_path,
+        )
+        assert rc == 0
+        assert _git_status_porcelain(tmp_path) == ""
+        assert "m.json" in _git_head_files(tmp_path)
+        assert any(f.startswith("archive/") for f in _git_head_files(tmp_path))
+
+    def test_archiving_step_reads_the_plan_before_the_archive_notice(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """The archive prepends a notice the parser rejects; the plan's
+        footprint is read first, so no warning and the lessons log rides."""
+        _init_git_repo(tmp_path)
+        plan_path, manifest_path = _completed_plan_and_manifest(tmp_path)
+        plan_path.write_text(
+            plan_path.read_text(encoding="utf-8").replace(
+                "---\n", "---\nlessons: notes/lessons.md\n", 1
+            ),
+            encoding="utf-8",
+        )
+        (tmp_path / "notes").mkdir()
+        (tmp_path / "notes" / "lessons.md").write_text("old\n", encoding="utf-8")
+        _commit_baseline(tmp_path)
+        (tmp_path / "notes" / "lessons.md").write_text("halt\n", encoding="utf-8")
+        baseline = {"notes/lessons.md"}  # dirty before the step, plan-owned
+        pre = run_cmd.plan_commit_footprint(tmp_path, plan_path)
+        outcome = run_cmd._archive_on_completion(
+            plan_path, ctx=_ctx(tmp_path), manifest_path=manifest_path
+        )
+        rc, tail, committed = self._commit(
+            tmp_path, plan_path, baseline,
+            archive_outcome=outcome, manifest_path=manifest_path,
+            plan_footprint=pre,
+        )
+        assert rc == 0 and committed, tail
+        assert "could not read" not in capsys.readouterr().err
+        assert "notes/lessons.md" in _git_head_files(tmp_path)
+
+    def test_plan_file_is_clean_after_each_green_commit(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The mark-done write ``run_step`` makes to the plan lands in the
+        commit, at single-step scope (``cmd_run``)."""
+        plan_path = self._repo(tmp_path)
+
+        def fake_run_step(*_a, **_k):
+            plan_path.write_text(
+                plan_path.read_text(encoding="utf-8").replace(
+                    "status: pending", "status: done"
+                ),
+                encoding="utf-8",
+            )
+            (tmp_path / "step_work.txt").write_text("a", encoding="utf-8")
+            return _FakeRunResult()
+
+        monkeypatch.setattr(run_cmd, "run_step", fake_run_step)
+        rc = run_cmd.cmd_run(
+            TestPreflightBranchGuardCallSite()._args(
+                tmp_path, step=1, commit=True
+            )
+        )
+        assert rc == 0
+        # No ignore rules of its own: the default .plan-tool/.gitignore keeps
+        # run logs and run-prefs, written around the commit, out of status.
+        assert _git_status_porcelain(tmp_path) == ""
+        assert {"feature.md", "step_work.txt"} <= set(_git_head_files(tmp_path))
+
+
 class TestRunAccept:
     """``--accept`` certifies with the gates a backend run would have run and
     writes nothing unless all pass; it is never a second route past a red gate."""
@@ -2186,6 +2511,24 @@ class TestRunAccept:
             _accept_args(commit=True), ctx=_ctx(tmp_path), plan_path=plan_path
         ) == 0
         assert not _working_tree_dirty(tmp_path)
+
+    def test_accept_ignored_path_warns_instead_of_silent_skip(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        _init_git_repo(tmp_path)
+        (tmp_path / ".gitignore").write_text("docs/lessons.md\n", encoding="utf-8")
+        plan_path = _accept_plan(tmp_path)
+        text = plan_path.read_text(encoding="utf-8").replace(
+            "priority: low\n", "priority: low\nlessons: docs/lessons.md\n", 1
+        )
+        plan_path.write_text(text, encoding="utf-8")
+        _commit_everything(tmp_path)
+        assert run_cmd._cmd_run_accept(
+            _accept_args(commit=True), ctx=_ctx(tmp_path), plan_path=plan_path
+        ) == 0
+        assert "not committing gitignored path: docs/lessons.md" in (
+            capsys.readouterr().err
+        )
 
     def test_commit_includes_a_tracked_lessons_file(self, tmp_path: Path) -> None:
         _init_git_repo(tmp_path)

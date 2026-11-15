@@ -207,22 +207,29 @@ the tree clean between steps (load-bearing for the test-authoring gate, same as
 [`cli/gitcommit.py`](../../../plan_tool/cli/gitcommit.py)):
 
 - **Clean-tree gate up front:** rejects (rc 2) if the working tree is dirty, so
-  `git add -A` can't fold unrelated edits into a commit. Skipped under `--dry-run`.
+  the run starts from a known baseline. Skipped under `--dry-run`.
+- **Footprint staging:** every commit (per-step, batch, residual) stages and
+  commits only the plan file, the plan's `plan-details/<slug>/` directory, every
+  `steps[].detail` file and the `lessons:` log the plan declares, and the files
+  under `.plan-tool/` that `.gitignore` does not exclude (`plan_commit_footprint`
+  in `plan_tool/cli/commit_footprint.py`, the same rule `completeness-audit` and
+  `run` use). An unrelated file that changes during the run stays out of the
+  commit. Entry rules: [run.md § Commit footprint](run.md#commit-footprint).
 - **Per-step:** each written step commits with subject
   `plan(<slug>): detail step N — <title>`; a step that skips (already authored)
-  or splits does **not** commit. A clean tree at a step's turn is a silent no-op
-  (no spurious "nothing to commit" failure).
-- **Safety invariant — per-step `git add -A` is only safe while no prior step
-  left the tree dirty.** The per-step commit stages *everything* (`git add -A`)
-  to capture a step's full footprint (detail file, plan pointer, lessons, orphan
-  archives) without enumerating it. So it is **skipped once any earlier step
-  failed** (e.g. a frontmatter-update failure that orphaned a written file) — an
-  otherwise-clean later step's `git add -A` would sweep that debris into the
-  wrong commit. After a failure the run is rc-gated off, so the debris is never
-  committed. The concurrent path and split re-authoring likewise route to the
-  end-of-run commit, not per-step, for the same reason.
-- **Residual sweep:** if the tree is still dirty after the run (e.g. completeness-
-  tail edits), one final commit `plan(<slug>): detail — residual authoring edits`.
+  or splits does **not** commit. A clean footprint at a step's turn is a silent
+  no-op (no spurious "nothing to commit" failure). After the first failed
+  per-step commit (e.g. a hook rejection leaves that step's files staged), later
+  steps are left uncommitted on disk. Per-step commits also stop once an
+  earlier step failed and left debris on disk (for example an orphaned detail
+  file from a frontmatter-update failure): the debris sits inside
+  `plan-details/<slug>/`, so the next step's footprint commit would carry it
+  under the wrong subject. The concurrent (`--jobs>1`) path commits
+  once at end of run, not per step.
+- **Post-commit clean check:** a footprint path still dirty after the commit
+  (e.g. a hook rewrote it) makes the command exit non-zero and names the path.
+- **Residual sweep:** if the footprint is still dirty after the run (e.g.
+  completeness-tail edits or the grounding stamp), one final commit `plan(<slug>): detail — residual authoring edits`.
 - **Hook-aware:** no `--no-verify` — a pre-commit hook rejection surfaces as a
   non-zero rc that flags the run (the files are still on disk).
 

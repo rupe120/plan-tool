@@ -144,9 +144,9 @@ when the condition holds.
      └─ success (step green):
           ├─ --archive & plan_completed? . move plan → archive/, deregister manifest, print undo hint
           │     SKIP-if not complete / no --archive       (runs BEFORE the commit so it's captured)
-          ├─ --commit & step done? ...... git add -A + one commit per green step   (clean-tree precheck
-          │     SKIP-if no --commit            commit fails → return its rc          ran pre-run; dirty → rc=2)
-          │                                    (captures the archive move when the step completed + archived)
+          ├─ --commit & step done? ...... commit the step's footprint + clean check   (clean-tree precheck
+          │     SKIP-if no --commit            commit or clean check fails → return its rc   ran pre-run; dirty → rc=2)
+          │                                    (footprint includes the archive move when the step completed + archived)
           ├─ advanced_to set ............ "✓ step N done — advanced to step M"
           ├─ plan_completed ............. "✓ plan complete" (archived above when --archive)
           └─ neither .................... "✓ step N done — no next runnable step"
@@ -176,7 +176,7 @@ once; then `run_step()` repeats until no runnable step remains or a gate halts.
           │     ├─ --dry-run → rc=0 (first iteration's prompt only)
           │     └─ exit_code ≠ 0 → record halt in lessons:, return that rc  (gate halted the sweep)
           ├─ --archive & plan_completed? . move plan → archive/ + deregister (BEFORE the commit)
-          ├─ --commit & step done? ...... git add -A + one commit per green step (captures the
+          ├─ --commit & step done? ...... commit the step's footprint + clean check (includes the
           │     SKIP-if no --commit           archive move); commit fails → return its rc (left dirty)
           └─ --archive & plan_completed? . print "sweep complete", rc=0 (sweep done)
 ```
@@ -317,15 +317,77 @@ config), or set `PLAN_TOOL_REQUIRE_MERGED_PLAN=0`. Implementation:
    with a `status_note`, so a re-run resumes exactly there.
 3. **`--commit` after gates pass** — the per-step commit captures a state that
    already cleared every blocking gate, so any later failure leaves precisely
-   one step's work dirty (`git reset` to recover).
+   one step's work dirty (`git reset` to recover). The commit stages only the
+   step's footprint; a footprint path still dirty after the commit gives a
+   non-zero exit and names the path. If git state is unreadable before or after
+   the step, the commit fails closed.
 4. **`--archive` before `--commit`** — on the completing step the plan move +
-   manifest deregister run first, so the green commit's `git add -A` captures
-   them in one commit. The tree is clean afterward, so a follow-up `--commit`
+   manifest deregister run first, so the green commit's footprint (which names
+   the archive outputs and the manifest) captures them in one commit. The tree is clean afterward, so a follow-up `--commit`
    run isn't blocked by the clean-tree precheck. (A failed commit still leaves
    the move dirty for `git reset` recovery, same as the step's edits.)
 5. **Sweep halts self-record** — a run failure or a refused gate appends
    `- <ts> step N halt (sweep): <reason>` to the plan's `lessons:` file, so the
    halt is recorded next to the plan it guards.
+
+## Commit footprint
+
+Every `--commit` verb (`run`, `detail`, `completeness-audit`, `manifest sweep`)
+commits through `gitcommit.commit_all`, which stages and commits only the paths
+it is given.
+
+- **Run's footprint:** the plan's own paths (`commit_footprint.plan_commit_footprint`:
+  the plan file, `plan-details/<slug>/`, declared `steps[].detail` files, the
+  plan's `lessons:` log, and `.plan-tool/`), any `--archive` outputs and manifest,
+  and the git delta since the step's baseline, both sides of a rename. A path
+  already dirty at the baseline is left out of the delta and named in a warning.
+- **Entry rules:**
+
+  | Entry | Behavior |
+  | --- | --- |
+  | directory | covers everything beneath it |
+  | symlink | the link itself is committed, not its target |
+  | absent, and not in the index or `HEAD` | skipped silently |
+  | only in `HEAD` (`git rm`, origin of `git mv`) | committed as a delete, not passed to `git add` |
+  | gitignored file | skipped with a warning |
+  | gitignored directory | its tracked files are committed (`git add -u`); the rest is skipped silently |
+  | relative path | read relative to the current directory |
+  | staged delete of a force-tracked file matching an ignore rule | committed, no warning |
+
+  `git status` paths are relative to the git top level, which can sit above a
+  project root that holds `.plan-tool/plans.json`; the delta and the clean check
+  translate them. `git commit` gets literal pathspecs through the `:(literal)`
+  prefix, so hooks keep their own glob matching.
+
+- **Result:** `CommitOutcome(rc, tail, committed)`. No change in the footprint is
+  `rc 0` with no commit. A footprint path still dirty after the commit (a hook
+  rewrote it) is non-zero with `committed` true. An unreadable index or git
+  status fails closed.
+- **Plan-tool's own files follow `.gitignore`:** every footprint includes
+  `.plan-tool/`, so the repo's ignore rules decide which of its files are
+  committed. Before its clean-tree check, a `--commit` verb on an otherwise
+  clean tree with no `.plan-tool/.gitignore` fills the gaps in the repo's rules
+  for plan-tool's runtime state (`runs/`, `run-prefs.json`, `telemetry/`,
+  `reviews/`, `checkpoints/`, the mutation lock, impact analyses, …): it writes
+  only the patterns no existing rule decides either way, and commits the file on
+  its own as `plan-tool: ignore runtime state by default`
+  (`commit_footprint.commit_state_ignore`). A nested `.gitignore` outranks the
+  root one, which is why it never repeats a decided pattern. Writes made after a
+  verb's last commit, such as the run-log end record, then never block the next
+  `--commit`.
+
+  | Situation | Behavior |
+  | --- | --- |
+  | every pattern already decided by the repo's rules | no file written |
+  | file present | never overwritten; the team edits the tracked copy |
+  | file deleted in a commit | not re-created: that deletion is the opt-out |
+  | tree dirty | nothing written; the clean-tree check refuses as usual |
+  | commit rejected (e.g. a commit-msg hook) | file removed, warning names the fix: add the paths to `.gitignore` |
+  | committed, then rewritten by a hook | warning; the clean-tree check then refuses |
+
+  The default commit lands at the clean-tree check, so a verb that then refuses
+  on a later argument check still leaves it in history. A repo that tracks a
+  runtime file keeps committing it, and its late writes are that repo's choice.
 
 ## After the plan completes — the two-loop verification tail
 
@@ -466,8 +528,8 @@ Every backend call appends its raw stdout lines, verbatim and live, to
 file). `tail -f` follows a running call.
 
 - **Unredacted.** The file holds whatever the backend emitted. The directory
-  carries its own `.gitignore` (`*`), so `run --commit`'s `git add -A` cannot
-  stage it. There is no size cap and nothing prunes automatically;
+  carries its own `.gitignore` (`*`), and `run --commit` skips gitignored
+  footprint entries with a warning, so it never stages the file. There is no size cap and nothing prunes automatically;
   `plan-tool runs clear` (`--all`, `<slug>`, or `--older-than <DURATION>`)
   removes `<run_id>.streams/` directories by their newest file's age
   (`run_log.prune_stream_logs`). Each call's `backend_spawn` event names its

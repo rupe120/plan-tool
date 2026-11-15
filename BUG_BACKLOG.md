@@ -639,6 +639,72 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
+### `detail --commit` leaves an out-of-tree detail file's moves and archive writes uncommitted
+
+- **Files:** `plan_tool/cli/commit_footprint.py:plan_commit_footprint`;
+  `plan_tool/detail.py` (the `--force` predecessor archive and
+  `_archive_orphan_details`, which write beside the detail file).
+- **Symptom:** a `steps[].detail` pointer may name a file outside
+  `plan-details/<slug>/` (e.g. `docs/specs/03-x.md`). The footprint includes
+  that file but not the `archive/` directory detail writes next to it, so
+  `detail --force --commit` leaves `docs/specs/archive/…` uncommitted and the
+  next `--commit` is refused by its clean-tree gate. `detail --split` has the
+  same gap: it renames downstream detail files before the commit, and the
+  footprint, rebuilt from the post-split plan, lists only the new pointer, so
+  the old out-of-tree path's deletion stays in the tree.
+- **Fix:** have detail report the archive and rename paths it wrote (both
+  sides) and add those exact paths to the footprint. Deliberately not done: adding each pointer's
+  `archive/` directory, which another plan may share, so its unrelated
+  changes would join the commit.
+- **Approach:** `direct`.
+- **Verification:** with an out-of-tree pointer, `detail --force --commit`
+  ends on a clean tree and the commit holds only this plan's archive files.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-15, round 4 of the `/code-review` of
+  `commit-scoped-to-verb-footprint`.
+
+### `--accept`'s clean-tree check misreads quoted and renamed paths
+
+- **Files:** `plan_tool/cli/gitcommit.py:unexpected_dirty_paths`.
+- **Symptom:** it parses `git status --porcelain` without `-z` (`line[3:]`), so
+  a name with a space or non-ASCII character comes back quoted (`"a b.txt"`) and
+  a rename as `old -> new`. Neither matches the expected plan or lessons path,
+  so `run --step N --accept` refuses a tree whose only dirt is those expected
+  files. It also relativizes the expected paths to the project root while
+  status paths are relative to the git top level, so under a project root
+  nested below the top level the plan file always reads as unexpected.
+  `commit_all`'s own clean check handles both through
+  `git_state.status_records_or_none` and the top level. Predates
+  `commit-scoped-to-verb-footprint`.
+- **Fix:** build `unexpected_dirty_paths` on `status_records_or_none` and share
+  one equals-or-nested-under matcher with `_dirty_footprint_paths`.
+- **Approach:** `direct`.
+- **Verification:** `--accept` succeeds when the plan file's name contains a
+  space and it is the only dirty path.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-15, round 5 of the `/code-review` of
+  `commit-scoped-to-verb-footprint`.
+
+### `--commit`'s post-commit clean check fails on a path git always reports as modified
+
+- **Files:** `plan_tool/cli/gitcommit.py` (`_dirty_footprint_paths`, the
+  post-commit check in `_commit_footprint`).
+- **Symptom:** a footprint path that still reads as modified after it is
+  committed, with no hook involved, makes the check return non-zero although
+  the commit landed: a submodule with untracked content (` M vendor/lib`), or a
+  file whose clean or line-ending filter keeps it showing as modified. `run
+  --all --commit` then halts after every such step.
+- **Fix:** run the check with `--ignore-submodules=untracked`, and decide
+  whether a path that `git diff` shows no content change for should count.
+  Deliberately not done: dropping the check, which is what catches a hook that
+  rewrote a committed file.
+- **Approach:** `direct`.
+- **Verification:** a step whose delta includes a submodule with untracked
+  files commits and the sweep continues.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-15, round 6 of the `/code-review` of
+  `commit-scoped-to-verb-footprint`.
+
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
@@ -814,42 +880,29 @@ Durable re-open conditions for retired items are recorded in
   14,725 passed, 67 skipped in 70.48 seconds. The trace records
   `assert 99 == 100` at `tests/test_run_log.py:161`.
 
-### `--commit` stages the whole working tree with `git add -A`, so a file another process changes during the run lands in the verb's commit
+### `run --commit` can still commit a file another process writes during the backend call
 
-- **Files:** `plan_tool/cli/gitcommit.py:commit_all` (runs a bare
-  `git add -A`); its call sites in `plan_tool/cli/authoring.py`,
-  `plan_tool/cli/completeness_cmd.py` and `plan_tool/cli/manifest.py`.
-  Precedent for a caller-supplied path set: `gitcommit.py:unexpected_dirty_paths`
-  and `launcher._git_changed_paths_or_none`.
-- **Symptom:** `--commit` requires a clean tree up front, which makes
-  "everything in the tree is this verb's output" true only at the start.
-  Anything written during a multi-step run (a concurrent session, an editor
-  sidecar, a hook) is swept into the next commit under a subject describing the
-  verb's work. Near-miss 2026-07-31: a `detail --commit` run on
-  `roadmap-01-domain-constraints` was one step from committing four unrelated
-  `plan_tool/` source files, edited by a second session in the same worktree,
-  under `plan(roadmap-01-domain-constraints): detail step 6 — …`.
-- **Fix:** give `commit_all` the verb's touched-path set and stage
-  `git add -A -- <paths>`, which keeps deletes and renames inside the set (the
-  seed-archive move). Two decisions to settle rather than discover: after
-  committing, assert no expected path is still dirty (the change inverts the
-  failure mode from over-staging to silent under-staging); and decide the
-  behavior for a gitignored expected path, which an explicit pathspec rejects
-  where `git add -A` skips it. Deliberately not changed: the clean-tree
-  precondition, commit subjects, which verbs accept `--commit`, per-step commit
-  granularity, and `launcher.py`'s test-authoring delta. If a caller cannot
-  enumerate its footprint without new bookkeeping, ship the surfaces that can
-  and file the rest.
-- **Approach:** `plan-tool` — mechanical per call site, but "what did this verb
-  touch" is a per-verb question across several modules, and the under-staging
-  and gitignore branches are decisions worth auditing.
-- **Verification:** per surface, an unrelated dirty file present at commit time
-  is not committed; deletes and renames inside the touched set still stage;
-  every expected path is clean after the commit; an ignored expected path takes
-  the decided branch.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-07-31, caught mid-run; moved from BACKLOG #209, 2026-11-14.
-  Lands before any widening of `--commit` to more verbs (BACKLOG #89).
+- **Files:** `plan_tool/cli/run_cmd.py:_step_footprint` (builds the footprint
+  from `after - baseline`); `plan_tool/git_state.py` (the path-name git delta).
+- **Symptom:** `run` records the backend's writes only as a git delta of path
+  names, so it cannot tell a backend edit from a concurrent write made during
+  the same call. A concurrent write to a path that was clean at the baseline
+  appears in the delta and lands in the step's commit. A path already dirty at
+  the baseline is not part of this residual: it is excluded from the commit and
+  `run` names it in a warning at run time.
+- **Other unconverted surfaces:** none. `detail`, `completeness-audit`,
+  `manifest sweep` and `run` all commit a footprint. A concurrent edit to a file
+  the verb itself wrote is out of scope and is committed with the verb's change.
+- **Fix:** a record of the paths the backend itself wrote would close it.
+  Deliberately not specified here; it needs new footprint bookkeeping, which the
+  scope fence of `commit-scoped-to-verb-footprint` excludes.
+- **Approach:** `plan-tool` — the record's shape is a design decision.
+- **Verification:** a path written by another process during the backend call is
+  not in the step's commit.
+- **Route:** plan · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** deferred from `commit-scoped-to-verb-footprint`, 2026-11-14 (from
+  BACKLOG #209). Lands before any widening of `--commit` to more verbs
+  (BACKLOG #89).
 
 ### A `create --iterate` re-proposal that reuses a done or current step's id for a different step drops the executed step from the plan, and a reworded title resets a finished step
 

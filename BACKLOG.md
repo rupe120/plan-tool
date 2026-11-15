@@ -4520,6 +4520,33 @@ working straight down the tiers.
 
 ### D. Process / hygiene
 
+**#536 — Batch `commit_all`'s per-path git calls**
+
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **What:** `plan_tool/cli/gitcommit.py:commit_all` runs `check-ignore`,
+  `ls-files`, sometimes `ls-tree HEAD`, and `diff --cached` once per footprint
+  entry. A footprint is usually a handful of paths, but an archiving `run` step
+  or a `manifest sweep` lists both sides of every plan-details move, so a plan
+  with ~50 saved reports spawns several hundred git processes per commit.
+- **Fix:** one call per check over all entries (`check-ignore --stdin`, one
+  `ls-files -z`, one `ls-tree -z HEAD`, one `diff --cached --name-only -z`),
+  matched back to entries by path prefix. Two cheaper cuts first: the
+  `--archive` footprints in `run_cmd._step_footprint` and
+  `manifest._sweep_commit_footprint` list every per-file `plan_details_moved`
+  pair where the source and destination directories would cover them, and
+  `run_cmd._commit_step_footprint` reads `git status` again right after
+  `commit_all`'s own post-commit read; and on a non-archiving step
+  `_step_footprint` lists the plan file and `plan-details/<slug>/` twice (git
+  accepts the duplicates, so only the cost changes). Deliberately not changed: the
+  per-entry decisions themselves (ignored, staged-delete, no-change), which the
+  `TestCommitAll` cases pin.
+- **Effort:** small.
+- **Approach:** direct; the existing `TestCommitAll` cases are the regression
+  net, plus one test that counts git invocations for a many-entry footprint.
+- **Origin:** 2026-11-14, `/code-review` of `commit-scoped-to-verb-footprint`
+  (deferred as a cost, not a defect).
+- **Status:** not started.
+
 **#497 — Keep one plain-words swap list for the detail, audit, and apply prompts**
 
 - **Labels:** Route `direct`
@@ -5110,10 +5137,9 @@ working straight down the tiers.
   flag), medium overall.
 - **Approach:** `plan-tool` (a flag + commit-unit decision per verb) or `direct`
   one verb at a time.
-- **Dependencies:** land the BUG_BACKLOG.md entry "`--commit` stages the whole working tree with
-  `git add -A` ..." first (`commit_all` stages with a bare
-  `git add -A`; extending `--commit` to more verbs would spread its
-  over-staging hazard). Complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
+- **Dependencies:** none outstanding: `commit_all` commits only the footprint
+  each verb passes it (`commit-scoped-to-verb-footprint`, 2026-11-15), so a new
+  `--commit` verb names its own footprint. Complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
 - **Origin:** 2026-07-05 — user, after `create` had to be hand-committed while
   building the auto-bridge-structural-remedies plan; narrowed 2026-11-14.
 
@@ -6176,8 +6202,9 @@ working straight down the tiers.
   returns empty today only because nothing has collided yet, not because
   anything tracked protects a fresh clone. Any other contributor (or this
   user on another machine) has zero built-in protection against
-  `git add -A`/`run --commit` sweeping Claude Code session/runtime state into
-  a commit. Evaluate folding the repo-relevant subset of those patterns into
+  `git add -A` sweeping Claude Code session/runtime state into a commit
+  (`run --commit` commits the step's git delta, which includes any such file
+  the session writes during the step). Evaluate folding the repo-relevant subset of those patterns into
   the tracked root `.gitignore` (or a new tracked `.claude/.gitignore` that
   travels with the directory) so the guarantee is explicit and portable
   instead of living in per-machine config.
@@ -6186,7 +6213,8 @@ working straight down the tiers.
   or clone-local excludes is exactly the fact that should be stated once,
   explicitly, in the tracked repo rather than left to be inferred from
   "nothing has broken yet." The risk is not hypothetical — `run --commit` is
-  standing policy for this tool's own pipeline and stages via `git add -A`.
+  standing policy for this tool's own pipeline and commits every file the step
+  changed, which includes session state written during it.
 - **Effort:** small — auditing and editing existing ignore files; no code
   changes.
 - **Risks:** low. Worst case is over-broadly ignoring a path that should stay

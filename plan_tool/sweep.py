@@ -125,7 +125,24 @@ class ArchiveOutcome:
     archived_to: Optional[Path] = None
     deregistered: bool = False
     plan_details_moved: list[tuple[Path, Path]] = field(default_factory=list)
+    # The plan-details directory moved as a whole: source (removed) and
+    # destination. ``None`` when no details directory was archived.
+    plan_details_dirs: Optional[tuple[Path, Path]] = None
     skipped: list[str] = field(default_factory=list)
+
+    def touched_paths(self) -> list[Path]:
+        """Both sides of every move this archive made, for a ``--commit``
+        footprint. The details directories are listed whole, since the source
+        is removed whole, including entries no per-file move recorded."""
+        paths = [self.plan_path]
+        if self.archived_to is not None:
+            paths.append(self.archived_to)
+        if self.plan_details_dirs is not None:
+            paths.extend(self.plan_details_dirs)
+        else:
+            for src, dest in self.plan_details_moved:
+                paths.extend((src, dest))
+        return paths
 
 
 @dataclass
@@ -539,6 +556,7 @@ def _archive_plan_details(
         return
 
     outcome.plan_details_moved.extend(moves)
+    outcome.plan_details_dirs = (details_src, details_dst)
     shutil.rmtree(details_src)
 
 

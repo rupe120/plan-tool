@@ -1,18 +1,24 @@
 """Shared git-commit plumbing for the opt-in ``--commit`` flags.
 
-Used by the authoring/audit verbs whose ``--commit`` stages and commits the
-plan/detail edits they produce (``detail``, ``completeness-audit``). Stdlib-only leaf — imports nothing from the cli
-package, so any command module can import it without a cycle. ``run``'s
-``--commit`` keeps its own per-green-step helper (different subject/semantics).
+``commit_all`` stages and commits only the footprint it is given; every
+``--commit`` verb (``detail``, ``completeness-audit``, ``manifest sweep``,
+``run``) goes through it, and a footprint path left dirty after the commit is a
+failure. Imports nothing from the cli package (its only first-party import is
+the ``git_state`` leaf, which owns the working-tree read), so any command
+module can import it without a cycle.
 """
 
 from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import NamedTuple
+
+from plan_tool.git_state import status_records_or_none, toplevel_or_none
 
 
 def working_tree_dirty(repo_root: Path) -> bool:
@@ -97,13 +103,11 @@ def unexpected_dirty_paths(
 def path_is_gitignored(repo_root: Path, path: Path) -> bool:
     """True when ``path`` is excluded by gitignore rules (``git check-ignore``).
 
-    Lets a ``--commit`` verb warn when a file it means to commit — e.g. the
-    saved-audit JSON the walker annotates in place — sits on an ignored path,
-    so ``git add -A`` would silently skip it and the annotations would never
-    land. ``check-ignore`` exits 0 when one or more paths match an ignore
-    rule, 1 when none do, 128 on a fatal error (not a work tree, …); only an
-    exit of 0 is a positive "ignored", so any other rc returns False rather
-    than false-warning.
+    Lets ``init`` warn when a file it writes for the team sits on an ignored
+    path. ``check-ignore`` exits 0 when one or more paths match an ignore rule,
+    1 when none do, 128 on a fatal error (not a work tree, …); only an exit of
+    0 is a positive "ignored", so any other rc returns False rather than
+    false-warning.
     """
     proc = subprocess.run(
         ["git", "check-ignore", "-q", "--", str(path)],
@@ -111,6 +115,7 @@ def path_is_gitignored(repo_root: Path, path: Path) -> bool:
         stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
+        errors="surrogateescape",
     )
     return proc.returncode == 0
 
@@ -175,32 +180,219 @@ def warn_recommended_paths_ignored(repo_root: Path, emit) -> None:
     )
 
 
-def commit_all(repo_root: Path, subject: str) -> "tuple[int, str]":
-    """Stage all changes (``git add -A``) and commit with ``subject``.
-    Returns ``(rc, stderr-tail)``.
+def _git_literal(
+    repo_root: Path, *args: str, input: "str | None" = None
+) -> "subprocess.CompletedProcess[str]":
+    """Run git with literal pathspecs so ``*`` / ``?`` in a name match only itself."""
+    return subprocess.run(
+        ["git", *args],
+        cwd=repo_root,
+        input=input,
+        stdin=None if input is not None else subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        errors="surrogateescape",
+        env={**os.environ, "GIT_LITERAL_PATHSPECS": "1"},
+    )
 
-    No AI-attribution trailer — the operator's own git identity is the sole
-    author of record. No ``--no-verify`` — pre-commit hooks run and a
-    rejection surfaces as a non-zero rc. ``tail`` is the failing command's
-    stderr for the caller to show.
+
+def _dirty_footprint_paths(
+    top: Path, entries: Sequence[str]
+) -> "list[str] | None":
+    """Dirty paths (either side of a rename) covered by ``entries``, which, like
+    ``git status`` paths, are relative to the work-tree top level ``top``;
+    ``None`` when git status cannot be read."""
+    records = status_records_or_none(top)
+    if records is None:
+        return None
+
+    def covered(rel: str) -> bool:
+        return any(
+            exp == "." or rel == exp or rel.startswith(exp + "/") for exp in entries
+        )
+
+    dirty = {
+        rel
+        for path, origin in records
+        for rel in (path, origin)
+        if rel is not None and covered(rel)
+    }
+    return sorted(dirty)
+
+
+def repo_relative(repo_root: Path, path: Path) -> "str | None":
+    """``path`` relative to ``repo_root`` as POSIX, or ``None`` when outside it.
+    A relative ``path`` is cwd-relative, as when it was written. Only the
+    parent is resolved: a leaf symlink is itself what git tracks."""
+    root = repo_root.resolve()
+    absolute = path.absolute()
+    lexical = absolute.parent.resolve() / absolute.name
+    try:
+        rel = lexical.relative_to(root).as_posix()
+    except ValueError:
+        return None
+    return "." if rel in ("", ".") else rel
+
+
+def _in_index(repo_root: Path, rel: str) -> bool:
+    return bool(_git_literal(repo_root, "ls-files", "--", rel).stdout.strip())
+
+
+def _matches_ignore_rules(repo_root: Path, rel: str) -> bool:
+    """True when ``rel`` matches an ignore rule, tracked or not (``--no-index``).
+    No literal-pathspec env: ``check-ignore`` takes paths and rejects it."""
+    return subprocess.run(
+        ["git", "check-ignore", "-q", "--no-index", "--", rel],
+        cwd=repo_root,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+    ).returncode == 0
+
+
+def _in_head(repo_root: Path, rel: str) -> bool:
+    return bool(
+        _git_literal(
+            repo_root, "ls-tree", "--name-only", "HEAD", "--", rel
+        ).stdout.strip()
+    )
+
+
+class CommitOutcome(NamedTuple):
+    """``commit_all``'s result. ``committed`` says whether HEAD moved, so a
+    caller never infers it from ``rc``: ``rc == 0`` can mean "nothing to
+    commit", and a non-zero ``rc`` can follow a commit that landed."""
+
+    rc: int
+    tail: str
+    committed: bool
+
+    def describe(self, what: str) -> str:
+        """Error line for a non-zero outcome; says whether HEAD moved."""
+        lead = (
+            f"{what} was committed, but the commit check failed (rc={self.rc})"
+            if self.committed
+            else f"{what} not committed (rc={self.rc})"
+        )
+        return lead + (f": {self.tail}" if self.tail else "")
+
+
+def commit_all(
+    repo_root: Path, subject: str, paths: Sequence[Path]
+) -> CommitOutcome:
+    """Stage and commit only the ``paths`` footprint with ``subject``, never
+    with ``--no-verify`` or an attribution trailer. Never raises: a git
+    subprocess or decoding error is an uncommitted failure. Entry rules and the
+    post-commit clean check: docs/how-to/pipeline/run.md § "Commit footprint".
     """
-    add = subprocess.run(
-        ["git", "add", "-A"],
-        cwd=repo_root,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
+    try:
+        return _commit_footprint(repo_root, subject, paths)
+    except (OSError, ValueError) as exc:
+        return CommitOutcome(1, f"git subprocess error: {exc}", False)
+
+
+def _commit_footprint(
+    repo_root: Path, subject: str, paths: Sequence[Path]
+) -> CommitOutcome:
+    # Work from the git top level: a project root holding .plan-tool/plans.json
+    # can sit below it, and a step may edit files outside the project root.
+    top = toplevel_or_none(repo_root)
+    if top is None:
+        return CommitOutcome(1, "could not find the git work tree to commit in", False)
+    repo_root = top
+    nothing = CommitOutcome(
+        0, "nothing changed in the footprint; no commit made", False
     )
-    if add.returncode != 0:
-        return add.returncode, add.stderr.strip()
+    entries: list[str] = []
+    stage_all: list[str] = []
+    stage_tracked: list[str] = []
+    for path in paths:
+        rel = repo_relative(repo_root, path)
+        if rel is None:
+            continue  # outside the work tree — nothing here to commit
+        absolute = repo_root.resolve() / rel
+        in_index = _in_index(repo_root, rel)
+        on_disk_or_index = os.path.lexists(absolute) or in_index
+        in_head = not on_disk_or_index and _in_head(repo_root, rel)
+        if not on_disk_or_index and not in_head:
+            continue  # nothing there to commit, ignored or not
+        if in_head:
+            entries.append(rel)  # staged delete: committed, never passed to add
+            continue
+        if rel != "." and _matches_ignore_rules(repo_root, rel):
+            # Naming an ignored path makes ``git add -A`` fail, so stage only
+            # its tracked files (``add -u``); untracked ones stay ignored.
+            if in_index:
+                stage_tracked.append(rel)
+                entries.append(rel)
+            elif not absolute.is_dir():
+                # An ignored directory is the repo opting that area out; an
+                # ignored file the verb meant to commit is worth saying.
+                print(
+                    f"warning: not committing gitignored path: {rel}",
+                    file=sys.stderr,
+                )
+            continue
+        stage_all.append(rel)
+        entries.append(rel)
+    if not entries:
+        return nothing
+
+    # Pathspecs go through stdin, NUL-separated: a step touching thousands of
+    # files would otherwise exceed the argv length limit.
+    for mode, group in (("-A", stage_all), ("-u", stage_tracked)):
+        if group:
+            add = _git_literal(
+                repo_root, "add", mode,
+                "--pathspec-from-file=-", "--pathspec-file-nul",
+                input="\0".join(group),
+            )
+            if add.returncode != 0:
+                return CommitOutcome(add.returncode, add.stderr.strip(), False)
+
+    # Only entries with a staged change: an entry git knows nothing about
+    # (empty directory, only ignored files) would fail ``commit -- <pathspec>``.
+    changed: list[str] = []
+    for entry in entries:
+        diff = _git_literal(
+            repo_root, "diff", "--cached", "--name-only", "--", entry
+        )
+        if diff.returncode != 0:  # unreadable index never reads as "no change"
+            return CommitOutcome(diff.returncode, diff.stderr.strip(), False)
+        if diff.stdout.strip():
+            changed.append(entry)
+    if not changed:
+        return nothing
+
+    # Literal pathspecs by magic prefix, not GIT_LITERAL_PATHSPECS: commit runs
+    # hooks, which would inherit the variable and read their own globs literally.
     commit = subprocess.run(
-        ["git", "commit", "-m", subject],
+        ["git", "commit", "-m", subject,
+         "--pathspec-from-file=-", "--pathspec-file-nul"],
         cwd=repo_root,
-        stdin=subprocess.DEVNULL,
+        input="\0".join(f":(literal){entry}" for entry in changed),
         capture_output=True,
         text=True,
+        errors="surrogateescape",
     )
-    return commit.returncode, commit.stderr.strip()
+    if commit.returncode != 0:
+        return CommitOutcome(commit.returncode, commit.stderr.strip(), False)
+
+    dirty = _dirty_footprint_paths(repo_root, entries)
+    if dirty is None:
+        return CommitOutcome(
+            1,
+            "committed, but could not read git status to confirm the "
+            "footprint is clean",
+            True,
+        )
+    if dirty:
+        return CommitOutcome(
+            1,
+            "committed, but a footprint path is still dirty after the commit "
+            "(e.g. a hook rewrote it): " + ", ".join(dirty),
+            True,
+        )
+    return CommitOutcome(0, commit.stderr.strip(), True)
 
 
 def commit_receipt(

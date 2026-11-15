@@ -659,17 +659,20 @@ def finalize_completeness_run(
 
     if getattr(args, "commit", False) and not args.json and budget.enabled:
         from plan_tool.detail import _plan_slug as _detail_plan_slug
-        commit_rc, tail = commit_all(
-            ctx.repo_root, _completeness_commit_subject(_detail_plan_slug(path))
+        from plan_tool.cli.commit_footprint import plan_commit_footprint
+
+        committed = commit_all(
+            ctx.repo_root,
+            _completeness_commit_subject(_detail_plan_slug(path)),
+            plan_commit_footprint(ctx.repo_root, path),
         )
-        if commit_rc == 0:
+        if committed.rc != 0:
+            error(committed.describe("completeness edits"))
+            return 1
+        if committed.committed:
             success("committed completeness edits")
         else:
-            error(
-                f"git commit failed (rc={commit_rc})"
-                + (f": {tail}" if tail else "")
-            )
-            return 1
+            info("--commit: nothing to commit (no edits inside the plan footprint)")
 
     if outcome.early_exit_code is not None:
         return outcome.early_exit_code
@@ -813,7 +816,7 @@ def cmd_completeness(args: argparse.Namespace) -> int:
 
     # ``--commit`` (human runs only) gates up front: it commits the edits the
     # --iterate loop applies, so it's meaningless without --iterate, and the
-    # end-of-run ``git add -A`` must not fold in pre-existing changes.
+    # end-of-run footprint commit must not fold in pre-existing changes.
     if getattr(args, "commit", False) and not args.json:
         if not budget.enabled:
             error(
@@ -821,6 +824,9 @@ def cmd_completeness(args: argparse.Namespace) -> int:
                 "plan edits to commit)."
             )
             return 2
+        from plan_tool.cli.commit_footprint import commit_state_ignore
+
+        commit_state_ignore(ctx.repo_root)
         if working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or stash "
@@ -1674,8 +1680,11 @@ def register(subparsers) -> dict[str, Handler]:
         action="store_true",
         dest="commit",
         help=(
-            "after a clean --iterate run that applied findings, stage all "
-            "changes (git add -A) and create one commit with subject "
+            "after a clean --iterate run that applied findings, stage only "
+            "the plan file, its plan-details/<slug>/ directory, the detail "
+            "files and lessons log the plan declares and the files under "
+            ".plan-tool/ that .gitignore does not exclude, and "
+            "create one commit with subject "
             "'plan(<slug>): completeness — applied audit findings'. Requires "
             "--iterate (an audit-only run makes no plan edits) and a clean "
             "working tree up front; off by default; ignored with --json."

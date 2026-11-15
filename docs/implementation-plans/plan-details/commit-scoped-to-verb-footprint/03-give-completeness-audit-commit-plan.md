@@ -62,7 +62,7 @@ All in `tests/cli/test_completeness_cmd.py`, in a real temporary repo (reuse `_i
 - `test_audit_commit_footprint_paths_clean_afterwards` — `git status` shows nothing dirty for the plan file, the plan-details directory and a declared detail file.
 - `test_audit_commit_covers_detail_file_declared_outside_plan_details` — a `step.detail` pointing at `plans/details/…` is committed. This pins the declared-pointer rule, which reads like an extra but is required.
 - `test_audit_commit_footprint_excludes_stray_pre_staged_file` — a file staged during the run is not in the audit commit.
-- `test_completeness_commit_footprint_helper_lists_plan_dir_and_declared_details` — unit check of the helper's output.
+- `test_completeness_commit_uses_the_detail_footprint_with_plan_dir_and_declared_details` — unit check of the shared `_detail_commit_footprint` output the audit commits.
 
 Every test above must be green before the step is finished. Existing tests in `TestCompletenessCommitSubjects` and `TestCompletenessCommitGates` stay unchanged and green.
 

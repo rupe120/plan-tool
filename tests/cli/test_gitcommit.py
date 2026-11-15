@@ -12,6 +12,7 @@ from plan_tool.cli.gitcommit import (
     branch_exists,
     checkout_existing_branch,
     clone_repo,
+    commit_all,
     commit_receipt,
     create_and_checkout_branch,
     current_branch,
@@ -72,6 +73,411 @@ def _commit_initial(root: Path) -> str:
     _git(root, "add", "-A")
     _git(root, "commit", "-q", "-m", "init")
     return _git(root, "rev-parse", "HEAD").stdout.decode().strip()
+
+
+def _head(root: Path) -> str:
+    return _git(root, "rev-parse", "HEAD").stdout.decode().strip()
+
+
+def _head_files(root: Path) -> list[str]:
+    return _git(
+        root, "show", "--format=", "--name-only", "HEAD"
+    ).stdout.decode().splitlines()
+
+
+def _porcelain(root: Path) -> str:
+    return _git(root, "status", "--porcelain", "-uall").stdout.decode()
+
+
+class TestCommitAll:
+    def _repo(self, root: Path) -> None:
+        _init_git_repo(root)
+        _commit_initial(root)
+
+    def test_paths_is_required(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        with pytest.raises(TypeError):
+            commit_all(tmp_path, "s")  # type: ignore[call-arg]
+
+    def test_unrelated_dirty_file_is_not_committed(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+        (tmp_path / "b.txt").write_text("b\n")
+
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["a.txt"]
+        assert "?? b.txt" in _porcelain(tmp_path)
+
+    def test_pre_staged_unrelated_file_is_not_committed(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+        (tmp_path / "b.txt").write_text("b\n")
+        _git(tmp_path, "add", "b.txt")
+
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["a.txt"]
+        assert "A  b.txt" in _porcelain(tmp_path)  # still staged, uncommitted
+
+    def test_delete_inside_footprint_is_staged(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "f.txt").unlink()
+
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path])
+
+        assert rc == 0, tail
+        assert _git(
+            tmp_path, "show", "--format=", "--name-status", "HEAD"
+        ).stdout.decode().split() == ["D", "f.txt"]
+
+    def test_rename_inside_footprint_is_staged(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "f.txt").rename(tmp_path / "g.txt")
+
+        rc, tail, _ = commit_all(
+            tmp_path, "s", [tmp_path / "f.txt", tmp_path / "g.txt"]
+        )
+
+        assert rc == 0, tail
+        status = _git(
+            tmp_path, "show", "--format=", "--name-status", "-M", "HEAD"
+        ).stdout.decode()
+        assert status.startswith("R") and "f.txt" in status and "g.txt" in status
+
+    def test_directory_entry_stages_new_nested_files(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        nested = tmp_path / "d" / "e" / "f"
+        nested.mkdir(parents=True)
+        (nested / "n.txt").write_text("n\n")
+        (tmp_path / "d" / "top.txt").write_text("t\n")
+
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "d"])
+
+        assert rc == 0, tail
+        assert sorted(_head_files(tmp_path)) == ["d/e/f/n.txt", "d/top.txt"]
+
+    def test_ignored_path_warns_and_commit_still_succeeds(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text("ign.txt\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "commit", "-q", "-m", "ignore")
+        (tmp_path / "ign.txt").write_text("i\n")
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail, _ = commit_all(
+            tmp_path, "s", [tmp_path / "ign.txt", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0, tail
+        assert "ign.txt" in capsys.readouterr().err
+        assert _head_files(tmp_path) == ["a.txt"]
+
+    def test_relative_entry_is_read_from_the_current_directory(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # A ``--manifest ../x`` given from a subdirectory names a file relative
+        # to the cwd; reading it from the repo root would drop it.
+        self._repo(tmp_path)
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "m.json").write_text("{}\n")
+        monkeypatch.chdir(tmp_path / "sub")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [Path("../m.json")])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == ["m.json"]
+
+    def test_hook_globs_are_not_made_literal(self, tmp_path: Path) -> None:
+        # A pre-commit hook that lints ``*.py`` must still see the staged file.
+        self._repo(tmp_path)
+        hook = tmp_path / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text(
+            "#!/bin/sh\n"
+            "n=$(git diff --cached --name-only -- '*.py' | wc -l)\n"
+            "[ \"$n\" -gt 0 ] || { echo 'hook saw no .py files' >&2; exit 1; }\n"
+        )
+        hook.chmod(0o755)
+        (tmp_path / "a.py").write_text("x = 1\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "a.py"])
+
+        assert rc == 0 and committed, tail
+
+    def test_staged_delete_of_force_tracked_ignored_file_is_committed(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text("pinned/\n")
+        (tmp_path / "pinned").mkdir()
+        (tmp_path / "pinned" / "fixture.bin").write_text("f\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "add", "-f", "pinned/fixture.bin")
+        _git(tmp_path, "commit", "-q", "-m", "pin")
+        _git(tmp_path, "rm", "-q", "pinned/fixture.bin")
+
+        rc, tail, committed = commit_all(
+            tmp_path, "s", [tmp_path / "pinned" / "fixture.bin"]
+        )
+
+        assert rc == 0 and committed, tail
+        assert "gitignored" not in capsys.readouterr().err
+        assert _porcelain(tmp_path) == ""
+
+    def test_project_root_below_git_top_level_still_checks_its_paths(
+        self, tmp_path: Path
+    ) -> None:
+        # A project root holding .plan-tool/plans.json can sit below the git
+        # top level; status paths are top-level-relative, entries are not.
+        self._repo(tmp_path)
+        svc = tmp_path / "svc"
+        svc.mkdir()
+        hook = tmp_path / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text("#!/bin/sh\necho rewritten >> svc/a.txt\n")
+        hook.chmod(0o755)
+        (svc / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(svc, "s", [svc / "a.txt"])
+
+        assert committed
+        assert rc != 0 and "a.txt" in tail
+
+    def test_git_error_is_an_uncommitted_outcome_not_an_exception(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        import plan_tool.cli.gitcommit as gc
+
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+
+        def undecodable(*_a, **_k):
+            raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid start byte")
+
+        monkeypatch.setattr(gc, "_matches_ignore_rules", undecodable)
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc != 0 and not committed
+        assert "git subprocess error" in tail
+
+    def test_not_committed_outcome_does_not_blame_git_commit(self) -> None:
+        from plan_tool.cli.gitcommit import CommitOutcome
+
+        text = CommitOutcome(128, "fatal: beyond a symbolic link", False).describe(
+            "sweep changes"
+        )
+        assert "git commit failed" not in text
+        assert "not committed" in text and "beyond a symbolic link" in text
+
+    def test_project_root_below_top_level_commits_edits_outside_it(
+        self, tmp_path: Path
+    ) -> None:
+        # A step in svc/ may edit shared/; the commit covers the work tree.
+        self._repo(tmp_path)
+        (tmp_path / "svc").mkdir()
+        (tmp_path / "shared").mkdir()
+        (tmp_path / "shared" / "lib.py").write_text("x = 1\n")
+
+        rc, tail, committed = commit_all(
+            tmp_path / "svc", "s", [tmp_path / "shared" / "lib.py"]
+        )
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == ["shared/lib.py"]
+
+    def test_state_dir_commits_what_gitignore_allows_and_nothing_else(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # The repo's ignore rules decide which plan-tool files are committed.
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text(".plan-tool/runs\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "commit", "-q", "-m", "ignore")
+        state = tmp_path / ".plan-tool"
+        (state / "telemetry").mkdir(parents=True)
+        (state / "telemetry" / "decisions.jsonl").write_text("{}\n")
+        (state / "runs").mkdir()
+        (state / "runs" / "r.jsonl").write_text("{}\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [state])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == [".plan-tool/telemetry/decisions.jsonl"]
+        assert "gitignored" not in capsys.readouterr().err
+
+    def test_wholly_ignored_dir_commits_its_tracked_files(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # ``.plan-tool/`` ignored as a whole, plans.json force-tracked: naming
+        # the directory makes ``git add -A`` fail, so tracked files go via -u.
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text(".plan-tool/\n")
+        state = tmp_path / ".plan-tool"
+        state.mkdir()
+        (state / "plans.json").write_text("{}\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "add", "-f", ".plan-tool/plans.json")
+        _git(tmp_path, "commit", "-q", "-m", "track manifest")
+        (state / "plans.json").write_text('{"plans": []}\n')
+        (state / "scratch.json").write_text("{}\n")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [state])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == [".plan-tool/plans.json"]
+        assert "gitignored" not in capsys.readouterr().err
+
+    def test_absent_ignored_entry_is_skipped_without_a_warning(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # Nothing exists there, so nothing is being left out: no warning.
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text(".plan-tool/\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "commit", "-q", "-m", "ignore")
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(
+            tmp_path, "s", [tmp_path / ".plan-tool" / "lessons", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0 and committed, tail
+        assert "gitignored" not in capsys.readouterr().err
+
+    def test_expected_path_left_dirty_is_reported_by_name_with_nonzero_rc(
+        self, tmp_path: Path
+    ) -> None:
+        # A hook rewriting a footprint file after staging leaves it dirty; the
+        # post-commit check must flag it rather than report a clean commit.
+        self._repo(tmp_path)
+        hook = tmp_path / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text("#!/bin/sh\necho rewritten >> a.txt\n")
+        hook.chmod(0o755)
+        (tmp_path / "a.txt").write_text("a\n")
+
+        before = _head(tmp_path)
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc != 0
+        assert "a.txt" in tail
+        # The commit itself landed; callers must not report it as uncommitted.
+        assert committed and _head(tmp_path) != before
+
+    def test_absent_untracked_entry_is_skipped_without_failing(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail, _ = commit_all(
+            tmp_path, "s", [tmp_path / "ghost.txt", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0, tail
+        assert "ghost.txt" not in tail
+        assert _head_files(tmp_path) == ["a.txt"]
+
+    def test_empty_directory_entry_beside_changed_entry_does_not_fail(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "empty").mkdir()
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail, _ = commit_all(
+            tmp_path, "s", [tmp_path / "empty", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["a.txt"]
+
+    def test_tracked_deleted_entry_is_staged(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "f.txt").unlink()
+
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
+
+        assert rc == 0, tail
+        assert _git(
+            tmp_path, "show", "--format=", "--name-status", "HEAD"
+        ).stdout.decode().split() == ["D", "f.txt"]
+
+    @pytest.mark.parametrize("op", ["rm", "mv"])
+    def test_staged_delete_absent_from_index_is_still_committed(
+        self, tmp_path: Path, op: str
+    ) -> None:
+        # ``git rm`` and ``git mv`` drop the old path from the index; it is
+        # still in HEAD, so the commit must carry the delete, not skip it.
+        self._repo(tmp_path)
+        if op == "rm":
+            _git(tmp_path, "rm", "-q", "f.txt")
+            footprint = [tmp_path / "f.txt"]
+        else:
+            _git(tmp_path, "mv", "f.txt", "g.txt")
+            footprint = [tmp_path / "f.txt", tmp_path / "g.txt"]
+
+        rc, tail, _ = commit_all(tmp_path, "s", footprint)
+
+        assert rc == 0, tail
+        assert "D\tf.txt" in _git(
+            tmp_path, "show", "--format=", "--name-status", "--no-renames", "HEAD"
+        ).stdout.decode().splitlines()
+        assert _porcelain(tmp_path) == ""
+
+    def test_footprint_with_no_changes_returns_success_and_makes_no_commit(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        before = _head(tmp_path)
+
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
+
+        assert rc == 0
+        assert not committed
+        assert "nothing changed" in tail
+        assert _head(tmp_path) == before
+
+    @pytest.mark.parametrize("target", ["inside", "outside"])
+    def test_symlink_entry_commits_the_link_not_its_target(
+        self, tmp_path: Path, target: str
+    ) -> None:
+        # The link is what git tracks; resolving the leaf would stage the
+        # target, or drop an out-of-repo link as "outside the repo".
+        repo = tmp_path / "repo"
+        repo.mkdir()
+        self._repo(repo)
+        (repo / "v2.txt").write_text("v2\n")
+        dest = repo / "v2.txt" if target == "inside" else tmp_path / "elsewhere"
+        (repo / "current").symlink_to(dest)
+
+        rc, tail, committed = commit_all(repo, "s", [repo / "current"])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(repo) == ["current"]
+        mode = _git(repo, "ls-tree", "HEAD", "current").stdout.decode().split()[0]
+        assert mode == "120000"
+        assert "?? v2.txt" in _porcelain(repo)
+
+    def test_literal_pathspec_does_not_match_glob_characters(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "x*.txt").write_text("star\n")
+        (tmp_path / "xy.txt").write_text("sibling\n")
+
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "x*.txt"])
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["x*.txt"]
+        assert "?? xy.txt" in _porcelain(tmp_path)
 
 
 class TestCommitReceipt:

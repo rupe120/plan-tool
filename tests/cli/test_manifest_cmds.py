@@ -904,6 +904,21 @@ class TestSweepCommit:
         )
         assert _git_tree_clean(tmp_repo.root)
 
+    def test_first_commit_in_a_repo_commits_the_default_ignore_on_its_own(
+        self, tmp_repo
+    ) -> None:
+        """plan-tool commits its default ignore on its own before the gate, so
+        the team shares one file and the sweep itself still commits nothing."""
+        from plan_tool.cli import main
+        from plan_tool.cli.commit_footprint import STATE_IGNORE_COMMIT_SUBJECT
+
+        _real_git_repo(tmp_repo)
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+        assert _git_log_subjects(tmp_repo.root) == [STATE_IGNORE_COMMIT_SUBJECT, "init"]
+        assert self._git(tmp_repo.root, "status", "--porcelain") == ""
+
     def test_commit_nothing_to_sweep_makes_no_commit(
         self, tmp_repo, capsys
     ) -> None:
@@ -912,6 +927,10 @@ class TestSweepCommit:
         _real_git_repo(tmp_repo)
         tmp_repo.add_plan("1-demo", title="Demo")  # planning — not completed
         tmp_repo.write_manifest()
+        # A repo that already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(tmp_repo.root)
         _git_commit_all(tmp_repo.root, "init")
 
         rc = main(tmp_repo.argv("sweep", "--commit", "-y"))
@@ -946,6 +965,148 @@ class TestSweepCommit:
 
         assert rc == 2
         assert "nothing to commit" in capsys.readouterr().err
+
+    @staticmethod
+    def _git(root, *args: str) -> str:
+        import subprocess
+
+        return subprocess.run(
+            ["git", *args], cwd=root, check=True, capture_output=True, text=True
+        ).stdout
+
+    @staticmethod
+    def _dirty_during_sweep(monkeypatch, path) -> None:
+        """Dirty ``path`` mid-run: wrap the real ``sweep_plans`` to write it."""
+        from plan_tool.cli import manifest as manifest_mod
+
+        real = manifest_mod.sweep_plans
+
+        def _sweep_then_dirty(*a, **kw):
+            report = real(*a, **kw)
+            path.write_text("unrelated\n", encoding="utf-8")
+            return report
+
+        monkeypatch.setattr(manifest_mod, "sweep_plans", _sweep_then_dirty)
+
+    def test_commit_holds_both_sides_of_archived_plan_move(self, tmp_repo) -> None:
+        from plan_tool.cli import main
+
+        _real_git_repo(tmp_repo)
+        _add_completed_plan(tmp_repo)
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+
+        # Sweep prepends an archive notice, so a tiny fixture can fall under
+        # git's rename-similarity threshold; the property is that both sides
+        # of the move land in the one commit.
+        status = self._git(
+            tmp_repo.root, "show", "--name-status", "--no-renames", "--format=", "HEAD"
+        )
+        lines = status.splitlines()
+        assert "D\tplans/1-done.md" in lines, status
+        assert "A\tplans/archive/1-done.md" in lines, status
+
+    def test_commit_holds_both_sides_of_plan_details_move(self, tmp_repo) -> None:
+        from plan_tool.cli import main
+
+        _real_git_repo(tmp_repo)
+        _add_completed_plan(tmp_repo)
+        details = tmp_repo.plans_dir / "plan-details" / "done"
+        details.mkdir(parents=True)
+        (details / "step-1.md").write_text("# detail\n", encoding="utf-8")
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+
+        status = self._git(
+            tmp_repo.root, "show", "--name-status", "--no-renames", "--format=", "HEAD"
+        )
+        lines = status.splitlines()
+        assert "D\tplans/plan-details/done/step-1.md" in lines, status
+        assert "A\tplans/archive/plan-details/done/step-1.md" in lines, status
+        assert not details.exists()
+
+    def test_commit_leaves_unrelated_dirty_file_uncommitted(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        """Narrowing replaces `git add -A`: a file dirtied mid-sweep stays out."""
+        from plan_tool.cli import main
+
+        _real_git_repo(tmp_repo)
+        _add_completed_plan(tmp_repo)
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+        stray = tmp_repo.root / "stray.txt"
+        self._dirty_during_sweep(monkeypatch, stray)
+
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+
+        committed = self._git(
+            tmp_repo.root, "show", "--name-only", "--format=", "HEAD"
+        )
+        assert "stray.txt" not in committed
+        assert _git_log_subjects(tmp_repo.root)[0] == "sweep: archive 1 completed plan"
+        assert "?? stray.txt" in self._git(tmp_repo.root, "status", "--porcelain")
+
+    def test_commit_unrelated_dirty_file_alone_gives_nothing_to_commit(
+        self, tmp_repo, monkeypatch, capsys
+    ) -> None:
+        """The whole-tree dirt check misread this case as a sweep change."""
+        from plan_tool.cli import main
+
+        _real_git_repo(tmp_repo)
+        tmp_repo.add_plan("1-demo", title="Demo")  # planning — nothing to sweep
+        tmp_repo.write_manifest()
+        # A repo that already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(tmp_repo.root)
+        _git_commit_all(tmp_repo.root, "init")
+        self._dirty_during_sweep(monkeypatch, tmp_repo.root / "stray.txt")
+
+        rc = main(tmp_repo.argv("sweep", "--commit", "-y"))
+
+        assert rc == 0
+        assert _git_log_subjects(tmp_repo.root) == ["init"]
+        assert "nothing to commit" in capsys.readouterr().err
+
+    def test_commit_footprint_is_clean_after_commit(self, tmp_repo) -> None:
+        from plan_tool.cli import main
+
+        _real_git_repo(tmp_repo)
+        _add_completed_plan(tmp_repo)
+        details = tmp_repo.plans_dir / "plan-details" / "1-done"
+        details.mkdir(parents=True)
+        (details / "step-1.md").write_text("# detail\n", encoding="utf-8")
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+
+        assert self._git(tmp_repo.root, "status", "--porcelain", "-uall") == ""
+
+    def test_commit_includes_manifest_edit_for_missing_entry_prune(
+        self, tmp_repo
+    ) -> None:
+        from plan_tool.cli import main
+
+        _real_git_repo(tmp_repo)
+        tmp_repo.add_plan("1-demo", title="Demo")
+        tmp_repo.plans.append(tmp_repo.plans_dir / "9-ghost.md")  # never written
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+
+        assert _git_log_subjects(tmp_repo.root)[0] == "sweep: manifest hygiene"
+        committed = self._git(
+            tmp_repo.root, "show", "--name-only", "--format=", "HEAD"
+        )
+        assert "plans.json" in committed
+        assert self._git(tmp_repo.root, "status", "--porcelain", "-uall") == ""
 
     def test_commit_rejects_report_only(self, tmp_repo, capsys) -> None:
         from plan_tool.cli import main

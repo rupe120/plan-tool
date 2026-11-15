@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import json
 import shlex
-import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -86,7 +85,8 @@ from plan_tool.cli.context import (
     _resolve_iterative_budget,
 )
 from plan_tool.cli.gitcommit import (
-    path_is_gitignored,
+    CommitOutcome,
+    commit_all,
     unexpected_dirty_paths,
     branch_exists,
     checkout_existing_branch,
@@ -97,6 +97,15 @@ from plan_tool.cli.gitcommit import (
 # stays the patch point the test suite monkeypatches (mirrors authoring.py).
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
 from plan_tool.cli.parser import Handler, make_yes_parent
+from plan_tool.cli.commit_footprint import (
+    commit_state_ignore,
+    plan_commit_footprint,
+)
+from plan_tool.git_state import (
+    changed_paths_or_none,
+    status_records_or_none,
+    toplevel_or_none,
+)
 
 # Reconcile engine (step-15 leaf). ``cmd_run`` forward-calls
 # ``_cmd_run_reconcile`` for the ``--reconcile`` code-side audit (which owns
@@ -492,22 +501,28 @@ def _green_commit_subject(slug: str, step_id: int, step_title: str) -> str:
 
 
 def _green_commit_failure_msg(
-    rc: int, step_id: int, tail: str, *, swept: bool
+    outcome: CommitOutcome, step_id: int, *, swept: bool
 ) -> str:
     """Recovery message for a failed green-step ``--commit``, shared by the
     single-step and ``--all`` sweep call sites. ``swept`` adds the sweep-halt
-    clause; ``tail`` (git stderr) is appended when present."""
-    lead = (
-        f"git commit failed (rc={rc}) for green step {step_id}; sweep halted. The"
-        if swept
-        else f"git commit failed (rc={rc}) for green step {step_id}; the"
-    )
-    msg = (
-        f"{lead} step's work is staged/uncommitted in the working tree — "
-        f"inspect with `git status` and `git diff` (recover with `git reset`)."
-    )
-    if tail:
-        msg += f" git: {tail}"
+    clause; ``outcome.tail`` (git stderr) is appended when present. A commit
+    that landed before its clean check failed gets no ``git reset`` advice."""
+    halt = "; sweep halted" if swept else ""
+    if outcome.committed:
+        msg = (
+            f"green step {step_id} was committed, but the commit check failed "
+            f"(rc={outcome.rc}){halt}. Inspect the remaining changes with "
+            f"`git status` and `git diff`."
+        )
+    else:
+        msg = (
+            f"--commit did not commit green step {step_id} (rc={outcome.rc})"
+            f"{halt}. The step's work is left in the working tree — inspect "
+            f"with `git status` and `git diff` (`git reset` unstages anything "
+            f"left staged)."
+        )
+    if outcome.tail:
+        msg += f" Reason: {outcome.tail}"
     return msg
 
 
@@ -517,52 +532,107 @@ def _commit_green_step(
     slug: str,
     step_id: int,
     step_title: str,
-    paths: Optional[list[Path]] = None,
-) -> tuple[int, str]:
-    """Stage all changes and commit the just-greened step. Returns ``(rc, tail)``.
+    paths: list[Path],
+) -> CommitOutcome:
+    """Commit the just-greened step's footprint.
 
-    ``paths`` (``--accept``) scopes the commit to those files, so build output
-    a certifying suite left behind is not swept in; a gitignored path is
-    skipped rather than failing ``git add``.
-
-    One ``git add -A`` + ``git commit`` per green step: ``git add -A``
-    stages the step's code edits and
-    the plan-file mark-done/advance write ``run_step`` already performed
-    (and any ``.plan-tool/runs/`` run-log artifacts, unless gitignored —
-    the harness has the same property). The commit carries the mirrored
-    subject only — no AI-attribution trailer; the operator's own git
-    identity is the sole author of record. No ``--no-verify`` — pre-commit
-    hooks run, and a hook rejection surfaces as a non-zero rc that halts
-    the sweep. ``tail`` is the commit's stderr so the caller can surface a
-    reason on failure.
+    ``paths`` is required (no whole-tree default): ``--accept`` passes its
+    ``expected`` set, the run callers pass :func:`_step_footprint`. Staging,
+    the ignored-path warning and the post-commit clean check live in
+    ``commit_all``. The commit carries the mirrored subject only — no
+    AI-attribution trailer, no ``--no-verify``; a hook rejection surfaces as a
+    non-zero rc.
     """
-    scoped = (
-        None
-        if paths is None
-        else [
-            str(p) for p in paths
-            if p.exists() and not path_is_gitignored(repo_root, p)
-        ]
-    )
-    add = subprocess.run(
-        ["git", "add", "-A"] if scoped is None else ["git", "add", "--", *scoped],
-        cwd=repo_root,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-    )
-    if add.returncode != 0:
-        return add.returncode, add.stderr.strip()
     subject = _green_commit_subject(slug, step_id, step_title)
-    commit = subprocess.run(
-        ["git", "commit", "-m", subject]
-        + ([] if scoped is None else ["--", *scoped]),
-        cwd=repo_root,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
+    return commit_all(repo_root, subject, paths)
+
+
+def _step_footprint(
+    ctx: PlanToolContext,
+    *,
+    plan_path: Path,
+    baseline: Optional[set[str]],
+    archive_outcome: Optional[ArchiveOutcome],
+    manifest_path: Optional[Path],
+    plan_footprint: Optional[list[Path]] = None,
+) -> "tuple[Optional[list[Path]], str]":
+    """Paths a green ``run --commit`` step may commit, or ``(None, reason)``:
+    the plan's own paths and archive outputs always, plus the step's git delta
+    (a path dirty at the baseline is left out). ``plan_footprint`` is the
+    plan's paths read before an archive rewrote the file. See
+    docs/how-to/pipeline/run.md.
+    """
+    root = ctx.repo_root
+    if baseline is None:
+        return None, "git state was unreadable at the baseline (before the step)"
+    records = status_records_or_none(root)
+    toplevel = toplevel_or_none(root)
+    if records is None or toplevel is None:
+        return None, "git state was unreadable after the step"
+    after = {path for path, _origin in records}
+    origins = {path: origin for path, origin in records if origin is not None}
+    delta = after - baseline
+    rels: set[str] = set(delta)
+    # A rename's origin rides with it, unless it was dirty before the step.
+    rels.update(
+        origins[dest]
+        for dest in delta
+        if dest in origins and origins[dest] not in baseline
     )
-    return commit.returncode, commit.stderr.strip()
+
+    fixed: list[Path] = list(
+        plan_footprint
+        if plan_footprint is not None
+        else plan_commit_footprint(root, plan_path)
+    )
+    if archive_outcome is not None:
+        fixed.extend(archive_outcome.touched_paths())
+        if manifest_path is not None:
+            fixed.append(manifest_path)
+    # Status paths are relative to the work tree's top level, not ``root``.
+    return fixed + [toplevel / rel for rel in sorted(rels)], ""
+
+
+def _commit_step_footprint(
+    ctx: PlanToolContext,
+    *,
+    plan_path: Path,
+    slug: str,
+    step_id: int,
+    step_title: str,
+    baseline: Optional[set[str]],
+    archive_outcome: Optional[ArchiveOutcome],
+    manifest_path: Optional[Path],
+    plan_footprint: Optional[list[Path]] = None,
+) -> CommitOutcome:
+    """Commit one green ``run`` step's footprint; fail closed on unreadable git."""
+    paths, reason = _step_footprint(
+        ctx,
+        plan_path=plan_path,
+        baseline=baseline,
+        archive_outcome=archive_outcome,
+        manifest_path=manifest_path,
+        plan_footprint=plan_footprint,
+    )
+    if paths is None:
+        return CommitOutcome(1, f"no commit made: {reason}", False)
+    outcome = _commit_green_step(
+        ctx.repo_root,
+        slug=slug,
+        step_id=step_id,
+        step_title=step_title,
+        paths=paths,
+    )
+    if outcome.rc == 0 and baseline:
+        still_dirty = changed_paths_or_none(ctx.repo_root)
+        left = sorted(baseline & still_dirty) if still_dirty else []
+        if left:
+            print(
+                "warning: left uncommitted because it was dirty before the "
+                "step (the step may also have edited it): " + ", ".join(left),
+                file=sys.stderr,
+            )
+    return outcome
 
 
 def _archive_on_completion(
@@ -882,18 +952,18 @@ def _cmd_run_accept(
         )
         return result.exit_code
     if getattr(args, "commit", False):
-        rc_commit, tail = _commit_green_step(
+        committed = _commit_green_step(
             ctx.repo_root,
             slug=args.name,
             step_id=result.step_id,
             step_title=result.step_title,
             paths=expected,
         )
-        if rc_commit != 0:
+        if committed.rc != 0:
             error(_green_commit_failure_msg(
-                rc_commit, result.step_id, tail, swept=False
+                committed, result.step_id, swept=False
             ))
-            return rc_commit
+            return committed.rc
     if result.plan_completed:
         print(f"✓ step {result.step_id} accepted — plan completed")
     elif result.advanced_to is not None:
@@ -1077,6 +1147,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     # the user's tree, and before the run log so a rejection leaves no ghost run
     # dir. Run-execution path only. See docs/how-to/pipeline/run.md.
     if commit_active and args.mode == "run" and not getattr(args, "reconcile", False):
+        commit_state_ignore(ctx.repo_root)
         if _working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or "
@@ -1085,7 +1156,8 @@ def cmd_run(args: argparse.Namespace) -> int:
             return 2
 
     # Record prefs before the run log (keeps last_plan fresh even if the step
-    # fails); run-prefs.json is gitignored, so it doesn't ride a --commit commit.
+    # fails). Whether run-prefs.json rides a --commit commit is the repo's
+    # .gitignore's call: `.plan-tool/` is in every footprint.
     if record_prefs:
         _save_run_prefs(ctx.repo_root, last_plan=run_slug, scope=run_scope)
 
@@ -1191,6 +1263,15 @@ def cmd_run(args: argparse.Namespace) -> int:
             except (ParseError, ValidationError, LauncherError):
                 commit_step_title = ""
 
+        # Footprint baseline: the git delta from here to the commit is what the
+        # step wrote. ``None`` (unreadable) is carried to commit time, where it
+        # fails closed.
+        commit_baseline = (
+            changed_paths_or_none(ctx.repo_root)
+            if commit_active and args.mode == "run"
+            and not getattr(args, "reconcile", False)
+            else None
+        )
         try:
             initial_backend_name = get_active_backend().name
             resume_token = set_rate_limit_resume_command_provider(
@@ -1266,16 +1347,23 @@ def cmd_run(args: argparse.Namespace) -> int:
             return rc
 
         # ``--archive`` (completing step): move the plan + rewrite the manifest
-        # BEFORE the commit so the green commit's ``git add -A`` captures the
+        # BEFORE the commit so the green commit's footprint captures the
         # move + manifest edit — otherwise ``--commit --archive`` exits with a
         # dirty tree that blocks the next ``--commit``. ``archived`` lets the
         # plan_completed branch below skip re-archiving. See docs/how-to/pipeline/run.md.
         archived = False
+        archive_outcome: Optional[ArchiveOutcome] = None
+        manifest_path = None
+        plan_footprint: Optional[list[Path]] = None
         if getattr(args, "archive", False) and result.plan_completed:
             manifest_path = getattr(args, "manifest", None) or (
                 default_manifest_path(ctx.repo_root)
             )
-            _archive_on_completion(path, ctx=ctx, manifest_path=manifest_path)
+            # Read before the archive prepends its notice, which the parser rejects.
+            plan_footprint = plan_commit_footprint(ctx.repo_root, path)
+            archive_outcome = _archive_on_completion(
+                path, ctx=ctx, manifest_path=manifest_path
+            )
             archived = True
 
         # ``--commit``: one commit for the green step at single-step scope too
@@ -1283,18 +1371,23 @@ def cmd_run(args: argparse.Namespace) -> int:
         # pre-run title (see above) and captures the archive move above when the
         # completing step was archived. See docs/how-to/pipeline/run.md.
         if commit_active and result.done:
-            rc_commit, tail = _commit_green_step(
-                ctx.repo_root,
+            committed = _commit_step_footprint(
+                ctx,
+                plan_path=path,
                 slug=args.name,
                 step_id=result.step_id,
                 step_title=commit_step_title,
+                baseline=commit_baseline,
+                archive_outcome=archive_outcome,
+                manifest_path=manifest_path,
+                plan_footprint=plan_footprint,
             )
-            if rc_commit != 0:
+            if committed.rc != 0:
                 err_msg = _green_commit_failure_msg(
-                    rc_commit, result.step_id, tail, swept=False
+                    committed, result.step_id, swept=False
                 )
                 error(err_msg)
-                rc = rc_commit
+                rc = committed.rc
                 return rc
 
         out_color = color_enabled(sys.stdout)
@@ -1480,6 +1573,7 @@ def _cmd_run_sweep(
     # consistent with the other rc=2 gates above. Skipped under
     # ``--dry-run`` (no step advances, so no commit happens).
     if getattr(args, "commit", False) and not args.dry_run:
+        commit_state_ignore(ctx.repo_root)
         if _working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or "
@@ -1618,6 +1712,9 @@ def _cmd_run_sweep(
                     step_id=None,
                 )
 
+            commit_baseline = (
+                changed_paths_or_none(ctx.repo_root) if args.commit else None
+            )
             try:
                 result = run_step(
                     plan_path,
@@ -1691,7 +1788,7 @@ def _cmd_run_sweep(
                 )
 
             # ``--archive`` (completing step): move the plan to ``archive/`` +
-            # deregister BEFORE the commit so the green commit's ``git add -A``
+            # deregister BEFORE the commit so the green commit's footprint
             # captures the move + manifest edit — otherwise ``--commit
             # --archive`` leaves them uncommitted, dirtying the tree and
             # blocking the next ``--commit``. Gate on ``result.plan_completed``
@@ -1700,9 +1797,13 @@ def _cmd_run_sweep(
             plan_archived = (
                 getattr(args, "archive", False) and result.plan_completed
             )
+            archive_outcome: Optional[ArchiveOutcome] = None
+            plan_footprint: Optional[list[Path]] = None
             if plan_archived:
                 assert archive_manifest_path is not None
-                _archive_on_completion(
+                # Read before the archive prepends its notice, which the parser rejects.
+                plan_footprint = plan_commit_footprint(ctx.repo_root, plan_path)
+                archive_outcome = _archive_on_completion(
                     plan_path,
                     ctx=ctx,
                     manifest_path=archive_manifest_path,
@@ -1713,21 +1814,26 @@ def _cmd_run_sweep(
             # commits too. The title comes from ``pre_step`` (``run_step``
             # leaves ``RunResult.step_title`` empty on green). When the step
             # completed + archived above, this same commit captures the archive
-            # move. A failed commit halts the sweep with the commit's rc,
-            # leaving that step's work dirty for ``git reset`` recovery.
+            # move. A failed commit halts the sweep with the commit's rc;
+            # ``_green_commit_failure_msg`` says whether the commit landed.
             if args.commit and result.done:
-                rc_commit, tail = _commit_green_step(
-                    ctx.repo_root,
+                committed = _commit_step_footprint(
+                    ctx,
+                    plan_path=plan_path,
                     slug=args.name,
                     step_id=result.step_id,
                     step_title=pre_step.title,
+                    baseline=commit_baseline,
+                    archive_outcome=archive_outcome,
+                    manifest_path=archive_manifest_path,
+                    plan_footprint=plan_footprint,
                 )
-                if rc_commit != 0:
+                if committed.rc != 0:
                     err_msg = _green_commit_failure_msg(
-                        rc_commit, result.step_id, tail, swept=True
+                        committed, result.step_id, swept=True
                     )
                     error(err_msg)
-                    rc = rc_commit
+                    rc = committed.rc
                     return rc
 
             # After archiving the completed plan, end the sweep: the next loop
@@ -1975,8 +2081,12 @@ def register(subparsers) -> dict[str, Handler]:
         action="store_true",
         dest="commit",
         help=(
-            "after each step goes green, stage all changes (git add -A) and "
-            "create one commit with subject "
+            "after each step goes green, create one commit holding the plan "
+            "file, its plan-details/<slug>/ directory, the detail files and "
+            "lessons log the plan declares, files under .plan-tool/ that "
+            ".gitignore does not exclude, any --archive "
+            "move, and the files the step changed since it started, with "
+            "subject "
             "'plan(<slug>): step N green — <title>'. Applies to execution "
             "(--mode run) at either scope (single-step or --all); requires a "
             "clean working tree up front; off by default. No-ops (with a "

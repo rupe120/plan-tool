@@ -3900,6 +3900,10 @@ class TestCmdRunAll:
                 ["git", "config", key, value], cwd=repo,
                 stdin=subprocess.DEVNULL, capture_output=True, check=True,
             )
+        # An existing repo already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(repo)
         subprocess.run(
             ["git", "add", "-A"], cwd=repo,
             stdin=subprocess.DEVNULL, capture_output=True, check=True,

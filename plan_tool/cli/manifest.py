@@ -630,6 +630,9 @@ def cmd_sweep(args: argparse.Namespace) -> int:
                 "--report-only (those modes write nothing)."
             )
             return 2
+        from plan_tool.cli.commit_footprint import commit_state_ignore
+
+        commit_state_ignore(ctx.repo_root)
         if working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or stash "
@@ -680,25 +683,23 @@ def cmd_sweep(args: argparse.Namespace) -> int:
 
     # ``--commit``: stage and commit exactly the sweep's own mutations —
     # the archived plan files, their moved plan-details, and the manifest
-    # edits (archives + missing-entry deregistrations). The clean-tree gate ran up
-    # front, so a dirty tree here is the sweep's doing; a clean tree means
-    # the sweep moved nothing (no completed plans, no orphans/missing),
-    # leaving nothing to commit.
+    # edits (archives + missing-entry deregistrations). ``commit_all`` reports
+    # whether it committed; nothing changed in the footprint means the sweep
+    # moved nothing, which is not a failure.
     if getattr(args, "commit", False):
-        if working_tree_dirty(ctx.repo_root):
-            n_archived = sum(
-                1 for o in report.archived if o.archived_to is not None
-            )
-            commit_rc, tail = commit_all(
-                ctx.repo_root, _sweep_commit_subject(n_archived)
-            )
-            if commit_rc == 0:
-                success("committed sweep changes")
-            else:
-                error(f"git commit failed (rc={commit_rc})")
-                if tail:
-                    error(tail)
-                return 1
+        n_archived = sum(1 for o in report.archived if o.archived_to is not None)
+        committed = commit_all(
+            ctx.repo_root,
+            _sweep_commit_subject(n_archived),
+            _sweep_commit_footprint(
+                ctx.repo_root, manifest_path, report, duplicate_archive_results
+            ),
+        )
+        if committed.rc != 0:
+            error(committed.describe("sweep changes"))
+            return 1
+        if committed.committed:
+            success("committed sweep changes")
         else:
             info("--commit: nothing to commit (sweep moved nothing)")
 
@@ -708,6 +709,29 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     # failure of the sweep itself. Non-zero is reserved for a run that
     # couldn't proceed (e.g. directory-mode refusal above, rc 2).
     return 0
+
+
+def _sweep_commit_footprint(
+    repo_root: Path,
+    manifest_path: Path,
+    report: SweepReport,
+    duplicate_archive_results: list[tuple[Path, Path]],
+) -> list[Path]:
+    """Paths a sweep wrote: manifest, plan-tool's state directory, and both
+    sides of every move.
+
+    Both sides matter: the source is a delete and the destination an add, so
+    staging them together lets git record a rename. Missing-entry prunes only
+    edit the manifest, which is already listed.
+    """
+    from plan_tool.cli.commit_footprint import plan_tool_state_dir
+
+    paths: list[Path] = [manifest_path, plan_tool_state_dir(repo_root)]
+    for outcome in report.archived:
+        paths.extend(outcome.touched_paths())
+    for src, dest in duplicate_archive_results:
+        paths.extend((src, dest))
+    return paths
 
 
 def _sweep_commit_subject(n_archived: int) -> str:
@@ -1059,8 +1083,9 @@ def register(subparsers) -> dict[str, Handler]:
         action="store_true",
         dest="commit",
         help=(
-            "after sweeping, stage all changes (git add -A) and create one "
-            "commit for the archived plans + manifest edits (subject "
+            "after sweeping, create one commit holding only the archived "
+            "plans, their plan-details moves, and the manifest edits "
+            "(subject "
             "'sweep: archive N completed plans'). Requires a clean working "
             "tree up front; incompatible with --dry-run / --report-only; "
             "off by default; only commits when the sweep moved something."
