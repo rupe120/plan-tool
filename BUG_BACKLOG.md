@@ -823,7 +823,10 @@ Durable re-open conditions for retired items are recorded in
   structural-stop design, which seed 02 specifies. Seed 01 proposes
   `plan_tool/impact_recurrence.py` and `tests/test_impact_recurrence.py`;
   neither file exists, because the shipped classifier is
-  `classify_impact_recurrence` in `convergence_diagnosis.py`.
+  `classify_impact_recurrence` in `convergence_diagnosis.py`. The archived seed
+  `plan-seeds/archive/convergence-non-severity-advisories.replaced.md` already
+  says not to execute either "as-is — they still name retired `FORK_*` /
+  `RegionTrend` vocabulary."
 - **Fix (needs a decision):** delete both seeds under the documentation rule that
   a description of a former state is deleted, not archived in place, or keep a
   seed deliberately and give it a References section. Deleting changes no code.
