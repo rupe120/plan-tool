@@ -167,7 +167,7 @@ steps:
   depends_on_notes:
     1: the predicate used to confirm every swept seed passes
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/05-three-guardrail-headings-hand-every.md
-  status: current
+  status: done
   description: Add the three guardrail headings by hand to every live seed in `docs/implementation-plans/plan-seeds/`
     and `plan-seeds/` that lacks one; the step 1 predicate, run over both directories,
     defines which seeds lack a heading. Write each body from that seed's own content
@@ -204,6 +204,7 @@ steps:
     4: roadmap draft seeds already carry the headings
     5: live seeds already pass, so turning the refusal on breaks no current input
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/06-turn-on-refusal-create-py-classify-file.md
+  status: current
   description: Turn on the refusal in `create.py:classify_file_backed_source`. `validate_from_existing_seed`
     and the CLI's pre-slug call in `plan_tool/cli/authoring.py` both reach it, and
     so does the `create_plan` intake. It calls the step 1 predicate and raises one
