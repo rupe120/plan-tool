@@ -143,6 +143,16 @@ committed with the remaining dirt named. Both are pinned in
 `tests/cli/test_gitcommit.py`. Reopen the second half only if git offers a way
 to tell a filter's re-modification from a hook's rewrite.
 
+### The tracked `.claude/skills/plan-tool/` copy of the skill
+
+Resolved 2026-11-15 (owner decision). The copy was untracked and ignored: it had
+drifted 87 lines from `integrations/` and an assistant in this checkout loaded the
+stale text. `plan-tool install-skill` installs the skill from `integrations/`, so
+nothing tracked can drift from its source. Reopen only if a fresh clone or CI must
+carry the skill without running the installer; then regenerate it with
+`plan-tool install-skill --copy` and add a test that fails when it differs from
+`integrations/`.
+
 ### Roadmap evidence-storage hardening
 
 Retired 2026-09-01. No current roadmap consumer requires the configured tree
@@ -371,7 +381,11 @@ Closed 2026-08-11. `plan-tool convergence` and completeness stderr report a
 recommend-only pause when the same open, explicit high-impact seam persists
 without shrinking across compatible audit history. It neither stops iteration
 nor mutates a plan. Do not restore the older structural-stop design; #231's
-causal-provenance proposal is retired.
+causal-provenance proposal is retired. The two seeds that still specified that
+design, `impact-recurrence-01-classifier.md` and `impact-recurrence-02-loop-stop.md`,
+were deleted 2026-11-15 (owner decision): `create --from-existing` refused both
+for a missing `## References`, and adding one would have made the retired design
+executable.
 
 ### #261 — Convergence policy-channel ownership
 

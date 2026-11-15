@@ -625,31 +625,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-15, round 4 of the `/code-review` of
   `commit-scoped-to-verb-footprint`; narrowed the same day by the drain.
 
-### The tracked `.claude/skills/plan-tool/` copy of the skill and directives has drifted from `integrations/`
-
-- **Files:** `.claude/skills/plan-tool/DIRECTIVES.md` and `SKILL.md` (tracked);
-  `integrations/shared/DIRECTIVES.md` and `integrations/claude/SKILL.md` (the
-  sources); `tests/cli/test_skill_cmd.py` (names the path).
-- **Symptom:** `diff` against the sources shows 87 differing lines in
-  `DIRECTIVES.md` (the "independent syntax examples, not a stage sequence"
-  disclaimer is missing, and the model-selection section is an older wording)
-  and a differing `description` in `SKILL.md` ("claude subprocess" against
-  "backend subprocess"). The tracked copy was last touched 2026-11-06; the
-  sources have moved since. An assistant working in this clone loads the stale
-  copy as its plan-tool guidance. Found 2026-11-15 while retiring the `Iterate:`
-  recipes entry.
-- **Fix:** decide whether the copy should be tracked at all. If yes, regenerate
-  it with `plan-tool install-skill --copy` and add a drift test beside the
-  existing path check; if no, untrack it. Deliberately not done: hand-syncing
-  the two files, which drifts again.
-- **Approach:** `direct` once decided.
-- **Verification:** a test fails when the tracked copy differs from its
-  sources, or the path is no longer tracked.
-- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** 2026-11-15, bug-backlog drain.
-
-## RISK
-
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
 
 - **Files:** `plan_tool/scope_fence.py:extract_h2_sections`.
@@ -809,35 +784,6 @@ Durable re-open conditions for retired items are recorded in
   different step).
 
 ## MINOR
-
-### Two live impact-recurrence seeds describe a design that backlog decisions closed, and `create --from-existing` refuses both
-
-- **Files:** `docs/implementation-plans/plan-seeds/impact-recurrence-01-classifier.md`
-  and `impact-recurrence-02-loop-stop.md` (neither has a `## References`
-  section; the check is `plan_tool/create.py:classify_file_backed_source`).
-- **Symptom:** both fail the `References` preflight, so `create --from-existing`
-  exits 2 before any model call. Adding the section would make them
-  `create`-able, and that is the wrong repair: `docs/history/backlog-decisions.md`
-  § "#153 / #158 — Impact-recurrence handling" closed this work on 2026-08-11
-  with a recommend-only advisory and says not to restore the older
-  structural-stop design, which seed 02 specifies. Seed 01 proposes
-  `plan_tool/impact_recurrence.py` and `tests/test_impact_recurrence.py`;
-  neither file exists, because the shipped classifier is
-  `classify_impact_recurrence` in `convergence_diagnosis.py`. The archived seed
-  `plan-seeds/archive/convergence-non-severity-advisories.replaced.md` already
-  says not to execute either "as-is — they still name retired `FORK_*` /
-  `RegionTrend` vocabulary."
-- **Fix (needs a decision):** delete both seeds under the documentation rule that
-  a description of a former state is deleted, not archived in place, or keep a
-  seed deliberately and give it a References section. Deleting changes no code.
-- **Verification:** `ls docs/implementation-plans/plan-seeds` shows neither file,
-  and nothing in `BACKLOG.md` or the plans cites them.
-- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** 2026-11-15, found by a code review of the required-guardrail-
-  headings branch while checking every live seed against `create`'s intake;
-  narrowed the same day by the drain, which fixed the other two seeds that
-  entry listed (`roadmap-revision-retention.md`, and the carved
-  `intent-required-carved-…-7.md`, whose two References sections are merged).
 
 ### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
 
