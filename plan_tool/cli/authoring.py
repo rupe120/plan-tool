@@ -194,7 +194,7 @@ from plan_tool.style import detail, error, info, success, warn
 # ``_working_tree_dirty`` is re-exported under its historical name so the
 # test suite's ``authoring._working_tree_dirty`` import keeps resolving.
 
-from plan_tool.cli.commit_footprint import ensure_state_ignore, plan_commit_footprint
+from plan_tool.cli.commit_footprint import commit_state_ignore, plan_commit_footprint
 from plan_tool.cli.gitcommit import CommitOutcome
 from plan_tool.cli.gitcommit import commit_all as _commit_all
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
@@ -1665,7 +1665,7 @@ def cmd_detail(args: argparse.Namespace) -> int:
     # before any run log opens (consistent with run's --commit gate).
     # Skipped under --dry-run (no files written, so nothing to commit).
     if getattr(args, "commit", False) and not args.dry_run:
-        ensure_state_ignore(ctx.repo_root)
+        commit_state_ignore(ctx.repo_root)
         if _working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or stash "

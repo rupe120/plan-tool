@@ -6782,6 +6782,10 @@ class TestCompletenessCommitFootprint:
         (tmp_repo.root / ".gitignore").write_text(
             ".plan-tool/runs/\n", encoding="utf-8"
         )
+        # An existing repo already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(tmp_repo.root)
         _git_commit_all(tmp_repo.root, "init")
 
         def fake_audit(*_a, budget_report=None, **_kw):

@@ -182,13 +182,14 @@ def warn_recommended_paths_ignored(repo_root: Path, emit) -> None:
 
 
 def _git_literal(
-    repo_root: Path, *args: str
+    repo_root: Path, *args: str, input: "str | None" = None
 ) -> "subprocess.CompletedProcess[str]":
     """Run git with literal pathspecs so ``*`` / ``?`` in a name match only itself."""
     return subprocess.run(
         ["git", *args],
         cwd=repo_root,
-        stdin=subprocess.DEVNULL,
+        input=input,
+        stdin=None if input is not None else subprocess.DEVNULL,
         capture_output=True,
         text=True,
         errors="surrogateescape",
@@ -197,25 +198,16 @@ def _git_literal(
 
 
 def _dirty_footprint_paths(
-    repo_root: Path, entries: Sequence[str]
+    top: Path, entries: Sequence[str]
 ) -> "list[str] | None":
-    """Dirty paths (either side of a rename) covered by ``entries``, which are
-    relative to ``repo_root``; ``None`` when git status cannot be read."""
-    records = status_records_or_none(repo_root)
-    toplevel = toplevel_or_none(repo_root)
-    if records is None or toplevel is None:
+    """Dirty paths (either side of a rename) covered by ``entries``, which, like
+    ``git status`` paths, are relative to the work-tree top level ``top``;
+    ``None`` when git status cannot be read."""
+    records = status_records_or_none(top)
+    if records is None:
         return None
-    # Status paths are relative to the top level, which can sit above repo_root.
-    try:
-        prefix = repo_root.resolve().relative_to(toplevel.resolve()).as_posix()
-    except ValueError:
-        return None
-    prefix = "" if prefix == "." else prefix + "/"
 
     def covered(rel: str) -> bool:
-        if not rel.startswith(prefix):
-            return False
-        rel = rel[len(prefix):]
         return any(
             exp == "." or rel == exp or rel.startswith(exp + "/") for exp in entries
         )
@@ -346,9 +338,15 @@ def _commit_footprint(
     if not entries:
         return nothing
 
+    # Pathspecs go through stdin, NUL-separated: a step touching thousands of
+    # files would otherwise exceed the argv length limit.
     for mode, group in (("-A", stage_all), ("-u", stage_tracked)):
         if group:
-            add = _git_literal(repo_root, "add", mode, "--", *group)
+            add = _git_literal(
+                repo_root, "add", mode,
+                "--pathspec-from-file=-", "--pathspec-file-nul",
+                input="\0".join(group),
+            )
             if add.returncode != 0:
                 return CommitOutcome(add.returncode, add.stderr.strip(), False)
 
@@ -369,10 +367,10 @@ def _commit_footprint(
     # Literal pathspecs by magic prefix, not GIT_LITERAL_PATHSPECS: commit runs
     # hooks, which would inherit the variable and read their own globs literally.
     commit = subprocess.run(
-        ["git", "commit", "-m", subject, "--",
-         *(f":(literal){entry}" for entry in changed)],
+        ["git", "commit", "-m", subject,
+         "--pathspec-from-file=-", "--pathspec-file-nul"],
         cwd=repo_root,
-        stdin=subprocess.DEVNULL,
+        input="\0".join(f":(literal){entry}" for entry in changed),
         capture_output=True,
         text=True,
         errors="surrogateescape",

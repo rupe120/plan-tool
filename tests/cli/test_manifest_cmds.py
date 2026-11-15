@@ -904,6 +904,21 @@ class TestSweepCommit:
         )
         assert _git_tree_clean(tmp_repo.root)
 
+    def test_first_commit_in_a_repo_commits_the_default_ignore_on_its_own(
+        self, tmp_repo
+    ) -> None:
+        """plan-tool commits its default ignore on its own before the gate, so
+        the team shares one file and the sweep itself still commits nothing."""
+        from plan_tool.cli import main
+        from plan_tool.cli.commit_footprint import STATE_IGNORE_COMMIT_SUBJECT
+
+        _real_git_repo(tmp_repo)
+        tmp_repo.write_manifest()
+        _git_commit_all(tmp_repo.root, "init")
+        assert main(tmp_repo.argv("sweep", "--commit", "-y")) == 0
+        assert _git_log_subjects(tmp_repo.root) == [STATE_IGNORE_COMMIT_SUBJECT, "init"]
+        assert self._git(tmp_repo.root, "status", "--porcelain") == ""
+
     def test_commit_nothing_to_sweep_makes_no_commit(
         self, tmp_repo, capsys
     ) -> None:
@@ -912,6 +927,10 @@ class TestSweepCommit:
         _real_git_repo(tmp_repo)
         tmp_repo.add_plan("1-demo", title="Demo")  # planning — not completed
         tmp_repo.write_manifest()
+        # A repo that already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(tmp_repo.root)
         _git_commit_all(tmp_repo.root, "init")
 
         rc = main(tmp_repo.argv("sweep", "--commit", "-y"))
@@ -1041,6 +1060,10 @@ class TestSweepCommit:
         _real_git_repo(tmp_repo)
         tmp_repo.add_plan("1-demo", title="Demo")  # planning — nothing to sweep
         tmp_repo.write_manifest()
+        # A repo that already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(tmp_repo.root)
         _git_commit_all(tmp_repo.root, "init")
         self._dirty_during_sweep(monkeypatch, tmp_repo.root / "stray.txt")
 

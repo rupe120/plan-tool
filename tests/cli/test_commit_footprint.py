@@ -59,7 +59,7 @@ def _repo(root: Path) -> None:
     _git(root, "commit", "-q", "-m", "init")
 
 
-def test_state_ignore_hides_runtime_state_and_itself(tmp_path: Path) -> None:
+def test_state_ignore_hides_runtime_state_and_is_itself_tracked(tmp_path: Path) -> None:
     from plan_tool.cli.commit_footprint import ensure_state_ignore
 
     _repo(tmp_path)
@@ -71,8 +71,11 @@ def test_state_ignore_hides_runtime_state_and_itself(tmp_path: Path) -> None:
 
     ensure_state_ignore(tmp_path)
 
-    # Only the manifest, which is not runtime state, still shows up.
-    assert _git(tmp_path, "status", "--porcelain", "-uall") == "?? .plan-tool/plans.json\n"
+    # Runtime state is hidden; the manifest and the ignore file itself, both
+    # meant to be committed, still show up.
+    assert _git(tmp_path, "status", "--porcelain", "-uall") == (
+        "?? .plan-tool/.gitignore\n?? .plan-tool/plans.json\n"
+    )
 
 
 def test_state_ignore_is_never_overwritten(tmp_path: Path) -> None:
@@ -104,5 +107,37 @@ def test_tracked_runtime_file_stays_committed(tmp_path: Path) -> None:
 
     assert rc == 0 and committed, tail
     assert _git(tmp_path, "show", "--name-only", "--format=", "HEAD").split() == [
-        ".plan-tool/run-prefs.json"
+        ".plan-tool/.gitignore", ".plan-tool/run-prefs.json"
     ]
+
+
+def _log(root: Path) -> list[str]:
+    return _git(root, "log", "--format=%s").splitlines()
+
+
+def test_default_ignore_is_committed_on_its_own_on_a_clean_tree(tmp_path: Path) -> None:
+    from plan_tool.cli.commit_footprint import (
+        STATE_IGNORE_COMMIT_SUBJECT,
+        commit_state_ignore,
+    )
+
+    _repo(tmp_path)
+    commit_state_ignore(tmp_path)
+    assert _log(tmp_path) == [STATE_IGNORE_COMMIT_SUBJECT, "init"]
+    assert _git(tmp_path, "show", "--name-only", "--format=", "HEAD").split() == [
+        ".plan-tool/.gitignore"
+    ]
+    assert _git(tmp_path, "status", "--porcelain") == ""
+    commit_state_ignore(tmp_path)  # already there: no second commit
+    assert len(_log(tmp_path)) == 2
+
+
+def test_default_ignore_is_not_written_on_a_dirty_tree(tmp_path: Path) -> None:
+    """The gate refuses a dirty tree; plan-tool adds nothing to it first."""
+    from plan_tool.cli.commit_footprint import commit_state_ignore
+
+    _repo(tmp_path)
+    (tmp_path / "wip.txt").write_text("x\n", encoding="utf-8")
+    commit_state_ignore(tmp_path)
+    assert not (tmp_path / ".plan-tool" / ".gitignore").exists()
+    assert _log(tmp_path) == ["init"]

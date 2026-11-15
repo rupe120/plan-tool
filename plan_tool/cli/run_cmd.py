@@ -97,7 +97,10 @@ from plan_tool.cli.gitcommit import (
 # stays the patch point the test suite monkeypatches (mirrors authoring.py).
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
 from plan_tool.cli.parser import Handler, make_yes_parent
-from plan_tool.cli.commit_footprint import ensure_state_ignore, plan_commit_footprint
+from plan_tool.cli.commit_footprint import (
+    commit_state_ignore,
+    plan_commit_footprint,
+)
 from plan_tool.git_state import (
     changed_paths_or_none,
     status_records_or_none,
@@ -570,7 +573,12 @@ def _step_footprint(
     origins = {path: origin for path, origin in records if origin is not None}
     delta = after - baseline
     rels: set[str] = set(delta)
-    rels.update(origins[dest] for dest in delta if dest in origins)
+    # A rename's origin rides with it, unless it was dirty before the step.
+    rels.update(
+        origins[dest]
+        for dest in delta
+        if dest in origins and origins[dest] not in baseline
+    )
 
     fixed: list[Path] = list(
         plan_footprint
@@ -920,7 +928,6 @@ def _cmd_run_accept(
     # sweep halt's lessons line dirty, so those two files are expected; any
     # other change means the certified tree is not the committed one.
     expected = [plan_path] + ([ctx.repo_root / plan.lessons] if plan.lessons else [])
-    ensure_state_ignore(ctx.repo_root)
     dirty = unexpected_dirty_paths(ctx.repo_root, expected)
     if dirty is None or dirty:
         error(
@@ -1140,7 +1147,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     # the user's tree, and before the run log so a rejection leaves no ghost run
     # dir. Run-execution path only. See docs/how-to/pipeline/run.md.
     if commit_active and args.mode == "run" and not getattr(args, "reconcile", False):
-        ensure_state_ignore(ctx.repo_root)
+        commit_state_ignore(ctx.repo_root)
         if _working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or "
@@ -1562,7 +1569,7 @@ def _cmd_run_sweep(
     # consistent with the other rc=2 gates above. Skipped under
     # ``--dry-run`` (no step advances, so no commit happens).
     if getattr(args, "commit", False) and not args.dry_run:
-        ensure_state_ignore(ctx.repo_root)
+        commit_state_ignore(ctx.repo_root)
         if _working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or "

@@ -2158,6 +2158,25 @@ class TestRunCommitFootprint:
         assert rc == 0 and committed, tail
         assert "svc/src/x.py" in _git_head_files(tmp_path)
 
+    def test_rename_origin_dirty_before_the_step_is_left_out(
+        self, tmp_path: Path
+    ) -> None:
+        """The operator's edit to a file the step then renames is not folded
+        into the step's commit through the rename origin."""
+        plan_path = self._repo(tmp_path)
+        (tmp_path / "tracked.txt").write_text("operator edit", encoding="utf-8")
+        baseline = {"tracked.txt"}
+        subprocess.run(
+            ["git", "mv", "tracked.txt", "moved.txt"], cwd=tmp_path,
+            stdin=subprocess.DEVNULL, capture_output=True, check=True,
+        )
+        paths, _ = run_cmd._step_footprint(
+            _ctx(tmp_path), plan_path=plan_path, baseline=baseline,
+            archive_outcome=None, manifest_path=None,
+        )
+        assert tmp_path / "moved.txt" in paths
+        assert tmp_path / "tracked.txt" not in paths
+
     def test_unrelated_file_outside_delta_is_excluded(self, tmp_path: Path) -> None:
         plan_path = self._repo(tmp_path)
         (tmp_path / "tracked.txt").write_text("dirty before", encoding="utf-8")

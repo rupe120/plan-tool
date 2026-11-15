@@ -5,7 +5,7 @@
 
 ### Added
 
-- plan-tool writes `.plan-tool/.gitignore` (it ignores itself) before a `--commit` verb's clean-tree check, so its runtime state (run logs, `run-prefs.json`, telemetry, review and checkpoint caches, the mutation lock) is ignored by default. An existing file is never overwritten, and a runtime file a repo already tracks stays tracked.
+- The first `--commit` in a repo without `.plan-tool/.gitignore` writes a default one and commits it on its own (`plan-tool: ignore runtime state by default`), so plan-tool's runtime state (run logs, `run-prefs.json`, telemetry, review and checkpoint caches, the mutation lock) is ignored by default. The file is tracked so a team shares one copy; it is never overwritten, and a runtime file a repo already tracks stays tracked.
 
 ### Fixed
 

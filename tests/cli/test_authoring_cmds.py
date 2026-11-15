@@ -3096,10 +3096,10 @@ class TestDetailCommitHelpers:
         # Index unreadable before the commit: no commit, never "clean".
         real = gitcommit._git_literal
 
-        def broken_diff(root, *args):
+        def broken_diff(root, *args, **kw):
             if args[:2] == ("diff", "--cached"):
                 return subprocess.CompletedProcess(args, 128, "", "fatal: index")
-            return real(root, *args)
+            return real(root, *args, **kw)
 
         monkeypatch.setattr(gitcommit, "_git_literal", broken_diff)
         (tmp_path / "plan.md").write_text("edit 3\n", encoding="utf-8")
@@ -3141,6 +3141,10 @@ class TestDetailCommitCmd:
         _init_git_repo(tmp_repo.root)
         tmp_repo.add_plan("1-demo", title="Demo")
         tmp_repo.write_manifest()
+        # An existing repo already has plan-tool's default .plan-tool/.gitignore.
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(tmp_repo.root)
         _git_commit_all(tmp_repo.root, "init")
         return tmp_repo.plans_dir / "plan-details" / "demo"
 

@@ -365,13 +365,16 @@ it is given.
   status fails closed.
 - **Plan-tool's own files follow `.gitignore`:** every footprint includes
   `.plan-tool/`, so the repo's ignore rules decide which of its files are
-  committed. Before its clean-tree check, each `--commit` verb writes
-  `.plan-tool/.gitignore` if it is missing (`commit_footprint.ensure_state_ignore`):
-  it ignores itself and plan-tool's runtime state (`runs/`, `run-prefs.json`,
-  `telemetry/`, `reviews/`, `checkpoints/`, the mutation lock, …), so writes made
-  after a verb's last commit, such as the run-log end record, never block the
-  next `--commit`. It is never overwritten. A repo that tracks a runtime file
-  keeps committing it, and its late writes are that repo's choice to commit.
+  committed. Before its clean-tree check, a `--commit` verb on an otherwise
+  clean tree with no `.plan-tool/.gitignore` writes the default and commits it
+  on its own as `plan-tool: ignore runtime state by default`
+  (`commit_footprint.commit_state_ignore`). The file is tracked, so the team
+  shares and edits one copy; it lists plan-tool's runtime state (`runs/`,
+  `run-prefs.json`, `telemetry/`, `reviews/`, `checkpoints/`, the mutation lock,
+  bench runs, impact analyses, …), so writes made after a verb's last commit,
+  such as the run-log end record, never block the next `--commit`. It is never
+  overwritten. A repo that tracks a runtime file keeps committing it, and its
+  late writes are that repo's choice to commit.
 
 ## After the plan completes — the two-loop verification tail
 
