@@ -810,26 +810,31 @@ Durable re-open conditions for retired items are recorded in
 
 ## MINOR
 
-### Four live seeds are refused by `create --from-existing` because their `## References` section is missing or duplicated
+### Two live impact-recurrence seeds describe a design that backlog decisions closed, and `create --from-existing` refuses both
 
-- **Files:** `docs/implementation-plans/plan-seeds/impact-recurrence-01-classifier.md`,
-  `impact-recurrence-02-loop-stop.md` and `roadmap-revision-retention.md` (no
-  `## References`), and
-  `intent-required-carved-have-the-intent-presence-finding-carry-through-7.md`
-  (two `## References` sections). The check is
-  `plan_tool/create.py:classify_file_backed_source`.
-- **Symptom:** each seed fails the existing `References` preflight, so
-  `create --from-existing` exits 2 before any model call. All four already
-  failed it on `main` before the guardrail-heading change; they now pass the
-  guardrail check and fail only this one. Deliberately not listed: the two
-  seed-directory `README.md` files, which are not seeds.
-- **Fix:** give each seed exactly one non-placeholder `## References` section
-  from its own source content (merge the duplicate pair). Edit the seeds only;
-  the preflight rule stays as it is.
-- **Verification:** `validate_from_existing_seed` accepts each of the four.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Files:** `docs/implementation-plans/plan-seeds/impact-recurrence-01-classifier.md`
+  and `impact-recurrence-02-loop-stop.md` (neither has a `## References`
+  section; the check is `plan_tool/create.py:classify_file_backed_source`).
+- **Symptom:** both fail the `References` preflight, so `create --from-existing`
+  exits 2 before any model call. Adding the section would make them
+  `create`-able, and that is the wrong repair: `docs/history/backlog-decisions.md`
+  § "#153 / #158 — Impact-recurrence handling" closed this work on 2026-08-11
+  with a recommend-only advisory and says not to restore the older
+  structural-stop design, which seed 02 specifies. Seed 01 proposes
+  `plan_tool/impact_recurrence.py` and `tests/test_impact_recurrence.py`;
+  neither file exists, because the shipped classifier is
+  `classify_impact_recurrence` in `convergence_diagnosis.py`.
+- **Fix (needs a decision):** delete both seeds under the documentation rule that
+  a description of a former state is deleted, not archived in place, or keep a
+  seed deliberately and give it a References section. Deleting changes no code.
+- **Verification:** `ls docs/implementation-plans/plan-seeds` shows neither file,
+  and nothing in `BACKLOG.md` or the plans cites them.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** 2026-11-15, found by a code review of the required-guardrail-
-  headings branch while checking every live seed against `create`'s intake.
+  headings branch while checking every live seed against `create`'s intake;
+  narrowed the same day by the drain, which fixed the other two seeds that
+  entry listed (`roadmap-revision-retention.md`, and the carved
+  `intent-required-carved-…-7.md`, whose two References sections are merged).
 
 ### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
 
