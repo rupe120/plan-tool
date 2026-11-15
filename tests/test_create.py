@@ -14015,11 +14015,14 @@ class TestCmdCreateRunLog:
         files = list(runs_dir.glob("*.jsonl"))
         assert len(files) == 1
         run_id = files[0].stem
-        # ``new_run_id`` shape: timestamp-with-dashes + 6 hex chars.
-        # We don't pin the timestamp, just the trailing "-<6 hex>" tail.
+        # ``new_run_id`` shape: timestamp-with-dashes + a random hex tail.
+        # We don't pin the timestamp, just the trailing "-<hex>" tail.
         assert len(run_id) >= 7
-        assert run_id[-7] == "-"
-        assert all(c in "0123456789abcdef" for c in run_id[-6:])
+        from plan_tool.run_log import RUN_ID_RANDOM_BYTES
+
+        tail = 2 * RUN_ID_RANDOM_BYTES  # hex chars of the random suffix
+        assert run_id[-(tail + 1)] == "-"
+        assert all(c in "0123456789abcdef" for c in run_id[-tail:])
 
 
 # --- Post-write iteration loop (step 2 of the iterative-completeness plan) ---

@@ -156,9 +156,55 @@ def test_new_run_id_is_filename_safe() -> None:
     assert not rid.startswith(".")
 
 
-def test_new_run_id_is_unique_per_call() -> None:
-    ids = {new_run_id() for _ in range(100)}
-    assert len(ids) == 100
+def test_new_run_id_tail_is_at_least_64_random_bits_from_secrets(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Pins the generation contract instead of sampling for a collision: a
+    24-bit tail produced 99 distinct IDs from 100 same-second calls in a
+    parallel suite, and any draw-and-compare test is probabilistic by nature.
+    The tail must come from ``secrets.token_hex`` with at least 8 bytes."""
+    import re
+
+    from plan_tool import run_log
+
+    asked: list[int] = []
+    real = run_log.secrets.token_hex
+
+    def spy(nbytes: int) -> str:
+        asked.append(nbytes)
+        return real(nbytes)
+
+    monkeypatch.setattr(run_log.secrets, "token_hex", spy)
+    rid = new_run_id()
+
+    assert asked == [run_log.RUN_ID_RANDOM_BYTES]
+    assert run_log.RUN_ID_RANDOM_BYTES >= 8
+    assert re.fullmatch(
+        r"\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\+00-00-[0-9a-f]{%d}"
+        % (2 * run_log.RUN_ID_RANDOM_BYTES),
+        rid,
+    )
+
+
+def test_logs_with_the_old_and_new_tail_widths_are_read_side_by_side(
+    tmp_path: Path,
+) -> None:
+    """The readers enumerate ``*.jsonl`` and take the run ID from each file's
+    events, never from the name's tail, so widening the tail strands no
+    stored log."""
+    from plan_tool.run_log import read_run_events, run_log_path
+
+    old = "2026-05-14T12-34-56+00-00-9f3a1c"
+    fresh = new_run_id()
+    for rid in (old, fresh):
+        path = run_log_path(tmp_path, "demo", rid)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"event": "run_start", "run_id": rid}) + "\n", encoding="utf-8"
+        )
+
+    logs = sorted((tmp_path / ".plan-tool" / "runs" / "demo").glob("*.jsonl"))
+    assert {read_run_events(log)[0]["run_id"] for log in logs} == {old, fresh}
 
 
 # ---------- utc_now_iso ----------
