@@ -103,12 +103,11 @@ def unexpected_dirty_paths(
 def path_is_gitignored(repo_root: Path, path: Path) -> bool:
     """True when ``path`` is excluded by gitignore rules (``git check-ignore``).
 
-    Lets a ``--commit`` verb warn when a file it means to commit — e.g. the
-    saved-audit JSON the walker annotates in place — sits on an ignored path,
-    which ``commit_all`` skips, so the annotations would never land. ``check-ignore`` exits 0 when one or more paths match an ignore
-    rule, 1 when none do, 128 on a fatal error (not a work tree, …); only an
-    exit of 0 is a positive "ignored", so any other rc returns False rather
-    than false-warning.
+    Lets ``init`` warn when a file it writes for the team sits on an ignored
+    path. ``check-ignore`` exits 0 when one or more paths match an ignore rule,
+    1 when none do, 128 on a fatal error (not a work tree, …); only an exit of
+    0 is a positive "ignored", so any other rc returns False rather than
+    false-warning.
     """
     proc = subprocess.run(
         ["git", "check-ignore", "-q", "--", str(path)],

@@ -214,3 +214,17 @@ def test_a_failed_default_commit_is_reported(
     err = capsys.readouterr().err
     assert ".plan-tool/.gitignore" in err and "your .gitignore" in err
     assert (tmp_path / ".plan-tool" / ".gitignore").exists() == (hook == "rewrite")
+    if hook == "reject":
+        # Nothing left staged, so the next --commit's clean-tree check passes.
+        assert _git(tmp_path, "status", "--porcelain") == ""
+
+
+def test_a_private_exclude_rule_is_not_the_repos_decision(tmp_path: Path) -> None:
+    """A rule only in .git/info/exclude is one developer's; the shared default
+    still carries the pattern for teammates without it."""
+    from plan_tool.cli.commit_footprint import undecided_patterns
+
+    _repo(tmp_path)
+    (tmp_path / ".git" / "info").mkdir(exist_ok=True)
+    (tmp_path / ".git" / "info" / "exclude").write_text(".plan-tool/runs/\n", encoding="utf-8")
+    assert "runs/" in (undecided_patterns(tmp_path) or [])

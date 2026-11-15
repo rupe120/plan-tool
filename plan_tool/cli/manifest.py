@@ -683,10 +683,9 @@ def cmd_sweep(args: argparse.Namespace) -> int:
 
     # ``--commit``: stage and commit exactly the sweep's own mutations —
     # the archived plan files, their moved plan-details, and the manifest
-    # edits (archives + missing-entry deregistrations). The clean-tree gate ran up
-    # front, so a dirty tree here is the sweep's doing; a clean tree means
-    # the sweep moved nothing (no completed plans, no orphans/missing),
-    # leaving nothing to commit.
+    # edits (archives + missing-entry deregistrations). ``commit_all`` reports
+    # whether it committed; nothing changed in the footprint means the sweep
+    # moved nothing, which is not a failure.
     if getattr(args, "commit", False):
         n_archived = sum(1 for o in report.archived if o.archived_to is not None)
         committed = commit_all(

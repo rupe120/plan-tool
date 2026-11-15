@@ -59,6 +59,13 @@ def _probe_path(pattern: str) -> str:
     return f".plan-tool/{pattern.replace('*', '1')}"
 
 
+def _is_shared_ignore_source(source: str) -> bool:
+    if not source:
+        return False
+    rel = Path(source)
+    return rel.name == ".gitignore" and not rel.is_absolute() and ".git" not in rel.parts
+
+
 def undecided_patterns(repo_root: Path) -> "list[str] | None":
     """The default patterns no existing ignore rule decides either way, or
     ``None`` when git cannot say. A rule that ignores a path, or a negation
@@ -80,9 +87,13 @@ def undecided_patterns(repo_root: Path) -> "list[str] | None":
     if proc.returncode not in (0, 1):
         return None
     fields = proc.stdout.split("\0")
-    # Four fields per path (source, line, pattern, path); no source = no rule.
+    # Four fields per path (source, line, pattern, path). Only a .gitignore in
+    # the work tree is the repo's decision; .git/info/exclude and a personal
+    # core.excludesFile are one developer's, which teammates do not share.
     decided = {
-        fields[k + 3] for k in range(0, len(fields) - 3, 4) if fields[k]
+        fields[k + 3]
+        for k in range(0, len(fields) - 3, 4)
+        if _is_shared_ignore_source(fields[k])
     }
     return [p for p, probe in zip(RUNTIME_STATE_PATTERNS, probes) if probe not in decided]
 
@@ -112,7 +123,7 @@ def _ever_committed(repo_root: Path, path: Path) -> bool:
 
     try:
         proc = subprocess.run(
-            ["git", "log", "-1", "--format=%H", "--", str(path)],
+            ["git", "log", "-1", "--format=%H", "--", f":(literal){path}"],
             cwd=repo_root, capture_output=True, text=True, errors="surrogateescape",
         )
     except OSError:
@@ -131,15 +142,15 @@ def commit_state_ignore(repo_root: Path) -> None:
     when it was ever committed (a committed deletion is the opt-out). Writes
     made after a verb's last commit then never block the next ``--commit``.
     """
+    import subprocess
+
     from plan_tool.cli.gitcommit import commit_all, working_tree_dirty
 
     path = state_ignore_path(repo_root)
     if path.exists() or working_tree_dirty(repo_root):
         return
-    if _ever_committed(repo_root, path):
-        return
-    gaps = undecided_patterns(repo_root)
-    if not gaps:
+    gaps = undecided_patterns(repo_root)  # cheap; checked before the history walk
+    if not gaps or _ever_committed(repo_root, path):
         return
     ensure_state_ignore(repo_root, gaps)
     if not path.exists():
@@ -148,6 +159,12 @@ def commit_state_ignore(repo_root: Path) -> None:
     if outcome.rc == 0 and outcome.committed:
         return
     if not outcome.committed:
+        # Unstage before deleting: a rejected commit leaves the add staged.
+        subprocess.run(
+            ["git", "rm", "--cached", "-q", "--ignore-unmatch", "--",
+             f":(literal){path}"],
+            cwd=repo_root, capture_output=True,
+        )
         path.unlink(missing_ok=True)
     print(
         "warning: " + outcome.describe("the default .plan-tool/.gitignore")

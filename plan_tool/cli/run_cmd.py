@@ -1156,7 +1156,8 @@ def cmd_run(args: argparse.Namespace) -> int:
             return 2
 
     # Record prefs before the run log (keeps last_plan fresh even if the step
-    # fails); run-prefs.json is gitignored, so it doesn't ride a --commit commit.
+    # fails). Whether run-prefs.json rides a --commit commit is the repo's
+    # .gitignore's call: `.plan-tool/` is in every footprint.
     if record_prefs:
         _save_run_prefs(ctx.repo_root, last_plan=run_slug, scope=run_scope)
 
@@ -1266,7 +1267,10 @@ def cmd_run(args: argparse.Namespace) -> int:
         # step wrote. ``None`` (unreadable) is carried to commit time, where it
         # fails closed.
         commit_baseline = (
-            changed_paths_or_none(ctx.repo_root) if commit_active else None
+            changed_paths_or_none(ctx.repo_root)
+            if commit_active and args.mode == "run"
+            and not getattr(args, "reconcile", False)
+            else None
         )
         try:
             initial_backend_name = get_active_backend().name
@@ -1810,8 +1814,8 @@ def _cmd_run_sweep(
             # commits too. The title comes from ``pre_step`` (``run_step``
             # leaves ``RunResult.step_title`` empty on green). When the step
             # completed + archived above, this same commit captures the archive
-            # move. A failed commit halts the sweep with the commit's rc,
-            # leaving that step's work dirty for ``git reset`` recovery.
+            # move. A failed commit halts the sweep with the commit's rc;
+            # ``_green_commit_failure_msg`` says whether the commit landed.
             if args.commit and result.done:
                 committed = _commit_step_footprint(
                     ctx,
