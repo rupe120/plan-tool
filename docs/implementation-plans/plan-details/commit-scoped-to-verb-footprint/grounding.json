@@ -1,0 +1,26 @@
+{
+  "plan_slug": "commit-scoped-to-verb-footprint",
+  "grounded_at": "2026-11-15T01:58:31Z",
+  "plan_fingerprint": "9bf805923cb830d55b88b0724f73356300b605e201e652cecbb42f265caf2262",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "b619125b2f407fa8cb988b0e0823b0a0e047c73aa4ec4e02ef6271f88a0fa2ca",
+    "docs/cli/completeness-audit.md": "fdcf24834b72936f7be2e85c402d486b44cfc0e43677fb2cf3bd715f14df1a1d",
+    "docs/cli/detail.md": "40e9f49ad1ac7906201827908b63c7b1c7f7d7916e7a43aabda2b5c00f3c9c59",
+    "docs/cli/run.md": "c3a1a584ae59f434c2b43648a6e7e28d638e8ba8f0db177a9525d24233a20bd0",
+    "docs/cli/sweep.md": "34e297e8019aceab61da78a72edee948b5bd22bedfe01f957197c520eb452069",
+    "docs/how-to/pipeline/detail.md": "690950e9bc6dc6921f0348f03998fcd3f8d539895fd00142e4401d8baeedd7ac",
+    "docs/how-to/pipeline/run.md": "24c240a146f2861d771ad36b8d14bd965b5e44d9d39a64f323e7192af85054e9",
+    "plan_tool/cli/authoring.py": "68cb6db3c2205fbd403790535a1d104c6563162552214e4976601d37e3e3db97",
+    "plan_tool/cli/completeness_cmd.py": "36e74fef8a5d55698c1fa6e27bf0a05fc0a54853349f77c92d975c7ba57e0bc9",
+    "plan_tool/cli/gitcommit.py": "106a581c7dae4e2126505469c6aa8383c87762f8f48a9b18db2b4a2c482f1d43",
+    "plan_tool/cli/manifest.py": "a535ee9f3db5967cef448f28f17acfa2bf54408ec933b344487bbf10379a1828",
+    "plan_tool/cli/run_cmd.py": "52f52e0cbcfb3ad94b0ecbbd1ea7618e3f97cf2848bf5f9d05c38ada57871f93",
+    "tests/cli/test_authoring_cmds.py": "04a0b93a968f012feadf49fad0e6399c87571b10aaa2406ddf5ebaa24c466d16",
+    "tests/cli/test_completeness_cmd.py": "367ceef296c080eb61d6500b13084907c11117b2cc88959dc10af21a9527d350",
+    "tests/cli/test_gitcommit.py": "7d557cd90082b684ba599ac797ac36b0f7559bead9b13a38a33b10cd843b7216",
+    "tests/cli/test_manifest_cmds.py": "8100ba050b64e974625ce71c4b451b863940841968321634259614661b7eddd0",
+    "tests/cli/test_run_cmd.py": "5dd53a7a3ba74a11104c715b93fe30488703ed0dd8a25fe88466b4323f3e5658"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}
