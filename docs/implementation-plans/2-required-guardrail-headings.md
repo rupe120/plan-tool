@@ -204,9 +204,7 @@ steps:
     4: roadmap draft seeds already carry the headings
     5: live seeds already pass, so turning the refusal on breaks no current input
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/06-turn-on-refusal-create-py-classify-file.md
-  status: current
-  status_note: 'test-authoring gate failed: feature step created or modified no test
-    file; step not advanced.'
+  status: done
   description: Turn on the refusal in `create.py:classify_file_backed_source`. `validate_from_existing_seed`
     and the CLI's pre-slug call in `plan_tool/cli/authoring.py` both reach it, and
     so does the `create_plan` intake. It calls the step 1 predicate and raises one
@@ -243,6 +241,7 @@ steps:
   depends_on_notes:
     6: the shipped refusal and its message that the docs describe
   detail: docs/implementation-plans/plan-details/required-guardrail-headings/07-update-docs-say-three-guardrail.md
+  status: current
   description: 'Update the docs to say the three guardrail headings are required,
     that `None` is a valid body, and that `_(TODO)_` is refused. The pages are `SEED_FORMAT.md`,
     `PLAN_FORMAT.md` § "Scope fence", `docs/how-to/pipeline/create-from-existing.md`,
