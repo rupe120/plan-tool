@@ -194,6 +194,7 @@ from plan_tool.style import detail, error, info, success, warn
 # ``_working_tree_dirty`` is re-exported under its historical name so the
 # test suite's ``authoring._working_tree_dirty`` import keeps resolving.
 
+from plan_tool.cli.gitcommit import _dirty_footprint_paths
 from plan_tool.cli.gitcommit import commit_all as _commit_all
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
 
@@ -242,32 +243,86 @@ def _detail_residual_commit_subject(slug: str) -> str:
     return f"plan({slug}): detail — residual authoring edits"
 
 
+def _detail_commit_footprint(repo_root: Path, plan_path: Path) -> "list[Path]":
+    """Paths ``detail --commit`` may stage: the plan file, its
+    ``plan-details/<slug>/`` directory (detail files, ``archive/`` moves, saved
+    reports), every ``steps[].detail`` pointer the plan declares (a pointer can
+    name a file outside that directory), and the project lessons directory.
+    Rebuilt at each commit so a pointer set mid-run is included; an unreadable
+    plan contributes no pointers rather than raising.
+    """
+    from plan_tool.lessons import PROJECT_LESSONS_REL
+    from plan_tool.review_persistence import plan_reports_dir
+
+    footprint = [
+        plan_path,
+        plan_reports_dir(plan_path).parent,
+        repo_root.joinpath(*PROJECT_LESSONS_REL),
+    ]
+    try:
+        plan = parse_plan(plan_path)
+    except Exception:  # noqa: BLE001 — footprint must never abort a commit
+        return footprint
+    footprint.extend(
+        repo_root / step.detail for step in plan.steps if step.detail
+    )
+    return footprint
+
+
+def _footprint_is_dirty(
+    repo_root: Path, footprint: "list[Path]"
+) -> "Optional[bool]":
+    """True when git reports dirt inside ``footprint``; ``None`` when git status
+    cannot be read. Missing or gitignored entries never appear in status."""
+    root = repo_root.resolve()
+    entries: list[str] = []
+    for path in footprint:
+        try:
+            entries.append(path.resolve().relative_to(root).as_posix())
+        except ValueError:
+            continue  # outside the repo — cannot appear in its status
+    dirty = _dirty_footprint_paths(repo_root, entries)
+    if dirty is None:
+        return None
+    return bool(dirty)
+
+
 def _commit_if_dirty(
-    repo_root: Path, subject: str
+    repo_root: Path, subject: str, footprint: "list[Path]"
 ) -> "Optional[tuple[int, str]]":
-    """Commit all changes under ``subject`` when the tree is dirty; ``None`` on a
-    clean tree. **Never raises** — a git subprocess failure (``OSError``: missing
+    """Commit ``footprint`` under ``subject`` when it holds dirt; ``None`` when
+    nothing inside it is dirty (unrelated dirt elsewhere does not count).
+    **Never raises** — a git subprocess failure (``OSError``: missing
     binary, removed cwd, EMFILE) or a ``ValueError`` / ``UnicodeDecodeError`` from
     ``subprocess.run(text=True)`` decoding non-UTF-8 git/hook output degrades to a
     non-zero ``(rc, tail)`` so every caller flags the run rather than crashing.
+    An unreadable git status fails closed (non-zero), never ``None``.
     Shared by the per-step commit and the end-of-run sweep so both are guarded
     identically.
     """
     try:
-        if not _working_tree_dirty(repo_root):
+        dirty = _footprint_is_dirty(repo_root, footprint)
+        if dirty is None:
+            return 1, "could not read git status to decide whether to commit"
+        if not dirty:
             return None
-        return _commit_all(repo_root, subject, [repo_root])
+        return _commit_all(repo_root, subject, footprint)
     except (OSError, ValueError) as exc:
         return 1, f"git subprocess error: {exc}"
 
 
 def _commit_detail_step(
-    repo_root: Path, *, slug: str, step_id: int, title: str
+    repo_root: Path,
+    *,
+    slug: str,
+    step_id: int,
+    title: str,
+    footprint: "list[Path]",
 ) -> "Optional[tuple[int, str]]":
-    """Commit one converged step's changes (#122) via :func:`_commit_if_dirty`,
-    so an interrupted batch keeps completed steps. ``None`` on a clean tree."""
+    """Commit one converged step's footprint (#122) via :func:`_commit_if_dirty`,
+    so an interrupted batch keeps completed steps. ``None`` when clean."""
     return _commit_if_dirty(
-        repo_root, _detail_step_commit_subject(slug, step_id, title)
+        repo_root, _detail_step_commit_subject(slug, step_id, title), footprint
     )
 
 
@@ -1790,13 +1845,17 @@ def cmd_detail(args: argparse.Namespace) -> int:
             _commit_step_ran.append(True)
             # Stop after the first failure: a failed ``git commit`` (e.g. a
             # pre-commit hook rejection) leaves that step's files *staged*, and
-            # a later step's ``git add -A`` would fold them into the wrong
+            # a later step's ``git add`` would fold them into the wrong
             # commit. Once one step's commit fails, leave the rest on disk
             # uncommitted for the operator rather than misattribute history.
             if _commit_failed_steps:
                 return
             res = _commit_detail_step(
-                ctx.repo_root, slug=_commit_slug, step_id=step_id, title=title
+                ctx.repo_root,
+                slug=_commit_slug,
+                step_id=step_id,
+                title=title,
+                footprint=_detail_commit_footprint(ctx.repo_root, path),
             )
             if res is None:
                 return  # clean tree — nothing to commit for this step
@@ -2056,7 +2115,11 @@ def cmd_detail(args: argparse.Namespace) -> int:
                     # so this is the one batch commit of everything authored.
                     subject = _detail_batch_commit_subject(slug, len(wrote))
                     label = f"{len(wrote)} detail file(s)"
-                res = _commit_if_dirty(ctx.repo_root, subject)
+                res = _commit_if_dirty(
+                    ctx.repo_root,
+                    subject,
+                    _detail_commit_footprint(ctx.repo_root, path),
+                )
                 if res is not None:
                     commit_rc, tail = res
                     if commit_rc == 0:
@@ -3240,11 +3303,13 @@ def register(subparsers) -> dict[str, Handler]:
         action="store_true",
         dest="commit",
         help=(
-            "after a clean authoring run (and the completeness tail), stage "
-            "all changes (git add -A) and create one commit with subject "
-            "'plan(<slug>): detail — authored N step(s)'. Requires a clean "
-            "working tree up front; off by default; ignored under --dry-run "
-            "or when nothing was authored."
+            "after a clean authoring run (and the completeness tail), commit "
+            "only the plan file, the plan's plan-details/<slug>/ directory, "
+            "the detail files the plan declares, and project lessons, with "
+            "subject 'plan(<slug>): detail — authored N step(s)'; other "
+            "changed files are left alone. Requires a clean working tree up "
+            "front; off by default; ignored under --dry-run or when nothing "
+            "was authored."
         ),
     )
     p_detail.add_argument(

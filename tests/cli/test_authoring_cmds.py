@@ -2961,15 +2961,18 @@ class TestDetailCommitHelpers:
 
         # Clean tree → None (nothing to commit; never counted as a commit).
         base = _count(tmp_path)
+        footprint = [tmp_path / "new.md"]
         assert _commit_detail_step(
-            tmp_path, slug="demo", step_id=1, title="Nothing"
+            tmp_path, slug="demo", step_id=1, title="Nothing",
+            footprint=footprint,
         ) is None
         assert _count(tmp_path) == base
 
-        # Dirty tree → one commit with the per-step subject.
+        # Dirty footprint → one commit with the per-step subject.
         (tmp_path / "new.md").write_text("# new\n", encoding="utf-8")
         res = _commit_detail_step(
-            tmp_path, slug="demo", step_id=3, title="Add thing"
+            tmp_path, slug="demo", step_id=3, title="Add thing",
+            footprint=footprint,
         )
         assert res is not None
         rc, tail = res
@@ -3008,11 +3011,93 @@ class TestDetailCommitHelpers:
             raise exc
 
         monkeypatch.setattr(authoring, "_commit_all", boom)
-        res = authoring._commit_if_dirty(tmp_path, "plan(demo): subj")
+        res = authoring._commit_if_dirty(
+            tmp_path, "plan(demo): subj", [tmp_path / "new.md"]
+        )
         assert res is not None
         rc, tail = res
         assert rc == 1
         assert "git subprocess error" in tail
+
+    def _repo_with_footprint_and_stray(self, tmp_path: Path):
+        _init_git_repo(tmp_path)
+        (tmp_path / "plan.md").write_text("p\n", encoding="utf-8")
+        (tmp_path / "stray.txt").write_text("s\n", encoding="utf-8")
+        _git_commit_all(tmp_path, "init")
+        return [tmp_path / "plan.md", tmp_path / ".plan-tool" / "lessons"]
+
+    def _head_count(self, root: Path) -> int:
+        import subprocess
+
+        return int(subprocess.run(
+            ["git", "rev-list", "--count", "HEAD"],
+            cwd=root, capture_output=True, text=True,
+        ).stdout.strip())
+
+    def test_commit_if_dirty_returns_none_when_only_unrelated_file_is_dirty(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Dirt outside the footprint is not 'something to commit': no commit
+        is made and ``commit_all`` is never invoked."""
+        from plan_tool.cli import authoring
+
+        footprint = self._repo_with_footprint_and_stray(tmp_path)
+        (tmp_path / "stray.txt").write_text("changed\n", encoding="utf-8")
+        base = self._head_count(tmp_path)
+        monkeypatch.setattr(
+            authoring, "_commit_all",
+            lambda *a, **k: pytest.fail("commit_all must not run"),
+        )
+        assert authoring._commit_if_dirty(tmp_path, "s", footprint) is None
+        assert self._head_count(tmp_path) == base
+
+    def test_commit_if_dirty_commits_footprint_and_leaves_unrelated_dirty(
+        self, tmp_path: Path,
+    ) -> None:
+        import subprocess
+
+        from plan_tool.cli import authoring
+
+        footprint = self._repo_with_footprint_and_stray(tmp_path)
+        (tmp_path / "plan.md").write_text("edited\n", encoding="utf-8")
+        (tmp_path / "stray.txt").write_text("changed\n", encoding="utf-8")
+        res = authoring._commit_if_dirty(tmp_path, "s", footprint)
+        assert res is not None and res[0] == 0, res
+        porcelain = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=tmp_path, capture_output=True, text=True,
+        ).stdout
+        assert porcelain == " M stray.txt\n"  # unstaged, uncommitted
+
+    def test_commit_if_dirty_fails_closed_when_git_status_unreadable(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """An unreadable git status must not read as 'clean' (None)."""
+        from plan_tool.cli import authoring
+
+        footprint = self._repo_with_footprint_and_stray(tmp_path)
+
+        def unreadable(*_a, **_k):
+            raise OSError("git: command not found")
+
+        monkeypatch.setattr(authoring, "_dirty_footprint_paths", unreadable)
+        res = authoring._commit_if_dirty(tmp_path, "s", footprint)
+        assert res is not None and res[0] != 0
+
+        monkeypatch.setattr(
+            authoring, "_dirty_footprint_paths", lambda *_a, **_k: None
+        )
+        res = authoring._commit_if_dirty(tmp_path, "s", footprint)
+        assert res is not None and res[0] != 0
+
+    def test_commit_if_dirty_footprint_with_missing_lessons_dir_does_not_raise(
+        self, tmp_path: Path,
+    ) -> None:
+        from plan_tool.cli import authoring
+
+        footprint = self._repo_with_footprint_and_stray(tmp_path)
+        assert not (tmp_path / ".plan-tool" / "lessons").exists()
+        assert authoring._commit_if_dirty(tmp_path, "s", footprint) is None
 
 
 class TestDetailCommitCmd:
@@ -3166,6 +3251,179 @@ class TestDetailCommitCmd:
         ).stdout
         assert "detail — authored 2 steps" in log  # one batch commit
         assert "detail step 1" not in log  # not per-step
+
+    def _run_commit_site(self, tmp_repo, monkeypatch, site: str):
+        """Drive ``detail --commit`` through one commit site with an archive
+        rename, a footprint write and an unrelated file dirtied mid-run.
+
+        ``per-step``: edits land before the step callback fires.
+        ``batch``: ``--jobs 2``; the callback never fires, one end-of-run commit.
+        ``residual``: edits land after the last per-step commit (completeness
+        tail), so only the residual sweep can commit them.
+        """
+        import subprocess
+
+        import plan_tool.cli.app as app
+        import plan_tool.cli.authoring as authoring
+        from plan_tool.detail import DetailResult
+
+        ddir = self._setup_git_plan(tmp_repo)
+        root = tmp_repo.root
+        ddir.mkdir(parents=True, exist_ok=True)
+        (ddir / "00-stale.md").write_text("# stale\n", encoding="utf-8")
+        _git_commit_all(root, "tracked stale detail")
+
+        def dirty_midrun() -> None:
+            (ddir / "archive").mkdir(exist_ok=True)
+            (ddir / "00-stale.md").rename(ddir / "archive" / "00-stale.md")
+            (root / ".plan-tool" / "lessons").mkdir(parents=True, exist_ok=True)
+            (root / ".plan-tool" / "lessons" / "l.md").write_text(
+                "lesson\n", encoding="utf-8"
+            )
+            (ddir / "reports").mkdir(exist_ok=True)
+            (ddir / "reports" / "r.json").write_text("{}\n", encoding="utf-8")
+            (root / "unrelated.txt").write_text("other\n", encoding="utf-8")
+
+        def fake_gen(plan_path, *, repo_root, commit_step=None, **kw):
+            f = ddir / "01-step.md"
+            f.write_text("# detail 1\n", encoding="utf-8")
+            if site != "residual":
+                dirty_midrun()
+            if commit_step is not None:
+                commit_step(1, "First step")
+            return [DetailResult(step_id=1, output_path=f, written=True)]
+
+        def fake_completeness(_a):
+            if site == "residual":
+                dirty_midrun()
+            return 0
+
+        monkeypatch.setattr(authoring, "generate_detail", fake_gen)
+        monkeypatch.setattr(app, "cmd_completeness", fake_completeness)
+        argv = tmp_repo.argv("detail", "demo", "--commit")
+        if site == "batch":
+            argv += ["--jobs", "2", "--no-iterate", "--no-split"]
+        assert main(argv) == 0
+
+        def git(*args: str) -> str:
+            return subprocess.run(
+                ["git", *args], cwd=root, capture_output=True, text=True
+            ).stdout
+
+        return git, ddir
+
+    SITES = ["per-step", "batch", "residual"]
+
+    @pytest.mark.parametrize("site", SITES)
+    def test_commit_leaves_file_dirtied_mid_run_out_of_commit(
+        self, tmp_repo, monkeypatch: pytest.MonkeyPatch, site: str,
+    ) -> None:
+        git, _ = self._run_commit_site(tmp_repo, monkeypatch, site)
+        # ``.plan-tool/runs/`` is run state a real repo gitignores; the fixture
+        # repo does not, so exclude it rather than count it as leftover dirt.
+        assert git(
+            "status", "--porcelain", "--", ".", ":(exclude).plan-tool/runs"
+        ).strip() == "?? unrelated.txt"
+        assert "unrelated.txt" not in git("log", "--name-only", "--format=")
+
+    @pytest.mark.parametrize("site", SITES)
+    def test_commit_stages_archive_rename_in_plan_details(
+        self, tmp_repo, monkeypatch: pytest.MonkeyPatch, site: str,
+    ) -> None:
+        git, _ = self._run_commit_site(tmp_repo, monkeypatch, site)
+        changes = git("log", "-n", "3", "--name-status", "--format=")
+        assert "00-stale.md" in changes
+        assert "archive/00-stale.md" in changes
+        # No dirt remains for either half of the rename.
+        assert "00-stale" not in git("status", "--porcelain")
+
+    @pytest.mark.parametrize("site", SITES)
+    def test_commit_leaves_every_footprint_path_clean(
+        self, tmp_repo, monkeypatch: pytest.MonkeyPatch, site: str,
+    ) -> None:
+        git, ddir = self._run_commit_site(tmp_repo, monkeypatch, site)
+        plan = tmp_repo.plans_dir / "1-demo.md"
+        lessons = tmp_repo.root / ".plan-tool" / "lessons"
+        footprint = [str(plan), str(ddir)] + (
+            [str(lessons)] if lessons.exists() else []
+        )
+        assert git("status", "--porcelain", "--untracked-files=all", "--", *footprint) == ""
+
+    def test_residual_sweep_with_only_unrelated_dirt_makes_no_commit(
+        self, tmp_repo, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """A serial run whose only leftover dirt is outside the footprint makes
+        no residual commit and exits 0 (empty footprint is not a failure)."""
+        import subprocess
+
+        import plan_tool.cli.app as app
+        import plan_tool.cli.authoring as authoring
+        from plan_tool.detail import DetailResult
+
+        ddir = self._setup_git_plan(tmp_repo)
+
+        def fake_gen(plan_path, *, repo_root, commit_step=None, **kw):
+            ddir.mkdir(parents=True, exist_ok=True)
+            f = ddir / "01-step.md"
+            f.write_text("# detail 1\n", encoding="utf-8")
+            commit_step(1, "First step")
+            return [DetailResult(step_id=1, output_path=f, written=True)]
+
+        def tail(_a):
+            (tmp_repo.root / "unrelated.txt").write_text("x\n", encoding="utf-8")
+            return 0
+
+        monkeypatch.setattr(authoring, "generate_detail", fake_gen)
+        monkeypatch.setattr(app, "cmd_completeness", tail)
+        # The grounding stamp writes into the footprint before the residual
+        # sweep; stub it so the only leftover dirt is outside the footprint.
+        monkeypatch.setattr(authoring, "_stamp_grounding", lambda *a, **k: None)
+        assert main(tmp_repo.argv("detail", "demo", "--commit")) == 0
+        log = subprocess.run(
+            ["git", "log", "--format=%s"],
+            cwd=tmp_repo.root, capture_output=True, text=True,
+        ).stdout
+        assert "residual authoring edits" not in log
+
+    def test_detail_commit_includes_a_declared_detail_path_outside_the_canonical_directory(
+        self, tmp_repo, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """A ``steps[].detail`` pointer may name a file outside
+        ``plan-details/<slug>/``; the footprint must still commit it."""
+        import subprocess
+
+        import plan_tool.cli.app as app
+        import plan_tool.cli.authoring as authoring
+        from plan_tool.detail import DetailResult
+
+        self._setup_git_plan(tmp_repo)
+        root = tmp_repo.root
+        plan_path = tmp_repo.plans_dir / "1-demo.md"
+        plan_path.write_text(
+            plan_path.read_text(encoding="utf-8").replace(
+                "    title: Only step\n",
+                "    title: Only step\n    detail: elsewhere/01-only.md\n",
+            ),
+            encoding="utf-8",
+        )
+        (root / "elsewhere").mkdir()
+        (root / "elsewhere" / "01-only.md").write_text("old\n", encoding="utf-8")
+        _git_commit_all(root, "declare detail pointer")
+
+        def fake_gen(pp, *, repo_root, commit_step=None, **kw):
+            f = root / "elsewhere" / "01-only.md"
+            f.write_text("new\n", encoding="utf-8")
+            commit_step(1, "Only step")
+            return [DetailResult(step_id=1, output_path=f, written=True)]
+
+        monkeypatch.setattr(authoring, "generate_detail", fake_gen)
+        monkeypatch.setattr(app, "cmd_completeness", lambda _a: 0)
+        assert main(tmp_repo.argv("detail", "demo", "--commit")) == 0
+        status = subprocess.run(
+            ["git", "status", "--porcelain", "--", ".", ":(exclude).plan-tool/runs"],
+            cwd=root, capture_output=True, text=True,
+        ).stdout
+        assert status == ""
 
     def test_commit_skipped_only_run_makes_no_commit(
         self, tmp_repo, monkeypatch: pytest.MonkeyPatch,
