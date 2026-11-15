@@ -3222,11 +3222,11 @@ class TestDetailCommitCmd:
         calls: list[str] = []
         real_commit_all = authoring._commit_all
 
-        def flaky_commit_all(repo_root, subject):
+        def flaky_commit_all(repo_root, subject, paths):
             calls.append(subject)
             if "detail step 1" in subject:  # reject step 1's commit
                 return (1, "pre-commit hook rejected")
-            return real_commit_all(repo_root, subject)
+            return real_commit_all(repo_root, subject, paths)
 
         monkeypatch.setattr(authoring, "_commit_all", flaky_commit_all)
 

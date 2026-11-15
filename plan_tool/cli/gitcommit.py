@@ -1,7 +1,8 @@
 """Shared git-commit plumbing for the opt-in ``--commit`` flags.
 
-Used by the authoring/audit verbs whose ``--commit`` stages and commits the
-plan/detail edits they produce (``detail``, ``completeness-audit``). Stdlib-only leaf — imports nothing from the cli
+Used by the authoring/audit verbs whose ``--commit`` stages and commits only the
+footprint ``commit_all`` is given (``detail``, ``completeness-audit``); a
+footprint path left dirty after the commit is a failure. Stdlib-only leaf — imports nothing from the cli
 package, so any command module can import it without a cycle. ``run``'s
 ``--commit`` keeps its own per-green-step helper (different subject/semantics).
 """
@@ -10,6 +11,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -175,32 +177,112 @@ def warn_recommended_paths_ignored(repo_root: Path, emit) -> None:
     )
 
 
-def commit_all(repo_root: Path, subject: str) -> "tuple[int, str]":
-    """Stage all changes (``git add -A``) and commit with ``subject``.
+def _git_literal(
+    repo_root: Path, *args: str
+) -> "subprocess.CompletedProcess[str]":
+    """Run git with literal pathspecs so ``*`` / ``?`` in a name match only itself."""
+    return subprocess.run(
+        ["git", *args],
+        cwd=repo_root,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        env={**os.environ, "GIT_LITERAL_PATHSPECS": "1"},
+    )
+
+
+def _dirty_footprint_paths(
+    repo_root: Path, entries: Sequence[str]
+) -> "list[str] | None":
+    """Reported dirty paths covered by ``entries``; ``None`` when status fails."""
+    proc = _git_literal(
+        repo_root, "status", "--porcelain", "-z", "--untracked-files=all"
+    )
+    if proc.returncode != 0:
+        return None
+    dirty: list[str] = []
+    fields = iter(proc.stdout.split("\0"))
+    for field in fields:
+        if not field:
+            continue
+        if field[0] in "RC":
+            next(fields, None)  # rename/copy origin follows as its own field
+        reported = field[3:]
+        if any(
+            exp == "." or reported == exp or reported.startswith(exp + "/")
+            for exp in entries
+        ):
+            dirty.append(reported)
+    return sorted(dirty)
+
+
+def commit_all(
+    repo_root: Path, subject: str, paths: Sequence[Path]
+) -> "tuple[int, str]":
+    """Stage and commit only the ``paths`` footprint with ``subject``.
     Returns ``(rc, stderr-tail)``.
+
+    Stages with ``git add -A -- <paths>`` and commits with
+    ``git commit -- <paths>`` so unrelated dirty or pre-staged files stay out.
+    A directory entry covers everything beneath it. Gitignored entries are
+    skipped with a warning; entries neither on disk nor tracked are skipped
+    silently. No change in the footprint is success with no commit. A footprint
+    path still dirty after the commit (e.g. a hook rewrote it) is a non-zero rc
+    naming it.
 
     No AI-attribution trailer — the operator's own git identity is the sole
     author of record. No ``--no-verify`` — pre-commit hooks run and a
     rejection surfaces as a non-zero rc. ``tail`` is the failing command's
     stderr for the caller to show.
     """
-    add = subprocess.run(
-        ["git", "add", "-A"],
-        cwd=repo_root,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-    )
+    root = repo_root.resolve()
+    entries: list[str] = []
+    for path in paths:
+        resolved = path.resolve()
+        try:
+            rel = resolved.relative_to(root).as_posix()
+        except ValueError:
+            continue  # not under repo_root — nothing here to commit
+        if rel != "." and path_is_gitignored(repo_root, resolved):
+            print(
+                f"warning: not committing gitignored path: {rel}",
+                file=sys.stderr,
+            )
+            continue
+        if not resolved.exists() and not _git_literal(
+            repo_root, "ls-files", "--", rel
+        ).stdout.strip():
+            continue
+        entries.append(rel)
+    if not entries:
+        return 0, "nothing changed in the footprint; no commit made"
+
+    add = _git_literal(repo_root, "add", "-A", "--", *entries)
     if add.returncode != 0:
         return add.returncode, add.stderr.strip()
-    commit = subprocess.run(
-        ["git", "commit", "-m", subject],
-        cwd=repo_root,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-    )
-    return commit.returncode, commit.stderr.strip()
+
+    # Only entries with a staged change: an entry git knows nothing about
+    # (empty directory, only ignored files) would fail ``commit -- <pathspec>``.
+    changed = [
+        entry
+        for entry in entries
+        if _git_literal(
+            repo_root, "diff", "--cached", "--name-only", "--", entry
+        ).stdout.strip()
+    ]
+    if not changed:
+        return 0, "nothing changed in the footprint; no commit made"
+
+    commit = _git_literal(repo_root, "commit", "-m", subject, "--", *changed)
+    if commit.returncode != 0:
+        return commit.returncode, commit.stderr.strip()
+
+    dirty = _dirty_footprint_paths(repo_root, entries)
+    if dirty is None:
+        return 1, "could not read git status to confirm the footprint is clean"
+    if dirty:
+        return 1, "footprint path still dirty after commit: " + ", ".join(dirty)
+    return 0, commit.stderr.strip()
 
 
 def commit_receipt(

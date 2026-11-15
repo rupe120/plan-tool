@@ -690,7 +690,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
                 1 for o in report.archived if o.archived_to is not None
             )
             commit_rc, tail = commit_all(
-                ctx.repo_root, _sweep_commit_subject(n_archived)
+                ctx.repo_root, _sweep_commit_subject(n_archived), [ctx.repo_root]
             )
             if commit_rc == 0:
                 success("committed sweep changes")

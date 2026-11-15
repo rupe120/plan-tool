@@ -12,6 +12,7 @@ from plan_tool.cli.gitcommit import (
     branch_exists,
     checkout_existing_branch,
     clone_repo,
+    commit_all,
     commit_receipt,
     create_and_checkout_branch,
     current_branch,
@@ -72,6 +73,192 @@ def _commit_initial(root: Path) -> str:
     _git(root, "add", "-A")
     _git(root, "commit", "-q", "-m", "init")
     return _git(root, "rev-parse", "HEAD").stdout.decode().strip()
+
+
+def _head(root: Path) -> str:
+    return _git(root, "rev-parse", "HEAD").stdout.decode().strip()
+
+
+def _head_files(root: Path) -> list[str]:
+    return _git(
+        root, "show", "--format=", "--name-only", "HEAD"
+    ).stdout.decode().splitlines()
+
+
+def _porcelain(root: Path) -> str:
+    return _git(root, "status", "--porcelain", "-uall").stdout.decode()
+
+
+class TestCommitAll:
+    def _repo(self, root: Path) -> None:
+        _init_git_repo(root)
+        _commit_initial(root)
+
+    def test_paths_is_required(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        with pytest.raises(TypeError):
+            commit_all(tmp_path, "s")  # type: ignore[call-arg]
+
+    def test_unrelated_dirty_file_is_not_committed(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+        (tmp_path / "b.txt").write_text("b\n")
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["a.txt"]
+        assert "?? b.txt" in _porcelain(tmp_path)
+
+    def test_pre_staged_unrelated_file_is_not_committed(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+        (tmp_path / "b.txt").write_text("b\n")
+        _git(tmp_path, "add", "b.txt")
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["a.txt"]
+        assert "A  b.txt" in _porcelain(tmp_path)  # still staged, uncommitted
+
+    def test_delete_inside_footprint_is_staged(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "f.txt").unlink()
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path])
+
+        assert rc == 0, tail
+        assert _git(
+            tmp_path, "show", "--format=", "--name-status", "HEAD"
+        ).stdout.decode().split() == ["D", "f.txt"]
+
+    def test_rename_inside_footprint_is_staged(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "f.txt").rename(tmp_path / "g.txt")
+
+        rc, tail = commit_all(
+            tmp_path, "s", [tmp_path / "f.txt", tmp_path / "g.txt"]
+        )
+
+        assert rc == 0, tail
+        status = _git(
+            tmp_path, "show", "--format=", "--name-status", "-M", "HEAD"
+        ).stdout.decode()
+        assert status.startswith("R") and "f.txt" in status and "g.txt" in status
+
+    def test_directory_entry_stages_new_nested_files(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        nested = tmp_path / "d" / "e" / "f"
+        nested.mkdir(parents=True)
+        (nested / "n.txt").write_text("n\n")
+        (tmp_path / "d" / "top.txt").write_text("t\n")
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "d"])
+
+        assert rc == 0, tail
+        assert sorted(_head_files(tmp_path)) == ["d/e/f/n.txt", "d/top.txt"]
+
+    def test_ignored_path_warns_and_commit_still_succeeds(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text("ign.txt\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "commit", "-q", "-m", "ignore")
+        (tmp_path / "ign.txt").write_text("i\n")
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail = commit_all(
+            tmp_path, "s", [tmp_path / "ign.txt", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0, tail
+        assert "ign.txt" in capsys.readouterr().err
+        assert _head_files(tmp_path) == ["a.txt"]
+
+    def test_expected_path_left_dirty_is_reported_by_name_with_nonzero_rc(
+        self, tmp_path: Path
+    ) -> None:
+        # A hook rewriting a footprint file after staging leaves it dirty; the
+        # post-commit check must flag it rather than report a clean commit.
+        self._repo(tmp_path)
+        hook = tmp_path / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text("#!/bin/sh\necho rewritten >> a.txt\n")
+        hook.chmod(0o755)
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+
+        assert rc != 0
+        assert "a.txt" in tail
+
+    def test_absent_untracked_entry_is_skipped_without_failing(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail = commit_all(
+            tmp_path, "s", [tmp_path / "ghost.txt", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0, tail
+        assert "ghost.txt" not in tail
+        assert _head_files(tmp_path) == ["a.txt"]
+
+    def test_empty_directory_entry_beside_changed_entry_does_not_fail(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "empty").mkdir()
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail = commit_all(
+            tmp_path, "s", [tmp_path / "empty", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["a.txt"]
+
+    def test_tracked_deleted_entry_is_staged(self, tmp_path: Path) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "f.txt").unlink()
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
+
+        assert rc == 0, tail
+        assert _git(
+            tmp_path, "show", "--format=", "--name-status", "HEAD"
+        ).stdout.decode().split() == ["D", "f.txt"]
+
+    def test_footprint_with_no_changes_returns_success_and_makes_no_commit(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        before = _head(tmp_path)
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
+
+        assert rc == 0
+        assert "nothing changed" in tail
+        assert _head(tmp_path) == before
+
+    def test_literal_pathspec_does_not_match_glob_characters(
+        self, tmp_path: Path
+    ) -> None:
+        self._repo(tmp_path)
+        (tmp_path / "x*.txt").write_text("star\n")
+        (tmp_path / "xy.txt").write_text("sibling\n")
+
+        rc, tail = commit_all(tmp_path, "s", [tmp_path / "x*.txt"])
+
+        assert rc == 0, tail
+        assert _head_files(tmp_path) == ["x*.txt"]
+        assert "?? xy.txt" in _porcelain(tmp_path)
 
 
 class TestCommitReceipt:

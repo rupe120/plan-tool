@@ -256,7 +256,7 @@ def _commit_if_dirty(
     try:
         if not _working_tree_dirty(repo_root):
             return None
-        return _commit_all(repo_root, subject)
+        return _commit_all(repo_root, subject, [repo_root])
     except (OSError, ValueError) as exc:
         return 1, f"git subprocess error: {exc}"
 

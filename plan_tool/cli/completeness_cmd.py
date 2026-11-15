@@ -660,7 +660,9 @@ def finalize_completeness_run(
     if getattr(args, "commit", False) and not args.json and budget.enabled:
         from plan_tool.detail import _plan_slug as _detail_plan_slug
         commit_rc, tail = commit_all(
-            ctx.repo_root, _completeness_commit_subject(_detail_plan_slug(path))
+            ctx.repo_root,
+            _completeness_commit_subject(_detail_plan_slug(path)),
+            [ctx.repo_root],
         )
         if commit_rc == 0:
             success("committed completeness edits")
