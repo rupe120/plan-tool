@@ -639,52 +639,29 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
-### `--commit` fails when a footprint directory sits under an ignored parent but holds force-tracked files
+### `--commit` leaves plan-tool's late writes dirty in a repo that does not gitignore them
 
-- **Files:** `plan_tool/cli/gitcommit.py:commit_all`.
-- **Symptom:** a repo that ignores `.plan-tool/` wholesale but force-tracks
-  `.plan-tool/lessons/project.md` (the setup `warn_recommended_paths_ignored`
-  already warns about). `git check-ignore` does not match the `.plan-tool/lessons`
-  entry, because it holds a tracked file, so the entry reaches
-  `git add -A -- .plan-tool/lessons`. git stages the tracked change, then exits
-  1 with "paths are ignored by one of your .gitignore files". `commit_all`
-  returns that rc, and `detail --commit` reports the step's commit as failed.
-  Probed 2026-11-14. The whole-tree `git add -A` this replaced exited 0 here.
-- **Fix:** stage such an entry without naming the ignored directory as a
-  pathspec (for example `git add -u -- <entry>` for its tracked files), or skip
-  it with the same warning as an ignored file. Deliberately not done: forcing
-  ignored files in with `git add -f`.
-- **Approach:** `direct`, with a test on that repo shape.
-- **Verification:** `detail --lessons --commit` in that repo commits the
-  modified `project.md` and exits 0.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-14, `/code-review` of `commit-scoped-to-verb-footprint`.
-  The reviewer described the symptom as the entry being silently dropped; the
-  probe shows the commit fails instead.
-
-### `run --commit` leaves the tree dirty in a repo that does not gitignore `.plan-tool/runs/` and `run-prefs.json`
-
-- **Files:** `plan_tool/cli/run_cmd.py` (`_save_run_prefs` call sites, the
-  `RunLogWriter` start and `run_end`); `plan_tool/cli/init_cmd.py`.
-- **Symptom:** `run` treats its run log and `run-prefs.json` as runtime state
-  that the repo gitignores, and writes them around its commits: the `--all`
-  sweep writes `run-prefs.json` after the last step commit, and every run
-  appends the run-log end record after the commit. In a repo that does not
-  ignore them, the tree is dirty after the run, so the next `--commit` is
-  refused by its clean-tree gate. This predates the footprint-scoped commits:
-  on `main`, `git add -A` committed the files before those late writes, which
-  dirtied them again. `init` adds no ignore rule.
-- **Fix:** make the runtime state ignore itself, as the raw backend stream-log
-  directory already does (`backend_runner.py` writes a `*` `.gitignore`), or
-  have `init` add the rules. Deliberately not done: committing runtime state in
-  the step footprint, which was tried 2026-11-14 for `run-prefs.json` alone and
-  reverted because it covered one file on one path and warned on every commit
-  in repos that ignore it.
-- **Approach:** `direct` once the self-ignore vs `init` choice is made.
-- **Verification:** in a fresh repo with no ignore rules, `run X --all --commit`
-  then `run X --step N --commit` both start on a clean tree.
+- **Files:** `plan_tool/run_log.py` (`RunLogWriter.run_end`, the `in-flight.json`
+  removal); `plan_tool/cli/run_cmd.py` (the `--all` sweep's `_save_run_prefs`
+  after the sweep).
+- **Symptom:** every `--commit` footprint includes `.plan-tool/`, and the repo's
+  ignore rules decide which of its files are committed (decided 2026-11-15,
+  owner). Writes that land *after* the verb's last commit are still left
+  dirty in a repo that does not ignore them: every verb's run-log end record and
+  `in-flight.json` removal, and the `--all` sweep's `run-prefs.json`. The next
+  `--commit` is then refused by its clean-tree gate. Measured 2026-11-15 on
+  `detail --commit` in a repo that does not ignore `.plan-tool/runs/`.
+- **Fix:** a decision between letting the clean-tree gate accept non-ignored
+  dirt under `.plan-tool/` (the next footprint commit carries it), a trailing
+  commit after the run log closes, or moving those writes before the last
+  commit. Deliberately not done: listing runtime files one by one, tried
+  2026-11-14 for `run-prefs.json` alone and reverted.
+- **Approach:** `direct` once decided.
+- **Verification:** in a repo with no `.plan-tool` ignore rules,
+  `detail X --commit` then `run X --all --commit` then `run X --step N --commit`
+  each start on a clean tree.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** 2026-11-14, round 3 of the `/code-review` of
+- **Origin:** 2026-11-14/15, rounds 3–5 of the `/code-review` of
   `commit-scoped-to-verb-footprint`.
 
 ### `detail --commit` leaves an out-of-tree detail file's `archive/` writes uncommitted
@@ -706,6 +683,24 @@ Durable re-open conditions for retired items are recorded in
   ends on a clean tree and the commit holds only this plan's archive files.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** 2026-11-15, round 4 of the `/code-review` of
+  `commit-scoped-to-verb-footprint`.
+
+### `--accept`'s clean-tree check misreads quoted and renamed paths
+
+- **Files:** `plan_tool/cli/gitcommit.py:unexpected_dirty_paths`.
+- **Symptom:** it parses `git status --porcelain` without `-z` (`line[3:]`), so
+  a name with a space or non-ASCII character comes back quoted (`"a b.txt"`) and
+  a rename as `old -> new`. Neither matches the expected plan or lessons path,
+  so `run --step N --accept` refuses a tree whose only dirt is those expected
+  files. `commit_all`'s own clean check reads the same tree correctly through
+  `git_state.status_records_or_none`. Predates `commit-scoped-to-verb-footprint`.
+- **Fix:** build `unexpected_dirty_paths` on `status_records_or_none` and share
+  one equals-or-nested-under matcher with `_dirty_footprint_paths`.
+- **Approach:** `direct`.
+- **Verification:** `--accept` succeeds when the plan file's name contains a
+  space and it is the only dirty path.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-15, round 5 of the `/code-review` of
   `commit-scoped-to-verb-footprint`.
 
 ## RISK
