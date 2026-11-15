@@ -213,6 +213,7 @@ steps:
   - 5
   depends_on_notes:
     5: which part of `run --commit` stays deferred, and why
+  detail: docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/06-rewrite-how-statements-that-say-commit.md
   description: 'Rewrite the how-to statements that say `--commit` stages the whole
     tree. In `docs/how-to/pipeline/detail.md`, retire the ''per-step `git add -A`
     is only safe while no prior step left the tree dirty'' safety invariant and its
