@@ -129,6 +129,20 @@ examples in `integrations/shared/DIRECTIVES.md` and the three router
 gates. Reopen when a `BACKLOG.md` entry carries a copyable recipe that runs
 `plan-tool detail` after `create` with no `completeness-audit` before it.
 
+### `--commit`'s post-commit clean check on paths git keeps reporting as modified
+
+Resolved 2026-11-15, in two halves. **Fixed:** untracked content inside a
+committed submodule shows as ` M vendor/lib` after the parent commits, though
+the commit could not have held it; the check now reads status with
+`--ignore-submodules=untracked` (`commit_all`'s `_dirty_footprint_paths`), while
+a tracked change in a submodule still counts. **Retired, by design:** a path
+that a non-idempotent clean filter keeps reporting as modified. Git itself says
+the commit did not absorb it, which is the same state as a hook rewriting a
+committed file, so the check keeps counting it and the commit is reported as
+committed with the remaining dirt named. Both are pinned in
+`tests/cli/test_gitcommit.py`. Reopen the second half only if git offers a way
+to tell a filter's re-modification from a hook's rewrite.
+
 ### Roadmap evidence-storage hardening
 
 Retired 2026-09-01. No current roadmap consumer requires the configured tree

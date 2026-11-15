@@ -625,26 +625,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-15, round 4 of the `/code-review` of
   `commit-scoped-to-verb-footprint`; narrowed the same day by the drain.
 
-### `--commit`'s post-commit clean check fails on a path git always reports as modified
-
-- **Files:** `plan_tool/cli/gitcommit.py` (`_dirty_footprint_paths`, the
-  post-commit check in `_commit_footprint`).
-- **Symptom:** a footprint path that still reads as modified after it is
-  committed, with no hook involved, makes the check return non-zero although
-  the commit landed: a submodule with untracked content (` M vendor/lib`), or a
-  file whose clean or line-ending filter keeps it showing as modified. `run
-  --all --commit` then halts after every such step.
-- **Fix:** run the check with `--ignore-submodules=untracked`, and decide
-  whether a path that `git diff` shows no content change for should count.
-  Deliberately not done: dropping the check, which is what catches a hook that
-  rewrote a committed file.
-- **Approach:** `direct`.
-- **Verification:** a step whose delta includes a submodule with untracked
-  files commits and the sweep continues.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-15, round 6 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
-
 ### The tracked `.claude/skills/plan-tool/` copy of the skill and directives has drifted from `integrations/`
 
 - **Files:** `.claude/skills/plan-tool/DIRECTIVES.md` and `SKILL.md` (tracked);
