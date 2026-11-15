@@ -625,28 +625,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-15, round 4 of the `/code-review` of
   `commit-scoped-to-verb-footprint`; narrowed the same day by the drain.
 
-### `--accept`'s clean-tree check misreads quoted and renamed paths
-
-- **Files:** `plan_tool/cli/gitcommit.py:unexpected_dirty_paths`.
-- **Symptom:** it parses `git status --porcelain` without `-z` (`line[3:]`), so
-  a name with a space or non-ASCII character comes back quoted (`"a b.txt"`) and
-  a rename as `old -> new`. Neither matches the expected plan or lessons path,
-  so `run --step N --accept` refuses a tree whose only dirt is those expected
-  files. It also relativizes the expected paths to the project root while
-  status paths are relative to the git top level, so under a project root
-  nested below the top level the plan file always reads as unexpected.
-  `commit_all`'s own clean check handles both through
-  `git_state.status_records_or_none` and the top level. Predates
-  `commit-scoped-to-verb-footprint`.
-- **Fix:** build `unexpected_dirty_paths` on `status_records_or_none` and share
-  one equals-or-nested-under matcher with `_dirty_footprint_paths`.
-- **Approach:** `direct`.
-- **Verification:** `--accept` succeeds when the plan file's name contains a
-  space and it is the only dirty path.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-15, round 5 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
-
 ### `--commit`'s post-commit clean check fails on a path git always reports as modified
 
 - **Files:** `plan_tool/cli/gitcommit.py` (`_dirty_footprint_paths`, the
