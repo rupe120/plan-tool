@@ -1,0 +1,169 @@
+{
+  "version": 4,
+  "plan_slug": "commit-scoped-to-verb-footprint",
+  "plan_path": "docs/implementation-plans/2-commit-scoped-to-verb-footprint.md",
+  "created_at": "2026-11-15T02:02:36Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "06a50ac2c18ec69b3efa8b5283f33b41abc6b1001e1f54d9d8508e85f4cb1570",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "b619125b2f407fa8cb988b0e0823b0a0e047c73aa4ec4e02ef6271f88a0fa2ca",
+    "docs/cli/completeness-audit.md": "fdcf24834b72936f7be2e85c402d486b44cfc0e43677fb2cf3bd715f14df1a1d",
+    "docs/cli/detail.md": "40e9f49ad1ac7906201827908b63c7b1c7f7d7916e7a43aabda2b5c00f3c9c59",
+    "docs/cli/run.md": "c3a1a584ae59f434c2b43648a6e7e28d638e8ba8f0db177a9525d24233a20bd0",
+    "docs/cli/sweep.md": "34e297e8019aceab61da78a72edee948b5bd22bedfe01f957197c520eb452069",
+    "docs/how-to/pipeline/detail.md": "690950e9bc6dc6921f0348f03998fcd3f8d539895fd00142e4401d8baeedd7ac",
+    "docs/how-to/pipeline/run.md": "24c240a146f2861d771ad36b8d14bd965b5e44d9d39a64f323e7192af85054e9",
+    "plan_tool/cli/authoring.py": "68cb6db3c2205fbd403790535a1d104c6563162552214e4976601d37e3e3db97",
+    "plan_tool/cli/completeness_cmd.py": "36e74fef8a5d55698c1fa6e27bf0a05fc0a54853349f77c92d975c7ba57e0bc9",
+    "plan_tool/cli/gitcommit.py": "106a581c7dae4e2126505469c6aa8383c87762f8f48a9b18db2b4a2c482f1d43",
+    "plan_tool/cli/manifest.py": "a535ee9f3db5967cef448f28f17acfa2bf54408ec933b344487bbf10379a1828",
+    "plan_tool/cli/run_cmd.py": "52f52e0cbcfb3ad94b0ecbbd1ea7618e3f97cf2848bf5f9d05c38ada57871f93",
+    "tests/cli/test_authoring_cmds.py": "04a0b93a968f012feadf49fad0e6399c87571b10aaa2406ddf5ebaa24c466d16",
+    "tests/cli/test_completeness_cmd.py": "367ceef296c080eb61d6500b13084907c11117b2cc88959dc10af21a9527d350",
+    "tests/cli/test_gitcommit.py": "7d557cd90082b684ba599ac797ac36b0f7559bead9b13a38a33b10cd843b7216",
+    "tests/cli/test_manifest_cmds.py": "8100ba050b64e974625ce71c4b451b863940841968321634259614661b7eddd0",
+    "tests/cli/test_run_cmd.py": "5dd53a7a3ba74a11104c715b93fe30488703ed0dd8a25fe88466b4323f3e5658"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/01-change-commit-all-plan-tool-cli.md": "1f4c95fa178ff93cf0060e748806febcbf717bed304be33453b9da99bcf30855",
+    "docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/02-give-detail-commit-its-own-footprint.md": "fcd29fd993d7d70140237d47b68c0f4c480c37ae64cb1b8969e9ae7ac58b83ef",
+    "docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/03-give-completeness-audit-commit-plan.md": "f1a797735a8a1cd02038794b42850074dfbaebb295a6e8c4b3a04e384319aed0",
+    "docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/04-give-manifest-sweep-commit-plan-tool.md": "442de89da41de1d4fdaba738f27880690205ff4ea09ca3392feb12efb0cf667e",
+    "docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/05-make-paths-required-on-commit-green.md": "896417a2cbed2e0619c4dc7c7bc7f536a7d5da9345f253a1f8349372aeacf404",
+    "docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/06-rewrite-how-statements-that-say-commit.md": "0c6f7c0065ba38a053d4bc0f84d9cd968b1628f5e0ca134df55ade9b594fed4d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Commit Scoped To Verb Footprint\n\n`commit-scoped-to-verb-footprint` \u00b7 generated 2026-11-15T02:02:35Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `06a50ac2c18ec69b3efa8b5283f33b41abc6b1001e1f54d9d8508e85f4cb1570`\n- **Detail bundle digest:** `db920a0bca63a4cb90968ad7dd0d119681f2470bf6d606700dc7b3bf653826fe`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring.\n\n    plan-tool reconcile-plan-walk commit-scoped-to-verb-footprint  # optional interactive review of the saved findings\n\n- MEDIUM `[footprint-omission-detection]` [confidence: limited]: The plan's Testing section promises a check that the plan's own Risks section says cannot exist. Testing says: \"a path the verb wrote but left out of its footprint is reported by the post-commit assertion.\" Risks says the assertion \"only covers paths the footprint names, so an omitted one is not caught by it.\" The assertion in step 1 (`commit_all`) checks only listed entries, so no step can build that test. Steps 2\u20135 list tests that match the Risks wording: unrelated file excluded, report committed, footprint clean. An implementer who follows Testing literally would either widen the assertion to the whole tree, which defeats the footprint, or drop the test without saying so. The acceptance criteria already match Risks.\n  - Fix: Reword the Testing sentence to match Risks: the omission guard is the per-verb tests that compare the commit with the verb's real writes in steps 2\u20135, not the post-commit assertion.\n- MEDIUM `[rename-origin-source]` [confidence: limited]: Step 5 names the existing git-delta function as the footprint source but also needs the origin side of each rename. Step 5 says: \"That baseline reuses `launcher._git_changed_paths_or_none` / `git_state.changed_paths_or_none`\" and \"Both sides of a rename in the delta are footprint entries. The footprint reads the origin path of each rename record from the same `git status --porcelain -z` output.\" At HEAD, `git_state.changed_paths_or_none` deliberately skips the origin field of `R`/`C` records, and the `launcher.py` test-authoring gate consumes it. The plan does not say where the rename-aware read lives. Step 5 therefore reads as reuse and as a change to a function whose behavior the plan declares untouched. A reader could change the shared function and alter the gate, or add a sibling reader. Both readings follow the plan, and only one honors the scope fence on the gate.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): The step must record both sides of a rename without changing what the test-authoring gate sees.\n  - Fix: State that step 5 gets rename origins from a separate rename-aware read, or an additive variant, and that `changed_paths_or_none` keeps its current return value for the gate. Reword \"reuses\" to match.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-2e7cebc0]` [confidence: limited]: Step 1 \"Change `commit_all` in `plan_tool/cli/gitcommit.py` so it takes a required `paths` argument. It stages with `git add -A -- <literal pathspecs>` and commits with `git commit -m <subject> -- <pathspecs>`, so only those paths are committed and other index entries are not swept in. A directory entry covers everything beneath it, which matches how `unexpected_dirty_paths` already treats directories. Before staging, a gitignored expected path is skipped with a one-line warning naming it, using the existing `path_is_gitignored`. After a successful commit, any non-ignored expected path that is still dirty in `git status --porcelain --untracked-files=all` produces a non-zero result whose tail names the path. A gitignored path skipped this way does not fail the commit. A footprint entry that is neither on disk nor tracked is skipped before staging (it names nothing to commit), and is outside the post-commit check. A tracked path deleted on disk is still staged by `-A`. An entry with no change is staged harmlessly. When no entry has a change, `commit_all` makes no commit and returns success with a tail saying nothing changed, rather than the non-zero 'nothing to commit' git would give. Existing callers keep their whole-tree behaviour for now by passing `[repo_root]` as the footprint; steps 2\u20135 replace that. Destructive-operation disposition: `commit_all` deletes nothing itself. Through `-A`, a delete or rename inside the footprint is still staged, and a delete outside it is no longer staged. Update the module docstring, which describes `--commit` as staging the produced edits. Unit tests go in `tests/cli/test_gitcommit.py` against a real temporary repo: an unrelated dirty file is not committed, a pre-staged unrelated file is not committed, a delete and a rename inside the footprint are staged, a directory entry stages its new nested files, an ignored path warns and the commit still succeeds, an expected path left dirty (for example when a hook rewrites it) is reported by name with a non-zero rc, an absent untracked entry is skipped without failing, a tracked deleted entry is staged, and a footprint with no changes returns success with no commit.\" carries refactor verb(s) ['rename'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n- INFO `[step4-granularity-split-958871d7]` [confidence: limited]: Step 4 \"Give `manifest sweep --commit` in `plan_tool/cli/manifest.py` its footprint from records the sweep already returns: the manifest path, and each `ArchiveOutcome`'s original `plan_path` (a delete) and `archived_to` (an add). It also includes the source and destination of each `plan_details_moved` pair and each `duplicate_archive_results` pair. Missing-entry deregistrations are covered by the manifest path. Replace the whole-tree `working_tree_dirty` check before the commit with a check for dirt inside the footprint, so an unrelated dirty file no longer turns 'sweep moved nothing' into a commit. Destructive-operation disposition: the archive moves and the manifest rewrites themselves are unchanged. Their deletes still reach the commit through `-A`, and only what gets staged is narrowed. Rewrite the `--commit` help text ('stage all changes (git add -A)') and regenerate `docs/cli/sweep.md`. Tests go in `tests/cli/test_manifest_cmds.py`: an archived plan's move and its plan-details move are committed as renames, an unrelated dirty file is not committed, an unrelated dirty file alone gives 'nothing to commit', and the footprint is clean afterwards.\" carries refactor verb(s) ['move'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n- INFO `[step5-granularity-split-35023ee5]` [confidence: limited]: Step 5 \"Make `paths` required on `_commit_green_step` in `plan_tool/cli/run_cmd.py` and have it delegate staging and committing to `commit_all`, so `run --commit` uses the same ignored-path warning and post-commit clean check. The `--accept` caller keeps its existing `expected` set. Its silent skip of an ignored path becomes the shared one-line warning, which is an allowed change. The single-step and `--all` sweep callers pass: the plan file, the plan's `plan-details/<slug>/` directory, the archived plan and manifest when `--archive` completed the plan, and the paths changed since a baseline taken just before `run_step`. That baseline reuses `launcher._git_changed_paths_or_none` / `git_state.changed_paths_or_none`. The backend writes arbitrary code and nothing records those writes except this git delta. As a result, a file another process writes during the backend call is still indistinguishable from the step's own work. The residual is filed in BUG_BACKLOG.md in step 6 and is not tracked further here. Dirt left between steps, or dirt from before the baseline, is excluded. The git delta holds path names only, so it cannot tell whether the step edited a path that was already dirty at the baseline. Such a path is not in the footprint and stays uncommitted, and `run` names each path that was dirty at the baseline and is still dirty after the commit in a one-line warning (left uncommitted because it was dirty before the step; the step may also have edited it), so the exclusion is never silent and the warning claims no more than the record shows. When `changed_paths_or_none` returns `None` (git state unreadable) at the baseline or after the step, `run --commit` fails closed for that step. It makes no commit, exits non-zero naming the unreadable snapshot, and leaves the step work in the tree for `git reset` recovery. It never falls back to the whole tree. Both sides of a rename in the delta are footprint entries. The footprint reads the origin path of each rename record from the same `git status --porcelain -z` output, so a staged `git mv a b` commits the deletion of `a` with `b`. `launcher.py`'s test-authoring delta gate is not touched. Destructive-operation disposition: an archive move during a completing step is still staged inside the footprint, and a failed commit still leaves that step's work for `git reset` recovery. Rewrite the `--commit` help text ('stage all changes (git add -A)') and regenerate `docs/cli/run.md`. Tests go in `tests/cli/test_run_cmd.py`: an unrelated file dirtied after the baseline is excluded only when it is outside the delta (pinning the known residual), a file dirty before the step is not committed, a file dirty before the step and still dirty after is left uncommitted and named in the warning, an unreadable git state at either snapshot makes no commit and exits non-zero, a staged rename inside the step commits both paths and leaves both clean, the archive move is committed, an `--accept` ignored path warns, and the plan file is clean after each green commit.\" carries refactor verb(s) ['move', 'rename'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit commit-scoped-to-verb-footprint --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Commit Scoped To Verb Footprint\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `06a50ac2c18ec69b3efa8b5283f33b41abc6b1001e1f54d9d8508e85f4cb1570`\n- **Detail bundle digest:** `db920a0bca63a4cb90968ad7dd0d119681f2470bf6d606700dc7b3bf653826fe`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: Step 1 \"Change `commit_all` in `plan_tool/cli/gitcommit.py` so it takes a required `paths` argument. It stages with `git add -A -- <literal pathspecs>` and commits with `git commit -m <subject> -- <pathspecs>`, so only those paths are committed and other index entries are not swept in. A directory entry covers everything beneath it, which matches how `unexpected_dirty_paths` already treats directories. Before staging, a gitignored expected path is skipped with a one-line warning naming it, using the existing `path_is_gitignored`. After a successful commit, any non-ignored expected path that is still dirty in `git status --porcelain --untracked-files=all` produces a non-zero result whose tail names the path. A gitignored path skipped this way does not fail the commit. A footprint entry that is neither on disk nor tracked is skipped before staging (it names nothing to commit), and is outside the post-commit check. A tracked path deleted on disk is still staged by `-A`. An entry with no change is staged harmlessly. When no entry has a change, `commit_all` makes no commit and returns success with a tail saying nothing changed, rather than the non-zero 'nothing to commit' git would give. Existing callers keep their whole-tree behaviour for now by passing `[repo_root]` as the footprint; steps 2\u20135 replace that. Destructive-operation disposition: `commit_all` deletes nothing itself. Through `-A`, a delete or rename inside the footprint is still staged, and a delete outside it is no longer staged. Update the module docstring, which describes `--commit` as staging the produced edits. Unit tests go in `tests/cli/test_gitcommit.py` against a real temporary repo: an unrelated dirty file is not committed, a pre-staged unrelated file is not committed, a delete and a rename inside the footprint are staged, a directory entry stages its new nested files, an ignored path warns and the commit still succeeds, an expected path left dirty (for example when a hook rewrites it) is reported by name with a non-zero rc, an absent untracked entry is skipped without failing, a tracked deleted entry is staged, and a footprint with no changes returns success with no commit.\" carries refactor verb(s) ['rename'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n- INFO [confidence: limited]: Step 4 \"Give `manifest sweep --commit` in `plan_tool/cli/manifest.py` its footprint from records the sweep already returns: the manifest path, and each `ArchiveOutcome`'s original `plan_path` (a delete) and `archived_to` (an add). It also includes the source and destination of each `plan_details_moved` pair and each `duplicate_archive_results` pair. Missing-entry deregistrations are covered by the manifest path. Replace the whole-tree `working_tree_dirty` check before the commit with a check for dirt inside the footprint, so an unrelated dirty file no longer turns 'sweep moved nothing' into a commit. Destructive-operation disposition: the archive moves and the manifest rewrites themselves are unchanged. Their deletes still reach the commit through `-A`, and only what gets staged is narrowed. Rewrite the `--commit` help text ('stage all changes (git add -A)') and regenerate `docs/cli/sweep.md`. Tests go in `tests/cli/test_manifest_cmds.py`: an archived plan's move and its plan-details move are committed as renames, an unrelated dirty file is not committed, an unrelated dirty file alone gives 'nothing to commit', and the footprint is clean afterwards.\" carries refactor verb(s) ['move'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n- INFO [confidence: limited]: Step 5 \"Make `paths` required on `_commit_green_step` in `plan_tool/cli/run_cmd.py` and have it delegate staging and committing to `commit_all`, so `run --commit` uses the same ignored-path warning and post-commit clean check. The `--accept` caller keeps its existing `expected` set. Its silent skip of an ignored path becomes the shared one-line warning, which is an allowed change. The single-step and `--all` sweep callers pass: the plan file, the plan's `plan-details/<slug>/` directory, the archived plan and manifest when `--archive` completed the plan, and the paths changed since a baseline taken just before `run_step`. That baseline reuses `launcher._git_changed_paths_or_none` / `git_state.changed_paths_or_none`. The backend writes arbitrary code and nothing records those writes except this git delta. As a result, a file another process writes during the backend call is still indistinguishable from the step's own work. The residual is filed in BUG_BACKLOG.md in step 6 and is not tracked further here. Dirt left between steps, or dirt from before the baseline, is excluded. The git delta holds path names only, so it cannot tell whether the step edited a path that was already dirty at the baseline. Such a path is not in the footprint and stays uncommitted, and `run` names each path that was dirty at the baseline and is still dirty after the commit in a one-line warning (left uncommitted because it was dirty before the step; the step may also have edited it), so the exclusion is never silent and the warning claims no more than the record shows. When `changed_paths_or_none` returns `None` (git state unreadable) at the baseline or after the step, `run --commit` fails closed for that step. It makes no commit, exits non-zero naming the unreadable snapshot, and leaves the step work in the tree for `git reset` recovery. It never falls back to the whole tree. Both sides of a rename in the delta are footprint entries. The footprint reads the origin path of each rename record from the same `git status --porcelain -z` output, so a staged `git mv a b` commits the deletion of `a` with `b`. `launcher.py`'s test-authoring delta gate is not touched. Destructive-operation disposition: an archive move during a completing step is still staged inside the footprint, and a failed commit still leaves that step's work for `git reset` recovery. Rewrite the `--commit` help text ('stage all changes (git add -A)') and regenerate `docs/cli/run.md`. Tests go in `tests/cli/test_run_cmd.py`: an unrelated file dirtied after the baseline is excluded only when it is outside the delta (pinning the known residual), a file dirty before the step is not committed, a file dirty before the step and still dirty after is left uncommitted and named in the warning, an unreadable git state at either snapshot makes no commit and exits non-zero, a staged rename inside the step commits both paths and leaves both clean, the archive move is committed, an `--accept` ignored path warns, and the plan file is clean after each green commit.\" carries refactor verb(s) ['move', 'rename'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body.\n- `plan-tool completeness-audit commit-scoped-to-verb-footprint --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3c7378d0",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan's Testing section promises a check that the plan's own Risks section says cannot exist. Testing says: \"a path t",
+      "body": "The plan's Testing section promises a check that the plan's own Risks section says cannot exist. Testing says: \"a path the verb wrote but left out of its footprint is reported by the post-commit assertion.\" Risks says the assertion \"only covers paths the footprint names, so an omitted one is not caught by it.\" The assertion in step 1 (`commit_all`) checks only listed entries, so no step can build that test. Steps 2\u20135 list tests that match the Risks wording: unrelated file excluded, report committed, footprint clean. An implementer who follows Testing literally would either widen the assertion to the whole tree, which defeats the footprint, or drop the test without saying so. The acceptance criteria already match Risks.",
+      "suggested_action": "Reword the Testing sentence to match Risks: the omission guard is the per-verb tests that compare the commit with the verb's real writes in steps 2\u20135, not the post-commit assertion.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "footprint-omission-detection",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-5861088b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 names the existing git-delta function as the footprint source but also needs the origin side of each rename. Step",
+      "body": "Step 5 names the existing git-delta function as the footprint source but also needs the origin side of each rename. Step 5 says: \"That baseline reuses `launcher._git_changed_paths_or_none` / `git_state.changed_paths_or_none`\" and \"Both sides of a rename in the delta are footprint entries. The footprint reads the origin path of each rename record from the same `git status --porcelain -z` output.\" At HEAD, `git_state.changed_paths_or_none` deliberately skips the origin field of `R`/`C` records, and the `launcher.py` test-authoring gate consumes it. The plan does not say where the rename-aware read lives. Step 5 therefore reads as reuse and as a change to a function whose behavior the plan declares untouched. A reader could change the shared function and alter the gate, or add a sibling reader. Both readings follow the plan, and only one honors the scope fence on the gate.",
+      "suggested_action": "State that step 5 gets rename origins from a separate rename-aware read, or an additive variant, and that `changed_paths_or_none` keeps its current return value for the gate. Reword \"reuses\" to match.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rename-origin-source",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "The step must record both sides of a rename without changing what the test-authoring gate sees."
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "06a50ac2c18ec69b3efa8b5283f33b41abc6b1001e1f54d9d8508e85f4cb1570",
+      "detail_bundle_digest": "db920a0bca63a4cb90968ad7dd0d119681f2470bf6d606700dc7b3bf653826fe",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/01-change-commit-all-plan-tool-cli.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/02-give-detail-commit-its-own-footprint.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/03-give-completeness-audit-commit-plan.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/04-give-manifest-sweep-commit-plan-tool.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/05-make-paths-required-on-commit-green.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/commit-scoped-to-verb-footprint/06-rewrite-how-statements-that-say-commit.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "646ab62b695e28b9f8696a4746b0e9e3f742b9100eb2c01c14609b6edbf3b779",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-commit-scoped-to-verb-footprint.md`.
+> Preserved here for history; do not edit.
+
 # Plan seed: `--commit` stages only the verb's own footprint
 
 ## Outcome
