@@ -4535,7 +4535,9 @@ working straight down the tiers.
   `manifest._sweep_commit_footprint` list every per-file `plan_details_moved`
   pair where the source and destination directories would cover them, and
   `run_cmd._commit_step_footprint` reads `git status` again right after
-  `commit_all`'s own post-commit read. Deliberately not changed: the
+  `commit_all`'s own post-commit read; and on a non-archiving step
+  `_step_footprint` lists the plan file and `plan-details/<slug>/` twice (git
+  accepts the duplicates, so only the cost changes). Deliberately not changed: the
   per-entry decisions themselves (ignored, staged-delete, no-change), which the
   `TestCommitAll` cases pin.
 - **Effort:** small.

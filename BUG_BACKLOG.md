@@ -662,6 +662,31 @@ Durable re-open conditions for retired items are recorded in
   The reviewer described the symptom as the entry being silently dropped; the
   probe shows the commit fails instead.
 
+### `run --commit` leaves the tree dirty in a repo that does not gitignore `.plan-tool/runs/` and `run-prefs.json`
+
+- **Files:** `plan_tool/cli/run_cmd.py` (`_save_run_prefs` call sites, the
+  `RunLogWriter` start and `run_end`); `plan_tool/cli/init_cmd.py`.
+- **Symptom:** `run` treats its run log and `run-prefs.json` as runtime state
+  that the repo gitignores, and writes them around its commits: the `--all`
+  sweep writes `run-prefs.json` after the last step commit, and every run
+  appends the run-log end record after the commit. In a repo that does not
+  ignore them, the tree is dirty after the run, so the next `--commit` is
+  refused by its clean-tree gate. This predates the footprint-scoped commits:
+  on `main`, `git add -A` committed the files before those late writes, which
+  dirtied them again. `init` adds no ignore rule.
+- **Fix:** make the runtime state ignore itself, as the raw backend stream-log
+  directory already does (`backend_runner.py` writes a `*` `.gitignore`), or
+  have `init` add the rules. Deliberately not done: committing runtime state in
+  the step footprint, which was tried 2026-11-14 for `run-prefs.json` alone and
+  reverted because it covered one file on one path and warned on every commit
+  in repos that ignore it.
+- **Approach:** `direct` once the self-ignore vs `init` choice is made.
+- **Verification:** in a fresh repo with no ignore rules, `run X --all --commit`
+  then `run X --step N --commit` both start on a clean tree.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** 2026-11-14, round 3 of the `/code-review` of
+  `commit-scoped-to-verb-footprint`.
+
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
