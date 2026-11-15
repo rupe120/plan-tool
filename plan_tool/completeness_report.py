@@ -883,8 +883,8 @@ def deferred_kind(rec: Recommendation) -> str:
         return "triage"
     # Eligible and ungated: counted by the loop's deferral summary, but it has
     # no section of its own. A plan-correctness finding renders under
-    # ``## Conceptual correctness``; a bare-stage ``detail-body`` finding is
-    # listed in the embedded grouped report.
+    # ``## Conceptual correctness``; any other source is listed only in the
+    # embedded grouped report.
     return "open"
 
 

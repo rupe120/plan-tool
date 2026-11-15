@@ -18019,6 +18019,21 @@ _CANONICAL_FULL_SEED = (
 )
 
 
+def test_find_dropped_references_reads_the_distilled_text_past_echoed_frontmatter() -> None:
+    """A model may echo the seed's frontmatter into its distilled text. A
+    column-0 ``## Acceptance criteria`` comment there has the closing ``---``
+    as its body; read raw, it hides the real section and flags a deliverable
+    the real acceptance criteria already pin."""
+    from plan_tool.create import find_dropped_references
+
+    distilled = (
+        "---\ntitle: demo\n## Acceptance criteria\n---\n# Plan\n\n"
+        "## Risks\n\nThe runbook in step 3 sequences this.\n\n"
+        "## Acceptance criteria\n\nThe runbook exists and is reviewed.\n"
+    )
+    assert find_dropped_references(distilled) == []
+
+
 class TestFrontmatterCommentNeverShadowsASeedSection:
     """A column-0 ``## <Section>`` YAML comment is legal in seed frontmatter, and
     its body is the closing ``---``. Every reader of a seed's sections must read

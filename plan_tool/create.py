@@ -8475,8 +8475,10 @@ def find_dropped_references(distilled_markdown: str) -> list[DroppedReference]:
     # strip_fenced_code, not just ignore_fenced_code: a fenced example
     # mentioning a keyword must not corroborate or manufacture a reference.
     # ``extract_h2_sections`` lowercases keys.
-    # No _strip_frontmatter: the text is the distiller's own output, not a seed.
-    sections = extract_h2_sections(distilled_markdown, strip_fenced_code=True)
+    # Stripped: a model can echo the seed's frontmatter into its distilled text.
+    sections = extract_h2_sections(
+        _strip_frontmatter(distilled_markdown), strip_fenced_code=True
+    )
     acceptance = sections.get("acceptance criteria", "").lower()
     artifact_re = _artifact_ref_re()
     out: list[DroppedReference] = []

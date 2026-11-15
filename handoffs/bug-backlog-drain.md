@@ -139,9 +139,11 @@ they resolve.
 - 2026-11-15 — four live seeds refused for `## References`: `pending`. Two fixed
   (`18438c1a9`); the two impact-recurrence seeds describe a design closed on
   2026-08-11 and wait for a delete-or-keep decision.
-- 2026-11-15 — review of the drain branch: pass 1 returned eight findings (three
-  refuted with evidence, two declined, three fixed in `20e85619d`). Pass 2 is
-  recorded below once it returns.
+- 2026-11-15 — review of the drain branch, closed as converged (two consecutive
+  low-yield passes; every finding low or nit). Pass 1: eight findings, three
+  refuted with evidence, two declined, three fixed in `20e85619d`. Pass 2: eight
+  findings, five repeats or declines, two fixed (`find_dropped_references` also
+  strips echoed frontmatter; the `open` comment says only what was verified).
 
 ## Deliberately not in this handoff
 
