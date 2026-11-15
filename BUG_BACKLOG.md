@@ -1068,35 +1068,6 @@ Durable re-open conditions for retired items are recorded in
   `code-review-loop` pass on the roadmap model-failure receipts, after rounds 1 and 2 each narrowed but did not
   close the same collision.
 
-### `CLAUDE.md`, `TESTING.md`, and backlog entry #190 cite a reconcile prompt, `prompts/reconcile.md`, that has never existed in this repository, so readers cannot find the rules they describe
-
-- **Files:** `CLAUDE.md:178`; `TESTING.md:229` (the "Impact-weighted apply
-  triage" row); `BACKLOG.md:3410` and `:3458` (entry #190).
-- **Symptom:** each cites `prompts/reconcile.md`. No file has that name, and git
-  history shows none at that path. What the citations describe lives elsewhere.
-  The refusal of scope-narrowing and criterion-softening edits that `CLAUDE.md`
-  and #190 name is in `plan_tool/prompts/detail-reconcile.md` (lines 107-112;
-  the `status`/`status_note` flip is at line 78). `TESTING.md`'s row says the
-  prompt asks for "Impact/Complexity Decision-block fields", but the triage tags
-  are an inline `(impact=..., complexity=...)` parenthetical asked for by
-  `plan-audit.md` (line 344) and `run-reconcile.md` (line 116). The same row
-  also cites a test class, `TestDecisionImpactComplexity`, that does not exist
-  (`TestApplyTriage` is at `tests/test_review.py:13825`). Backlog entry #189
-  already lists `TESTING.md`'s citation among its dead citations.
-- **Fix:** point each citation at the file that holds the text, checking each
-  against that file before editing: `detail-reconcile.md` for the refusal list,
-  `plan-audit.md` and `run-reconcile.md` for the triage tag. In the `TESTING.md`
-  row, also replace "Decision-block fields" with the inline tag and the missing
-  test class with one that exists. `CLAUDE.md` is architect-reviewed (its own
-  header), so that edit goes through pull-request review. If #189 lands first,
-  drop the `TESTING.md` part here.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced` — the
-  `TESTING.md` fix changes what the row says about how triage behaves, not only
-  a path.
-- **Approach:** `direct` — four sites; no test pins these strings.
-- **Origin:** 2026-09-24, found while writing the IPPT-6 ticket, whose fence
-  cites `detail-reconcile.md` because `CLAUDE.md`'s file does not exist.
-
 ### Six code comments say the reconcile prompts ask for a `## Decision` block and put the triage tags in it, but no prompt does either
 
 - **Promoted:** IPPT-8 (2026-09-25)
