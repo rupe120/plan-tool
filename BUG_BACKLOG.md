@@ -881,6 +881,27 @@ Durable re-open conditions for retired items are recorded in
 
 ## MINOR
 
+### Four live seeds are refused by `create --from-existing` because their `## References` section is missing or duplicated
+
+- **Files:** `docs/implementation-plans/plan-seeds/impact-recurrence-01-classifier.md`,
+  `impact-recurrence-02-loop-stop.md` and `roadmap-revision-retention.md` (no
+  `## References`), and
+  `intent-required-carved-have-the-intent-presence-finding-carry-through-7.md`
+  (two `## References` sections). The check is
+  `plan_tool/create.py:classify_file_backed_source`.
+- **Symptom:** each seed fails the existing `References` preflight, so
+  `create --from-existing` exits 2 before any model call. All four already
+  failed it on `main` before the guardrail-heading change; they now pass the
+  guardrail check and fail only this one. Deliberately not listed: the two
+  seed-directory `README.md` files, which are not seeds.
+- **Fix:** give each seed exactly one non-placeholder `## References` section
+  from its own source content (merge the duplicate pair). Edit the seeds only;
+  the preflight rule stays as it is.
+- **Verification:** `validate_from_existing_seed` accepts each of the four.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-15, found by a code review of the required-guardrail-
+  headings branch while checking every live seed against `create`'s intake.
+
 ### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
 
 - **Files:** `plan_tool/roadmap_candidate.py:_append_added_row_prose`
