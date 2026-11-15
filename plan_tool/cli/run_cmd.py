@@ -538,7 +538,6 @@ def _step_footprint(
     ctx: PlanToolContext,
     *,
     plan_path: Path,
-    slug: str,
     baseline: Optional[set[str]],
     archive_outcome: Optional[ArchiveOutcome],
     manifest_path: Optional[Path],
@@ -600,7 +599,6 @@ def _commit_step_footprint(
     paths, reason = _step_footprint(
         ctx,
         plan_path=plan_path,
-        slug=slug,
         baseline=baseline,
         archive_outcome=archive_outcome,
         manifest_path=manifest_path,
@@ -1333,7 +1331,7 @@ def cmd_run(args: argparse.Namespace) -> int:
             return rc
 
         # ``--archive`` (completing step): move the plan + rewrite the manifest
-        # BEFORE the commit so the green commit's ``git add -A`` captures the
+        # BEFORE the commit so the green commit's footprint captures the
         # move + manifest edit — otherwise ``--commit --archive`` exits with a
         # dirty tree that blocks the next ``--commit``. ``archived`` lets the
         # plan_completed branch below skip re-archiving. See docs/how-to/pipeline/run.md.
@@ -1769,7 +1767,7 @@ def _cmd_run_sweep(
                 )
 
             # ``--archive`` (completing step): move the plan to ``archive/`` +
-            # deregister BEFORE the commit so the green commit's ``git add -A``
+            # deregister BEFORE the commit so the green commit's footprint
             # captures the move + manifest edit — otherwise ``--commit
             # --archive`` leaves them uncommitted, dirtying the tree and
             # blocking the next ``--commit``. Gate on ``result.plan_completed``

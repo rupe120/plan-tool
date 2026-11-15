@@ -826,7 +826,7 @@ def cmd_completeness(args: argparse.Namespace) -> int:
 
     # ``--commit`` (human runs only) gates up front: it commits the edits the
     # --iterate loop applies, so it's meaningless without --iterate, and the
-    # end-of-run ``git add -A`` must not fold in pre-existing changes.
+    # end-of-run footprint commit must not fold in pre-existing changes.
     if getattr(args, "commit", False) and not args.json:
         if not budget.enabled:
             error(

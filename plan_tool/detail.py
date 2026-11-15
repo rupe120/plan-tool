@@ -3510,8 +3510,8 @@ def _generate_detail_concurrent(
             )
             # NB: no per-step commit here. The concurrent path's workers all
             # write their detail files *before* this serial tail runs, so a
-            # ``git add -A`` here would sweep every sibling's file into the
-            # first step's commit (no per-step isolation), and committing only
+            # commit here would sweep every sibling's file (all inside the
+            # footprint) into the first step's commit (no per-step isolation), and committing only
             # after the join gives no interruption-durability benefit anyway
             # (the expensive authoring already finished). The concurrent path
             # gets one batch commit at end-of-run instead (#122 is serial-only).
@@ -5380,8 +5380,8 @@ def _run_grade_detail_lifecycle(
                 # Per-step commit (#122): commit this converged step now so an
                 # interrupted batch keeps completed steps. Skip once any earlier
                 # step failed leaving debris (e.g. an orphaned file from a
-                # frontmatter-update failure) — per-step ``git add -A`` is only
-                # safe while no prior step left the tree dirty. See docs/how-to/pipeline/detail.md.
+                # frontmatter-update failure) — a per-step footprint commit is
+                # only safe while no prior step left debris inside it. See docs/how-to/pipeline/detail.md.
                 _prior_failure = any(
                     (not r.written)
                     and "already exists" not in (r.skipped_reason or "")

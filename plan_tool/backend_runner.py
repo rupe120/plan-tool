@@ -880,8 +880,9 @@ def run_streaming_once(
                     mode=0o700, parents=True, exist_ok=True
                 )
                 if sibling_log_dir is None:
-                    # Derived dir only: it must ignore itself (``git add -A``
-                    # under ``run --commit``) or the log is not written.
+                    # Derived dir only: it must ignore itself (``run --commit``
+                    # commits new files in the step's delta) or the log is not
+                    # written.
                     stream_log_path.parent.chmod(0o700)
                     ignore = stream_log_path.parent / ".gitignore"
                     if not ignore.is_file():

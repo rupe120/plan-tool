@@ -1707,8 +1707,8 @@ def cmd_detail(args: argparse.Namespace) -> int:
         )
         return 2
 
-    # ``--commit`` requires a clean tree up front: the post-run commit does
-    # ``git add -A``, so any pre-existing edit would fold into it. Reject
+    # ``--commit`` requires a clean tree up front: the commit stages the whole
+    # footprint, so a pre-existing edit inside it would fold in. Reject
     # before any run log opens (consistent with run's --commit gate).
     # Skipped under --dry-run (no files written, so nothing to commit).
     if getattr(args, "commit", False) and not args.dry_run:
