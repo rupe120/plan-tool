@@ -639,31 +639,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
-### `--commit` leaves plan-tool's late writes dirty in a repo that does not gitignore them
-
-- **Files:** `plan_tool/run_log.py` (`RunLogWriter.run_end`, the `in-flight.json`
-  removal); `plan_tool/cli/run_cmd.py` (the `--all` sweep's `_save_run_prefs`
-  after the sweep).
-- **Symptom:** every `--commit` footprint includes `.plan-tool/`, and the repo's
-  ignore rules decide which of its files are committed (decided 2026-11-15,
-  owner). Writes that land *after* the verb's last commit are still left
-  dirty in a repo that does not ignore them: every verb's run-log end record and
-  `in-flight.json` removal, and the `--all` sweep's `run-prefs.json`. The next
-  `--commit` is then refused by its clean-tree gate. Measured 2026-11-15 on
-  `detail --commit` in a repo that does not ignore `.plan-tool/runs/`.
-- **Fix:** a decision between letting the clean-tree gate accept non-ignored
-  dirt under `.plan-tool/` (the next footprint commit carries it), a trailing
-  commit after the run log closes, or moving those writes before the last
-  commit. Deliberately not done: listing runtime files one by one, tried
-  2026-11-14 for `run-prefs.json` alone and reverted.
-- **Approach:** `direct` once decided.
-- **Verification:** in a repo with no `.plan-tool` ignore rules,
-  `detail X --commit` then `run X --all --commit` then `run X --step N --commit`
-  each start on a clean tree.
-- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** 2026-11-14/15, rounds 3–5 of the `/code-review` of
-  `commit-scoped-to-verb-footprint`.
-
 ### `detail --commit` leaves an out-of-tree detail file's `archive/` writes uncommitted
 
 - **Files:** `plan_tool/cli/commit_footprint.py:plan_commit_footprint`;
