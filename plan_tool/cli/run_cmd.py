@@ -549,15 +549,9 @@ def _step_footprint(
     archive_outcome: Optional[ArchiveOutcome],
     manifest_path: Optional[Path],
 ) -> "tuple[Optional[list[Path]], str]":
-    """Paths a green ``run --commit`` step may commit, or ``(None, reason)``.
-
-    Two parts. The paths ``run`` itself owns are always committed: the plan's
-    :func:`plan_commit_footprint`, the archive outputs, and ``run-prefs.json``
-    (written before the baseline, and not gitignored in every repo). The
-    step's other writes are ``after - baseline`` (both sides of a rename); the
-    delta holds path names only, so a path already dirty at the baseline is
-    left out of that part even if the step edited it. An unreadable snapshot
-    fails closed.
+    """Paths a green ``run --commit`` step may commit, or ``(None, reason)``:
+    the plan's own paths and archive outputs always, plus the step's git delta
+    (a path dirty at the baseline is left out). See docs/how-to/pipeline/run.md.
     """
     root = ctx.repo_root
     if baseline is None:
@@ -571,11 +565,7 @@ def _step_footprint(
     rels: set[str] = set(delta)
     rels.update(origins[dest] for dest in delta if dest in origins)
 
-    fixed: list[Path] = [
-        plan_path,
-        plan_reports_dir(plan_path).parent,
-        _run_prefs_path(root),
-    ]
+    fixed: list[Path] = [plan_path, plan_reports_dir(plan_path).parent]
     plan_file = plan_path
     if archive_outcome is not None:
         fixed.extend(

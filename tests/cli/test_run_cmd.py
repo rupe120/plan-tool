@@ -2130,21 +2130,6 @@ class TestRunCommitFootprint:
         assert rc == 0 and committed, tail
         assert "step_work.txt" in _git_head_files(tmp_path)
 
-    def test_run_prefs_written_before_the_baseline_is_committed(
-        self, tmp_path: Path
-    ) -> None:
-        """``run`` writes run-prefs.json before it reads the baseline; a repo
-        that does not gitignore it must still end the step clean."""
-        plan_path = self._repo(tmp_path)
-        prefs = run_cmd._run_prefs_path(tmp_path)
-        prefs.parent.mkdir(parents=True, exist_ok=True)
-        prefs.write_text("{}", encoding="utf-8")
-        baseline = {".plan-tool/run-prefs.json"}
-        rc, tail, committed = self._commit(tmp_path, plan_path, baseline)
-        assert rc == 0 and committed, tail
-        assert ".plan-tool/run-prefs.json" in _git_head_files(tmp_path)
-        assert _git_status_porcelain(tmp_path) == ""
-
     def test_unrelated_file_outside_delta_is_excluded(self, tmp_path: Path) -> None:
         plan_path = self._repo(tmp_path)
         (tmp_path / "tracked.txt").write_text("dirty before", encoding="utf-8")

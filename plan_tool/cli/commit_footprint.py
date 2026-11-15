@@ -16,8 +16,8 @@ from plan_tool.review_persistence import plan_reports_dir
 def plan_commit_footprint(repo_root: Path, plan_path: Path) -> list[Path]:
     """The plan file, its ``plan-details/<slug>/`` directory (detail files,
     ``archive/`` moves, saved reports), every ``steps[].detail`` pointer the
-    plan declares (a pointer can name a file outside that directory), and the
-    project lessons directory. Rebuild it at each commit so a pointer set
+    plan declares and its ``lessons:`` log (either can sit outside that
+    directory), and the project lessons directory. Rebuild it at each commit so a pointer set
     mid-run is included; an unreadable plan contributes no pointers rather
     than raising.
     """
@@ -31,4 +31,6 @@ def plan_commit_footprint(repo_root: Path, plan_path: Path) -> list[Path]:
     except Exception:  # noqa: BLE001 — the footprint must never abort a commit
         return footprint
     footprint.extend(repo_root / step.detail for step in plan.steps if step.detail)
+    if plan.lessons:
+        footprint.append(repo_root / plan.lessons)
     return footprint

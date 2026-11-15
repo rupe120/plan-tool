@@ -330,6 +330,37 @@ config), or set `PLAN_TOOL_REQUIRE_MERGED_PLAN=0`. Implementation:
    `- <ts> step N halt (sweep): <reason>` to the plan's `lessons:` file, so the
    halt is recorded next to the plan it guards.
 
+## Commit footprint
+
+Every `--commit` verb (`run`, `detail`, `completeness-audit`, `manifest sweep`)
+commits through `gitcommit.commit_all`, which stages and commits only the paths
+it is given.
+
+- **Run's footprint:** the plan's own paths (`commit_footprint.plan_commit_footprint`:
+  the plan file, `plan-details/<slug>/`, declared `steps[].detail` files, the
+  plan's `lessons:` log, project lessons), any `--archive` outputs and manifest,
+  and the git delta since the step's baseline, both sides of a rename. A path
+  already dirty at the baseline is left out of the delta and named in a warning.
+- **Entry rules:**
+
+  | Entry | Behavior |
+  | --- | --- |
+  | directory | covers everything beneath it |
+  | symlink | the link itself is committed, not its target |
+  | absent, and not in the index or `HEAD` | skipped silently |
+  | only in `HEAD` (`git rm`, origin of `git mv`) | committed as a delete, not passed to `git add` |
+  | gitignored | skipped with a warning |
+  | relative path | read relative to the current directory |
+
+- **Result:** `CommitOutcome(rc, tail, committed)`. No change in the footprint is
+  `rc 0` with no commit. A footprint path still dirty after the commit (a hook
+  rewrote it) is non-zero with `committed` true. An unreadable index or git
+  status fails closed.
+- **Runtime state is assumed ignored:** `.plan-tool/runs/` and
+  `.plan-tool/run-prefs.json` are written around the commits and are not in any
+  footprint. A repo that does not gitignore them is left dirty after a run
+  (BUG_BACKLOG).
+
 ## After the plan completes — the two-loop verification tail
 
 A green final step flips the plan to `completed`, but "every step ran" is not

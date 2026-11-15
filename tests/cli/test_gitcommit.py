@@ -179,6 +179,21 @@ class TestCommitAll:
         assert "ign.txt" in capsys.readouterr().err
         assert _head_files(tmp_path) == ["a.txt"]
 
+    def test_relative_entry_is_read_from_the_current_directory(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # A ``--manifest ../x`` given from a subdirectory names a file relative
+        # to the cwd; reading it from the repo root would drop it.
+        self._repo(tmp_path)
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "m.json").write_text("{}\n")
+        monkeypatch.chdir(tmp_path / "sub")
+
+        rc, tail, committed = commit_all(tmp_path, "s", [Path("../m.json")])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(tmp_path) == ["m.json"]
+
     def test_absent_ignored_entry_is_skipped_without_a_warning(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
