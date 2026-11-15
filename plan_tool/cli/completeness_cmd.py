@@ -824,6 +824,9 @@ def cmd_completeness(args: argparse.Namespace) -> int:
                 "plan edits to commit)."
             )
             return 2
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(ctx.repo_root)
         if working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or stash "

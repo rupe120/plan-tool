@@ -19,6 +19,50 @@ def plan_tool_state_dir(repo_root: Path) -> Path:
     return repo_root / ".plan-tool"
 
 
+# Runtime state plan-tool writes under ``.plan-tool/``: transient, so ignored
+# by default. A repo keeps one by tracking it (git add -f); tracked files stay
+# tracked whatever the ignore rules say.
+RUNTIME_STATE_PATTERNS = (
+    "runs/",
+    "checkpoints/",
+    "reviews/",
+    "parse-failures/",
+    "crashes/",
+    "scenarios/",
+    "telemetry/",
+    "purity-cache/",
+    "mutation.lock",
+    "run-prefs.json",
+    "lessons-warnings.jsonl",
+    "lessons-warnings.jsonl.*",
+)
+
+_STATE_IGNORE_HEADER = (
+    "# Written by plan-tool: its runtime state under .plan-tool/ is ignored by\n"
+    "# default, and this file ignores itself. Kept as-is once written; edit it\n"
+    "# or force-track a file (git add -f) to keep that file in history.\n"
+)
+
+
+def ensure_state_ignore(repo_root: Path) -> None:
+    """Write ``.plan-tool/.gitignore`` when it is missing; never overwrite it.
+
+    Called before every ``--commit`` clean-tree gate, so runtime state never
+    reads as dirt and nothing plan-tool writes after a verb's last commit (the
+    run-log end record, the sweep's run-prefs) blocks the next ``--commit``.
+    Best-effort: an unwritable directory leaves the repo's own rules in charge.
+    """
+    path = plan_tool_state_dir(repo_root) / ".gitignore"
+    if path.exists():
+        return
+    lines = ["/.gitignore", *(f"/{p}" for p in RUNTIME_STATE_PATTERNS)]
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(_STATE_IGNORE_HEADER + "\n".join(lines) + "\n", encoding="utf-8")
+    except OSError:
+        pass
+
+
 def plan_commit_footprint(repo_root: Path, plan_path: Path) -> list[Path]:
     """The plan file, its ``plan-details/<slug>/`` directory (detail files,
     ``archive/`` moves, saved reports), every ``steps[].detail`` pointer the

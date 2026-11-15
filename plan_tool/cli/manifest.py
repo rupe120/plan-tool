@@ -630,6 +630,9 @@ def cmd_sweep(args: argparse.Namespace) -> int:
                 "--report-only (those modes write nothing)."
             )
             return 2
+        from plan_tool.cli.commit_footprint import ensure_state_ignore
+
+        ensure_state_ignore(ctx.repo_root)
         if working_tree_dirty(ctx.repo_root):
             error(
                 "--commit requires a clean working tree (commit or stash "

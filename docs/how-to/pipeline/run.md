@@ -364,10 +364,14 @@ it is given.
   rewrote it) is non-zero with `committed` true. An unreadable index or git
   status fails closed.
 - **Plan-tool's own files follow `.gitignore`:** every footprint includes
-  `.plan-tool/`, so the repo's ignore rules decide which of its files (manifest,
-  lessons, telemetry, run logs, run-prefs) are committed. Writes made after the
-  last commit, such as the run-log end record, are left dirty in a repo that
-  does not ignore them (BUG_BACKLOG).
+  `.plan-tool/`, so the repo's ignore rules decide which of its files are
+  committed. Before its clean-tree check, each `--commit` verb writes
+  `.plan-tool/.gitignore` if it is missing (`commit_footprint.ensure_state_ignore`):
+  it ignores itself and plan-tool's runtime state (`runs/`, `run-prefs.json`,
+  `telemetry/`, `reviews/`, `checkpoints/`, the mutation lock, …), so writes made
+  after a verb's last commit, such as the run-log end record, never block the
+  next `--commit`. It is never overwritten. A repo that tracks a runtime file
+  keeps committing it, and its late writes are that repo's choice to commit.
 
 ## After the plan completes — the two-loop verification tail
 

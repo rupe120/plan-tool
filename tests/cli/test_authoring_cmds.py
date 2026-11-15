@@ -3335,11 +3335,10 @@ class TestDetailCommitCmd:
         self, tmp_repo, monkeypatch: pytest.MonkeyPatch, site: str,
     ) -> None:
         git, _ = self._run_commit_site(tmp_repo, monkeypatch, site)
-        # ``.plan-tool/runs/`` is run state a real repo gitignores; the fixture
-        # repo does not, so exclude it rather than count it as leftover dirt.
-        assert git(
-            "status", "--porcelain", "--", ".", ":(exclude).plan-tool/runs"
-        ).strip() == "?? unrelated.txt"
+        # The fixture repo has no ignore rules of its own: plan-tool's default
+        # .plan-tool/.gitignore keeps its run log, written after the last
+        # commit, from reading as leftover dirt.
+        assert git("status", "--porcelain", "-uall").strip() == "?? unrelated.txt"
         assert "unrelated.txt" not in git("log", "--name-only", "--format=")
 
     @pytest.mark.parametrize("site", SITES)
@@ -3436,7 +3435,7 @@ class TestDetailCommitCmd:
         monkeypatch.setattr(app, "cmd_completeness", lambda _a: 0)
         assert main(tmp_repo.argv("detail", "demo", "--commit")) == 0
         status = subprocess.run(
-            ["git", "status", "--porcelain", "--", ".", ":(exclude).plan-tool/runs"],
+            ["git", "status", "--porcelain", "-uall"],
             cwd=root, capture_output=True, text=True,
         ).stdout
         assert status == ""

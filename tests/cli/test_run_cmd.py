@@ -2312,15 +2312,9 @@ class TestRunCommitFootprint:
             )
         )
         assert rc == 0
-        # Run-log and run-prefs state is gitignored in a real repo; the fixture
-        # repo has no ignore file, so leave it out of the cleanliness check.
-        leftover = subprocess.run(
-            ["git", "status", "--porcelain", "--", ".",
-             ":(exclude).plan-tool/runs", ":(exclude).plan-tool/run-prefs.json"],
-            cwd=tmp_path, stdin=subprocess.DEVNULL, capture_output=True,
-            text=True, check=True,
-        ).stdout
-        assert leftover == ""
+        # No ignore rules of its own: the default .plan-tool/.gitignore keeps
+        # run logs and run-prefs, written around the commit, out of status.
+        assert _git_status_porcelain(tmp_path) == ""
         assert {"feature.md", "step_work.txt"} <= set(_git_head_files(tmp_path))
 
 
