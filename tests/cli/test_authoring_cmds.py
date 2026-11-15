@@ -2975,8 +2975,9 @@ class TestDetailCommitHelpers:
             footprint=footprint,
         )
         assert res is not None
-        rc, tail = res
+        rc, tail, committed = res
         assert rc == 0, tail
+        assert committed
         assert _count(tmp_path) == base + 1
         log = subprocess.run(
             ["git", "log", "--oneline", "-1"],
@@ -3015,8 +3016,9 @@ class TestDetailCommitHelpers:
             tmp_path, "plan(demo): subj", [tmp_path / "new.md"]
         )
         assert res is not None
-        rc, tail = res
+        rc, tail, committed = res
         assert rc == 1
+        assert not committed
         assert "git subprocess error" in tail
 
     def _repo_with_footprint_and_stray(self, tmp_path: Path):
@@ -3035,19 +3037,15 @@ class TestDetailCommitHelpers:
         ).stdout.strip())
 
     def test_commit_if_dirty_returns_none_when_only_unrelated_file_is_dirty(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+        self, tmp_path: Path,
     ) -> None:
         """Dirt outside the footprint is not 'something to commit': no commit
-        is made and ``commit_all`` is never invoked."""
+        is made and the result is ``None``, not a reported commit."""
         from plan_tool.cli import authoring
 
         footprint = self._repo_with_footprint_and_stray(tmp_path)
         (tmp_path / "stray.txt").write_text("changed\n", encoding="utf-8")
         base = self._head_count(tmp_path)
-        monkeypatch.setattr(
-            authoring, "_commit_all",
-            lambda *a, **k: pytest.fail("commit_all must not run"),
-        )
         assert authoring._commit_if_dirty(tmp_path, "s", footprint) is None
         assert self._head_count(tmp_path) == base
 
@@ -3072,23 +3070,41 @@ class TestDetailCommitHelpers:
     def test_commit_if_dirty_fails_closed_when_git_status_unreadable(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
     ) -> None:
-        """An unreadable git status must not read as 'clean' (None)."""
-        from plan_tool.cli import authoring
+        """An unreadable git status or index must not read as 'clean' (None)."""
+        import subprocess
+
+        from plan_tool.cli import authoring, gitcommit
 
         footprint = self._repo_with_footprint_and_stray(tmp_path)
 
         def unreadable(*_a, **_k):
             raise OSError("git: command not found")
 
-        monkeypatch.setattr(authoring, "_dirty_footprint_paths", unreadable)
+        monkeypatch.setattr(gitcommit, "_dirty_footprint_paths", unreadable)
+        (tmp_path / "plan.md").write_text("edit 1\n", encoding="utf-8")
         res = authoring._commit_if_dirty(tmp_path, "s", footprint)
-        assert res is not None and res[0] != 0
+        assert res is not None and res.rc != 0
 
+        # Post-commit status unreadable: the commit landed, the check failed.
         monkeypatch.setattr(
-            authoring, "_dirty_footprint_paths", lambda *_a, **_k: None
+            gitcommit, "_dirty_footprint_paths", lambda *_a, **_k: None
         )
+        (tmp_path / "plan.md").write_text("edit 2\n", encoding="utf-8")
         res = authoring._commit_if_dirty(tmp_path, "s", footprint)
-        assert res is not None and res[0] != 0
+        assert res is not None and res.rc != 0 and res.committed
+
+        # Index unreadable before the commit: no commit, never "clean".
+        real = gitcommit._git_literal
+
+        def broken_diff(root, *args):
+            if args[:2] == ("diff", "--cached"):
+                return subprocess.CompletedProcess(args, 128, "", "fatal: index")
+            return real(root, *args)
+
+        monkeypatch.setattr(gitcommit, "_git_literal", broken_diff)
+        (tmp_path / "plan.md").write_text("edit 3\n", encoding="utf-8")
+        res = authoring._commit_if_dirty(tmp_path, "s", footprint)
+        assert res is not None and res.rc != 0 and not res.committed
 
     def test_commit_if_dirty_footprint_with_missing_lessons_dir_does_not_raise(
         self, tmp_path: Path,

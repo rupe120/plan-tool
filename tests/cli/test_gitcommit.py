@@ -104,7 +104,7 @@ class TestCommitAll:
         (tmp_path / "a.txt").write_text("a\n")
         (tmp_path / "b.txt").write_text("b\n")
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
 
         assert rc == 0, tail
         assert _head_files(tmp_path) == ["a.txt"]
@@ -118,7 +118,7 @@ class TestCommitAll:
         (tmp_path / "b.txt").write_text("b\n")
         _git(tmp_path, "add", "b.txt")
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
 
         assert rc == 0, tail
         assert _head_files(tmp_path) == ["a.txt"]
@@ -128,7 +128,7 @@ class TestCommitAll:
         self._repo(tmp_path)
         (tmp_path / "f.txt").unlink()
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path])
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path])
 
         assert rc == 0, tail
         assert _git(
@@ -139,7 +139,7 @@ class TestCommitAll:
         self._repo(tmp_path)
         (tmp_path / "f.txt").rename(tmp_path / "g.txt")
 
-        rc, tail = commit_all(
+        rc, tail, _ = commit_all(
             tmp_path, "s", [tmp_path / "f.txt", tmp_path / "g.txt"]
         )
 
@@ -156,7 +156,7 @@ class TestCommitAll:
         (nested / "n.txt").write_text("n\n")
         (tmp_path / "d" / "top.txt").write_text("t\n")
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "d"])
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "d"])
 
         assert rc == 0, tail
         assert sorted(_head_files(tmp_path)) == ["d/e/f/n.txt", "d/top.txt"]
@@ -171,7 +171,7 @@ class TestCommitAll:
         (tmp_path / "ign.txt").write_text("i\n")
         (tmp_path / "a.txt").write_text("a\n")
 
-        rc, tail = commit_all(
+        rc, tail, _ = commit_all(
             tmp_path, "s", [tmp_path / "ign.txt", tmp_path / "a.txt"]
         )
 
@@ -191,10 +191,13 @@ class TestCommitAll:
         hook.chmod(0o755)
         (tmp_path / "a.txt").write_text("a\n")
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
+        before = _head(tmp_path)
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "a.txt"])
 
         assert rc != 0
         assert "a.txt" in tail
+        # The commit itself landed; callers must not report it as uncommitted.
+        assert committed and _head(tmp_path) != before
 
     def test_absent_untracked_entry_is_skipped_without_failing(
         self, tmp_path: Path
@@ -202,7 +205,7 @@ class TestCommitAll:
         self._repo(tmp_path)
         (tmp_path / "a.txt").write_text("a\n")
 
-        rc, tail = commit_all(
+        rc, tail, _ = commit_all(
             tmp_path, "s", [tmp_path / "ghost.txt", tmp_path / "a.txt"]
         )
 
@@ -217,7 +220,7 @@ class TestCommitAll:
         (tmp_path / "empty").mkdir()
         (tmp_path / "a.txt").write_text("a\n")
 
-        rc, tail = commit_all(
+        rc, tail, _ = commit_all(
             tmp_path, "s", [tmp_path / "empty", tmp_path / "a.txt"]
         )
 
@@ -228,7 +231,7 @@ class TestCommitAll:
         self._repo(tmp_path)
         (tmp_path / "f.txt").unlink()
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
 
         assert rc == 0, tail
         assert _git(
@@ -249,7 +252,7 @@ class TestCommitAll:
             _git(tmp_path, "mv", "f.txt", "g.txt")
             footprint = [tmp_path / "f.txt", tmp_path / "g.txt"]
 
-        rc, tail = commit_all(tmp_path, "s", footprint)
+        rc, tail, _ = commit_all(tmp_path, "s", footprint)
 
         assert rc == 0, tail
         assert "D\tf.txt" in _git(
@@ -263,11 +266,33 @@ class TestCommitAll:
         self._repo(tmp_path)
         before = _head(tmp_path)
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
+        rc, tail, committed = commit_all(tmp_path, "s", [tmp_path / "f.txt"])
 
         assert rc == 0
+        assert not committed
         assert "nothing changed" in tail
         assert _head(tmp_path) == before
+
+    @pytest.mark.parametrize("target", ["inside", "outside"])
+    def test_symlink_entry_commits_the_link_not_its_target(
+        self, tmp_path: Path, target: str
+    ) -> None:
+        # The link is what git tracks; resolving the leaf would stage the
+        # target, or drop an out-of-repo link as "outside the repo".
+        repo = tmp_path / "repo"
+        repo.mkdir()
+        self._repo(repo)
+        (repo / "v2.txt").write_text("v2\n")
+        dest = repo / "v2.txt" if target == "inside" else tmp_path / "elsewhere"
+        (repo / "current").symlink_to(dest)
+
+        rc, tail, committed = commit_all(repo, "s", [repo / "current"])
+
+        assert rc == 0 and committed, tail
+        assert _head_files(repo) == ["current"]
+        mode = _git(repo, "ls-tree", "HEAD", "current").stdout.decode().split()[0]
+        assert mode == "120000"
+        assert "?? v2.txt" in _porcelain(repo)
 
     def test_literal_pathspec_does_not_match_glob_characters(
         self, tmp_path: Path
@@ -276,7 +301,7 @@ class TestCommitAll:
         (tmp_path / "x*.txt").write_text("star\n")
         (tmp_path / "xy.txt").write_text("sibling\n")
 
-        rc, tail = commit_all(tmp_path, "s", [tmp_path / "x*.txt"])
+        rc, tail, _ = commit_all(tmp_path, "s", [tmp_path / "x*.txt"])
 
         assert rc == 0, tail
         assert _head_files(tmp_path) == ["x*.txt"]

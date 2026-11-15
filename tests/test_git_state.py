@@ -18,7 +18,7 @@ from plan_tool.git_state import (
     committed_changed_paths,
     head_revision,
     make_partial_mutation_retry_guard,
-    renamed_origins_or_none,
+    status_records_or_none,
 )
 from plan_tool.rate_limit_loop import ALWAYS_RETRY, RetryPolicy
 
@@ -105,7 +105,7 @@ class TestChangedPathsOrNone:
         assert changed_paths_or_none(tmp_path) is None
 
 
-class TestRenamedOriginsOrNone:
+class TestStatusRecordsOrNone:
     def _staged_rename(self, root: Path) -> None:
         _init_git_repo(root)
         (root / "a.txt").write_text("line one\nline two\nline three\n", encoding="utf-8")
@@ -113,9 +113,9 @@ class TestRenamedOriginsOrNone:
         _run_git(["commit", "-q", "-m", "init"], root)
         _run_git(["mv", "a.txt", "b.txt"], root)
 
-    def test_renamed_origins_maps_destination_to_origin(self, tmp_path: Path) -> None:
+    def test_rename_record_carries_destination_and_origin(self, tmp_path: Path) -> None:
         self._staged_rename(tmp_path)
-        assert renamed_origins_or_none(tmp_path) == {"b.txt": "a.txt"}
+        assert status_records_or_none(tmp_path) == [("b.txt", "a.txt")]
 
     def test_changed_paths_or_none_still_omits_rename_origin(
         self, tmp_path: Path
@@ -125,13 +125,13 @@ class TestRenamedOriginsOrNone:
         self._staged_rename(tmp_path)
         assert changed_paths_or_none(tmp_path) == {"b.txt"}
 
-    def test_renamed_origins_empty_without_renames(self, tmp_path: Path) -> None:
+    def test_non_rename_record_has_no_origin(self, tmp_path: Path) -> None:
         _init_git_repo(tmp_path)
         (tmp_path / "x.txt").write_text("x", encoding="utf-8")
-        assert renamed_origins_or_none(tmp_path) == {}
+        assert status_records_or_none(tmp_path) == [("x.txt", None)]
 
-    def test_renamed_origins_is_none_when_git_unreadable(self, tmp_path: Path) -> None:
-        assert renamed_origins_or_none(tmp_path) is None
+    def test_records_are_none_when_git_unreadable(self, tmp_path: Path) -> None:
+        assert status_records_or_none(tmp_path) is None
 
 
 # --- changed_paths -------------------------------------------------------

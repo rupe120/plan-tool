@@ -71,7 +71,7 @@
 
 Both sides of a rename are footprint entries, so a staged `git mv a b` commits the deletion of `a` with `b`.
 
-- **Rename origins.** Add one function in `plan_tool/git_state.py` (for example `renamed_origins_or_none`) returning a destination-to-origin mapping, or `None` when git cannot be read. It parses the same `git status --porcelain -z --untracked-files=all` output.
+- **Rename origins.** `plan_tool/git_state.py:status_records_or_none` returns each status record as `(path, origin)`, with `origin` set only for a rename or copy, or `None` when git cannot be read. It parses the same `git status --porcelain -z --untracked-files=all` output, and `_step_footprint` reads it once for both the changed paths and the rename origins.
 - **No second copy of the git call.** If the new function would repeat the subprocess and splitting code in `changed_paths_or_none`, move that shared part into one private helper that both use. `tests/test_duplication.py` fails on a new duplicate body, and `changed_paths_or_none` must return exactly what it returns today.
 - **Unreadable rename read.** Treat `None` from this read like `None` from `changed_paths_or_none`: fail closed.
 

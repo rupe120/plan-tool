@@ -6844,6 +6844,24 @@ class TestCompletenessCommitFootprint:
         assert "unrelated.txt" not in committed
         assert "?? unrelated.txt" in self._git(tmp_repo.root, "status", "--porcelain")
 
+    def test_audit_commit_with_nothing_in_footprint_says_so_not_committed(
+        self, tmp_repo, monkeypatch, capsys
+    ) -> None:
+        import plan_tool.cli.completeness_cmd as completeness_cmd
+        from plan_tool.cli.gitcommit import CommitOutcome
+
+        self._setup(tmp_repo, monkeypatch)
+        head = self._git(tmp_repo.root, "rev-parse", "HEAD")
+        monkeypatch.setattr(
+            completeness_cmd, "commit_all",
+            lambda *_a, **_k: CommitOutcome(0, "nothing", False),
+        )
+        assert self._run(tmp_repo) == 0
+        out = capsys.readouterr()
+        assert "committed completeness edits" not in out.out + out.err
+        assert "nothing to commit" in out.out + out.err
+        assert self._git(tmp_repo.root, "rev-parse", "HEAD") == head
+
     def test_audit_commit_includes_report_and_sidecar(
         self, tmp_repo, monkeypatch
     ) -> None:
@@ -6901,10 +6919,12 @@ class TestCompletenessCommitFootprint:
         assert "stray.txt" not in committed
         assert "A  stray.txt" in self._git(tmp_repo.root, "status", "--porcelain")
 
-    def test_completeness_commit_footprint_helper_lists_plan_dir_and_declared_details(
+    def test_completeness_commit_uses_the_detail_footprint_with_plan_dir_and_declared_details(
         self, tmp_repo
     ) -> None:
-        from plan_tool.cli.completeness_cmd import _completeness_commit_footprint
+        from plan_tool.cli.authoring import (
+            _detail_commit_footprint as _completeness_commit_footprint,
+        )
 
         plan_path = tmp_repo.add_plan("1-demo", title="Demo")
         _attach_minimal_detail(tmp_repo, plan_path)

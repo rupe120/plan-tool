@@ -42,26 +42,16 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
     seen as ``tests/test_x.py``. ``-z`` disables git's path quoting/escaping,
     so spaces/tabs/non-ASCII come through verbatim; each NUL record is
     ``XY <path>`` and a rename/copy (``X`` in ``R``/``C``) is followed by an
-    extra NUL field (the origin) we skip; :func:`renamed_origins_or_none`
+    extra NUL field (the origin) we skip; :func:`status_records_or_none`
     reads those origins.
     """
-    records = _status_records_or_none(repo_root)
+    records = status_records_or_none(repo_root)
     if records is None:
         return None
     return {path for path, _origin in records}
 
 
-def renamed_origins_or_none(repo_root: Path) -> Optional[dict[str, str]]:
-    """Map each renamed/copied destination to its origin path, or ``None`` when
-    git can't be read. Additive companion to :func:`changed_paths_or_none`,
-    which omits origins."""
-    records = _status_records_or_none(repo_root)
-    if records is None:
-        return None
-    return {path: origin for path, origin in records if origin is not None}
-
-
-def _status_records_or_none(
+def status_records_or_none(
     repo_root: Path,
 ) -> Optional[list[tuple[str, Optional[str]]]]:
     """``(path, origin)`` per ``git status`` record (``origin`` set only for a

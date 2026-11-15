@@ -194,7 +194,7 @@ from plan_tool.style import detail, error, info, success, warn
 # ``_working_tree_dirty`` is re-exported under its historical name so the
 # test suite's ``authoring._working_tree_dirty`` import keeps resolving.
 
-from plan_tool.cli.gitcommit import _dirty_footprint_paths
+from plan_tool.cli.gitcommit import CommitOutcome
 from plan_tool.cli.gitcommit import commit_all as _commit_all
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
 
@@ -269,46 +269,34 @@ def _detail_commit_footprint(repo_root: Path, plan_path: Path) -> "list[Path]":
     return footprint
 
 
-def _footprint_is_dirty(
-    repo_root: Path, footprint: "list[Path]"
-) -> "Optional[bool]":
-    """True when git reports dirt inside ``footprint``; ``None`` when git status
-    cannot be read. Missing or gitignored entries never appear in status."""
-    root = repo_root.resolve()
-    entries: list[str] = []
-    for path in footprint:
-        try:
-            entries.append(path.resolve().relative_to(root).as_posix())
-        except ValueError:
-            continue  # outside the repo — cannot appear in its status
-    dirty = _dirty_footprint_paths(repo_root, entries)
-    if dirty is None:
-        return None
-    return bool(dirty)
-
-
 def _commit_if_dirty(
     repo_root: Path, subject: str, footprint: "list[Path]"
-) -> "Optional[tuple[int, str]]":
-    """Commit ``footprint`` under ``subject`` when it holds dirt; ``None`` when
-    nothing inside it is dirty (unrelated dirt elsewhere does not count).
+) -> "Optional[CommitOutcome]":
+    """Commit ``footprint`` under ``subject``; ``None`` when nothing inside it
+    changed (unrelated dirt elsewhere does not count).
     **Never raises** — a git subprocess failure (``OSError``: missing
-    binary, removed cwd, EMFILE) or a ``ValueError`` / ``UnicodeDecodeError`` from
-    ``subprocess.run(text=True)`` decoding non-UTF-8 git/hook output degrades to a
-    non-zero ``(rc, tail)`` so every caller flags the run rather than crashing.
-    An unreadable git status fails closed (non-zero), never ``None``.
-    Shared by the per-step commit and the end-of-run sweep so both are guarded
-    identically.
+    binary, removed cwd, EMFILE) or a ``ValueError`` from decoding git/hook
+    output degrades to a non-zero, uncommitted outcome so every caller flags
+    the run rather than crashing. Shared by the per-step commit and the
+    end-of-run sweep so both are guarded identically.
     """
     try:
-        dirty = _footprint_is_dirty(repo_root, footprint)
-        if dirty is None:
-            return 1, "could not read git status to decide whether to commit"
-        if not dirty:
-            return None
-        return _commit_all(repo_root, subject, footprint)
+        outcome = _commit_all(repo_root, subject, footprint)
     except (OSError, ValueError) as exc:
-        return 1, f"git subprocess error: {exc}"
+        return CommitOutcome(1, f"git subprocess error: {exc}", False)
+    if outcome.rc == 0 and not outcome.committed:
+        return None
+    return outcome
+
+
+def _commit_failure_text(outcome: CommitOutcome, what: str) -> str:
+    """Error line for a non-zero commit outcome; says whether HEAD moved."""
+    lead = (
+        f"{what} was committed, but the commit check failed (rc={outcome.rc})"
+        if outcome.committed
+        else f"git commit failed for {what} (rc={outcome.rc})"
+    )
+    return lead + (f": {outcome.tail}" if outcome.tail else "")
 
 
 def _commit_detail_step(
@@ -318,7 +306,7 @@ def _commit_detail_step(
     step_id: int,
     title: str,
     footprint: "list[Path]",
-) -> "Optional[tuple[int, str]]":
+) -> "Optional[CommitOutcome]":
     """Commit one converged step's footprint (#122) via :func:`_commit_if_dirty`,
     so an interrupted batch keeps completed steps. ``None`` when clean."""
     return _commit_if_dirty(
@@ -1859,15 +1847,11 @@ def cmd_detail(args: argparse.Namespace) -> int:
             )
             if res is None:
                 return  # clean tree — nothing to commit for this step
-            crc, ctail = res
-            if crc == 0:
+            if res.rc == 0:
                 _committed_steps.append(step_id)
             else:
                 _commit_failed_steps.append(step_id)
-                error(
-                    f"git commit failed for step {step_id} (rc={crc})"
-                    + (f": {ctail}" if ctail else "")
-                )
+                error(_commit_failure_text(res, f"step {step_id}"))
     try:
         try:
             results = generate_detail(
@@ -2121,14 +2105,10 @@ def cmd_detail(args: argparse.Namespace) -> int:
                     _detail_commit_footprint(ctx.repo_root, path),
                 )
                 if res is not None:
-                    commit_rc, tail = res
-                    if commit_rc == 0:
+                    if res.rc == 0:
                         success(f"committed {label}")
                     else:
-                        error(
-                            f"git commit failed (rc={commit_rc})"
-                            + (f": {tail}" if tail else "")
-                        )
+                        error(_commit_failure_text(res, label))
                         rc = 1
         return rc
     except KeyboardInterrupt:

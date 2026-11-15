@@ -76,17 +76,6 @@ from plan_tool.completeness_report import (
 )
 
 
-def _completeness_commit_footprint(repo_root: Path, plan_path: Path) -> "list[Path]":
-    """Paths ``completeness-audit --commit`` may stage: the plan file, its
-    ``plan-details/<slug>/`` directory (saved report and sidecar included),
-    declared ``steps[].detail`` pointers, and the project lessons directory.
-    Same footprint as ``detail --commit``, so it delegates to that builder.
-    """
-    from plan_tool.cli.authoring import _detail_commit_footprint
-
-    return _detail_commit_footprint(repo_root, plan_path)
-
-
 def _completeness_commit_subject(slug: str) -> str:
     """Commit subject for a ``completeness-audit --commit --iterate`` run
     (pure, so a test can assert the format without shelling out)."""
@@ -670,19 +659,28 @@ def finalize_completeness_run(
 
     if getattr(args, "commit", False) and not args.json and budget.enabled:
         from plan_tool.detail import _plan_slug as _detail_plan_slug
-        commit_rc, tail = commit_all(
+        from plan_tool.cli.authoring import _detail_commit_footprint
+
+        committed = commit_all(
             ctx.repo_root,
             _completeness_commit_subject(_detail_plan_slug(path)),
-            _completeness_commit_footprint(ctx.repo_root, path),
+            _detail_commit_footprint(ctx.repo_root, path),
         )
-        if commit_rc == 0:
-            success("committed completeness edits")
-        else:
+        if committed.rc != 0:
+            lead = (
+                "completeness edits were committed, but the commit check failed"
+                if committed.committed
+                else "git commit failed"
+            )
             error(
-                f"git commit failed (rc={commit_rc})"
-                + (f": {tail}" if tail else "")
+                f"{lead} (rc={committed.rc})"
+                + (f": {committed.tail}" if committed.tail else "")
             )
             return 1
+        if committed.committed:
+            success("committed completeness edits")
+        else:
+            info("--commit: nothing to commit (no edits inside the plan footprint)")
 
     if outcome.early_exit_code is not None:
         return outcome.early_exit_code

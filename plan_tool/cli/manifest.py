@@ -17,7 +17,6 @@ characterization tests can drive them by patching ``builtins.input``.
 from __future__ import annotations
 
 import argparse
-import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -687,20 +686,25 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     # leaving nothing to commit.
     if getattr(args, "commit", False):
         n_archived = sum(1 for o in report.archived if o.archived_to is not None)
-        head_before = _head_commit(ctx.repo_root)
-        commit_rc, tail = commit_all(
+        committed = commit_all(
             ctx.repo_root,
             _sweep_commit_subject(n_archived),
             _sweep_commit_footprint(
                 manifest_path, report, duplicate_archive_results
             ),
         )
-        if commit_rc != 0:
-            error(f"git commit failed (rc={commit_rc})")
-            if tail:
-                error(tail)
+        if committed.rc != 0:
+            if committed.committed:
+                error(
+                    "sweep changes were committed, but the commit check "
+                    f"failed (rc={committed.rc})"
+                )
+            else:
+                error(f"git commit failed (rc={committed.rc})")
+            if committed.tail:
+                error(committed.tail)
             return 1
-        if _head_commit(ctx.repo_root) != head_before:
+        if committed.committed:
             success("committed sweep changes")
         else:
             info("--commit: nothing to commit (sweep moved nothing)")
@@ -711,18 +715,6 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     # failure of the sweep itself. Non-zero is reserved for a run that
     # couldn't proceed (e.g. directory-mode refusal above, rc 2).
     return 0
-
-
-def _head_commit(repo_root: Path) -> str:
-    """Current HEAD sha, or '' when unreadable (e.g. no commits yet)."""
-    proc = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=repo_root,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-    )
-    return proc.stdout.strip() if proc.returncode == 0 else ""
 
 
 def _sweep_commit_footprint(
