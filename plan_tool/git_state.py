@@ -80,7 +80,9 @@ def status_records_or_none(
             i += 1
             continue
         status, path = entry[:2], entry[3:]
-        if status[0] in ("R", "C"):
+        # Either column can carry a rename/copy: ``X`` for a staged one, ``Y``
+        # for a worktree-side one (an intent-to-add destination).
+        if "R" in status or "C" in status:
             origin = fields[i + 1] if i + 1 < len(fields) else ""
             records.append((path, origin or None))
             i += 2

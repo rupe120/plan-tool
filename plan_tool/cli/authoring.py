@@ -194,6 +194,7 @@ from plan_tool.style import detail, error, info, success, warn
 # ``_working_tree_dirty`` is re-exported under its historical name so the
 # test suite's ``authoring._working_tree_dirty`` import keeps resolving.
 
+from plan_tool.cli.commit_footprint import plan_commit_footprint
 from plan_tool.cli.gitcommit import CommitOutcome
 from plan_tool.cli.gitcommit import commit_all as _commit_all
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
@@ -243,32 +244,6 @@ def _detail_residual_commit_subject(slug: str) -> str:
     return f"plan({slug}): detail — residual authoring edits"
 
 
-def _detail_commit_footprint(repo_root: Path, plan_path: Path) -> "list[Path]":
-    """Paths ``detail --commit`` may stage: the plan file, its
-    ``plan-details/<slug>/`` directory (detail files, ``archive/`` moves, saved
-    reports), every ``steps[].detail`` pointer the plan declares (a pointer can
-    name a file outside that directory), and the project lessons directory.
-    Rebuilt at each commit so a pointer set mid-run is included; an unreadable
-    plan contributes no pointers rather than raising.
-    """
-    from plan_tool.lessons import PROJECT_LESSONS_REL
-    from plan_tool.review_persistence import plan_reports_dir
-
-    footprint = [
-        plan_path,
-        plan_reports_dir(plan_path).parent,
-        repo_root.joinpath(*PROJECT_LESSONS_REL),
-    ]
-    try:
-        plan = parse_plan(plan_path)
-    except Exception:  # noqa: BLE001 — footprint must never abort a commit
-        return footprint
-    footprint.extend(
-        repo_root / step.detail for step in plan.steps if step.detail
-    )
-    return footprint
-
-
 def _commit_if_dirty(
     repo_root: Path, subject: str, footprint: "list[Path]"
 ) -> "Optional[CommitOutcome]":
@@ -287,16 +262,6 @@ def _commit_if_dirty(
     if outcome.rc == 0 and not outcome.committed:
         return None
     return outcome
-
-
-def _commit_failure_text(outcome: CommitOutcome, what: str) -> str:
-    """Error line for a non-zero commit outcome; says whether HEAD moved."""
-    lead = (
-        f"{what} was committed, but the commit check failed (rc={outcome.rc})"
-        if outcome.committed
-        else f"git commit failed for {what} (rc={outcome.rc})"
-    )
-    return lead + (f": {outcome.tail}" if outcome.tail else "")
 
 
 def _commit_detail_step(
@@ -1843,7 +1808,7 @@ def cmd_detail(args: argparse.Namespace) -> int:
                 slug=_commit_slug,
                 step_id=step_id,
                 title=title,
-                footprint=_detail_commit_footprint(ctx.repo_root, path),
+                footprint=plan_commit_footprint(ctx.repo_root, path),
             )
             if res is None:
                 return  # clean tree — nothing to commit for this step
@@ -1851,7 +1816,7 @@ def cmd_detail(args: argparse.Namespace) -> int:
                 _committed_steps.append(step_id)
             else:
                 _commit_failed_steps.append(step_id)
-                error(_commit_failure_text(res, f"step {step_id}"))
+                error(res.describe(f"step {step_id}"))
     try:
         try:
             results = generate_detail(
@@ -2102,13 +2067,13 @@ def cmd_detail(args: argparse.Namespace) -> int:
                 res = _commit_if_dirty(
                     ctx.repo_root,
                     subject,
-                    _detail_commit_footprint(ctx.repo_root, path),
+                    plan_commit_footprint(ctx.repo_root, path),
                 )
                 if res is not None:
                     if res.rc == 0:
                         success(f"committed {label}")
                     else:
-                        error(_commit_failure_text(res, label))
+                        error(res.describe(label))
                         rc = 1
         return rc
     except KeyboardInterrupt:

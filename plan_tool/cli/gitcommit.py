@@ -256,6 +256,15 @@ class CommitOutcome(NamedTuple):
     tail: str
     committed: bool
 
+    def describe(self, what: str) -> str:
+        """Error line for a non-zero outcome; says whether HEAD moved."""
+        lead = (
+            f"{what} was committed, but the commit check failed (rc={self.rc})"
+            if self.committed
+            else f"git commit failed for {what} (rc={self.rc})"
+        )
+        return lead + (f": {self.tail}" if self.tail else "")
+
 
 def commit_all(
     repo_root: Path, subject: str, paths: Sequence[Path]
@@ -288,16 +297,17 @@ def commit_all(
         if rel is None:
             continue  # not under repo_root — nothing here to commit
         absolute = repo_root.resolve() / rel
+        on_disk_or_index = os.path.lexists(absolute) or _in_index(repo_root, rel)
+        if not on_disk_or_index and not _in_head(repo_root, rel):
+            continue  # nothing there to commit, ignored or not
         if rel != "." and path_is_gitignored(repo_root, absolute):
             print(
                 f"warning: not committing gitignored path: {rel}",
                 file=sys.stderr,
             )
             continue
-        if os.path.lexists(absolute) or _in_index(repo_root, rel):
+        if on_disk_or_index:
             stageable.append(rel)
-        elif not _in_head(repo_root, rel):
-            continue
         entries.append(rel)
     if not entries:
         return nothing

@@ -694,15 +694,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
             ),
         )
         if committed.rc != 0:
-            if committed.committed:
-                error(
-                    "sweep changes were committed, but the commit check "
-                    f"failed (rc={committed.rc})"
-                )
-            else:
-                error(f"git commit failed (rc={committed.rc})")
-            if committed.tail:
-                error(committed.tail)
+            error(committed.describe("sweep changes"))
             return 1
         if committed.committed:
             success("committed sweep changes")

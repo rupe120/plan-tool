@@ -179,6 +179,23 @@ class TestCommitAll:
         assert "ign.txt" in capsys.readouterr().err
         assert _head_files(tmp_path) == ["a.txt"]
 
+    def test_absent_ignored_entry_is_skipped_without_a_warning(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        # Nothing exists there, so nothing is being left out: no warning.
+        self._repo(tmp_path)
+        (tmp_path / ".gitignore").write_text(".plan-tool/\n")
+        _git(tmp_path, "add", ".gitignore")
+        _git(tmp_path, "commit", "-q", "-m", "ignore")
+        (tmp_path / "a.txt").write_text("a\n")
+
+        rc, tail, committed = commit_all(
+            tmp_path, "s", [tmp_path / ".plan-tool" / "lessons", tmp_path / "a.txt"]
+        )
+
+        assert rc == 0 and committed, tail
+        assert "gitignored" not in capsys.readouterr().err
+
     def test_expected_path_left_dirty_is_reported_by_name_with_nonzero_rc(
         self, tmp_path: Path
     ) -> None:

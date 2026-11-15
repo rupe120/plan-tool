@@ -211,19 +211,24 @@ the tree clean between steps (load-bearing for the test-authoring gate, same as
 - **Footprint staging:** every commit (per-step, batch, residual) stages and
   commits only the plan file, the plan's `plan-details/<slug>/` directory, every
   `steps[].detail` file the plan declares, and the project lessons directory
-  (`_detail_commit_footprint`). An unrelated file that changes during the run
+  (`plan_commit_footprint` in `plan_tool/cli/commit_footprint.py`, the same
+  rule `completeness-audit` and `run` use). An unrelated file that changes during the run
   stays out of the commit. A gitignored footprint path is skipped with a warning.
 - **Per-step:** each written step commits with subject
   `plan(<slug>): detail step N — <title>`; a step that skips (already authored)
   or splits does **not** commit. A clean footprint at a step's turn is a silent
   no-op (no spurious "nothing to commit" failure). After the first failed
   per-step commit (e.g. a hook rejection leaves that step's files staged), later
-  steps are left uncommitted on disk. The concurrent (`--jobs>1`) path commits
+  steps are left uncommitted on disk. Per-step commits also stop once an
+  earlier step failed and left debris on disk (for example an orphaned detail
+  file from a frontmatter-update failure): the debris sits inside
+  `plan-details/<slug>/`, so the next step's footprint commit would carry it
+  under the wrong subject. The concurrent (`--jobs>1`) path commits
   once at end of run, not per step.
 - **Post-commit clean check:** a footprint path still dirty after the commit
   (e.g. a hook rewrote it) makes the command exit non-zero and names the path.
-- **Residual sweep:** if the tree is still dirty after the run (e.g. completeness-
-  tail edits), one final commit `plan(<slug>): detail — residual authoring edits`.
+- **Residual sweep:** if the footprint is still dirty after the run (e.g.
+  completeness-tail edits or the grounding stamp), one final commit `plan(<slug>): detail — residual authoring edits`.
 - **Hook-aware:** no `--no-verify` — a pre-commit hook rejection surfaces as a
   non-zero rc that flags the run (the files are still on disk).
 

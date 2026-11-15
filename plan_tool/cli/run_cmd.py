@@ -97,6 +97,7 @@ from plan_tool.cli.gitcommit import (
 # stays the patch point the test suite monkeypatches (mirrors authoring.py).
 from plan_tool.cli.gitcommit import working_tree_dirty as _working_tree_dirty
 from plan_tool.cli.parser import Handler, make_yes_parent
+from plan_tool.cli.commit_footprint import plan_commit_footprint
 from plan_tool.git_state import changed_paths_or_none, status_records_or_none
 from plan_tool.review_persistence import plan_reports_dir
 
@@ -509,13 +510,13 @@ def _green_commit_failure_msg(
         )
     else:
         msg = (
-            f"git commit failed (rc={outcome.rc}) for green step {step_id}"
-            f"{halt}. The step's work is staged/uncommitted in the working "
-            f"tree — inspect with `git status` and `git diff` (recover with "
-            f"`git reset`)."
+            f"--commit did not commit green step {step_id} (rc={outcome.rc})"
+            f"{halt}. The step's work is left in the working tree — inspect "
+            f"with `git status` and `git diff` (`git reset` unstages anything "
+            f"left staged)."
         )
     if outcome.tail:
-        msg += f" git: {outcome.tail}"
+        msg += f" Reason: {outcome.tail}"
     return msg
 
 
@@ -550,10 +551,13 @@ def _step_footprint(
 ) -> "tuple[Optional[list[Path]], str]":
     """Paths a green ``run --commit`` step may commit, or ``(None, reason)``.
 
-    The plan file, its detail directory and declared ``steps[].detail`` files,
-    the archive outputs, and ``after - baseline`` (both sides of a rename). The
-    git delta holds path names only, so a path already dirty at the baseline is
-    excluded even if the step edited it. An unreadable snapshot fails closed.
+    Two parts. The paths ``run`` itself owns are always committed: the plan's
+    :func:`plan_commit_footprint`, the archive outputs, and ``run-prefs.json``
+    (written before the baseline, and not gitignored in every repo). The
+    step's other writes are ``after - baseline`` (both sides of a rename); the
+    delta holds path names only, so a path already dirty at the baseline is
+    left out of that part even if the step edited it. An unreadable snapshot
+    fails closed.
     """
     root = ctx.repo_root
     if baseline is None:
@@ -567,7 +571,11 @@ def _step_footprint(
     rels: set[str] = set(delta)
     rels.update(origins[dest] for dest in delta if dest in origins)
 
-    fixed: list[Path] = [plan_path, plan_reports_dir(plan_path).parent]
+    fixed: list[Path] = [
+        plan_path,
+        plan_reports_dir(plan_path).parent,
+        _run_prefs_path(root),
+    ]
     plan_file = plan_path
     if archive_outcome is not None:
         fixed.extend(
@@ -580,14 +588,7 @@ def _step_footprint(
             plan_file = archive_outcome.archived_to
         if manifest_path is not None:
             fixed.append(manifest_path)
-    try:
-        fixed.extend(
-            root / step.detail
-            for step in parse_plan(plan_file).steps
-            if step.detail
-        )
-    except Exception:  # noqa: BLE001 — the footprint must never abort a commit
-        pass  # unreadable plan: the plan file and details dir still count
+    fixed.extend(plan_commit_footprint(root, plan_file))
     return fixed + [root / rel for rel in sorted(rels)], ""
 
 

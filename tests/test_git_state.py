@@ -130,6 +130,23 @@ class TestStatusRecordsOrNone:
         (tmp_path / "x.txt").write_text("x", encoding="utf-8")
         assert status_records_or_none(tmp_path) == [("x.txt", None)]
 
+    def test_worktree_side_rename_origin_is_not_parsed_as_its_own_record(
+        self, tmp_path: Path
+    ) -> None:
+        """An intent-to-add destination reports `` R new <NUL> origin``; the
+        origin is the rename source, not a separate status entry."""
+        _init_git_repo(tmp_path)
+        (tmp_path / "src").mkdir()
+        (tmp_path / "src" / "old.py").write_text(
+            "one\ntwo\nthree\nfour\n", encoding="utf-8"
+        )
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-q", "-m", "init"], tmp_path)
+        (tmp_path / "src" / "old.py").rename(tmp_path / "new.py")
+        _run_git(["add", "-N", "new.py"], tmp_path)
+        assert status_records_or_none(tmp_path) == [("new.py", "src/old.py")]
+        assert changed_paths_or_none(tmp_path) == {"new.py"}
+
     def test_records_are_none_when_git_unreadable(self, tmp_path: Path) -> None:
         assert status_records_or_none(tmp_path) is None
 

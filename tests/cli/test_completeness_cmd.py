@@ -6922,8 +6922,8 @@ class TestCompletenessCommitFootprint:
     def test_completeness_commit_uses_the_detail_footprint_with_plan_dir_and_declared_details(
         self, tmp_repo
     ) -> None:
-        from plan_tool.cli.authoring import (
-            _detail_commit_footprint as _completeness_commit_footprint,
+        from plan_tool.cli.commit_footprint import (
+            plan_commit_footprint as _completeness_commit_footprint,
         )
 
         plan_path = tmp_repo.add_plan("1-demo", title="Demo")

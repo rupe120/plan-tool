@@ -43,6 +43,7 @@ group; the layering rules are in [`CLAUDE.md`](../CLAUDE.md) § "Architecture"
 | --- | --- |
 | `__init__.py` | Package surface: the entry point and the intent-grouped subcommand catalog. |
 | `app.py` | `main()`, dispatch assembly, and top-level error handling. |
+| `commit_footprint.py` | Which paths a plan owns for `--commit` (`plan_commit_footprint`), shared by `detail`, `completeness-audit` and `run`. |
 | `parser.py` | argparse construction and the per-module subparser registration seam. |
 | `annotate_cmd.py` | `annotate`. |
 | `authoring.py` | The plan-writing verbs (`create`, `detail`, …). |

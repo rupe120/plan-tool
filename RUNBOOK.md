@@ -900,7 +900,8 @@ vs blocking), see [`docs/how-to/pipeline/run.md`](docs/how-to/pipeline/run.md):
     (behavior unchanged).
   - **Ordering with `--commit`:** on the completing step the archive runs
     **before** the commit, so the plan move + manifest deregister ride the
-    terminal step's green commit (`git add -A` captures them). The tree is
+    terminal step's green commit (the archive outputs are part of the step's
+    commit footprint). The tree is
     clean afterward — a follow-up `--commit` run isn't blocked by the
     clean-tree precheck.
 

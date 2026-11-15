@@ -659,23 +659,15 @@ def finalize_completeness_run(
 
     if getattr(args, "commit", False) and not args.json and budget.enabled:
         from plan_tool.detail import _plan_slug as _detail_plan_slug
-        from plan_tool.cli.authoring import _detail_commit_footprint
+        from plan_tool.cli.commit_footprint import plan_commit_footprint
 
         committed = commit_all(
             ctx.repo_root,
             _completeness_commit_subject(_detail_plan_slug(path)),
-            _detail_commit_footprint(ctx.repo_root, path),
+            plan_commit_footprint(ctx.repo_root, path),
         )
         if committed.rc != 0:
-            lead = (
-                "completeness edits were committed, but the commit check failed"
-                if committed.committed
-                else "git commit failed"
-            )
-            error(
-                f"{lead} (rc={committed.rc})"
-                + (f": {committed.tail}" if committed.tail else "")
-            )
+            error(committed.describe("completeness edits"))
             return 1
         if committed.committed:
             success("committed completeness edits")
