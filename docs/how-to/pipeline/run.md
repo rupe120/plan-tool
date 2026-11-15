@@ -366,15 +366,28 @@ it is given.
 - **Plan-tool's own files follow `.gitignore`:** every footprint includes
   `.plan-tool/`, so the repo's ignore rules decide which of its files are
   committed. Before its clean-tree check, a `--commit` verb on an otherwise
-  clean tree with no `.plan-tool/.gitignore` writes the default and commits it
-  on its own as `plan-tool: ignore runtime state by default`
-  (`commit_footprint.commit_state_ignore`). The file is tracked, so the team
-  shares and edits one copy; it lists plan-tool's runtime state (`runs/`,
-  `run-prefs.json`, `telemetry/`, `reviews/`, `checkpoints/`, the mutation lock,
-  bench runs, impact analyses, …), so writes made after a verb's last commit,
-  such as the run-log end record, never block the next `--commit`. It is never
-  overwritten. A repo that tracks a runtime file keeps committing it, and its
-  late writes are that repo's choice to commit.
+  clean tree with no `.plan-tool/.gitignore` fills the gaps in the repo's rules
+  for plan-tool's runtime state (`runs/`, `run-prefs.json`, `telemetry/`,
+  `reviews/`, `checkpoints/`, the mutation lock, impact analyses, …): it writes
+  only the patterns no existing rule decides either way, and commits the file on
+  its own as `plan-tool: ignore runtime state by default`
+  (`commit_footprint.commit_state_ignore`). A nested `.gitignore` outranks the
+  root one, which is why it never repeats a decided pattern. Writes made after a
+  verb's last commit, such as the run-log end record, then never block the next
+  `--commit`.
+
+  | Situation | Behavior |
+  | --- | --- |
+  | every pattern already decided by the repo's rules | no file written |
+  | file present | never overwritten; the team edits the tracked copy |
+  | file deleted in a commit | not re-created: that deletion is the opt-out |
+  | tree dirty | nothing written; the clean-tree check refuses as usual |
+  | commit rejected (e.g. a commit-msg hook) | file removed, warning names the fix: add the paths to `.gitignore` |
+  | committed, then rewritten by a hook | warning; the clean-tree check then refuses |
+
+  The default commit lands at the clean-tree check, so a verb that then refuses
+  on a later argument check still leaves it in history. A repo that tracks a
+  runtime file keeps committing it, and its late writes are that repo's choice.
 
 ## After the plan completes — the two-loop verification tail
 

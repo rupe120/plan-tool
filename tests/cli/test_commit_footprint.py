@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from plan_tool.cli.commit_footprint import plan_commit_footprint
 
 
@@ -141,3 +143,74 @@ def test_default_ignore_is_not_written_on_a_dirty_tree(tmp_path: Path) -> None:
     commit_state_ignore(tmp_path)
     assert not (tmp_path / ".plan-tool" / ".gitignore").exists()
     assert _log(tmp_path) == ["init"]
+
+
+def test_existing_rules_are_not_overridden_only_gaps_are_written(tmp_path: Path) -> None:
+    """A nested .gitignore outranks the root one, so the default writes only
+    patterns no rule decides: a root negation that keeps a review stays."""
+    from plan_tool.cli.commit_footprint import commit_state_ignore
+
+    _repo(tmp_path)
+    (tmp_path / ".gitignore").write_text(
+        ".plan-tool/reviews/*\n!.plan-tool/reviews/keep.json\n.plan-tool/runs\n",
+        encoding="utf-8",
+    )
+    _git(tmp_path, "add", ".gitignore")
+    _git(tmp_path, "commit", "-q", "-m", "rules")
+    commit_state_ignore(tmp_path)
+
+    written = (tmp_path / ".plan-tool" / ".gitignore").read_text(encoding="utf-8")
+    assert "/reviews/" not in written and "/runs/" not in written
+    assert "/telemetry/" in written and "/run-prefs.json" in written
+    keep = tmp_path / ".plan-tool" / "reviews" / "keep.json"
+    keep.parent.mkdir(parents=True)
+    keep.write_text("{}\n", encoding="utf-8")
+    assert "?? .plan-tool/reviews/keep.json" in _git(tmp_path, "status", "--porcelain", "-uall")
+
+
+def test_no_file_when_the_repo_already_decides_everything(tmp_path: Path) -> None:
+    from plan_tool.cli.commit_footprint import commit_state_ignore
+
+    _repo(tmp_path)
+    (tmp_path / ".gitignore").write_text(".plan-tool/\n", encoding="utf-8")
+    _git(tmp_path, "add", ".gitignore")
+    _git(tmp_path, "commit", "-q", "-m", "ignore all")
+    commit_state_ignore(tmp_path)
+    assert not (tmp_path / ".plan-tool" / ".gitignore").exists()
+    assert len(_log(tmp_path)) == 2
+
+
+def test_committed_deletion_is_an_opt_out(tmp_path: Path) -> None:
+    from plan_tool.cli.commit_footprint import commit_state_ignore
+
+    _repo(tmp_path)
+    commit_state_ignore(tmp_path)
+    _git(tmp_path, "rm", "-q", ".plan-tool/.gitignore")
+    _git(tmp_path, "commit", "-q", "-m", "we manage our own rules")
+    commit_state_ignore(tmp_path)
+    assert not (tmp_path / ".plan-tool" / ".gitignore").exists()
+    assert _log(tmp_path)[0] == "we manage our own rules"
+
+
+@pytest.mark.parametrize("hook", ["reject", "rewrite"])
+def test_a_failed_default_commit_is_reported(
+    tmp_path: Path, capsys, hook: str
+) -> None:
+    """A hook that rejects the commit (file removed) or rewrites the file after
+    it lands (file kept) both say what happened and what to do instead."""
+    from plan_tool.cli.commit_footprint import commit_state_ignore
+
+    _repo(tmp_path)
+    script = (
+        "#!/bin/sh\nexit 1\n" if hook == "reject"
+        else "#!/bin/sh\necho '# touched' >> .plan-tool/.gitignore\n"
+    )
+    hook_path = tmp_path / ".git" / "hooks" / "pre-commit"
+    hook_path.write_text(script, encoding="utf-8")
+    hook_path.chmod(0o755)
+
+    commit_state_ignore(tmp_path)
+
+    err = capsys.readouterr().err
+    assert ".plan-tool/.gitignore" in err and "your .gitignore" in err
+    assert (tmp_path / ".plan-tool" / ".gitignore").exists() == (hook == "rewrite")

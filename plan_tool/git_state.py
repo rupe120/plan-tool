@@ -41,8 +41,8 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
     wholly-untracked dir to its name, so a test in a brand-new ``tests/`` is
     seen as ``tests/test_x.py``. ``-z`` disables git's path quoting/escaping,
     so spaces/tabs/non-ASCII come through verbatim; each NUL record is
-    ``XY <path>`` and a rename/copy (``X`` in ``R``/``C``) is followed by an
-    extra NUL field (the origin) we skip; :func:`status_records_or_none`
+    ``XY <path>`` and a rename/copy (``R``/``C`` in either column) is followed
+    by an extra NUL field (the origin) we skip; :func:`status_records_or_none`
     reads those origins.
     """
     records = status_records_or_none(repo_root)

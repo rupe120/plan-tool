@@ -3011,7 +3011,9 @@ class TestDetailCommitHelpers:
         def boom(*_a, **_k):
             raise exc
 
-        monkeypatch.setattr(authoring, "_commit_all", boom)
+        import plan_tool.cli.gitcommit as gitcommit
+
+        monkeypatch.setattr(gitcommit, "_commit_footprint", boom)
         res = authoring._commit_if_dirty(
             tmp_path, "plan(demo): subj", [tmp_path / "new.md"]
         )

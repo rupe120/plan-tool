@@ -248,17 +248,11 @@ def _commit_if_dirty(
     repo_root: Path, subject: str, footprint: "list[Path]"
 ) -> "Optional[CommitOutcome]":
     """Commit ``footprint`` under ``subject``; ``None`` when nothing inside it
-    changed (unrelated dirt elsewhere does not count).
-    **Never raises** — a git subprocess failure (``OSError``: missing
-    binary, removed cwd, EMFILE) or a ``ValueError`` from decoding git/hook
-    output degrades to a non-zero, uncommitted outcome so every caller flags
-    the run rather than crashing. Shared by the per-step commit and the
-    end-of-run sweep so both are guarded identically.
+    changed (unrelated dirt elsewhere does not count). Never raises, because
+    ``commit_all`` never does. Shared by the per-step commit and the end-of-run
+    sweep.
     """
-    try:
-        outcome = _commit_all(repo_root, subject, footprint)
-    except (OSError, ValueError) as exc:
-        return CommitOutcome(1, f"git subprocess error: {exc}", False)
+    outcome = _commit_all(repo_root, subject, footprint)
     if outcome.rc == 0 and not outcome.committed:
         return None
     return outcome
