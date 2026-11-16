@@ -970,9 +970,10 @@ working straight down the tiers.
   · Principle `converge-on-correct-plan`
 - **Absorbs #425 and #388 (merged 2026-11-14):** (a) the router's must-read
   list names `integrations/shared/DIRECTIVES.md` § "Which model to run a
-  subcommand with", so a driving session states the backend and model before
-  any model-backed command and passes them explicitly; the mapping stays in
-  the directives and no model ids are copied into the routers. This does not
+  subcommand with", so a driving session applies its selection rule (a
+  configured `.plan-tool/backends.json` supplies the choices) before any
+  model-backed command; the mapping stays in the directives and no model ids
+  are copied into the routers. This does not
   cover a repository with no skill installed, which was #425's motivating case
   and is an install-readiness issue. (b) #388's router-table drift decision
   (generated template or drift lint over the three hand-maintained copies of
