@@ -6616,6 +6616,35 @@ class TestApplyMode:
             "plan-tool create plan-a"
         )
 
+    def test_apply_summary_is_destination_neutral_and_rows_name_each_real_destination(
+        self, tmp_path: Path, capsys
+    ) -> None:
+        # A legacy recorded publication promotes to the root plan-seeds/, a new
+        # one to the nested default: the summary line must not claim either,
+        # while each detail row and create handoff names its own destination.
+        from plan_tool.cli.roadmap_cmd import _render_apply_outcome
+        from plan_tool.roadmap import APPLY_OUTCOME_APPLIED, RoadmapApplyResult
+
+        legacy = tmp_path / "plan-seeds" / "plan-old.md"
+        nested = tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan-new.md"
+        _render_apply_outcome(
+            RoadmapApplyResult(
+                outcome=APPLY_OUTCOME_APPLIED,
+                promotions=(
+                    ("plan-old", tmp_path / "draft-old.md", legacy),
+                    ("plan-new", tmp_path / "draft-new.md", nested),
+                ),
+            ),
+            slug="rm",
+            repo_root=tmp_path,
+        )
+        out = capsys.readouterr().out
+        summary = next(line for line in out.splitlines() if "promoted 2 seed(s)" in line)
+        assert "plan-seeds" not in summary
+        assert "  plan-old: plan-seeds/plan-old.md" in out
+        assert "  plan-new: docs/implementation-plans/plan-seeds/plan-new.md" in out
+        assert "plan-tool create plan-old --from-existing plan-seeds/plan-old.md" in out
+
     def test_apply_recommended_prints_preview_and_actuate_hint(
         self,
         tmp_path: Path,
