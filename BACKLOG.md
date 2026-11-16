@@ -1095,7 +1095,11 @@ working straight down the tiers.
   scope was cut to the router-only slice 2026-11-14.
 - **Evidence gate:** the gate is met when a consuming-repo session with the
   skill installed drives a plan through both audit gates and the post-run tail.
-  Record whether the four rules were broken again. If none was, close this
+  Record whether any rule the incident broke was broken again: the audit
+  stopped at the three-snapshot window; a scope move made before surfacing it;
+  an owner answer not recorded as a dated decision line; findings not presented
+  as the plan-gap map; plan steps implemented by hand instead of through `run`;
+  the post-run reconcile and code-review tail skipped. If none was, close this
   entry; if any was, stop and file the full split as its own entry, per Stop /
   defer. Closing with "no action" is a valid outcome.
 - **Status:** the router slice shipped 2026-11-16 (a phase table in each router,
