@@ -25,7 +25,7 @@ execution history remains on Integration-local branches; publication is not assu
 
 BACKLOG #492 owns the investigation and the staged handoff to #493, #462 and
 #494. Existing #490 owns finding-disposition records; #490 also owns the deliberate-roadmap-departure decision
-(merged from #485); #484 owns fix-induced finding marks.
+(merged from #485). The `edit_drift` advisory already names the findings it attributes to the previous apply (retired #484, `docs/history/backlog-decisions.md`).
 Their contracts must not be duplicated under shared-context terminology.
 
 The first useful result is a reviewed decision about the smallest composition

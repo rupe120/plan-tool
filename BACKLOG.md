@@ -366,7 +366,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | #484 · #487 · #518 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #484, #487 and #518 (P1) are the `edit_drift` attribution, the infrastructure-plan audit rule and the installed-router phase rules. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
+| **Now — drain candidates (unpicked)** | #487 · #518 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #487 and #518 (P1) are the infrastructure-plan audit rule and the installed-router phase rules. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -8262,53 +8262,6 @@ working straight down the tiers.
   close with "no action".
 - **Status:** not started.
 - **Origin:** tracking-process review, 2026-10-10.
-
-**#484 — Mark each finding the `edit_drift` advisory attributes to the previous apply, and count them**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `converge-on-correct-plan`
-- **What:** the `edit_drift` advisory (`convergence_diagnosis.py`,
-  `classify_edit_drift`) says only that a strict majority of new findings match
-  the prior-apply set. The report does not say which findings those are, so a
-  finding against surface the previous round's fix added reads the same as a
-  defect in what the plan always promised.
-- **Evidence:** a Integration fix added a deployment-role construct to
-  `cdk-infrastructure-and-environments`. The next round produced 8 new HIGH
-  findings across that plan and `bitbucket-deployment-pipelines`, all on the
-  new construct (Integration reports under
-  `plan-details/<plan>/reports/20261010-*-completeness.md`).
-- **Effort:** small to medium; `classify_edit_drift` already builds the
-  window-local prior-apply set, so the work is exposing its matches per finding
-  and rendering them.
-- **Risks / fallout:** the match is a judgment; a wrong mark could teach
-  operators to dismiss a real defect.
-- **Dependencies:** none.
-- **Outcome:** `EditDriftAdvisory` carries the matched findings, and the
-  `edit_drift` rendering (`_edit_drift_lines`) marks each one and states the
-  count of marked findings beside the total.
-- **In scope:** `classify_edit_drift`, `EditDriftAdvisory`,
-  `_edit_drift_lines`, and their tests.
-- **Out of scope / Non-goals:** a separate attribution rule or a plan-snapshot
-  diff-to-finding mapping (deliberately not taken, cut 2026-11-14: it overlaps
-  the shipped `edit_drift` match); a new completeness-report field; marking
-  when the advisory does not fire; suppressing, demoting, or excluding a marked
-  finding from the blocking set; changing the stopping rule (#125) or any
-  continuation or exit behavior (`edit_drift` stays recommend-only).
-- **Allowed behavior changes:** the per-finding mark and count in the existing
-  advisory output only.
-- **Allowed reorganization:** none.
-- **Verification:** a fixture where `classify_edit_drift` fires asserts the
-  advisory lists exactly the matched findings and the rendering marks them and
-  gives the count; an unmatched finding is not marked.
-- **Stop / defer:** stop if a match cannot be tied to a finding without
-  inferring from prose; surface that rather than guess.
-- **Approach:** direct; extend the existing advisory.
-- **Quality:** `convergence` — separates fix-induced growth from real
-  non-convergence.
-- **Status:** not started.
-- **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
 **#486 — Say in `detail`'s description and console output that it runs a completeness audit and saves a report**
 
