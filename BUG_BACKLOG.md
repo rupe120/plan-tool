@@ -1047,15 +1047,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
-### Roadmap promotion summary names the nested destination even for legacy publications
-
-- **Files:** `plan_tool/cli/roadmap_cmd.py:_render_apply_outcome`; `tests/cli/test_roadmap_cmd.py`.
-- **Symptom:** the success summary always says promotion goes to `docs/implementation-plans/plan-seeds/`, while detailed rows and create handoffs use each real destination. A legacy recorded publication can retain root `plan-seeds/`, making the summary misleading.
-- **Fix:** render a destination-neutral summary or derive it from actual promotion results; preserve detailed paths and all publication semantics. Cover legacy and nested outcomes.
-- **Approach:** direct; **Readiness:** ready; **Tier:** working.
-- **Scope contract:** rendered promotion summary and focused tests only; no seed moves, storage/provenance changes or path-policy redesign. Verify existing rendering tests before applying a fix.
-- **Evidence:** `_render_apply_outcome` contains the unconditional nested-path string; `plan_tool/seed_paths.py:published_seeds_dir` retains legacy roots. Static confirmation only; this task changes no runtime code.
-
 ## ROADMAP
 
 Owner-tracked. The `roadmap` verb is experimental work the
