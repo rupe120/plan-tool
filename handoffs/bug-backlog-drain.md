@@ -100,72 +100,10 @@ they resolve.
   shown to fail under the old behavior. A repeated non-canonical heading in a
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
-
 - 2026-11-15 — out-of-tree detail archive writes: `pending`, narrowed to
   `detail --split` renames and `evidence-gated` (`detail --force` never writes
   outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
   tree).
-
-- 2026-11-16 — drain survey of `BUG_BACKLOG.md`: no RISK section, and no
-  `direct` + `ready` entry in BUG or MINOR until the ten-site run-log entry was
-  split (owner decision). Other unlabelled `direct` entries stay out:
-  `extract_h2_sections` defaults (compatibility review first), `install-skill`
-  TOCTOU (re-open on a concurrent-install use case), `renderer.py`
-  `MUTATING_MODES` (move it to a leaf first), fence-check consolidation (identity
-  check first).
-- 2026-11-16 — run-log calls with a reachable writer: `fixed a7aee31af` for
-  `lessons consolidate` (writer open, no sink bound); refuted for the other four
-  (`review_plan_full`, `extract_and_append_review_lessons`, `run_all_done_steps`,
-  `_run_deep_for_step`): `cli/review_cmd.py` binds the sink around them. Runtime
-  coverage exists only for `reconcile_plan`
-  (`tests/test_review.py::TestCmdReviewSaveByDefault::test_claude_calls_land_in_the_run_log`,
-  with `invoker=None`, so not the lessons call); the rest rely on
-  `CALLER_BOUND_SITES`, which checks each call sits inside its caller's bind.
-  Entry removed in `7db641e34`. These sites write no `claude_call_start`, so
-  `runs profile` omits them (token totals are complete): retired, owner
-  decision, recorded in `docs/history/backlog-decisions.md`.
-- 2026-11-16 — overlap sweep: the split's no-writer entry duplicated BACKLOG
-  #176 (`render_jira_export`, `classify_plan_implementation`) and #177
-  (`suggest_slug`). It is now a MINOR entry for the two callerless functions
-  only; `DEFERRED_SITES` reasons cite the tracking entry; #177 is unparked
-  (`b71e9ce2f` met its condition) and `decision-needed`. Owner decision.
-  Review (`HEAD~2..HEAD`, `/code-review high`): ten prose findings, all fixed.
-  #332 is not an instance of #537 (`propose_references` binds a sink and is in
-  `LOGGED_SITES`; #332's own "no sink" claim looks stale, left for its owner);
-  #177 is `decision-needed`, not `ready`, and its 2026-10-02 note is past tense;
-  #176 counts three verbs and notes `reconcile-plan-walk`'s unlisted site; the
-  decision record names logged commands (`verify-all`, not its aliases), states
-  the signature cost directly, and reopens only for latency or `prompt_sha256`;
-  callerless reasons cite their entry; the ambient-writer line left the
-  callerless entry. #537 also names `propose_distilled_seed_from_claude` (binds,
-  unpinned).
-- 2026-11-16 — review of `HEAD~4..HEAD` (`/code-review high`), pass 1: eight
-  findings. Fixed: the bench's reconcile trial opened a run log but bound no
-  sink, so its records carried no tokens (same class as `lessons consolidate`;
-  now bound, with a test); the coverage guard only searched the caller file for
-  the phase (now checks the call is inside the `with`, verified by mutation);
-  the coverage comment overclaimed `find_lesson_equivalences` (now names the
-  library-only route); this log's test citation and bench claim; the lessons
-  sink is bound once around the loop. Refuted: the `detail` strict-check route
-  to `find_lesson_equivalences` is unlogged but unreachable, since no CLI path
-  sets `strict_check` or `warn_check`. Declined: a `claude_call_start` in
-  `lessons consolidate` (the prompt is rendered per pair inside
-  `find_lesson_equivalences`; same deliberately-not as above); the bind
-  overriding the retry attempt number (every `bind_shell_sink` site does this
-  by design). Pass 2 (`HEAD~6..HEAD`): eight findings, four of them on the
-  coverage guard pass 1 added, so the review stopped here under exit 2 (the loop
-  is auditing its own edits). Fixed: every call of a caller-bound site in its
-  caller module must sit inside the bind, and calls inside a nested def or lambda
-  no longer count; the bench bind is pinned as a second caller of
-  `review_plan_full`; the deferred-site comment and message name
-  `CALLER_BOUND_SITES`; `_read_log_stats`'s docstring no longer says reconcile
-  trials carry no tokens; the ambient-writer "deliberately not done" line moved
-  to the deferred entry. Declined: the deferred-site check cannot see a
-  caller-side bind (said in its comment); a nested bind with another phase
-  mislabels the phase but still records the tokens; folding the
-  writer-or-`nullcontext` shape into one helper (incidental consolidation,
-  unverified). Class-wide guard (every function opening a `RunLogWriter` also
-  binds a sink): `tracked BACKLOG #537`, owner decision.
 
 ## Deliberately not in this handoff
 
