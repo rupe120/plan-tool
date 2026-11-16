@@ -2084,8 +2084,8 @@ def _render_apply_outcome(result: RoadmapApplyResult, *, slug: str, repo_root: P
         info(f"roadmap {slug}: no unpublished seed to promote.")
         return
     if result.outcome == APPLY_OUTCOME_APPLIED:
-        # Destination-neutral: a legacy recorded publication promotes to its recorded
-# root, so only the per-row paths below name where each seed went.
+        # Destination-neutral: a legacy recorded publication promotes to its
+        # recorded root, so only the per-row paths name where each seed went.
         success(f"roadmap {slug}: promoted {len(result.promotions)} seed(s)")
         for plan_id, _source, dest in result.promotions:
             detail(f"  {plan_id}: {_short_path(dest, repo_root)}")

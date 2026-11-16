@@ -6640,7 +6640,7 @@ class TestApplyMode:
         )
         out = capsys.readouterr().out
         summary = next(line for line in out.splitlines() if "promoted 2 seed(s)" in line)
-        assert "plan-seeds" not in summary
+        assert summary.rstrip().endswith("roadmap rm: promoted 2 seed(s)")
         assert "  plan-old: plan-seeds/plan-old.md" in out
         assert "  plan-new: docs/implementation-plans/plan-seeds/plan-new.md" in out
         assert "plan-tool create plan-old --from-existing plan-seeds/plan-old.md" in out
