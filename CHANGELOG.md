@@ -6,6 +6,24 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.4.0'></a>
+## 1.4.0 — 2026-11-16
+
+### Added
+
+- The first `--commit` in a repo without `.plan-tool/.gitignore` fills the gaps in its ignore rules for plan-tool's runtime state (run logs, `run-prefs.json`, telemetry, review and checkpoint caches, the mutation lock): it writes only the patterns the repo's own rules leave undecided, and commits the file on its own (`plan-tool: ignore runtime state by default`). The file is tracked so a team shares one copy. It is never overwritten, a committed deletion opts out, and a runtime file a repo already tracks stays tracked.
+- Projects can set `default_backend` and backend-specific `commands.<command>.model` defaults in `.plan-tool/backends.json`. Explicit invocation overrides take precedence, and bundled skill guidance honors project choices.
+
+### Changed
+
+- `--commit` on `run`, `detail`, `completeness-audit` and `manifest sweep` commits only the paths that verb wrote: the plan, its `plan-details/<slug>/` directory, declared detail files and lessons log, the files under `.plan-tool/` that `.gitignore` does not exclude, any archive moves, and for `run` the files the step changed. Changes another process makes elsewhere in the tree stay out of the commit (BACKLOG #209).
+- A failed `--commit` now says whether the commit landed. A commit that went in before a hook rewrote a file is reported as committed, with no `git reset` advice.
+- `roadmap` keeps every requirement the brief states. The smallest-proof rule now limits how a requirement is met and refuses work the brief does not ask for, but no longer drops a stated requirement; a stage that reads one as optional keeps it and records a `pending` decision for the owner. Stage 4 prefers several small, independently verifiable plans over one broad plan, with no plan-count target.
+
+### Fixed
+
+- `--commit` commits a staged delete (`git rm`, the old side of `git mv`), commits a symlink as a link, works from a project root nested below the git top level, and leaves pre-commit hooks' own glob matching alone.
+
 <a id='changelog-1.3.1'></a>
 ## 1.3.1 — 2026-11-12
 
