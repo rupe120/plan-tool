@@ -7386,17 +7386,6 @@ class TestEmitCoverageUnconfirmed:
         assert "terminal plan quota" in message
         assert "re-run with a live audit pass" not in message
 
-    def test_live_plan_quota_warns_without_caller_side_coordination(self, capsys) -> None:
-        from plan_tool.cli.completeness_phases import _warn_if_audit_incomplete
-
-        _warn_if_audit_incomplete(
-            {"early_stop_reason": "plan-quota", "passes_used": 2}, reuse=False
-        )
-
-        message = capsys.readouterr().err
-        assert "terminal plan quota" in message
-        assert "re-run with a live audit pass" not in message
-
 
 class TestRenderCoverageConfidenceMarkdown:
     def test_render_coverage_confidence_fires_even_when_sample_qualifies(

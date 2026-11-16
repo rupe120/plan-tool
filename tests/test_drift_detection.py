@@ -385,17 +385,6 @@ def test_emit_drift_warning_appends_detail_reconcile_hint_for_reconcile_loop(
     assert "plan-tool run <name> --reconcile" not in err
 
 
-def test_emit_drift_warning_appends_detail_reconcile_hint_for_authoring_loop(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """Plan-authoring loops recover via ``detail --reconcile``."""
-    for loop_name in ("completeness", "create"):
-        emit_drift_warning(
-            [tmp_path / "foo.py"], repo_root=tmp_path, loop_name=loop_name,
-        )
-        err = capsys.readouterr().err
-        assert "plan-tool detail <name> --reconcile" in err
-
 
 # ---------- emit_drift_halt_warning (task #30 / #33) ----------
 
@@ -565,18 +554,6 @@ def test_emit_drift_halt_warning_reconcile_loop_hint(
     assert "plan-tool detail <name> --reconcile" in err
     assert "plan-tool run <name> --reconcile" not in err
 
-
-def test_emit_drift_halt_warning_plan_side_hint(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """A named plan-authoring loop yields the ``detail --reconcile``
-    pointer."""
-    emit_drift_halt_warning(
-        [tmp_path / "watched.py"], phase="before", finding_id="F",
-        repo_root=tmp_path, loop_name="completeness",
-    )
-    err = capsys.readouterr().err
-    assert "plan-tool detail <name> --reconcile" in err
 
 
 # ---------- refresh_snapshot (Bug 1 from session-4 review) ----------

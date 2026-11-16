@@ -253,19 +253,6 @@ class TestEmitSplitProposal:
         assert "No plan or manifest entry was written." in out
         assert _SPLIT_PROPOSAL_ROADMAP_GUIDANCE in out
 
-    def test_emit_split_proposal_prints_roadmap_guidance(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        _emit_split_proposal(
-            _proposal(),
-            slug="seed",
-            source_path=tmp_path / "seed.md",
-            output_dir_override=tmp_path,
-            repo_root=tmp_path,
-            yes=True,
-        )
-        assert "plan-tool roadmap" in capsys.readouterr().out
-
     def test_emit_split_proposal_does_not_print_runnable_roadmap_command(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:

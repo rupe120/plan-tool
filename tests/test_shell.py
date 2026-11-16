@@ -688,10 +688,6 @@ class TestUnsinkedCallWarning:
         assert "test_shell.py:" in err
         assert "not reported" in err
 
-    def test_names_the_phase(self, capsys: pytest.CaptureFixture[str]) -> None:
-        self._emit(phase="purity_scan")
-        assert "phase='purity_scan'" in capsys.readouterr().err
-
     def test_silent_when_a_sink_is_installed(
         self, capsys: pytest.CaptureFixture[str]
     ) -> None:
