@@ -715,21 +715,13 @@ Durable re-open conditions for retired items are recorded in
   `run/roadmap-candidate-row-prose-amendments` (commit range through
   `efb78f0a`).
 
-### Run-log call pairing has open gaps around `plan_audit` and the sink-installing proposal sites
+### `_invoker_stats` isolates only the bare `shell_invoker`, so a wrapped invoker under `--jobs N` reads the shared `_last_stats`
 
-- **Files:** `plan_tool/review.py:_error_tracking_invoker`, `plan_tool/launcher.py:_invoke_and_log_end`,
-  `_invoker_stats`, `plan_tool/gates.py:suggest_gates`, `plan_tool/intent_proposal.py`,
-  `plan_tool/create.py:_propose_risk_profile_from_seed`.
-- **Symptom:** (1) a `plan_audit` missing-heading re-prompt writes two starts and two ends under one
-  `(phase, attempt=pass)` key, so a ledger cannot tell the calls apart. (2) `plan_audit`, `suggest_gates`,
-  `propose_intents`, and the risk-profile classifier write a start before the call; an invoker that raises
-  before reaching the shell leaves it without an end; `assess_direct_source_split_from_claude` has the inverse risk, an end sink
-  with its start coming only from a reporter that may carry no run log. (3) `_invoker_stats` only isolates the bare `shell_invoker`, not a wrapper of it, so a wrapped
-  invoker under `--jobs N` still reads the shared `_last_stats`.
-- **Fix:** a per-call attempt for the audit; an end on the raise path at each start site; thread-local stats for wrappers.
-- **Approach:** direct. The three start/sink blocks in `gates.py`, `intent_proposal.py` and `create.py`
-  are also near-identical and could share one scoped helper; that consolidation needs AST-verified
-  identity before anyone merges them.
+- **Files:** `plan_tool/launcher.py:_invoker_stats`.
+- **Symptom:** `_invoker_stats` returns per-call stats only when the invoker is the bare `shell_invoker`. A wrapper of it under `--jobs N` still reads the shared `_last_stats`, so concurrent workers can read each other's tokens. Not yet traced to a concrete caller that wraps the invoker.
+- **Fix:** thread-local stats for wrappers. Confirm a wrapping caller exists first.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+- **Origin:** split 2026-11-16 from "Run-log call pairing has open gaps"; the other two symptoms are retired in `docs/history/backlog-decisions.md`.
 
 ### `run --commit` can still commit a file another process writes during the backend call
 
