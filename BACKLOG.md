@@ -6430,6 +6430,10 @@ working straight down the tiers.
 - **Why:** a driver that treats "no `create-refused:` line" as "no refusal"
   misreads these. #502's scope fence read "seed paths", while its What line
   said "each pre-slug refusal"; the fence held and this entry carries the rest.
+- **Adjacent gap (same class):** a seed that exists but cannot be read or
+  decoded raises `UnicodeDecodeError` or `OSError` out of
+  `read_existing_description` and `_read_seed_body`, uncaught, so a driver sees a
+  traceback with no token.
 - **Decision needed:** whether the branch-collision decline joins the set. #502
   recorded its lack of a log as by design, and it happens after the slug
   resolves, so a token there is a different claim from the pre-slug ones.
@@ -6438,9 +6442,11 @@ working straight down the tiers.
 - **Scope contract:**
   - **Outcome:** each listed `create` refusal prints one stderr line carrying a
     closed reason token from the documented set.
-  - **In scope:** the four paths above (the collision decline once decided),
+  - **In scope:** the four paths above and the unreadable-seed gap (the
+    collision decline once decided),
     the token set, `DATA_CONTRACT.md`, tests.
-  - **Out of scope / Non-goals:** other subcommands; a persisted run record or
+  - **Out of scope / Non-goals:** other subcommands; the `--reprocess` mode and
+    failures after the slug resolves; a persisted run record or
     record location (an `architect`-tier decision); a `--json` result.
   - **Allowed behavior changes:** one added stderr line on each of these
     refusals; exit codes unchanged.

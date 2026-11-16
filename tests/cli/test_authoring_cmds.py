@@ -1173,7 +1173,7 @@ class TestCreatePreSlugRefusalReason:
         monkeypatch.setattr(
             authoring.RunLogWriter,
             "start",
-            lambda **_k: pytest.fail("a pre-slug refusal must not open a run log"),
+            lambda *_a, **_k: pytest.fail("a pre-slug refusal must not open a run log"),
         )
 
     def test_missing_seed_file_is_seed_unreadable(
@@ -1260,6 +1260,31 @@ class TestCreatePreSlugRefusalReason:
         )
         assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
 
+    @pytest.mark.parametrize("exc", [EOFError, KeyboardInterrupt])
+    def test_interrupted_prompt_puts_the_token_on_its_own_line(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+        exc: type[BaseException],
+    ) -> None:
+        """The prompt writes no newline; a line-oriented reader must still see the token."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, status="invalidated")
+        monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
+        location = locate_tracked_seed(source, repo_root=tmp_path)
+        assert location is not None
+
+        def interrupted(prompt: str) -> str:
+            sys.stderr.write(prompt)  # as input() does: no trailing newline
+            raise exc
+
+        assert not _confirm_invalidated_roadmap_seed(
+            location, yes=False, input_fn=interrupted
+        )
+        assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
+
     def test_non_tty_refusal_of_stale_seed_is_roadmap_seed_not_confirmed(
         self,
         tmp_path: Path,
@@ -1300,15 +1325,18 @@ class TestCreatePreSlugRefusalReason:
         import plan_tool.cli.authoring as authoring
 
         tree = ast.parse(Path(authoring.__file__).read_text(encoding="utf-8"))
-        emitted = {
-            call.args[0].value
+        calls = [
+            call
             for call in ast.walk(tree)
             if isinstance(call, ast.Call)
             and isinstance(call.func, ast.Name)
             and call.func.id == "_pre_slug_refusal"
-            and call.args
-            and isinstance(call.args[0], ast.Constant)
-        }
+        ]
+        # A non-literal argument would slip past the set comparison below.
+        assert all(
+            call.args and isinstance(call.args[0], ast.Constant) for call in calls
+        )
+        emitted = {call.args[0].value for call in calls}
         assert emitted == set(authoring.PRE_SLUG_REFUSAL_REASONS)
         contract = (
             Path(authoring.__file__).resolve().parents[2] / "DATA_CONTRACT.md"

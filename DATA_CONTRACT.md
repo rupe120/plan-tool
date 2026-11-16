@@ -728,9 +728,10 @@ fixed outside configuration.
 
 ## Pre-slug `create` refusals
 
-A `create` that refuses a seed before the slug resolves has no run log: the log
-is keyed by the slug. The refusal prints one stderr line, after the
-human-readable message, and exits `2` as before:
+A `create` that refuses a seed or an inline `--from` description before the slug
+resolves has no run log: the log is keyed by the slug. The refusal prints one
+stderr line, on its own line and after any human-readable message, and exits `2`
+as before:
 
 ```text
 create-refused: reason=<token>
@@ -747,12 +748,13 @@ persisted record and no `--json` form.
 | `roadmap-seed-unresolved` | a roadmap-tracked seed cannot be tied to its accepted roadmap: no accepted version, a plan row absent from it, or an unreadable roadmap or seed state |
 | `roadmap-seed-not-confirmed` | a roadmap-tracked seed is invalidated or digest-mismatched and the operator declined, or no `-y` was given on a non-interactive run |
 
-The set covers only these seed-reading refusals. Four other `create` refusals
-exit non-zero and print **no** `create-refused` line: the repo root not found, a
-failed slug resolution, an aborted plan-root confirmation, and the
-branch-collision decline (`BACKLOG.md` #538). A driver must treat a non-zero
-exit with no `create-refused` line as a refusal of unknown reason, never as "did
-not refuse". Every other subcommand is outside this set. A `create` that does
+The set covers only these refusals. Other `create` failures exit non-zero and
+print **no** `create-refused` line: the repo root not found, a failed slug
+resolution, an aborted plan-root confirmation and the branch-collision decline
+(`BACKLOG.md` #538), a seed that exists but cannot be read or decoded, the
+`--reprocess` mode, and any failure after the slug resolves. A driver must treat
+a non-zero exit with no `create-refused` line as a failure of unknown reason,
+never as "did not fail". Every other subcommand is outside this set. A `create` that does
 not refuse prints no `create-refused` line.
 
 ## Intentional exclusions

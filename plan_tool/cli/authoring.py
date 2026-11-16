@@ -325,7 +325,8 @@ PRE_SLUG_REFUSAL_REASONS = (
 
 def _pre_slug_refusal(reason: str) -> None:
     """Print the machine-readable reason line a driver reads on a pre-slug refusal."""
-    assert reason in PRE_SLUG_REFUSAL_REASONS, reason
+    if reason not in PRE_SLUG_REFUSAL_REASONS:
+        raise ValueError(f"unknown pre-slug refusal reason: {reason!r}")
     print(f"create-refused: reason={reason}", file=sys.stderr)
 
 
@@ -431,8 +432,9 @@ def _confirm_invalidated_roadmap_seed(
             f"{message}. Continue with {prompt_description}? [y/N]: "
         ).strip().lower()
     except (EOFError, KeyboardInterrupt):
-        _pre_slug_refusal("roadmap-seed-not-confirmed")
-        return False
+        # The prompt left no newline; keep the token on its own line.
+        print(file=sys.stderr)
+        answer = ""
     if answer not in {"y", "yes"}:
         _pre_slug_refusal("roadmap-seed-not-confirmed")
         return False
