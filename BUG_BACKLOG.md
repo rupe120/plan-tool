@@ -289,31 +289,55 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
 
-### Ten model-backed calls still write no start or end record to the run log, so run-log token totals undercount
+### Five model-backed calls that can reach a run writer still write no start or end record to the run log, so run-log token totals undercount
 
-- **Files:** `plan_tool/create.py` (`suggest_slug`), `plan_tool/review.py`
-  (`check_criteria_fulfillment`, `review_plan_full`,
-  `extract_and_append_review_lessons`), `plan_tool/jira.py`
-  (`render_jira_export`), `plan_tool/annotate.py`
-  (`classify_plan_implementation`), `plan_tool/lessons.py`
-  (`find_lesson_equivalences`), `plan_tool/concept_tree.py`
-  (`emit_concept_tree`), `plan_tool/launcher.py` (`_run_deep_for_step`,
-  `run_all_done_steps`).
+- **Files:** `plan_tool/review.py` (`review_plan_full`,
+  `extract_and_append_review_lessons`), `plan_tool/lessons.py`
+  (`find_lesson_equivalences`), `plan_tool/launcher.py` (`_run_deep_for_step`,
+  `run_all_done_steps`); callers `plan_tool/cli/review_cmd.py` (has
+  `_open_run_log()`) and `plan_tool/cli/lessons_cmd.py` (starts a `RunLogWriter`
+  at line 226).
 - **Symptom:** `shell._emit_call_end` drops `claude_call_end` when no sink is
-  installed. None of these functions receives a `RunLogWriter`, so none can
-  bind one. Their tokens are invisible to run-log analysis.
-- **Fix:** thread a `run_logger` parameter (or one shared opener) through each
-  function's public signature and CLI callers, bind a sink, emit a start with
-  `prompt_sha256`. The list is pinned as `DEFERRED_SITES` in
-  `tests/test_run_log_call_coverage.py`; wiring a site moves it to
-  `LOGGED_SITES`.
+  installed. None of these five functions receives a `RunLogWriter`, so none
+  can bind one, although each caller already holds or can open one. Their
+  tokens are invisible to run-log analysis.
+- **Fix:** follow `gates.suggest_gates`: add a `run_logger` parameter, emit
+  `claude_call_start` with `prompt_sha256`, and bracket the invoker call with
+  `install_call_end_sink` / `uninstall_call_end_sink`. Pass the writer from the
+  caller. One function per commit; wiring a site moves it from `DEFERRED_SITES`
+  to `LOGGED_SITES` in `tests/test_run_log_call_coverage.py`.
 - **Deliberately not done:** an ambient-writer fallback inside `_emit_call_end`
   — with no bind there is no ambient writer either.
 - **Approach:** direct.
-- **Origin:** 2026-10-16, token ledger analysis. Wired the same day:
-  `apply_finding` (streaming invoker emitted no end),
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-10-16, token ledger analysis; split 2026-11-16 from the
+  ten-site entry. Wired 2026-10-16: `apply_finding`,
   `assess_direct_source_split_from_claude`, `_propose_risk_profile_from_seed`;
-  `plan_audit` now emits a start; `prompt_sha256` added to every start.
+  `plan_audit` emits a start; `prompt_sha256` is on every start.
+
+### Five model-backed calls have no run writer to bind, or no production caller, so where they log is undecided
+
+- **Files:** `plan_tool/create.py` (`suggest_slug`, called from
+  `resolve_create_slug`, `plan_tool/cli/authoring.py:773`), `plan_tool/jira.py`
+  (`render_jira_export`; `cli/jira_cmd.py` opens no writer),
+  `plan_tool/annotate.py` (`classify_plan_implementation`; `cli/annotate_cmd.py`
+  opens no writer), `plan_tool/review.py` (`check_criteria_fulfillment`),
+  `plan_tool/concept_tree.py` (`emit_concept_tree`).
+- **Symptom:** the run log is keyed by `(slug, run_id)` (`run_log_path`).
+  `suggest_slug` runs before the slug or plan directory exists. The jira and
+  annotate commands open no writer, and annotate's source can be a note with no
+  plan slug (not verified per input kind). `check_criteria_fulfillment` and
+  `emit_concept_tree` have no production caller (grep, 2026-11-16). Their
+  tokens are invisible to run-log analysis, and a `run_logger` parameter alone
+  does not give any of them a place to write.
+- **Fix:** decide per site where the record goes (a scratch or per-command log,
+  a buffer flushed once the slug exists) or retire it as deliberately
+  unlogged with the reason in `docs/history/backlog-decisions.md`; for the two
+  uncalled functions, decide wire-or-delete. Then apply the `suggest_gates`
+  pattern. All five sit in `DEFERRED_SITES` until then.
+- **Approach:** direct once the destination decision is made.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** 2026-11-16, split from the ten-site run-log entry.
 
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 

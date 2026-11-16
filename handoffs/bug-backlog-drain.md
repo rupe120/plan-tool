@@ -106,20 +106,16 @@ they resolve.
   outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
   tree).
 
-- 2026-11-16 — drain survey of `BUG_BACKLOG.md`, no code change: `pending`. The
-  BUG and MINOR sections hold no entry labelled `direct` + `ready`; there is no
-  RISK section. The only unlabelled `direct` candidate is "Ten model-backed calls
-  still write no start or end record to the run log" (BUG): its ten sites match
-  `DEFERRED_SITES` in `tests/test_run_log_call_coverage.py`, so it needs a Route /
-  Readiness label (a `direct` + `ready` read is the likely result; ten sites across
-  seven modules, so one site or module per commit) before pickup. Left unlabelled
-  `direct` entries stay out: `extract_h2_sections` defaults (deferred to a
-  compatibility review), `install-skill` TOCTOU (re-open only on a concurrent-install
-  use case), `renderer.py` `MUTATING_MODES` (blocked on moving it to a leaf), and the
-  fence-check consolidation (needs the identity check first). Every other labelled
-  entry is `plan`, `evidence-gated`, `decision-needed` or `needs investigation`.
-  The 2026-11-13 and 2026-11-15 `fixed` lines were dropped: each fix is an ancestor
-  of `main`.
+- 2026-11-16 — drain survey of `BUG_BACKLOG.md`: `pending`. No RISK section; the
+  BUG and MINOR sections held no `direct` + `ready` entry until the ten-site run-log
+  entry was split (owner decision, 2026-11-16): five sites with a reachable writer
+  are now `direct` · `ready` (first pickup: `review_plan_full`, one function per
+  commit, `suggest_gates` as the pattern); `suggest_slug`, `render_jira_export`,
+  `classify_plan_implementation` and the two uncalled functions are
+  `decision-needed` (no writer to bind). Other unlabelled `direct` entries stay out:
+  `extract_h2_sections` defaults (compatibility review first), `install-skill` TOCTOU
+  (re-open on a concurrent-install use case), `renderer.py` `MUTATING_MODES` (move it
+  to a leaf first), fence-check consolidation (identity check first).
 
 ## Deliberately not in this handoff
 
