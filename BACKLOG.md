@@ -143,8 +143,8 @@ over a tier doc whenever your session is already committed to its theme:
 - [`backlog-arc-driver-contract.md`](docs/implementation-plans/backlog-arcs/backlog-arc-driver-contract.md)
   — what an unattended driver can read from `plan-tool` without inferring it:
   the result of `create`/`detail`, a plan's gate verdict,
-  per-finding triage labels, and run usage totals. Its item (#499)
-  is untiered — this arc is its sole router; #504 and #385 stay with
+  per-finding triage labels, and run usage totals. Its items (#499, #538)
+  are untiered — this arc is their sole router; #504 and #385 stay with
   `backlog-arc-roadmap`.
 - [`backlog-arc-run-gates.md`](docs/implementation-plans/backlog-arcs/backlog-arc-run-gates.md)
   — what happens around a `run` step's gates: the prompt before it finishes,
@@ -6413,6 +6413,45 @@ working straight down the tiers.
 - **Approach:** `direct`.
 - **Origin:** 2026-11-16, `/code-review high` pass 2 on the run-log
   call-coverage change (`HEAD~6..HEAD` at `210411e67`); owner chose to file.
+
+**#538 — Four `create` refusals before the run log opens still print no reason token**
+
+- **Labels:** Route `direct`
+  · Readiness `decision-needed`
+  · Tier `experienced`
+  · Principle `deterministic-non-determinism`
+- **What:** the `create-refused: reason=<token>` line (`DATA_CONTRACT.md`
+  § "Pre-slug `create` refusals") covers only the five seed-reading refusals.
+  Four refusals before `RunLogWriter.start` print a message and exit non-zero
+  with no token: the repo root not found, a failed slug resolution
+  (`resolve_create_slug`), an aborted plan-root confirmation
+  (`_confirm_repo_root`), and the branch-collision decline
+  (`_create_branch_collision_gate`).
+- **Why:** a driver that treats "no `create-refused:` line" as "no refusal"
+  misreads these. #502's scope fence read "seed paths", while its What line
+  said "each pre-slug refusal"; the fence held and this entry carries the rest.
+- **Decision needed:** whether the branch-collision decline joins the set. #502
+  recorded its lack of a log as by design, and it happens after the slug
+  resolves, so a token there is a different claim from the pre-slug ones.
+- **Effort:** small; extend `PRE_SLUG_REFUSAL_REASONS`, one
+  `_pre_slug_refusal` call per path, the contract table and tests.
+- **Scope contract:**
+  - **Outcome:** each listed `create` refusal prints one stderr line carrying a
+    closed reason token from the documented set.
+  - **In scope:** the four paths above (the collision decline once decided),
+    the token set, `DATA_CONTRACT.md`, tests.
+  - **Out of scope / Non-goals:** other subcommands; a persisted run record or
+    record location (an `architect`-tier decision); a `--json` result.
+  - **Allowed behavior changes:** one added stderr line on each of these
+    refusals; exit codes unchanged.
+  - **Allowed reorganization:** none.
+  - **Verification:** each path prints its token line; a `create` that does not
+    refuse prints none; the token-set test covers the new tokens.
+  - **Stop / defer:** a driver needing the record after the process exits
+    files a persisted-record entry.
+- **Approach:** `direct`.
+- **Origin:** 2026-11-16, review of the #502 change (a side-agent note on the
+  uncovered refusals); owner chose to file.
 
 ### E. Cosmetic / churn
 

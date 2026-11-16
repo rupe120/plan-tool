@@ -4,11 +4,12 @@
 
 This file is the execution guide for what an unattended driver can read from
 `plan-tool` without inferring it: the result of `create` and `detail`, a
-plan's gate verdict, each finding's triage label, and a run's usage totals. It
-routes #499, filed 2026-10-19 from the design of Integration's Construction
-batch driver. `BACKLOG.md` owns the item; this file owns only its working
-order. The item is untiered in the priority (mission-grounded) sense — this
-arc is its sole router. #501 (`run_end.result` for `create` and `detail`),
+plan's gate verdict, each finding's triage label, the reason token of a
+refused `create`, and a run's usage totals. It routes #499 (filed 2026-10-19
+from the design of Integration's Construction batch driver) and #538 (filed
+2026-11-16). `BACKLOG.md` owns each item; this file owns only their working
+order. The items are untiered in the priority (mission-grounded) sense — this
+arc is their sole router. #501 (`run_end.result` for `create` and `detail`),
 #505 (`run_end.usage` totals), and #500 (`gate-status`) shipped 2026-10-19 and
 left this arc; #502 (a `create` refused before its slug resolves prints a
 closed reason token) shipped 2026-11-16 and left it too.
@@ -25,6 +26,8 @@ path a sibling roadmap plan creates.
 - **#499** — the audit's own detail-level (D) label per bare-stage finding,
   built only after a label-agreement measurement; it lands with #192's
   finding-record version bump.
+- **#538** — reason tokens for the four `create` refusals #502 left without
+  one; the branch-collision decline needs a decision first.
 
 ## Choose this arc when
 
@@ -43,6 +46,8 @@ push automatically; push only when the user explicitly requests it.
 
 1. **#499** is `decision-needed`. Settle who owns the D label and measure
    its pass-to-pass agreement before building.
+2. **#538** is `decision-needed`: decide whether the branch-collision decline
+   joins the token set, then print a token on each remaining refusal.
 
 ## Decision gates
 
