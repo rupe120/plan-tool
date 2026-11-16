@@ -287,7 +287,7 @@ lens exists to produce; keep it in sync as entries land or are added):
   audit mode — complements the stochastic sampler), **#175** (jira-readiness
   deterministic checks in `jira --lint` / `validate` — HEAD-anchor
   verification and frontmatter↔detail footprint coherence, no model call), and the run-log coverage
-  arc **#176** / **#177** (four verbs spend Claude with no log at all;
+  arc **#176** / **#177** (three verbs spend Claude with no log at all;
   `create`'s slug call precedes its own log; an unsinked call now warns once
   per process naming its call site, so the remaining gaps announce themselves),
   **#295** (give `Recommendation` a confidence signal distinct from severity,
@@ -344,14 +344,16 @@ backlog entries below **and the authored plans** in
 mission-aligned one is the cheapest path to shipped value, but *authored ≠
 priority*; the mission decides.
 
-**Current queue facts (checked 2026-09-16):**
+**Current queue facts (checked 2026-11-16):**
 
-1. **`BUG_BACKLOG.md` has unresolved BUG entries.** Triage its live BUG
-   section before selecting a new feature route; each entry owns its own
-   readiness and approach.
-2. **#102 remains independent of the delivered seed-ingestion route.** Its
-   future alias-matching decision does not reopen the source-selection or
-   preparation contract.
+1. **`BUG_BACKLOG.md` has no entry that is both Route `direct` and Readiness
+   `ready`.** Its live entries are `plan`-route, `evidence-gated` or
+   `decision-needed`, plus a few unlabelled `direct` entries that each wait on
+   a prerequisite or a decision. Each entry owns its own readiness and
+   approach.
+2. **#102 is promoted (IPPT-11, 2026-09-27) and remains independent of the
+   delivered seed-ingestion route.** Its future alias-matching decision does
+   not reopen the source-selection or preparation contract.
 3. **The manifest contains planning and completed plans.** Choose an authored
    plan only after checking its current body and detail coverage; archive
    membership is delivery history, not a queue item.
@@ -364,14 +366,14 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — bug triage** | `BUG_BACKLOG.md` | Work from the live BUG section and its triage rules; the earlier bounded direct batch is no longer the current queue. |
-| **Roadmap — Integration** | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
+| **Now — drain candidates (unpicked)** | #502 · #484 · #487 · #518 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #502 (P2) names the stable refusal reason a pre-slug `create` refusal prints; #484, #487 and #518 (P1) are the `edit_drift` attribution, the infrastructure-plan audit rule and the installed-router phase rules. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
+| **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
-| **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
+| **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Deferred without the label: `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
+| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Deferred without the label: `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
 
-**Authored plans** (manifest; every plan below is `status: planning`):
+**Authored plans** (manifest; every plan below is `status: planning`; the manifest's two roadmap-owned planning plans, `roadmap-source-baseline-recovery` and `roadmap-candidate-vocabulary-retry`, and its three completed plans are not listed):
 
 | Plan | Steps | Disposition |
 |---|---|---|
@@ -428,8 +430,8 @@ the highest-leverage move (e.g. a `heuristic-tuning` unlock).
   archived `review.py` decision is the worked example of this lens paying off:
   the investigation cost a read and returned "don't build it", which is the
   outcome a theoretical item is *supposed* to be allowed to have.
-- **Concrete (ready to implement):** every other open entry, plus all ten
-  planning plans.
+- **Concrete (ready to implement):** every other open entry, plus every
+  planning plan in the manifest.
 
 **Recommended execution order:** T1 → T2 → T3 → the remaining idle plans →
 T4/T5, per the chained band-baseline arcs in § "Execution-routing arcs"
