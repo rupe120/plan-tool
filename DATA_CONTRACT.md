@@ -747,9 +747,13 @@ persisted record and no `--json` form.
 | `roadmap-seed-unresolved` | a roadmap-tracked seed cannot be tied to its accepted roadmap: no accepted version, a plan row absent from it, or an unreadable roadmap or seed state |
 | `roadmap-seed-not-confirmed` | a roadmap-tracked seed is invalidated or digest-mismatched and the operator declined, or no `-y` was given on a non-interactive run |
 
-A refusal after the slug resolves (the branch-collision decline, an unresolvable
-slug) and every other subcommand are outside this set. A `create` that does not
-refuse prints no `create-refused` line.
+The set covers only these seed-reading refusals. Four other `create` refusals
+exit non-zero and print **no** `create-refused` line: the repo root not found, a
+failed slug resolution, an aborted plan-root confirmation, and the
+branch-collision decline (`BACKLOG.md` #538). A driver must treat a non-zero
+exit with no `create-refused` line as a refusal of unknown reason, never as "did
+not refuse". Every other subcommand is outside this set. A `create` that does
+not refuse prints no `create-refused` line.
 
 ## Intentional exclusions
 
