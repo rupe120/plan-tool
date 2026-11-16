@@ -965,7 +965,7 @@ working straight down the tiers.
 **#518 — An installed plan-tool skill's router does not name the phase rules a driving session must read, so it skips them (for example the audit stopping rule)**
 
 - **Labels:** Route `direct`
-  · Readiness `evidence-gated` (gate: the next consuming-repo run that drives a plan through both audit gates and the post-run tail)
+  · Readiness `evidence-gated` (gate: see Evidence gate)
   · Tier `experienced`
   · Principle `converge-on-correct-plan`
 - **Absorbs #425 and #388 (merged 2026-11-14):** (a) the router's must-read
@@ -1061,6 +1061,9 @@ working straight down the tiers.
       symlink and the project-`CLAUDE.md` pointer reach.
     - Seed-authoring guidance (#377) and capture rules (#378, including the
       former #379).
+    - A phase row for `jira` export, or for the reconcile verbs apart from the
+      post-run tail: no measured incident broke their rules. Add one only if the
+      re-measurement shows those rules skipped.
   - **Allowed behavior changes:** the installed router's text grows by the
     must-read lists and phase checklists.
   - **Allowed reorganization:** none.
@@ -1090,7 +1093,7 @@ working straight down the tiers.
   proposed splitting the skill, not the CLI, to improve skill routing; the
   scope was cut to the router-only slice 2026-11-14.
 - **Evidence gate:** the gate is met when a consuming-repo session with the skill installed drives a plan through both audit gates and the post-run tail. Record whether the four rules were broken again. If none was, close this entry; if any was, stop and file the full split as its own entry, per Stop / defer. Closing with "no action" is a valid outcome.
-- **Status:** the router slice shipped 2026-11-16 (a phase table in each router, held in parity and anchor-checked by `tests/test_skill_router_phase_rules.py`); the re-measurement is pending.
+- **Status:** the router slice shipped 2026-11-16 (a phase table in each router, held in parity and anchor-checked by `tests/test_skill_router_phase_rules.py`); the Evidence gate is the open part.
 
 **#389 — A newly added backend is rejected by `plan-tool install-skill --integration` with "invalid choice" until someone edits its hard-coded list of three names** → promoted to IPPT-7 (2026-09-24)
 
