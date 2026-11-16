@@ -288,6 +288,14 @@ clarity advice without a material consequence.
   informational context for judging fit, not itself an audit target — the
   plan body wins if the two disagree, since the plan may have legitimately
   evolved past its seed.
+- **Judge an infrastructure plan's isolation, scoping, and least-privilege
+  claims only against the resources the plan's own code creates.** Resources
+  the toolchain or platform creates and needs to operate (a deployment tool's
+  bootstrap roles, account-level services, managed roles) are outside what the
+  plan can change. When the plan names one as an exception in its own prose,
+  with a reason, treat it as informational and raise no finding against it. A
+  toolchain resource the plan does not name still stands as a finding, and an
+  exception never covers a resource the plan's own code creates.
 - **Out-of-scope findings are deferred, not applied.** Give each one its own
   leading `[topic-anchor]`, then include the literal trailing marker
   `[out-of-scope-deferred]` with severity INFO or LOW, state where it should
