@@ -4,13 +4,14 @@
 
 This file is the execution guide for what an unattended driver can read from
 `plan-tool` without inferring it: the result of `create` and `detail`, a
-refused `create`'s reason, a plan's gate verdict, each finding's triage label, and a
-run's usage totals. It routes #499 and #502, filed
-2026-10-19 from the design of Integration's Construction batch driver. `BACKLOG.md`
-owns each item; this file owns only their working order. The two items are
-untiered in the priority (mission-grounded) sense — this arc is their sole
-router. #501 (`run_end.result` for `create` and `detail`), #505 (`run_end.usage`
-totals), and #500 (`gate-status`) shipped 2026-10-19 and left this arc.
+plan's gate verdict, each finding's triage label, and a run's usage totals. It
+routes #499, filed 2026-10-19 from the design of Integration's Construction
+batch driver. `BACKLOG.md` owns the item; this file owns only its working
+order. The item is untiered in the priority (mission-grounded) sense — this
+arc is its sole router. #501 (`run_end.result` for `create` and `detail`),
+#505 (`run_end.usage` totals), and #500 (`gate-status`) shipped 2026-10-19 and
+left this arc; #502 (a `create` refused before its slug resolves prints a
+closed reason token) shipped 2026-11-16 and left it too.
 
 Adjacent items that stay routed elsewhere and are not owned here: #504 (plan
 level dependencies; routed by `backlog-arc-roadmap`), #385 (a roadmap status
@@ -24,7 +25,6 @@ path a sibling roadmap plan creates.
 - **#499** — the audit's own detail-level (D) label per bare-stage finding,
   built only after a label-agreement measurement; it lands with #192's
   finding-record version bump.
-- **#502** — a stable stderr reason token for a `create` refused before its slug resolves.
 
 ## Choose this arc when
 
@@ -43,7 +43,6 @@ push automatically; push only when the user explicitly requests it.
 
 1. **#499** is `decision-needed`. Settle who owns the D label and measure
    its pass-to-pass agreement before building.
-2. **#502** is `ready`: print the closed reason token on each pre-slug refusal.
 
 ## Decision gates
 

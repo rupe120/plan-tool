@@ -142,9 +142,9 @@ over a tier doc whenever your session is already committed to its theme:
   skill) and #444 (quote the routers' `argument-hint`) shipped 2026-10-06.
 - [`backlog-arc-driver-contract.md`](docs/implementation-plans/backlog-arcs/backlog-arc-driver-contract.md)
   — what an unattended driver can read from `plan-tool` without inferring it:
-  the result of `create`/`detail`, a refused `create`, a plan's gate verdict,
-  per-finding triage labels, and run usage totals. Its items (#499, #502)
-  are untiered — this arc is their sole router; #504 and #385 stay with
+  the result of `create`/`detail`, a plan's gate verdict,
+  per-finding triage labels, and run usage totals. Its item (#499)
+  is untiered — this arc is its sole router; #504 and #385 stay with
   `backlog-arc-roadmap`.
 - [`backlog-arc-run-gates.md`](docs/implementation-plans/backlog-arcs/backlog-arc-run-gates.md)
   — what happens around a `run` step's gates: the prompt before it finishes,
@@ -366,7 +366,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | #502 · #484 · #487 · #518 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #502 (P2) names the stable refusal reason a pre-slug `create` refusal prints; #484, #487 and #518 (P1) are the `edit_drift` attribution, the infrastructure-plan audit rule and the installed-router phase rules. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
+| **Now — drain candidates (unpicked)** | #484 · #487 · #518 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #484, #487 and #518 (P1) are the `edit_drift` attribution, the infrastructure-plan audit rule and the installed-router phase rules. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -704,46 +704,6 @@ working straight down the tiers.
 - **Origin:** 2026-11-14, the owner, after the trace of Loom's repository-browser
   decision found it was model-settled and never asked: "file the self-settled
   entry".
-
-**#502 — A refused `create` prints a stable reason token an external driver can read**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `deterministic-non-determinism`
-- **What:** `create` refuses on the seed paths before it resolves a slug and
-  opens its run log, for example when a roadmap-tracked seed's accepted
-  version is absent. The run log is keyed by the resolved slug, so those
-  refusals have no log to write to, and a later branch-collision decline also
-  opens none by design. Print a stable closed reason token on stderr for each
-  pre-slug refusal.
-- **Why:** the driver that invoked `create` already sees a non-zero exit, so
-  "refused" versus "never ran" needs no new persisted location; what it lacks
-  is a machine-readable reason. `DATA_CONTRACT.md` does not promise a run log
-  for every invocation, so this is a capability gap and not a bug.
-- **Effort:** small; one closed token set and one stderr line per pre-slug
-  refusal path.
-- **Scope contract:**
-  - **Outcome:** a `create` refused on a seed path before slug resolution
-    prints one stderr line carrying a closed reason token from a documented
-    set.
-  - **In scope:** the pre-slug seed refusal paths, the token set and its line
-    format, `DATA_CONTRACT.md` (the token vocabulary), tests.
-  - **Out of scope / Non-goals:** other subcommands (file separately if they
-    share the gap); a log for a bad plan name (`detail` deliberately opens no
-    ghost JSONL for an unknown name, and `create` keeps the same rule);
-    deliberately not a persisted run record or record location, because the
-    invoking driver already observes the non-zero exit and a pre-slug record
-    would need an `architect`-tier run-record-location decision; deliberately
-    not a `--json` result, because `create` has no `--json` surface.
-  - **Allowed behavior changes:** one added stderr line on a pre-slug
-    refusal; exit codes unchanged.
-  - **Allowed reorganization:** none.
-  - **Verification:** each pre-slug `create` refusal path prints the token
-    line with its closed reason, and a successful `create` is unchanged.
-  - **Stop / defer:** if a driver needs the record after the process has
-    exited, file a persisted-record entry then; do not build it here.
-- **Origin:** 2026-10-19, Integration `construction-batch-driver` design §2.2.
 
 **#504 — Plans declare dependencies on other plans**
 
