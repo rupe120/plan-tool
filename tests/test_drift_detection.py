@@ -385,7 +385,6 @@ def test_emit_drift_warning_appends_detail_reconcile_hint_for_reconcile_loop(
     assert "plan-tool run <name> --reconcile" not in err
 
 
-
 # ---------- emit_drift_halt_warning (task #30 / #33) ----------
 
 def test_emit_drift_halt_warning_no_op_on_empty(
@@ -553,7 +552,6 @@ def test_emit_drift_halt_warning_reconcile_loop_hint(
     err = capsys.readouterr().err
     assert "plan-tool detail <name> --reconcile" in err
     assert "plan-tool run <name> --reconcile" not in err
-
 
 
 # ---------- refresh_snapshot (Bug 1 from session-4 review) ----------

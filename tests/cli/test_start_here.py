@@ -84,4 +84,3 @@ def test_global_flags_without_a_subcommand_still_report_the_usage_error() -> Non
         main(["--debug"])
 
     assert raised.value.code == 2
-

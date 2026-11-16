@@ -1411,8 +1411,9 @@ def test_cursor_manifest_plan_quota_pattern_round_trips() -> None:
 
 def test_load_backend_malformed_json_raises(tmp_path: Path) -> None:
     d = _write_manifest(tmp_path, "{ not valid json")
-    with pytest.raises(BackendManifestError):
+    with pytest.raises(BackendManifestError) as excinfo:
         load_backend_from_dir(d)
+    assert "backend.json" in str(excinfo.value)
 
 
 def test_load_backend_unknown_parser_raises(tmp_path: Path) -> None:
