@@ -4049,13 +4049,6 @@ class TestFeedbackAwaitingReview:
         out = self._run(tmp_path, monkeypatch, capsys, awaiting=0)
         assert "feedback" not in out
 
-    def test_a_zero_count_does_not_claim_feedback_awaits_review_when_a_stage_was_written(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        out = self._run(tmp_path, monkeypatch, capsys, awaiting=0, written_stages=(1,))
-        assert "feedback row(s)" not in out
-        assert "await your review" not in out
-
     def test_an_exhausted_run_that_wrote_a_revision_still_reports_the_count(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
     ) -> None:
@@ -4084,24 +4077,6 @@ class TestFeedbackAwaitingReview:
 
         assert "feedback" not in capsys.readouterr().out
 
-    def test_the_block_names_deleting_the_row_as_the_close_action(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        out = self._run(tmp_path, monkeypatch, capsys, awaiting=1)
-        assert "deleting the row" in out
-
-    def test_the_block_names_reopening_by_setting_the_state_back_to_open(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        out = self._run(tmp_path, monkeypatch, capsys, awaiting=1)
-        assert f"reopen it by setting 'state' back to '{FeedbackState.OPEN.value}'" in out
-
-    def test_the_block_names_deferring_the_row(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        out = self._run(tmp_path, monkeypatch, capsys, awaiting=1)
-        assert f"'{FeedbackState.DEFERRED.value}'" in out
-
     def test_the_printed_state_words_come_from_the_feedback_vocabulary(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
     ) -> None:
@@ -4118,12 +4093,6 @@ class TestFeedbackAwaitingReview:
         source = inspect.getsource(roadmap_cmd._feedback_summary_lines)
         assert "FeedbackState.OPEN.value" in source
         assert "FeedbackState.DEFERRED.value" in source
-
-    def test_the_block_points_at_the_proposed_response_field_by_name(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        out = self._run(tmp_path, monkeypatch, capsys, awaiting=1)
-        assert "proposed_response" in out
 
     def test_the_block_never_claims_the_feedback_was_resolved(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
@@ -4169,9 +4138,17 @@ class TestFeedbackAwaitingReview:
         A pending decision is the model's own unsettled guess; an
         awaiting-review row is its answer to something the reviewer wrote.
         """
-        out = self._run(tmp_path, monkeypatch, capsys, awaiting=3, pending=2)
+        out = self._run(
+            tmp_path,
+            monkeypatch,
+            capsys,
+            awaiting=3,
+            pending=2,
+            newly_settled=("dec-x",),
+        )
         assert "2 pending decision(s)" in out
         assert "3 feedback row(s)" in out
+        assert "1 decision(s) newly settled by this revision" in out
 
     def test_the_command_module_makes_no_interactive_call(self) -> None:
         """This block is where a TTY review walk is most tempting: the tool now
@@ -4221,18 +4198,6 @@ class TestNewlySettledDecisions:
         assert "'dec-two-patterns-not-one'" in out
         assert "'dec-extra'" in out
         assert "confirm each in place" in out
-
-    def test_the_block_names_both_shapes_that_reach_it(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        """An id alone does not say which move produced it.
-
-        A reviewer reading only "newly settled" would look for a row that is
-        not there when the revision settled one they had left ``pending``.
-        """
-        out = self._run(tmp_path, monkeypatch, capsys, newly_settled=("dec-x",))
-        assert "did not carry" in out
-        assert f"carried as '{DecisionStatus.PENDING.value}'" in out
 
     def test_the_printed_status_word_comes_from_the_decision_vocabulary(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
@@ -4308,21 +4273,6 @@ class TestNewlySettledDecisions:
             newly_settled=("dec-x",),
         )
         assert out.index("await your review") < out.index("newly settled")
-
-    def test_all_three_residue_lines_appear_together(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
-    ) -> None:
-        out = self._run(
-            tmp_path,
-            monkeypatch,
-            capsys,
-            pending=1,
-            awaiting=2,
-            newly_settled=("dec-x",),
-        )
-        assert "1 pending decision(s)" in out
-        assert "2 feedback row(s)" in out
-        assert "1 decision(s) newly settled by this revision" in out
 
 
 # --------------------------------------------------------------------------

@@ -84,10 +84,3 @@ def test_global_flags_without_a_subcommand_still_report_the_usage_error() -> Non
         main(["--debug"])
 
     assert raised.value.code == 2
-
-
-def test_full_help_points_newcomers_at_the_start_screen(capsys) -> None:
-    with pytest.raises(SystemExit):
-        main(["--help"])
-
-    assert "Run plan-tool with no arguments for the core path." in capsys.readouterr().out

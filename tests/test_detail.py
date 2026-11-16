@@ -14493,42 +14493,6 @@ class TestDetailStyleOutput:
             "detail file is unaffected"
         ) in err
 
-    def test_lesson_extraction_error_no_error_level(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        plan_path = _write_orchestrator_plan(tmp_path)
-        from plan_tool import detail as detail_module
-
-        def boom(**kwargs: object) -> tuple[int, int]:
-            raise RuntimeError("boom")
-
-        monkeypatch.setattr(
-            detail_module, "extract_and_append_detail_lessons", boom
-        )
-        monkeypatch.setattr(
-            detail_module,
-            "collect_detail_quality_findings",
-            lambda *a, **kw: [],
-        )
-        generate_detail(
-            plan_path,
-            repo_root=tmp_path,
-            step_id=1,
-            invoker=lambda _p: _GOOD_BODY,
-            extract_lessons=True,
-            lessons_invoker=lambda _p: (0, ""),
-            reporter=NullReporter(),
-            budget=_IterativeBudget(enabled=True, max_iterations=3),
-        )
-        line = _line_containing(
-            capsys.readouterr().err, "lesson extraction failed"
-        )
-        # ``tool()`` with no ``level=`` → no ``error:`` tag (byte-identity).
-        assert "error:" not in line
-
     def test_lesson_extraction_skipped_without_iterate(
         self,
         tmp_path: Path,

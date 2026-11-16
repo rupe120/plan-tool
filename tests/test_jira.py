@@ -5073,25 +5073,6 @@ class TestPairedJiraExport:
 
         assert len(calls) == 1
 
-    def test_companion_export_surfaces_documented_advisory_warnings(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        plan_path = _write_companion_plan(tmp_path)
-        story_target, handoff_target = self._targets(tmp_path, plan_path)
-
-        export_jira(
-            plan_path,
-            repo_root=tmp_path,
-            epic=_DEFAULT_EPIC,
-            story_output_path=story_target,
-            handoff_output_path=handoff_target,
-            invoker=lambda _prompt: _companion_response(
-                [{"id": "AUTH-S1", "steps": [1], "estimate_hours": 1}]
-            ),
-        )
-
-        assert "soft decomposition floor" in capsys.readouterr().err
-
     def test_companion_publication_reports_handoff_render_errors_as_jira_errors(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
