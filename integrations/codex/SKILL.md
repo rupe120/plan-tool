@@ -33,6 +33,22 @@ State the simpler alternative and which current requirement needs any added
 complexity, or what you will simplify. Follow [the checkpoints](DIRECTIVES.md#explicit-overengineering-checkpoints)
 at seed, plan, detail, and correction-batch transitions as well.
 
+## Read these `DIRECTIVES.md` sections before acting in a phase
+
+[DIRECTIVES.md](DIRECTIVES.md) is long, and a search hit or an offset read is
+not enough: before the first command of a phase, read each section named for it
+in full. Before any model-backed command in any phase, also read
+[Which model to run a subcommand with](DIRECTIVES.md#which-model-to-run-a-subcommand-with),
+state the backend and model, and pass them explicitly. Each checklist item below
+points at the section that owns the rule; none is a new rule.
+
+| Phase | Read in full | Checklist |
+| --- | --- | --- |
+| Authoring (`create`, `detail`) | [Explicit overengineering checkpoints](DIRECTIVES.md#explicit-overengineering-checkpoints); [Pause on a product question — ask, don't infer](DIRECTIVES.md#pause-on-a-product-question--ask-dont-infer) | Ask the user on a product question instead of inferring the answer. Give the overengineering answer at each transition. |
+| Auditing (`completeness-audit`) | [Gate 1 — the bare-plan audit](DIRECTIVES.md#gate-1--the-bare-plan-audit-before-detail); [Gate 2 — the detail-grounded audit](DIRECTIVES.md#gate-2--the-detail-grounded-audit-after-detail); [Stage-differentiated conceptual bar](DIRECTIVES.md#stage-differentiated-conceptual-bar-completeness-audit); [Close conceptual gaps through judged hand-edits](DIRECTIVES.md#close-conceptual-gaps-through-judged-hand-edits); [Before applying anything: audit the why, not the what](DIRECTIVES.md#before-applying-anything-audit-the-why-not-the-what); [Trajectory, stopping, and the three exits](DIRECTIVES.md#trajectory-stopping-and-the-three-exits) | Three audit snapshots are the minimum window, not a stopping point. Surface a scope move to the user before making it. Record each owner answer as one dated decision line in the plan. Present findings as the plan-gap map. |
+| Running and the post-run tail | [`--commit`](DIRECTIVES.md#--commit); [When a `run` step's own tests fail](DIRECTIVES.md#when-a-run-steps-own-tests-fail); [After `run` finishes a plan](DIRECTIVES.md#after-run-finishes-a-plan); [Post-run reconcile-tail stop rule](DIRECTIVES.md#post-run-reconcile-tail-stop-rule); [The two reconcile verbs are not interchangeable](DIRECTIVES.md#the-two-reconcile-verbs-are-not-interchangeable) | Run a plan's steps through `run` with `--commit`; never mark a step `done` by hand. After the last green step, run `reconcile-code <name> --all`, then `/code-review` to convergence. |
+| Roadmap | [Roadmap](DIRECTIVES.md#roadmap) | Read the section before `roadmap`, including its resume and refusal semantics. |
+
 ## Which tool
 
 - Plan markdown **starts with `---` frontmatter** → use **plan-tool** (this skill).
