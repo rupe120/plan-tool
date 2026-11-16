@@ -9592,6 +9592,8 @@ class TestCheckPlanAudit:
         )
         assert "own code creates" in clause
         assert "lists one in its own prose as a named exception with a reason" in clause
+        assert "in a closed list rather than an open category" in clause
+        assert "the finding is that the plan omits the exception" in clause
         assert "raise no finding about the resource's own stock behavior" in clause
         assert "does not list still stands as a finding" in clause
         assert "never covers a resource the plan's own code creates" in clause

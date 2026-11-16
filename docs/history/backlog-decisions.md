@@ -1305,9 +1305,12 @@ continuation or exit behavior.
 
 ### #487 — Infrastructure plans: claim scope only for resources the plan creates
 
-Shipped 2026-11-16 as a clause in `plan_tool/prompts/plan-audit.md` § "Rules",
-mirroring `integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim
-scope only for resources the plan creates"; `tests/test_review.py` pins it.
+Clause added 2026-11-16 to `plan_tool/prompts/plan-audit.md` § "Rules", beside
+`integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim scope only
+for resources the plan creates"; `tests/test_review.py` pins it. The two state
+one rule in their own terms: the directive says a listed exception is judged
+informational, the prompt says it is context and draws no finding. Edit both
+together.
 Three parts are deliberately not built, none open as an entry:
 
 - **A completeness-report field for declared exceptions**, with findings against
