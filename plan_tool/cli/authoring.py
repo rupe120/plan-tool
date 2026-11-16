@@ -312,6 +312,23 @@ def _confirm_repo_root(
     return None
 
 
+# Closed reason tokens for a ``create`` refused on a seed path before the slug
+# (and so the run log) exists. DATA_CONTRACT.md "Pre-slug create refusals".
+PRE_SLUG_REFUSAL_REASONS = (
+    "seed-unreadable",
+    "seed-invalid",
+    "seed-source-unmatched",
+    "roadmap-seed-unresolved",
+    "roadmap-seed-not-confirmed",
+)
+
+
+def _pre_slug_refusal(reason: str) -> None:
+    """Print the machine-readable reason line a driver reads on a pre-slug refusal."""
+    assert reason in PRE_SLUG_REFUSAL_REASONS, reason
+    print(f"create-refused: reason={reason}", file=sys.stderr)
+
+
 def _confirm_invalidated_roadmap_seed(
     location: TrackedSeedLocation | None, *, yes: bool, input_fn=input
 ) -> bool:
@@ -345,6 +362,7 @@ def _confirm_invalidated_roadmap_seed(
                 f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' "
                 "is no longer present in its roadmap"
             )
+            _pre_slug_refusal("roadmap-seed-unresolved")
             return False
         if location.via_marker:
             entry = load_seed_state(location.state_path)["seeds"].get(
@@ -362,6 +380,7 @@ def _confirm_invalidated_roadmap_seed(
                     f"roadmap seed '{location.plan_id}' from "
                     f"'{location.roadmap_slug}' is no longer present in its roadmap"
                 )
+                _pre_slug_refusal("roadmap-seed-unresolved")
                 return False
             non_current_state = (
                 None
@@ -376,6 +395,7 @@ def _confirm_invalidated_roadmap_seed(
         UnicodeDecodeError,
     ) as exc:
         error(str(exc))
+        _pre_slug_refusal("roadmap-seed-unresolved")
         return False
     if non_current_state is None:
         return True
@@ -404,14 +424,19 @@ def _confirm_invalidated_roadmap_seed(
             "or run `plan-tool roadmap "
             f"{location.roadmap_slug} --refresh-seeds` first"
         )
+        _pre_slug_refusal("roadmap-seed-not-confirmed")
         return False
     try:
         answer = input_fn(
             f"{message}. Continue with {prompt_description}? [y/N]: "
         ).strip().lower()
     except (EOFError, KeyboardInterrupt):
+        _pre_slug_refusal("roadmap-seed-not-confirmed")
         return False
-    return answer in {"y", "yes"}
+    if answer not in {"y", "yes"}:
+        _pre_slug_refusal("roadmap-seed-not-confirmed")
+        return False
+    return True
 
 
 def _create_branch_collision_gate(
@@ -732,6 +757,7 @@ def cmd_create(args: argparse.Namespace) -> int:
             description = read_existing_description(source_path)
         except CreateError as exc:
             error(str(exc))
+            _pre_slug_refusal("seed-unreadable")
             return 2
         seed_body = _read_seed_body(source_path, description)
         try:
@@ -740,6 +766,7 @@ def cmd_create(args: argparse.Namespace) -> int:
             )
         except CreateError as exc:
             error(str(exc))
+            _pre_slug_refusal("seed-invalid")
             return 2
         try:
             tracked_seed_location = locate_tracked_seed(
@@ -747,6 +774,7 @@ def cmd_create(args: argparse.Namespace) -> int:
             )
         except (RoadmapArtifactError, RoadmapSeedStateError) as exc:
             error(str(exc))
+            _pre_slug_refusal("roadmap-seed-unresolved")
             return 2
         if not _confirm_invalidated_roadmap_seed(
             tracked_seed_location, yes=args.yes
@@ -762,6 +790,7 @@ def cmd_create(args: argparse.Namespace) -> int:
             )
         except CreateError as exc:
             error(str(exc))
+            _pre_slug_refusal("seed-source-unmatched")
             return 2
 
     # Slug resolution. ``slug`` is now an optional positional: when the

@@ -726,6 +726,31 @@ fixed outside configuration.
 | `max_response_bytes` | positive cap at or below the hard 32 KiB reply ceiling |
 | `max_prose_amendment_bytes` | positive cap at or below the hard 4 KiB row-prose ceiling |
 
+## Pre-slug `create` refusals
+
+A `create` that refuses a seed before the slug resolves has no run log: the log
+is keyed by the slug. The refusal prints one stderr line, after the
+human-readable message, and exits `2` as before:
+
+```text
+create-refused: reason=<token>
+```
+
+`<token>` is one of a closed set. A driver reads the line; there is no
+persisted record and no `--json` form.
+
+| Token | Refusal |
+| --- | --- |
+| `seed-unreadable` | the `--from-existing` path is not a file |
+| `seed-invalid` | the seed fails the from-existing intake check, for example a missing, duplicated, empty or placeholder guardrail heading |
+| `seed-source-unmatched` | a create source (the seed body or the description) has an unmatched opening code fence |
+| `roadmap-seed-unresolved` | a roadmap-tracked seed cannot be tied to its accepted roadmap: no accepted version, a plan row absent from it, or an unreadable roadmap or seed state |
+| `roadmap-seed-not-confirmed` | a roadmap-tracked seed is invalidated or digest-mismatched and the operator declined, or no `-y` was given on a non-interactive run |
+
+A refusal after the slug resolves (the branch-collision decline, an unresolvable
+slug) and every other subcommand are outside this set. A `create` that does not
+refuse prints no `create-refused` line.
+
 ## Intentional exclusions
 
 No registered serialized fields or JSON keys are intentionally undocumented.

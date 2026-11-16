@@ -1133,6 +1133,190 @@ class TestCreateGuardrailHeadingPreflight:
         assert reached == [True]
 
 
+class TestCreatePreSlugRefusalReason:
+    """A ``create`` refused before the slug exists prints one closed reason line.
+
+    No run log exists at that point (it is keyed by the slug), so the stderr
+    line ``create-refused: reason=<token>`` is the driver's only machine-readable
+    reason. The token set is closed and documented in ``DATA_CONTRACT.md``.
+    """
+
+    LINE = "create-refused: reason="
+
+    @staticmethod
+    def _reasons(err: str) -> list[str]:
+        return [
+            ln.split("reason=", 1)[1]
+            for ln in err.splitlines()
+            if ln.startswith("create-refused: reason=")
+        ]
+
+    @staticmethod
+    def _args(source: Path, tmp_path: Path, **over):
+        import argparse
+
+        ns = argparse.Namespace(
+            repo_root=tmp_path,
+            reprocess=False,
+            from_description=None,
+            from_existing=source,
+            yes=True,
+        )
+        for k, v in over.items():
+            setattr(ns, k, v)
+        return ns
+
+    @pytest.fixture(autouse=True)
+    def _no_run_log(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        monkeypatch.setattr(
+            authoring.RunLogWriter,
+            "start",
+            lambda **_k: pytest.fail("a pre-slug refusal must not open a run log"),
+        )
+
+    def test_missing_seed_file_is_seed_unreadable(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        args = self._args(tmp_path / "absent.md", tmp_path)
+        assert authoring.cmd_create(args) == 2
+        assert self._reasons(capsys.readouterr().err) == ["seed-unreadable"]
+
+    def test_seed_missing_a_guardrail_heading_is_seed_invalid(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        source = tmp_path / "seed.md"
+        source.write_text(
+            TestCreateGuardrailHeadingPreflight._seed("missing"), encoding="utf-8"
+        )
+        assert authoring.cmd_create(self._args(source, tmp_path)) == 2
+        assert self._reasons(capsys.readouterr().err) == ["seed-invalid"]
+
+    def test_unmatched_fence_in_canonical_source_is_seed_source_unmatched(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        source = tmp_path / "canonical.md"
+        source.write_text(
+            "---\nsource: raw.md\n---\n# Draft\n\n## Overview\n\n```\n",
+            encoding="utf-8",
+        )
+        (tmp_path / "raw.md").write_text(
+            "## References\n\n- [Real](https://example.test/reference)\n"
+            + NONE_GUARDRAILS,
+            encoding="utf-8",
+        )
+        monkeypatch.setattr(authoring, "locate_tracked_seed", lambda *_a, **_k: None)
+        assert authoring.cmd_create(self._args(source, tmp_path)) == 2
+        assert self._reasons(capsys.readouterr().err) == ["seed-source-unmatched"]
+
+    @pytest.mark.parametrize(
+        "draft",
+        [
+            {"publish": False},  # accepted version absent
+            {"head_has_plan_row": False},  # plan row gone from the accepted head
+        ],
+        ids=["accepted-version-absent", "plan-row-absent"],
+    )
+    def test_unresolvable_roadmap_seed_is_roadmap_seed_unresolved(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+        draft: dict,
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        source = _write_tracked_draft(tmp_path, **draft)
+        monkeypatch.setattr(authoring.sys.stdin, "isatty", lambda: False)
+        assert authoring.cmd_create(self._args(source, tmp_path)) == 2
+        assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-unresolved"]
+
+    @pytest.mark.parametrize("answer", ["n", ""], ids=["no", "enter"])
+    def test_declined_stale_seed_prompt_is_roadmap_seed_not_confirmed(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+        answer: str,
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, status="invalidated")
+        monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
+        location = locate_tracked_seed(source, repo_root=tmp_path)
+        assert location is not None
+        assert not _confirm_invalidated_roadmap_seed(
+            location, yes=False, input_fn=lambda _p: answer
+        )
+        assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
+
+    def test_non_tty_refusal_of_stale_seed_is_roadmap_seed_not_confirmed(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        import plan_tool.cli.authoring as authoring
+
+        source = _write_tracked_draft(tmp_path, status="invalidated")
+        monkeypatch.setattr(authoring.sys.stdin, "isatty", lambda: False)
+        args = self._args(source, tmp_path, yes=False)
+        assert authoring.cmd_create(args) == 2
+        assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
+
+    def test_confirmed_seed_prints_no_refusal_line(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """The carve-out: an accepted seed (or ``-y``) emits no refusal token."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, status="invalidated")
+        monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
+        location = locate_tracked_seed(source, repo_root=tmp_path)
+        assert location is not None
+        assert _confirm_invalidated_roadmap_seed(
+            location, yes=False, input_fn=lambda _p: "y"
+        )
+        assert _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert self.LINE not in capsys.readouterr().err
+
+    def test_token_set_is_closed_and_documented(self) -> None:
+        """Every emitted token is in the set, and the contract names the whole set."""
+        import ast
+
+        import plan_tool.cli.authoring as authoring
+
+        tree = ast.parse(Path(authoring.__file__).read_text(encoding="utf-8"))
+        emitted = {
+            call.args[0].value
+            for call in ast.walk(tree)
+            if isinstance(call, ast.Call)
+            and isinstance(call.func, ast.Name)
+            and call.func.id == "_pre_slug_refusal"
+            and call.args
+            and isinstance(call.args[0], ast.Constant)
+        }
+        assert emitted == set(authoring.PRE_SLUG_REFUSAL_REASONS)
+        contract = (
+            Path(authoring.__file__).resolve().parents[2] / "DATA_CONTRACT.md"
+        ).read_text(encoding="utf-8")
+        for token in authoring.PRE_SLUG_REFUSAL_REASONS:
+            assert f"`{token}`" in contract
+
+
 class TestCreateReprocessRouting:
     def test_reprocess_without_slug_is_usage_error(
         self, tmp_repo, capsys: pytest.CaptureFixture[str]
