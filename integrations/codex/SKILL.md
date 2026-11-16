@@ -40,7 +40,8 @@ not enough: before the first command of a phase, read each section named for it
 in full. Before any model-backed command in any phase, also read
 [Which model to run a subcommand with](DIRECTIVES.md#which-model-to-run-a-subcommand-with),
 state the backend and model, and pass them explicitly. Each checklist item below
-points at the section that owns the rule; none is a new rule.
+points at the section that owns the rule; none is a new rule. The table is
+the minimum reading, not the whole of DIRECTIVES.md.
 
 | Phase | Read in full | Checklist |
 | --- | --- | --- |
