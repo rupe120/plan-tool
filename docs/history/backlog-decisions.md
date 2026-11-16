@@ -1302,3 +1302,27 @@ shows three. Reopen when an operator needs more than three matched titles to
 tell fix-induced findings from real ones: raise the cap or print every title in
 `_edit_drift_lines`, still recommend-only, with no change to blocking,
 continuation or exit behavior.
+
+### #487 — Infrastructure plans: claim scope only for resources the plan creates
+
+Clause added 2026-11-16 to `plan_tool/prompts/plan-audit.md` § "Rules", beside
+`integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim scope only
+for resources the plan creates"; `tests/test_review.py` pins it. The two state
+one rule in their own terms: the directive says a listed exception is judged
+informational, the prompt says informational and not a finding target. Edit
+both together.
+
+Three parts are deliberately not built, none open as an entry:
+
+- **A completeness-report field for declared exceptions**, with findings against
+  them demoted to informational (cut 2026-11-14: the machinery outgrows a prompt
+  clause). Reopen when recorded exceptions must outlive the plan's prose; route
+  them through #490 dispositions.
+- **The same rule in Integration's own audit and review guidance**, and
+  plan-tool consuming Integration's `docs/technology-shapes/` index: Integration
+  owns both; plan-tool files nothing until that index exists, then files the
+  consumption entry.
+- **A measured effect.** One test cannot show the clause stops the
+  `cdk-infrastructure-and-environments` rounds 12-17 findings. Compare the
+  findings the next audited infrastructure plan draws against resources it
+  excepts.

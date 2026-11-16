@@ -9579,6 +9579,27 @@ class TestCheckPlanAudit:
         assert "correctness finding" in clause
         assert "[out-of-scope-deferred]" in clause
 
+    def test_audit_prompt_scopes_infrastructure_claims_to_resources_the_plan_creates(
+        self, tmp_path: Path
+    ) -> None:
+        """BACKLOG #487: a toolchain resource the plan names as an exception
+        draws no finding; an unnamed one still does, and an exception never
+        covers a resource the plan's own code creates."""
+        prompt = self._render_audit_prompt(tmp_path, _FULL_BODY_SECTIONS)
+        start = prompt.index("Judge an infrastructure plan's isolation")
+        clause = " ".join(
+            prompt[start:prompt.index("- **Out-of-scope findings", start)].split()
+        )
+        assert "own code creates" in clause
+        assert "lists one in its own prose as a named exception with a reason" in clause
+        assert "in a closed list rather than an open category" in clause
+        assert "treat it as informational, not a finding target" in clause
+        assert "does not list still stands" in clause
+        assert "never covers a resource the plan's own code creates" in clause
+        rules = prompt.index("## Rules")
+        findings_format = prompt.index("## Findings format")
+        assert rules < start < findings_format
+
     def test_audit_prompt_lists_settled_store_or_hosting_product_as_a_commitment_kind(
         self, tmp_path: Path
     ) -> None:

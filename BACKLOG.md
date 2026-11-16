@@ -366,7 +366,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | #487 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #487 (P1) is the infrastructure-plan audit rule. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
+| **Now — drain candidates (unpicked)** | *(none)* | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2), excluding entries an arc document routes (#66; #488 in `backlog-arc-roadmap.md`) and experiments (#534). None remains as of 2026-11-16. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1) either, so the drain has no candidate until an entry is triaged to `direct` + `ready`. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -8305,64 +8305,6 @@ working straight down the tiers.
 - **Approach:** direct.
 - **Status:** not started.
 - **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
-
-**#487 — Audit infrastructure-as-code plans only against resources the plan defines the creation of, and name the rest as exceptions**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `converge-on-correct-plan`
-- **What:** an infrastructure plan always runs on resources its own code does
-  not create (the toolchain's bootstrap stack, account-level services, managed
-  roles). The audit has no rule for them, so it reports their stock behavior
-  as a defect in the plan, and a fix then either wraps the stock resource in
-  a mechanism the plan does not own or claims isolation the plan cannot
-  deliver.
-- **Evidence:** Integration `cdk-infrastructure-and-environments` rounds 12-17: the
-  audit reported that the stock CDK bootstrap roles (including the lookup
-  role's account-wide read access) and `ecr:GetAuthorizationToken` on `*` break
-  per-environment isolation. Both are the toolchain's or the service's own
-  pattern, not something the plan defines. The owner ruled both an explicit,
-  named exception (2026-10-10) and gave the general rule: a plan makes
-  scoping and isolation claims only for resources whose creation pattern it
-  defines; resources the toolchain creates and needs to operate are out of
-  scope and stated as such.
-- **Effort:** small; the directive ships at
-  `integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim scope only
-  for resources the plan creates". Remaining: a Gate 2 prompt clause in
-  `plan-audit.md`.
-- **Risks / fallout:** an exception list can hide a real gap; the plan states
-  each exception in its own prose with its reason, so the exception is visible
-  in the plan the audit reads.
-- **Dependencies:** none.
-- **Outcome:** the detail-grounded audit prompt tells the auditor to judge
-  isolation, scoping and least-privilege claims only against resources the plan
-  creates, and to treat toolchain resources the plan names as exceptions (with
-  their stated reason) as out of scope.
-- **In scope:** the detail-grounded audit prompt clause (`plan-audit.md`); the
-  directives text already ships.
-- **Out of scope / Non-goals:** deciding which resources a given toolchain
-  creates; relaxing checks on resources the plan does define; a new
-  completeness-report field for declared exceptions and demoting findings
-  against them to informational (deliberately not taken, cut 2026-11-14: the
-  machinery outgrows a prompt clause; if recorded exceptions are wanted, route
-  them through #490 dispositions).
-- **Allowed behavior changes:** the audit prompt gains the clause; no change to
-  finding severity or blocking rules.
-- **Allowed reorganization:** none.
-- **Verification:** the prompt-content test names the clause (resources the
-  plan creates; exceptions stated in plan prose); the full suite passes. Effect
-  on audit output is not measurable from one test; record it on the next
-  infrastructure plan audited.
-- **Stop / defer:** stop if a stated exception covers a resource the plan's
-  own code creates.
-- **Approach:** audit prompt clause; the directive already ships.
-- **Quality:** `precision` — removes defects that no plan edit can close.
-- **Integration-side use:** the same rule belongs in Integration's own audit and review
-  guidance, since Integration will audit infrastructure plans for its users. The
-  per-technology record of out-of-scope items is started in Integration at
-  `docs/technology-shapes/` (CDK first); plan-tool consumption of such an
-  index is a follow-up to this entry.
 
 **#488 — Route a failed `run` step's stated reason to roadmap feedback**
 
