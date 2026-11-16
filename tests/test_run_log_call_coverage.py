@@ -35,20 +35,27 @@ LOGGED_SITES = [
     ("gates.py", "suggest_gates"),
 ]
 
-# Sites whose own source binds nothing because their CLI caller binds the sink
-# around them, so their ``claude_call_end`` (and tokens) still land under the
-# caller's phase. Each maps to (caller module, phase the caller binds).
+# Sites whose own source binds nothing because a caller binds the sink around
+# them, so their ``claude_call_end`` (and tokens) land under the caller's
+# phase. Each maps to (caller module, phase bound, callee named inside the
+# ``with`` block) — the callee is the site itself or the function that reaches
+# it. ``find_lesson_equivalences``'s other route (``append_lessons`` with
+# ``strict_check``/``warn_check``) is library-only: no CLI path enables either.
 CALLER_BOUND_SITES = {
-    ("review.py", "review_plan_full"): ("cli/review_cmd.py", "reconcile_plan"),
-    # Called inside review_plan_full, under the same sink.
-    ("review.py", "extract_and_append_review_lessons"): (
-        "cli/review_cmd.py", "reconcile_plan",
+    ("review.py", "review_plan_full"): (
+        "cli/review_cmd.py", "reconcile_plan", "review_plan_full",
     ),
-    ("launcher.py", "run_all_done_steps"): ("cli/review_cmd.py", "review_sweep"),
-    # Called inside verify_plan, under the same sink.
-    ("launcher.py", "_run_deep_for_step"): ("cli/review_cmd.py", "verify_rollup"),
+    ("review.py", "extract_and_append_review_lessons"): (
+        "cli/review_cmd.py", "reconcile_plan", "review_plan_full",
+    ),
+    ("launcher.py", "run_all_done_steps"): (
+        "cli/review_cmd.py", "review_sweep", "run_all_done_steps",
+    ),
+    ("launcher.py", "_run_deep_for_step"): (
+        "cli/review_cmd.py", "verify_rollup", "verify_plan",
+    ),
     ("lessons.py", "find_lesson_equivalences"): (
-        "cli/lessons_cmd.py", "lessons_equivalence",
+        "cli/lessons_cmd.py", "lessons_equivalence", "find_lesson_equivalences",
     ),
 }
 
@@ -83,20 +90,42 @@ def test_logged_call_site_binds_a_call_end_sink(filename: str, name: str) -> Non
     )
 
 
+def _calls_inside_phase_binds(caller: str, phase: str) -> set[str]:
+    """Names called inside any ``with`` whose context expression carries
+    *phase* as a string constant (``_audit_sink(run_logger, "<phase>")`` or
+    ``bind_shell_sink(phase="<phase>", ...)``)."""
+    tree = ast.parse((PKG / caller).read_text())
+    names: set[str] = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.With):
+            continue
+        binds = any(
+            isinstance(c, ast.Constant) and c.value == phase
+            for item in node.items
+            for c in ast.walk(item.context_expr)
+        )
+        if not binds:
+            continue
+        for stmt in node.body:
+            for call in ast.walk(stmt):
+                if isinstance(call, ast.Call):
+                    func = call.func
+                    if isinstance(func, ast.Name):
+                        names.add(func.id)
+                    elif isinstance(func, ast.Attribute):
+                        names.add(func.attr)
+    return names
+
+
 @pytest.mark.parametrize(("filename", "name"), sorted(CALLER_BOUND_SITES))
-def test_caller_bound_site_is_wrapped_by_its_callers_sink(
+def test_caller_bound_site_is_called_inside_its_callers_sink(
     filename: str, name: str
 ) -> None:
-    caller, phase = CALLER_BOUND_SITES[(filename, name)]
+    caller, phase, callee = CALLER_BOUND_SITES[(filename, name)]
     _function_source(filename, name)  # the site still exists
-    caller_source = (PKG / caller).read_text()
-    bound = re.compile(
-        rf'(_audit_sink\(run_logger, "{phase}"\)'
-        rf'|bind_shell_sink\(\s*phase="{phase}")'
-    )
-    assert bound.search(caller_source), (
-        f"{caller} no longer binds phase {phase!r}; {filename}:{name}'s "
-        "call ends would be dropped"
+    assert callee in _calls_inside_phase_binds(caller, phase), (
+        f"{caller} no longer calls {callee} inside a {phase!r} bind; "
+        f"{filename}:{name}'s call ends would be dropped"
     )
 
 

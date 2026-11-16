@@ -245,16 +245,16 @@ def cmd_lessons_consolidate(args: argparse.Namespace) -> int:
         #    candidates=()), record findings. Empty files are skipped.
         per_file: list = []
         invoker: EquivalenceInvoker = shell_equivalence_invoker
-        for f in discovered:
-            body = f.path.read_text(encoding="utf-8") if f.path.is_file() else ""
-            entries = parse_existing_entries(body)
-            if not entries:
-                continue
-            # The open writer alone records nothing: the sink is what lands
-            # each equivalence call's ``claude_call_end`` in the log.
-            with run_logger.bind_shell_sink(
-                phase="lessons_equivalence", attempt=1
-            ):
+        # The open writer alone records nothing: the sink is what lands each
+        # equivalence call's ``claude_call_end`` in the log.
+        with run_logger.bind_shell_sink(phase="lessons_equivalence", attempt=1):
+            for f in discovered:
+                body = (
+                    f.path.read_text(encoding="utf-8") if f.path.is_file() else ""
+                )
+                entries = parse_existing_entries(body)
+                if not entries:
+                    continue
                 findings = find_lesson_equivalences(
                     entries,
                     (),
@@ -263,7 +263,7 @@ def cmd_lessons_consolidate(args: argparse.Namespace) -> int:
                     resume=not args.no_resume,
                     min_confidence=args.min_confidence,
                 )
-            per_file.append((f, entries, findings))
+                per_file.append((f, entries, findings))
 
         # 5a. Recurrence weighting: read the warning log and count repeat
         #     candidate↔matched-prior pairs so the summary can sort

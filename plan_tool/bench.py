@@ -45,6 +45,7 @@ given a stamp).
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import re
@@ -740,13 +741,21 @@ def _run_reconcile(ctx: BenchTrialContext) -> BenchTrialResult:
     data = json.loads(ctx.cell.fixture_path.read_text(encoding="utf-8"))
     entry = next(r for r in data["repos"] if r["id"] == ctx.cell.selector)
     plan_path = ctx.scratch_dir / entry.get("plan_path", "plan.md")
-    result = review_plan_full(
-        plan_path,
-        repo_root=ctx.scratch_dir,
-        plan_name=str(ctx.cell.selector),
-        invoker=ctx.invoker,
-        extract_lessons=False,
+    # The trial's stats come from its run log, which records nothing unless a
+    # sink is bound — mirrors ``reconcile-plan``'s CLI bind.
+    sink = (
+        ctx.run_logger.bind_shell_sink(phase="reconcile_plan", attempt=1)
+        if ctx.run_logger is not None
+        else contextlib.nullcontext()
     )
+    with sink:
+        result = review_plan_full(
+            plan_path,
+            repo_root=ctx.scratch_dir,
+            plan_name=str(ctx.cell.selector),
+            invoker=ctx.invoker,
+            extract_lessons=False,
+        )
     count = len(result.recommendations)
     # Normalize each reported finding to its searchable text (title + body);
     # the scorer fuzzy-matches file+symbol mentions in this text against the

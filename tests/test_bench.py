@@ -1499,6 +1499,38 @@ def test_reconcile_realistic_trial_succeeds(tmp_path: Path) -> None:
         assert r["score"]["recall"] == 1.0
 
 
+def test_reconcile_trial_records_tokens_from_its_run_log(tmp_path: Path) -> None:
+    """A reconcile trial's stats come from its run log, which drops every
+    ``claude_call_end`` unless a sink is bound around ``review_plan_full``."""
+    from plan_tool import shell
+    from plan_tool.backend import ClaudeRunStats
+
+    class TokenEmittingReconcileInvoker(RealisticReconcileInvoker):
+        def __call__(self, prompt: str, **kwargs) -> tuple[int, str]:
+            # The emit the real ``claude_invoke`` performs per call.
+            shell._emit_call_end(
+                phase="claude_invoke", attempt=1, rc=0, duration_ms=5,
+                stdout_bytes=1, prompt_bytes=1,
+                stats=ClaudeRunStats(tokens_input=100, tokens_output=20),
+            )
+            return super().__call__(prompt, **kwargs)
+
+    repo_root = tmp_path / "repo"
+    run_bench_matrix(
+        repo_root,
+        corpus_root=REAL_CORPUS,
+        stamp="s1",
+        backends=["claude"],
+        families=["reconcile"],
+        trials=1,
+        invokers=BenchInvokers(reconcile_invoker=TokenEmittingReconcileInvoker()),
+    )
+    records = _read_records(repo_root, "s1")
+    assert records
+    for r in records:
+        assert (r["tokens_input"], r["tokens_output"]) == (100, 20), r["cell_id"]
+
+
 def test_implementation_realistic_trial_succeeds(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     run_bench_matrix(
