@@ -289,38 +289,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
 
-### Five model-backed calls have no run writer to bind, or no production caller, so where they log is undecided
-
-- **Files:** `plan_tool/create.py` (`suggest_slug`, called from
-  `resolve_create_slug`, `plan_tool/cli/authoring.py:773`), `plan_tool/jira.py`
-  (`render_jira_export`; `cli/jira_cmd.py` opens no writer),
-  `plan_tool/annotate.py` (`classify_plan_implementation`; `cli/annotate_cmd.py`
-  opens no writer), `plan_tool/review.py` (`check_criteria_fulfillment`),
-  `plan_tool/concept_tree.py` (`emit_concept_tree`).
-- **Symptom:** the run log is keyed by `(slug, run_id)` (`run_log_path`).
-  `suggest_slug` runs before the slug or plan directory exists. The jira and
-  annotate commands open no writer, and annotate's source can be a note with no
-  plan slug (not verified per input kind). `check_criteria_fulfillment` and
-  `emit_concept_tree` have no production caller (grep, 2026-11-16). Their
-  tokens are invisible to run-log analysis, and a `run_logger` parameter alone
-  does not give any of them a place to write.
-- **Fix:** decide per site where the record goes (a per-command pseudo-slug,
-  as `lessons consolidate` already uses with `slug="lessons-consolidate"`; a
-  buffer flushed once the slug exists) or retire it as deliberately
-  unlogged with the reason in `docs/history/backlog-decisions.md`; for the two
-  uncalled functions, decide wire-or-delete. Then apply the `suggest_gates`
-  pattern. All five sit in `DEFERRED_SITES` until then.
-- **Deliberately not done:** an ambient-writer fallback inside `_emit_call_end`
-  — with no bind there is no ambient writer either.
-- **Approach:** direct once the destination decision is made.
-- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** 2026-11-16, split from the ten-site run-log entry. The other
-  five sites were already logged through a sink their CLI caller binds, except
-  `find_lesson_equivalences` under `lessons consolidate` and `review_plan_full`
-  under the bench's reconcile trial, which now bind one;
-  `CALLER_BOUND_SITES` in `tests/test_run_log_call_coverage.py` requires every
-  call in each listed caller to sit inside that caller's bind.
-
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 
 - **Files:** the `create` plan-generation prompts under `plan_tool/prompts/`,
@@ -976,6 +944,29 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct, after the invariant is stated.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
+
+### `check_criteria_fulfillment` and `emit_concept_tree` make a model call but have no production caller
+
+- **Files:** `plan_tool/review.py:check_criteria_fulfillment`,
+  `plan_tool/concept_tree.py:emit_concept_tree`; tests in `tests/test_review.py`,
+  `tests/test_concept_emit.py`.
+- **Symptom:** neither function is called anywhere in `plan_tool/` (grep,
+  2026-11-16); only tests and one comment (`review.py`'s conceptual-audit
+  header) reach them. Each still carries an invoker seam and sits in
+  `DEFERRED_SITES` in `tests/test_run_log_call_coverage.py` as unlogged, which
+  is harmless while nothing calls it and a gap the moment something does.
+- **Fix:** decide per function: delete it with its tests, or wire a production
+  caller and bind a call-end sink there. No run-log change is needed while it
+  stays callerless.
+- **Deliberately not done:** an ambient-writer fallback inside `_emit_call_end`
+  — with no bind there is no ambient writer either.
+- **Approach:** direct, once wire-or-delete is decided.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** 2026-11-16, split from the ten-site run-log entry. Of the other
+  eight sites, `render_jira_export` and `classify_plan_implementation` are
+  BACKLOG #176, `suggest_slug` is #177, and the five whose caller binds the sink
+  are pinned by `CALLER_BOUND_SITES`; `lessons consolidate` and the bench
+  reconcile trial now bind one.
 
 ## ROADMAP
 

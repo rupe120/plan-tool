@@ -62,16 +62,16 @@ CALLER_BOUND_SITES = {
 }
 
 # Sites that stay unlogged: no RunLogWriter is reachable from the function or
-# its callers (or there is no production caller). Filed in BUG_BACKLOG.md as
-# decision-needed. Each entry must not mention a sink call; wiring one moves it
+# its callers (or there is no production caller). Each reason names the entry
+# that tracks it. Each entry must not mention a sink call; wiring one moves it
 # to LOGGED_SITES (bind in the site) or CALLER_BOUND_SITES (bind in its caller).
 # The check below sees only the first: a caller-side bind does not trip it.
 DEFERRED_SITES = {
-    ("create.py", "suggest_slug"): "runs before the slug exists",
-    ("review.py", "check_criteria_fulfillment"): "no production caller",
-    ("jira.py", "render_jira_export"): "jira opens no run log",
-    ("annotate.py", "classify_plan_implementation"): "annotate opens no run log",
-    ("concept_tree.py", "emit_concept_tree"): "no production caller",
+    ("create.py", "suggest_slug"): "runs before the slug exists; BACKLOG #177",
+    ("review.py", "check_criteria_fulfillment"): "no production caller; BUG_BACKLOG MINOR",
+    ("jira.py", "render_jira_export"): "jira opens no run log; BACKLOG #176",
+    ("annotate.py", "classify_plan_implementation"): "annotate opens no run log; BACKLOG #176",
+    ("concept_tree.py", "emit_concept_tree"): "no production caller; BUG_BACKLOG MINOR",
 }
 
 

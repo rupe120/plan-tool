@@ -121,10 +121,15 @@ they resolve.
   (`tests/test_review.py::TestCmdReviewSaveByDefault::test_claude_calls_land_in_the_run_log`,
   with `invoker=None`, so not the lessons call); the rest rely on
   `CALLER_BOUND_SITES`, which checks each call sits inside its caller's bind.
-  Entry removed in `7db641e34`. Not yet filed, owner decision open: these
-  sites write no `claude_call_start`, and `cli/runs.py`'s profile pairing skips
-  an end with no start, so `runs profile` omits these calls entirely; `runs
-  list` token totals are complete.
+  Entry removed in `7db641e34`. These sites write no `claude_call_start`, so
+  `runs profile` omits them (token totals are complete): retired, owner
+  decision, recorded in `docs/history/backlog-decisions.md`.
+- 2026-11-16 — overlap sweep: the split's no-writer entry duplicated BACKLOG
+  #176 (`render_jira_export`, `classify_plan_implementation`) and #177
+  (`suggest_slug`). It is now a MINOR entry for the two callerless functions
+  only; `DEFERRED_SITES` reasons cite the tracking entry; #177 is unparked
+  (`b71e9ce2f` met its condition); #537 names #332 as a known instance. Owner
+  decision.
 - 2026-11-16 — review of `HEAD~4..HEAD` (`/code-review high`), pass 1: eight
   findings. Fixed: the bench's reconcile trial opened a run log but bound no
   sink, so its records carried no tokens (same class as `lessons consolidate`;

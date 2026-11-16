@@ -5469,6 +5469,9 @@ working straight down the tiers.
   log exists iff the verb may spend Claude, matching `--refresh` and
   `convergence`).
 - **Dependencies:** none. `741fdf6` is the reference implementation.
+- **Test pin:** `render_jira_export` and `classify_plan_implementation` sit in
+  `DEFERRED_SITES` in `tests/test_run_log_call_coverage.py`; wiring a verb's
+  sink at the command level moves its site to `CALLER_BOUND_SITES`.
 - **Effort:** small — four mechanical wrappers against a settled pattern.
 - **Approach:** `direct` — the design question was answered by `741fdf6`;
   what's left is applying it four times.
@@ -5480,8 +5483,12 @@ working straight down the tiers.
 
 **#177 — Decide how `create`'s slug proposal gets logged (it runs before the log exists)**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced` · Principle `untriaged`
-- **Unpark when:** the BUG_BACKLOG fix that makes the unsinked-call warning name its real caller lands; then default to option (c), a RUNBOOK note, unless the unlogged cost matters.
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Unparked 2026-11-16:** its condition landed in `b71e9ce2f` (2026-11-15), so
+  the unsinked-call warning names its real caller. The default is option (c), a
+  RUNBOOK note, unless the unlogged cost matters. The other unlogged `create`
+  call in the 2026-10-02 update below is likely `propose_references` (#332),
+  not yet confirmed from the warning.
 - **What:** `create.py:suggest_slug` makes a Claude call that no run log can
   currently record. `cli/authoring.py` must resolve the slug **before**
   `RunLogWriter.start` because the log's path is keyed by the resolved slug
@@ -6417,16 +6424,18 @@ working straight down the tiers.
 - **Risks / fallout:** a static check will meet writers opened for commands
   that spend no model call, and binds reached through a passed writer; each
   needs an explicit, reasoned allowlist entry rather than a silent pass.
-- **Dependencies:** none. The five sites with no writer to bind
-  (`BUG_BACKLOG.md`, "Five model-backed calls have no run writer to bind")
-  are separate and stay out.
+- **Dependencies:** none. Verbs that open no run log at all (#176, #177) are
+  separate and stay out. #332 (`create`'s `propose_references` runs with no
+  sink) is a known instance of this class; it carries its own `parse_failure`
+  scope and lands on its own, and this check should find it if it has not.
 - **Scope contract:**
   - **Outcome:** a test fails when a function that opens a `RunLogWriter`
     reaches a model call with no sink bound.
   - **In scope:** `tests/test_run_log_call_coverage.py` (or a sibling test)
     and any allowlist it needs; binding a sink at a site the new check finds
     unbound.
-  - **Out of scope / Non-goals:** the no-writer sites above; writing
+  - **Out of scope / Non-goals:** #176 / #177 (no writer opened); #332's
+    `parse_failure` record; writing
     `claude_call_start` at caller-bound sites (only `runs profile` latency
     depends on it); an ambient-writer fallback in `_emit_call_end` (with no
     bind there is no ambient writer); folding the writer-or-`nullcontext`
@@ -6437,7 +6446,7 @@ working straight down the tiers.
   - **Verification:** remove the bind at `cli/lessons_cmd.py` or
     `bench.py:_run_reconcile` and watch the new check fail; full suite green.
   - **Stop / defer:** a site whose fix needs a run-log destination decision
-    goes to the `BUG_BACKLOG.md` no-writer entry, not here.
+    goes to #176 or #177, not here.
 - **Approach:** `direct`.
 - **Origin:** 2026-11-16, `/code-review high` pass 2 on the run-log
   call-coverage change (`HEAD~6..HEAD` at `210411e67`); owner chose to file.
