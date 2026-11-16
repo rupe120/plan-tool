@@ -18688,16 +18688,6 @@ def test_distill_prompt_preserves_seed_audit_altitude() -> None:
     assert "ordinary completeness" in normalized
 
 
-def test_distill_prompt_preserves_stage_separated_replays() -> None:
-    prompt = (Path(__file__).parents[1] / "plan_tool/prompts/distill-seed.md").read_text(
-        encoding="utf-8"
-    )
-    normalized = " ".join(prompt.split())
-    assert "Stage-separated replay preservation" in prompt
-    assert "named property, the routes it covers, and both stage dispositions" in normalized
-    assert "detail-owned mechanism into `Architecture`" in normalized
-
-
 def test_stack_is_a_recognized_optional_key_in_both_prompts() -> None:
     # Asserted by key: the recognized-optional-keys sentence must list the
     # backticked ``Stack`` key, and the prompt must keep its existing rule

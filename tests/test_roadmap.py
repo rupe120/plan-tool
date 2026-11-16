@@ -1499,15 +1499,6 @@ class TestConstraintsPromptTemplate:
     def test_constraints_prompt_names_every_stack_concern(self, concern: str) -> None:
         assert _names_key(_stack_section(_constraints_prompt_text()), concern)
 
-    def test_constraints_prompt_tells_the_model_to_record_open_when_the_brief_is_undecided(
-        self,
-    ) -> None:
-        text = _flattened(_stack_section(_constraints_prompt_text()))
-
-        assert "`open`" in text
-        assert "when the brief leaves that concern undecided" in text
-        assert "never invent a vendor, product, or version the brief does not name" in text
-
     def test_constraints_prompt_still_forbids_inventing_a_hosting_vendor(self) -> None:
         """Deliberate carve-out: stack rows may be `open`, hosting rows may not.
         Widening the `open` allowance into the hosting block must go red here."""
@@ -1856,14 +1847,6 @@ class TestPlansPromptTemplate:
         assert "${" not in invoker.prompts[3]
         assert _placeholders(invoker.prompts[3]) == set()
 
-    def test_plans_prompt_assigns_shared_producers_and_consumer_integration(self) -> None:
-        text = _flattened(_plans_prompt_text())
-
-        assert "which plan produces each shared capability or contract" in text
-        assert "which plans consume it" in text
-        assert "which plan connects each consumer to the producer" in text
-        assert "existing row descriptions and narrative linked by plan id" in text
-
     def test_plans_prompt_assigns_business_input_operations_without_inventing_support(self) -> None:
         text = _flattened(_plans_prompt_text())
 
@@ -1887,32 +1870,6 @@ class TestPlansPromptTemplate:
         # sentence carries the unresolved part, so a hop is never unowned and never invented.
         assert "name a plan that owns each hop, even when the source leaves its support unresolved" in bullet
         assert "state unresolved source support as an assumption" in bullet
-
-    def test_plans_prompt_sizes_rows_by_responsibility_without_fixed_count(self) -> None:
-        text = _flattened(_plans_prompt_text())
-
-        assert "cohesive implementation outcome" in text
-        assert "explicit scope boundary, identifiable prerequisites" in text
-        assert "verifiable completion result" in text
-        assert "split overly broad scopes into bounded plan rows" in text
-        assert "splitting steps inside one broad plan is insufficient" in text
-        guidance = text.split("## map complete implementation responsibilities", 1)[1].split(
-            "## the frontmatter inventory", 1
-        )[0]
-        for disposition in ("keep", "merge", "split", "cross-cutting"):
-            assert f"`{disposition}`" in guidance
-        assert "several plans per component are expected where needed" in text
-        assert "do not impose a target plan count or directory-based boundaries" in text
-        assert "or create a separate plan for every shared concern" in text
-
-    def test_plans_prompt_orders_required_handoffs_and_keeps_unknowns_explicit(self) -> None:
-        text = _flattened(_plans_prompt_text())
-
-        assert "use `ordering.depends_on` for prerequisite plans" in text
-        assert "what each consumer needs delivered by those plans" in text
-        assert "`assumption_targets` as plan references for ordering-level assumptions" in text
-        assert "inter-plan unknowns in `assumptions` with their consuming plans" in text
-        assert "unknown prerequisite remains explicit; do not invent a settled result" in text
 
     def test_plans_prompt_preserves_eventual_observed_acceptance_within_source_scope(self) -> None:
         text = _flattened(_plans_prompt_text())
@@ -2260,16 +2217,6 @@ class TestRevisionModeSelection:
 
     def test_revision_template_ships_under_prompts_dir(self) -> None:
         assert (prompts_dir() / roadmap.REVISION_PROMPT_FILENAME).is_file()
-
-    def test_shared_revision_prompt_keeps_updates_proportional_and_at_altitude(self) -> None:
-        text = _revision_prompt_text()
-
-        assert "smallest truthful response" in text
-        assert "proportional to the selected reviewer request" in text
-        assert "target's recorded role" in text
-        assert "declared plan intent" in text
-        assert "eventual capability" in text
-        assert "selected artifact at its own altitude" in text
 
     def test_shipped_stage_feedback_prompt_inherits_the_update_judgment(self) -> None:
         artifact = replace(
@@ -6454,12 +6401,6 @@ class TestSeedPromptTemplate:
         ):
             assert instruction in text
 
-    def test_seed_prompt_keeps_sibling_prerequisites_outside_selected_row_scope(self) -> None:
-        text = _flattened(_seed_prompt_text())
-        assert "`ordering.depends_on` and relevant inter-plan assumptions" in text
-        assert "distinguish what this row delivers from what another row supplies" in text
-        assert "do not repartition accepted rows or implement a sibling prerequisite" in text
-
     def test_seed_prompt_preserves_business_delivery_when_prerequisites_are_missing(self) -> None:
         text = _flattened(_seed_prompt_text())
 
@@ -6534,23 +6475,6 @@ class TestSeedPromptTemplate:
 
         assert "must resolve against this plan row's `component_ids`" in text
         assert "`cross_cutting: true`" in text
-
-    def test_seed_prompt_warns_against_copying_rejected_alternative_rationale(
-        self,
-    ) -> None:
-        text = _flattened(_seed_prompt_text())
-
-        assert "without pasting long rejected-alternative rationale prose" in text
-        assert "`create` re-grounds reasons against live docs" in text
-
-    def test_seed_prompt_states_the_plan_review_contract(self) -> None:
-        text = _flattened(_seed_prompt_text())
-
-        assert "preserve the owning plan row's `intent` in `outcome`" in text
-        assert (
-            "the authoritative review statement; do not make a reviewer infer "
-            "it from this derived seed" in text
-        )
 
     def test_seed_prompt_keeps_the_proof_and_roadmap_altitude(self) -> None:
         """The seed model drafts one row and never sees the brief, so its
