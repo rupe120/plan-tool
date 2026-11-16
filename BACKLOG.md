@@ -6396,6 +6396,52 @@ working straight down the tiers.
   plan's shipped implementation (`e77ebfa5..HEAD`).
 - **Status:** parked 2026-11-14; narrow (same-membership reorder with no other field change), and before/after still shows the change.
 
+**#537 — A command that opens a run log but binds no call-end sink silently drops every model call it makes, and no test catches the next one**
+
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **What:** `shell._emit_call_end` no-ops unless a sink is bound, so a
+  `RunLogWriter.start` with no `bind_shell_sink` / `install_call_end_sink`
+  (or a callee that binds) around the spend writes a run log with no
+  `claude_call_end` events and no tokens. Two instances were fixed one caller
+  at a time on 2026-11-16 (`lessons consolidate`, the bench reconcile trial);
+  `tests/test_run_log_call_coverage.py` pins only listed sites, so a new
+  command repeats the gap unseen, and `_warn_unsinked_call` fires once per
+  process and only at call time.
+- **Effort:** small to medium — one AST or runtime check over 20
+  `RunLogWriter.start` calls in 11 modules (`bench.py`, `cli/authoring.py`,
+  `cli/completeness_cmd.py`, `cli/gates_cmd.py`, `cli/lessons_cmd.py`,
+  `cli/reconcile.py`, `cli/review_cmd.py`, `cli/run_cmd.py`,
+  `roadmap.py`, `roadmap_candidate_review.py`, `roadmap_candidate_run.py`);
+  the design work is recognizing a bind that lives in a callee (most sites
+  pass the writer to an orchestrator that binds).
+- **Risks / fallout:** a static check will meet writers opened for commands
+  that spend no model call, and binds reached through a passed writer; each
+  needs an explicit, reasoned allowlist entry rather than a silent pass.
+- **Dependencies:** none. The five sites with no writer to bind
+  (`BUG_BACKLOG.md`, "Five model-backed calls have no run writer to bind")
+  are separate and stay out.
+- **Scope contract:**
+  - **Outcome:** a test fails when a function that opens a `RunLogWriter`
+    reaches a model call with no sink bound.
+  - **In scope:** `tests/test_run_log_call_coverage.py` (or a sibling test)
+    and any allowlist it needs; binding a sink at a site the new check finds
+    unbound.
+  - **Out of scope / Non-goals:** the no-writer sites above; writing
+    `claude_call_start` at caller-bound sites (only `runs profile` latency
+    depends on it); an ambient-writer fallback in `_emit_call_end` (with no
+    bind there is no ambient writer); folding the writer-or-`nullcontext`
+    bind shape into a shared helper.
+  - **Allowed behavior changes:** run-log `claude_call_end` events (and
+    token totals) appear for calls the check finds unbound; none otherwise.
+  - **Allowed reorganization:** none.
+  - **Verification:** remove the bind at `cli/lessons_cmd.py` or
+    `bench.py:_run_reconcile` and watch the new check fail; full suite green.
+  - **Stop / defer:** a site whose fix needs a run-log destination decision
+    goes to the `BUG_BACKLOG.md` no-writer entry, not here.
+- **Approach:** `direct`.
+- **Origin:** 2026-11-16, `/code-review high` pass 2 on the run-log
+  call-coverage change (`HEAD~6..HEAD` at `210411e67`); owner chose to file.
+
 ### E. Cosmetic / churn
 
 **#393 — `ROADMAP_FORMAT.md` calls a field "discharges" where the schema keyword is `constraint_ids`**

@@ -149,9 +149,8 @@ they resolve.
   caller-side bind (said in its comment); a nested bind with another phase
   mislabels the phase but still records the tokens; folding the
   writer-or-`nullcontext` shape into one helper (incidental consolidation,
-  unverified). Surfaced to the owner: a class-wide guard that every function
-  opening a `RunLogWriter` also binds a sink (21 `RunLogWriter.start` sites in
-  12 modules).
+  unverified). Class-wide guard (every function opening a `RunLogWriter` also
+  binds a sink): `tracked BACKLOG #537`, owner decision.
 
 ## Deliberately not in this handoff
 
