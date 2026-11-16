@@ -330,7 +330,6 @@ remaining items; it does not create another backlog owner.
 | #494 recorded-prerequisite view | Discarded: #492 recorded `no-action`. Re-file only on a distinct status-reporting need. |
 | #490 finding dispositions | Consult its convergence-evidence arc; do not duplicate its store or transfer ownership. |
 | #485 roadmap departures (merged into #490) | Resolve its authority decision in #490 before relying on departure semantics; a pending feedback id alone does not approve a roadmap change. |
-| #484 per-finding `edit_drift` marks | Independent reporting work; not a prerequisite or a hidden expansion of shared-context delivery. |
 
 Do not bulk-author future implementation plans from unresolved design choices.
 The next small selected plan still requires its complete detail bundle and

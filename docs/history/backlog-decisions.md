@@ -1288,3 +1288,17 @@ Each entry below was folded into the entry named, which now carries its scope in
 | #410, #416, #421 | `--compare` entry in `BUG_BACKLOG.md` | A `default=` parameter on `_option_occurrences`, a fail-closed type check in `design_row_collections`, and one parametrized test of the companion-mode rejection list. |
 | #427 | #458 | Its 212 cited / 95 defined / 117 undefined test-name counts become #458's false-positive corpus. The archived plan's detail files are not rewritten. |
 | #485 | #490 | A deliberate departure from a roadmap row is a disposition of kind `departure`; the authority question is assigned to #490 to settle. |
+
+### #484 — Per-finding `edit_drift` marks
+
+Retired 2026-11-16, owner-confirmed after a tree check: the entry's premise was
+already false. `EditDriftAdvisory` carries `matched_findings`, `matched_count`
+and `new_eligible_count`, and `_edit_drift_lines` prints `(N of M)` with a
+`Matched findings:` line naming them, both standalone and under the bare-mechanism
+combined advisory. `tests/test_convergence_diagnosis.py` pins the matched set and
+the rendering. The advisory names at most `_ADVISORY_TITLE_CAP` (3) titles and
+then "and N more"; the cap is deliberate and pinned, so an eight-finding round
+shows three. Reopen when an operator needs more than three matched titles to
+tell fix-induced findings from real ones: raise the cap or print every title in
+`_edit_drift_lines`, still recommend-only, with no change to blocking,
+continuation or exit behavior.
