@@ -101,60 +101,71 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
-- 2026-11-13 — the loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md`
-  omit the `no_progress` and `no_blocking_findings` stops: `fixed c8bd15643`,
-  entry removed in `ea5396a14`. `docs/ITERATION.md` § "How the loop terminates"
-  now lists every `should_continue` reason with its code, per-command scope and
-  exit codes, pinned by a drift test. Pass-by-pass record and closure (stopped at
-  exit 2); the pass-by-pass record was retired 2026-11-13.
-
-- 2026-11-15 — `completeness_report.py` kept `WHY["open"]` and `_HEADINGS["open"]`,
-  which no report path renders: `fixed ed32f3f77`, entry removed in `0805402b8`.
-  `deferred_kind` still returns `open` (the loop's deferral summary counts it).
-- 2026-11-15 — `--accept`'s clean-tree check misread quoted and renamed paths:
-  `fixed 3ab6d153f`, entry removed in `6d5001351`. It now reads `git status -z`
-  from the git top level, so spaces, non-ASCII names, renames and a nested
-  project root match.
-- 2026-11-15 — the post-commit clean check on paths git keeps reporting as
-  modified: `fixed ae5956a9c` for untracked content in a committed submodule;
-  the filter-modified half is retired by design (record in
-  `docs/history/backlog-decisions.md`). Entry removed in `cfd3b2ed7`.
-- 2026-11-15 — `create --from-existing` read seed sections without stripping
-  frontmatter: `fixed cc09f31ad`, entry removed in `67f8947be`. Seven readers,
-  one test each, plus a test for the distill gate that had none. Two further
-  readers stay unstripped on purpose (the distiller's own output, the tool's
-  rendered plan body); each says so in a comment.
-- 2026-11-15 — run IDs collided within a second (24-bit tail): `fixed 49ff32c94`,
-  entry removed in `e9c43949b`. The tail is `token_hex(8)`; a deterministic test
-  replaces the sampling one.
-- 2026-11-15 — `CLAUDE.md`, `TESTING.md` and backlog #190 cited the missing
-  `prompts/reconcile.md`: `fixed 3d35705c5`, entry removed in `fe72a5791`. The
-  `CLAUDE.md` edit is architect-tier (its own header): it needs review in the
-  pull request. `lessons/general.md` still names the old path as a record of
-  past plans and is left alone.
 - 2026-11-15 — out-of-tree detail archive writes: `pending`, narrowed to
   `detail --split` renames and `evidence-gated` (`detail --force` never writes
   outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
   tree).
-- 2026-11-15 — four live seeds refused for `## References`: `fixed 18438c1a9`
-  for `roadmap-revision-retention.md` and the carved intent seed; the two
-  impact-recurrence seeds described a design closed on 2026-08-11 and were
-  deleted (`0038319ae`, owner decision, recorded in `backlog-decisions.md`).
-- 2026-11-15 — the tracked `.claude/skills/plan-tool/` copy had drifted 87 lines
-  from `integrations/`: untracked and ignored (`e12e7e019`, owner decision,
-  recorded in `backlog-decisions.md`).
-- 2026-11-15 — review of the drain branch, closed as converged (three
-  consecutive low-yield passes; every finding low or nit). Pass 1: eight
-  findings, three refuted with evidence, two declined, three fixed in `20e85619d`.
-  Pass 2: eight findings, five repeats or declines, two fixed
-  (`find_dropped_references` also strips echoed frontmatter; the `open` comment
-  says only what was verified). Pass 3, over the range plus the two decision
-  commits: seven findings, five repeats or declines, two fixed (the two `open`
-  comments agree and name `_render_grouped_report`; the example run ID in the
-  `runs` help, `RUNBOOK.md` and `commands.md` has the current shape). Declined
-  every time: `unexpected_dirty_paths` and the post-commit check treat
-  submodules differently on purpose (one asks "clean before I start?", the other
-  "did the commit absorb what it could?").
+
+- 2026-11-16 — drain survey of `BUG_BACKLOG.md`: no RISK section, and no
+  `direct` + `ready` entry in BUG or MINOR until the ten-site run-log entry was
+  split (owner decision). Other unlabelled `direct` entries stay out:
+  `extract_h2_sections` defaults (compatibility review first), `install-skill`
+  TOCTOU (re-open on a concurrent-install use case), `renderer.py`
+  `MUTATING_MODES` (move it to a leaf first), fence-check consolidation (identity
+  check first).
+- 2026-11-16 — run-log calls with a reachable writer: `fixed a7aee31af` for
+  `lessons consolidate` (writer open, no sink bound); refuted for the other four
+  (`review_plan_full`, `extract_and_append_review_lessons`, `run_all_done_steps`,
+  `_run_deep_for_step`): `cli/review_cmd.py` binds the sink around them. Runtime
+  coverage exists only for `reconcile_plan`
+  (`tests/test_review.py::TestCmdReviewSaveByDefault::test_claude_calls_land_in_the_run_log`,
+  with `invoker=None`, so not the lessons call); the rest rely on
+  `CALLER_BOUND_SITES`, which checks each call sits inside its caller's bind.
+  Entry removed in `7db641e34`. These sites write no `claude_call_start`, so
+  `runs profile` omits them (token totals are complete): retired, owner
+  decision, recorded in `docs/history/backlog-decisions.md`.
+- 2026-11-16 — overlap sweep: the split's no-writer entry duplicated BACKLOG
+  #176 (`render_jira_export`, `classify_plan_implementation`) and #177
+  (`suggest_slug`). It is now a MINOR entry for the two callerless functions
+  only; `DEFERRED_SITES` reasons cite the tracking entry; #177 is unparked
+  (`b71e9ce2f` met its condition) and `decision-needed`. Owner decision.
+  Review (`HEAD~2..HEAD`, `/code-review high`): ten prose findings, all fixed.
+  #332 is not an instance of #537 (`propose_references` binds a sink and is in
+  `LOGGED_SITES`; #332's own "no sink" claim looks stale, left for its owner);
+  #177 is `decision-needed`, not `ready`, and its 2026-10-02 note is past tense;
+  #176 counts three verbs and notes `reconcile-plan-walk`'s unlisted site; the
+  decision record names logged commands (`verify-all`, not its aliases), states
+  the signature cost directly, and reopens only for latency or `prompt_sha256`;
+  callerless reasons cite their entry; the ambient-writer line left the
+  callerless entry. #537 also names `propose_distilled_seed_from_claude` (binds,
+  unpinned).
+- 2026-11-16 — review of `HEAD~4..HEAD` (`/code-review high`), pass 1: eight
+  findings. Fixed: the bench's reconcile trial opened a run log but bound no
+  sink, so its records carried no tokens (same class as `lessons consolidate`;
+  now bound, with a test); the coverage guard only searched the caller file for
+  the phase (now checks the call is inside the `with`, verified by mutation);
+  the coverage comment overclaimed `find_lesson_equivalences` (now names the
+  library-only route); this log's test citation and bench claim; the lessons
+  sink is bound once around the loop. Refuted: the `detail` strict-check route
+  to `find_lesson_equivalences` is unlogged but unreachable, since no CLI path
+  sets `strict_check` or `warn_check`. Declined: a `claude_call_start` in
+  `lessons consolidate` (the prompt is rendered per pair inside
+  `find_lesson_equivalences`; same deliberately-not as above); the bind
+  overriding the retry attempt number (every `bind_shell_sink` site does this
+  by design). Pass 2 (`HEAD~6..HEAD`): eight findings, four of them on the
+  coverage guard pass 1 added, so the review stopped here under exit 2 (the loop
+  is auditing its own edits). Fixed: every call of a caller-bound site in its
+  caller module must sit inside the bind, and calls inside a nested def or lambda
+  no longer count; the bench bind is pinned as a second caller of
+  `review_plan_full`; the deferred-site comment and message name
+  `CALLER_BOUND_SITES`; `_read_log_stats`'s docstring no longer says reconcile
+  trials carry no tokens; the ambient-writer "deliberately not done" line moved
+  to the deferred entry. Declined: the deferred-site check cannot see a
+  caller-side bind (said in its comment); a nested bind with another phase
+  mislabels the phase but still records the tokens; folding the
+  writer-or-`nullcontext` shape into one helper (incidental consolidation,
+  unverified). Class-wide guard (every function opening a `RunLogWriter` also
+  binds a sink): `tracked BACKLOG #537`, owner decision.
 
 ## Deliberately not in this handoff
 

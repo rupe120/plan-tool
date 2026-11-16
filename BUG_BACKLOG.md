@@ -289,32 +289,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
 
-### Ten model-backed calls still write no start or end record to the run log, so run-log token totals undercount
-
-- **Files:** `plan_tool/create.py` (`suggest_slug`), `plan_tool/review.py`
-  (`check_criteria_fulfillment`, `review_plan_full`,
-  `extract_and_append_review_lessons`), `plan_tool/jira.py`
-  (`render_jira_export`), `plan_tool/annotate.py`
-  (`classify_plan_implementation`), `plan_tool/lessons.py`
-  (`find_lesson_equivalences`), `plan_tool/concept_tree.py`
-  (`emit_concept_tree`), `plan_tool/launcher.py` (`_run_deep_for_step`,
-  `run_all_done_steps`).
-- **Symptom:** `shell._emit_call_end` drops `claude_call_end` when no sink is
-  installed. None of these functions receives a `RunLogWriter`, so none can
-  bind one. Their tokens are invisible to run-log analysis.
-- **Fix:** thread a `run_logger` parameter (or one shared opener) through each
-  function's public signature and CLI callers, bind a sink, emit a start with
-  `prompt_sha256`. The list is pinned as `DEFERRED_SITES` in
-  `tests/test_run_log_call_coverage.py`; wiring a site moves it to
-  `LOGGED_SITES`.
-- **Deliberately not done:** an ambient-writer fallback inside `_emit_call_end`
-  — with no bind there is no ambient writer either.
-- **Approach:** direct.
-- **Origin:** 2026-10-16, token ledger analysis. Wired the same day:
-  `apply_finding` (streaming invoker emitted no end),
-  `assess_direct_source_split_from_claude`, `_propose_risk_profile_from_seed`;
-  `plan_audit` now emits a start; `prompt_sha256` added to every start.
-
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 
 - **Files:** the `create` plan-generation prompts under `plan_tool/prompts/`,
@@ -970,6 +944,27 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct, after the invariant is stated.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
+
+### `check_criteria_fulfillment` and `emit_concept_tree` make a model call but have no production caller
+
+- **Files:** `plan_tool/review.py:check_criteria_fulfillment`,
+  `plan_tool/concept_tree.py:emit_concept_tree`; tests in `tests/test_review.py`,
+  `tests/test_concept_emit.py`.
+- **Symptom:** neither function is called anywhere in `plan_tool/` (grep,
+  2026-11-16); only tests and one comment (`review.py`'s conceptual-audit
+  header) reach them. Each still carries an invoker seam and sits in
+  `DEFERRED_SITES` in `tests/test_run_log_call_coverage.py` as unlogged, which
+  is harmless while nothing calls it and a gap the moment something does.
+- **Fix:** decide per function: delete it with its tests, or wire a production
+  caller and bind a call-end sink there. No run-log change is needed while it
+  stays callerless.
+- **Approach:** direct, once wire-or-delete is decided.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** 2026-11-16, split from the ten-site run-log entry. Of the other
+  eight sites, `render_jira_export` and `classify_plan_implementation` are
+  BACKLOG #176, `suggest_slug` is #177, and the five whose caller binds the sink
+  are pinned by `CALLER_BOUND_SITES`; `lessons consolidate` and the bench
+  reconcile trial now bind one.
 
 ## ROADMAP
 

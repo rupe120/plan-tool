@@ -5469,10 +5469,15 @@ working straight down the tiers.
   log exists iff the verb may spend Claude, matching `--refresh` and
   `convergence`).
 - **Dependencies:** none. `741fdf6` is the reference implementation.
-- **Effort:** small — four mechanical wrappers against a settled pattern.
+- **Test pin:** `render_jira_export` and `classify_plan_implementation` sit in
+  `DEFERRED_SITES` in `tests/test_run_log_call_coverage.py`; wiring a verb's
+  sink at the command level moves its site to `CALLER_BOUND_SITES`.
+  `reconcile-plan-walk`'s model-call site is in no list yet; add it to
+  `CALLER_BOUND_SITES` when its bind lands.
+- **Effort:** small — three mechanical wrappers against a settled pattern.
 - **Approach:** `direct` — the design question was answered by `741fdf6`;
-  what's left is applying it four times.
-- **Quality:** `audit-coverage` — makes the spend of four verbs observable at
+  what's left is applying it three times.
+- **Quality:** `audit-coverage` — makes the spend of three verbs observable at
   all, which is the precondition for diagnosing anything about them.
 - **Origin:** 2026-07-28, logging-gap audit run after the empty-response
   entry in `BUG_BACKLOG.md` proved only measurable once `8b7615c` added
@@ -5480,8 +5485,12 @@ working straight down the tiers.
 
 **#177 — Decide how `create`'s slug proposal gets logged (it runs before the log exists)**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced` · Principle `untriaged`
-- **Unpark when:** the BUG_BACKLOG fix that makes the unsinked-call warning name its real caller lands; then default to option (c), a RUNBOOK note, unless the unlogged cost matters.
+- **Labels:** Route `direct` · Readiness `decision-needed` · Tier `experienced` · Principle `untriaged`
+- **Unparked 2026-11-16:** its condition landed in `b71e9ce2f` (2026-11-15), so
+  the unsinked-call warning names its real caller. Next: run `create` with an
+  explicit slug, read which call the warning names, then choose among
+  (a)–(c); the default is (c), a RUNBOOK note, unless the unlogged cost
+  matters.
 - **What:** `create.py:suggest_slug` makes a Claude call that no run log can
   currently record. `cli/authoring.py` must resolve the slug **before**
   `RunLogWriter.start` because the log's path is keyed by the resolved slug
@@ -5491,12 +5500,10 @@ working straight down the tiers.
   directory once resolved; (b) buffer the call's `ClaudeCallEnd` and flush it
   after `start`; (c) accept it as a documented pre-log call and say so in
   `RUNBOOK.md` so the gap is known rather than surprising.
-- **Update 2026-10-02:** `create` with an explicit slug, which skips the slug
-  proposal, still prints the unsinked-call warning (after the distill step), so
-  `suggest_slug` is not the only unlogged call in `create`. Which call it is
-  stays unproven until the warning can name its caller (BUG_BACKLOG, "The
-  unsinked-call warning names the rate-limit retry loop instead of the call that
-  ran"); settle that before choosing among (a)–(c); that fix is the unpark condition.
+- **Observed 2026-10-02:** `create` with an explicit slug, which skips the slug
+  proposal, still printed the unsinked-call warning (after the distill step), so
+  `suggest_slug` is not the only unlogged call in `create`. The warning could
+  not then name its caller; it can since `b71e9ce2f`.
 - **Why it matters:** every `create` makes this call, so it is a small but
   permanent hole in cost accounting — and (c) is a legitimate outcome, which
   is what makes this a decision entry rather than a fix.
@@ -6395,6 +6402,55 @@ working straight down the tiers.
 - **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
   plan's shipped implementation (`e77ebfa5..HEAD`).
 - **Status:** parked 2026-11-14; narrow (same-membership reorder with no other field change), and before/after still shows the change.
+
+**#537 — A command that opens a run log but binds no call-end sink silently drops every model call it makes, and no test catches the next one**
+
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **What:** `shell._emit_call_end` no-ops unless a sink is bound, so a
+  `RunLogWriter.start` with no `bind_shell_sink` / `install_call_end_sink`
+  (or a callee that binds) around the spend writes a run log with no
+  `claude_call_end` events and no tokens. Two instances were fixed one caller
+  at a time on 2026-11-16 (`lessons consolidate`, the bench reconcile trial);
+  `tests/test_run_log_call_coverage.py` pins only listed sites, so a new
+  command repeats the gap unseen, and `_warn_unsinked_call` fires once per
+  process and only at call time.
+- **Effort:** small to medium — one AST or runtime check over 20
+  `RunLogWriter.start` calls in 11 modules (`bench.py`, `cli/authoring.py`,
+  `cli/completeness_cmd.py`, `cli/gates_cmd.py`, `cli/lessons_cmd.py`,
+  `cli/reconcile.py`, `cli/review_cmd.py`, `cli/run_cmd.py`,
+  `roadmap.py`, `roadmap_candidate_review.py`, `roadmap_candidate_run.py`);
+  the design work is recognizing a bind that lives in a callee (most sites
+  pass the writer to an orchestrator that binds).
+- **Risks / fallout:** a static check will meet writers opened for commands
+  that spend no model call, and binds reached through a passed writer; each
+  needs an explicit, reasoned allowlist entry rather than a silent pass.
+- **Dependencies:** none. Verbs that open no run log at all (#176, #177) are
+  separate and stay out. Deliberately not cited as an instance: #332, whose
+  `propose_references` call binds a sink at HEAD (`create.py`, both send paths)
+  and is in `LOGGED_SITES`. Known unpinned site the check should also cover:
+  `create.py:propose_distilled_seed_from_claude` binds a sink but is in no
+  coverage list.
+- **Scope contract:**
+  - **Outcome:** a test fails when a function that opens a `RunLogWriter`
+    reaches a model call with no sink bound.
+  - **In scope:** `tests/test_run_log_call_coverage.py` (or a sibling test)
+    and any allowlist it needs; binding a sink at a site the new check finds
+    unbound.
+  - **Out of scope / Non-goals:** #176 / #177 (no writer opened); #332; writing
+    `claude_call_start` at caller-bound sites (only `runs profile` latency
+    depends on it); an ambient-writer fallback in `_emit_call_end` (with no
+    bind there is no ambient writer); folding the writer-or-`nullcontext`
+    bind shape into a shared helper.
+  - **Allowed behavior changes:** run-log `claude_call_end` events (and
+    token totals) appear for calls the check finds unbound; none otherwise.
+  - **Allowed reorganization:** none.
+  - **Verification:** remove the bind at `cli/lessons_cmd.py` or
+    `bench.py:_run_reconcile` and watch the new check fail; full suite green.
+  - **Stop / defer:** a site whose fix needs a run-log destination decision
+    goes to #176 or #177, not here.
+- **Approach:** `direct`.
+- **Origin:** 2026-11-16, `/code-review high` pass 2 on the run-log
+  call-coverage change (`HEAD~6..HEAD` at `210411e67`); owner chose to file.
 
 ### E. Cosmetic / churn
 
