@@ -785,57 +785,6 @@ Durable re-open conditions for retired items are recorded in
 
 ## MINOR
 
-### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
-
-- **Files:** `plan_tool/roadmap_candidate.py:_append_added_row_prose`
-  (`amended = dict(artifacts)`); its sole caller, the shared apply body in
-  `plan_tool/roadmap_candidate.py` (`return _append_added_row_prose(artifacts,
-  prepared)`) that both materialize and replay use — it builds a fresh
-  `dict(predecessor_artifacts)`, mutates it in an `_apply_operation` loop, then
-  passes it straight in and immediately returns the result, so nothing holds
-  the pre-call reference afterward.
-- **Symptom:** not a correctness bug — confirmed no aliasing exists at the
-  call site, so the copy is pure waste, not a safety net. On the data volumes
-  here (a handful of stage-artifact keys, a handful of operations per
-  candidate) the cost is immaterial; recorded so it stops surfacing as a
-  seemingly-new finding across `/code-review` rounds.
-- **Fix:** have `_append_added_row_prose` mutate its `artifacts` argument in
-  place and return it, matching how the adjacent `_apply_operation` loop
-  already mutates the same dict directly — which also means widening its
-  parameter type from `Mapping[str, RoadmapArtifact]` to a mutable mapping
-  type, a real (if small) signature/contract change, not just a body edit.
-- **Deliberately not:** folding the prose-append pass into the
-  `_apply_operation` loop itself — that would need duplicating the fold in
-  the shared apply body rather than fixing the helper once.
-- **Approach:** direct, low priority — wasted work only, no behavioral
-  change.
-- **Origin:** 2026-09-28, `/code-review high`, flagged in two consecutive
-  rounds on `run/roadmap-candidate-row-prose-amendments`.
-
-### `review_plan_full`'s fence guard re-runs the full audit-input snapshot capture, duplicating `cmd_review`'s own capture moments earlier
-
-- **Files:** `plan_tool/review.py` (`review_plan_full`'s call to
-  `AuditInputSnapshot.capture(plan_path, repo_root)`, made purely to reach
-  the unmatched-fence check); `plan_tool/cli/review_cmd.py` (`cmd_review`'s
-  own, separate full capture just before it).
-- **Symptom:** not a correctness bug — both captures agree, since nothing
-  mutates the plan between them — but every `plan-tool review` /
-  `reconcile-plan` invocation on an N-step plan performs the full O(N)
-  snapshot capture (one file read per step's detail artifact, plus the seed
-  archive fallback's directory scan) twice in a row, purely to raise on a
-  fence check that a lightweight standalone helper (like the sibling
-  `_reject_unmatched_*_fence` functions already in this file) could answer
-  without the snapshot's other side reads.
-- **Fix:** either thread `cmd_review`'s already-captured snapshot into
-  `review_plan_full` instead of re-capturing, or replace the fence check's
-  use of the full capture with a narrow, snapshot-free `_fenced_code_spans`
-  check like `review.py`'s own `_reject_unmatched_plan_fence`.
-- **Approach:** direct, low priority — wasted work only, no behavioral
-  change.
-- **Origin:** 2026-09-02, `/code-review high` round 2 on the
-  fence-guard-class fix (`be28de96`); confirmed but predates that fix (the
-  guard call site itself is unchanged by it).
-
 ### Candidate consolidation: ~12 independent copies of the same "reject unmatched opening code fence" check (unverified — needs identity check before any merge)
 
 - **Files:** `plan_tool/launcher.py`, `detail.py`, `review.py`, `renderer.py`,
@@ -935,23 +884,6 @@ Durable re-open conditions for retired items are recorded in
 ### `ruff check` reports an undefined name, `Plan`, in `tests/cli/test_completeness_cmd.py`, so the code check fails on that file even though its tests pass
 
 - **Promoted:** IPPT-5 (2026-09-24)
-
-### `install-skill`'s Phase 1/Phase 2 recompute a resolved path and read source bytes redundantly
-
-- **Files:** `plan_tool/cli/skill_cmd.py:cmd_install_skill`, `_classify_dest`.
-- **Symptom:** `source.resolve()` is computed once in `_classify_dest`
-  during Phase 1 and again in Phase 2 for a symlink write; on a
-  collision/mode-switch `--copy` write, `_same_bytes` reads the source's
-  bytes during Phase 1 classification and `atomic_write_bytes` reads them
-  again to write. No correctness issue — both files are small and read
-  once per invocation — pure avoidable redundancy.
-- **Fix:** thread Phase 1's already-resolved path and already-read bytes
-  forward into Phase 2 instead of recomputing, most naturally by having
-  `_classify_dest` return the resolved source path (and, for the `--copy`
-  case, the bytes it already read) alongside the status.
-- **Approach:** direct.
-- **Origin:** 2026-09-17, `/code-review high` (round 4) on the
-  `skill-router-and-shared-reference` plan.
 
 ### `_classify_dest`'s "collision" status discards the "is a directory" fact it already computed
 
