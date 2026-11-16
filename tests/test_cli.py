@@ -14393,6 +14393,40 @@ class TestCmdLessonsConsolidate:
         first = json.loads(logs[0].read_text(encoding="utf-8").splitlines()[0])
         assert first["command"] == "lessons-consolidate"
 
+    def test_equivalence_call_ends_land_in_the_run_log_with_their_tokens(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """The open writer alone records nothing — ``shell._emit_call_end``
+        no-ops unless a sink is bound — so each equivalence call must reach
+        the log, tokens included, for ``runs`` totals to count it."""
+        from plan_tool import shell
+        from plan_tool.backend import ClaudeRunStats
+        from plan_tool.cli import lessons_cmd
+
+        self._seed_project(tmp_path, "alpha rule", "beta rule")
+        self._set_tty(monkeypatch, False)
+
+        def fake(prompt: str) -> str:
+            # The emit the real ``claude_invoke`` performs per call.
+            shell._emit_call_end(
+                phase="lessons_equivalence", attempt=1, rc=0,
+                duration_ms=1234, stdout_bytes=42, prompt_bytes=7,
+                stats=ClaudeRunStats(tokens_input=100, tokens_output=20),
+            )
+            return self._DUP_JSON
+
+        monkeypatch.setattr(lessons_cmd, "shell_equivalence_invoker", fake)
+        rc = main(["--repo-root", str(tmp_path), "lessons", "consolidate"])
+        assert rc == 0
+        (log,) = (tmp_path / ".plan-tool" / "runs" / "lessons-consolidate").glob(
+            "*.jsonl"
+        )
+        events = [json.loads(line) for line in log.read_text().splitlines()]
+        ends = [e for e in events if e.get("event") == "claude_call_end"]
+        assert len(ends) == 1
+        assert ends[0]["phase"] == "lessons_equivalence"
+        assert (ends[0]["tokens_input"], ends[0]["tokens_output"]) == (100, 20)
+
     def test_atomic_write_leaves_no_tmp_artifact_on_success(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
     ) -> None:

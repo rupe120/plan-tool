@@ -35,21 +35,33 @@ LOGGED_SITES = [
     ("gates.py", "suggest_gates"),
 ]
 
+# Sites whose own source binds nothing because their CLI caller binds the sink
+# around them, so their ``claude_call_end`` (and tokens) still land under the
+# caller's phase. Each maps to (caller module, phase the caller binds).
+CALLER_BOUND_SITES = {
+    ("review.py", "review_plan_full"): ("cli/review_cmd.py", "reconcile_plan"),
+    # Called inside review_plan_full, under the same sink.
+    ("review.py", "extract_and_append_review_lessons"): (
+        "cli/review_cmd.py", "reconcile_plan",
+    ),
+    ("launcher.py", "run_all_done_steps"): ("cli/review_cmd.py", "review_sweep"),
+    # Called inside verify_plan, under the same sink.
+    ("launcher.py", "_run_deep_for_step"): ("cli/review_cmd.py", "verify_rollup"),
+    ("lessons.py", "find_lesson_equivalences"): (
+        "cli/lessons_cmd.py", "lessons_equivalence",
+    ),
+}
+
 # Sites that stay unlogged: no RunLogWriter is reachable from the function or
-# its callers' signatures, so wiring one means widening public signatures and
-# every CLI caller. Filed in BUG_BACKLOG.md. Each entry must not mention a
-# sink call; wiring one moves it to LOGGED_SITES.
+# its callers (or there is no production caller). Filed in BUG_BACKLOG.md as
+# decision-needed. Each entry must not mention a sink call; wiring one moves it
+# to LOGGED_SITES.
 DEFERRED_SITES = {
-    ("create.py", "suggest_slug"): "no run_logger parameter",
-    ("review.py", "check_criteria_fulfillment"): "no run_logger parameter",
-    ("review.py", "review_plan_full"): "no run_logger parameter",
-    ("review.py", "extract_and_append_review_lessons"): "no run_logger parameter",
-    ("jira.py", "render_jira_export"): "no run_logger parameter",
-    ("annotate.py", "classify_plan_implementation"): "no run_logger parameter",
-    ("lessons.py", "find_lesson_equivalences"): "no run_logger parameter",
-    ("concept_tree.py", "emit_concept_tree"): "no run_logger parameter",
-    ("launcher.py", "_run_deep_for_step"): "no run_logger parameter",
-    ("launcher.py", "run_all_done_steps"): "no run_logger parameter",
+    ("create.py", "suggest_slug"): "runs before the slug exists",
+    ("review.py", "check_criteria_fulfillment"): "no production caller",
+    ("jira.py", "render_jira_export"): "jira opens no run log",
+    ("annotate.py", "classify_plan_implementation"): "annotate opens no run log",
+    ("concept_tree.py", "emit_concept_tree"): "no production caller",
 }
 
 
@@ -68,6 +80,23 @@ def test_logged_call_site_binds_a_call_end_sink(filename: str, name: str) -> Non
     assert SINK_RE.search(source), (
         f"{filename}:{name} no longer writes a claude_call_end; "
         "its tokens vanish from the run log"
+    )
+
+
+@pytest.mark.parametrize(("filename", "name"), sorted(CALLER_BOUND_SITES))
+def test_caller_bound_site_is_wrapped_by_its_callers_sink(
+    filename: str, name: str
+) -> None:
+    caller, phase = CALLER_BOUND_SITES[(filename, name)]
+    _function_source(filename, name)  # the site still exists
+    caller_source = (PKG / caller).read_text()
+    bound = re.compile(
+        rf'(_audit_sink\(run_logger, "{phase}"\)'
+        rf'|bind_shell_sink\(\s*phase="{phase}")'
+    )
+    assert bound.search(caller_source), (
+        f"{caller} no longer binds phase {phase!r}; {filename}:{name}'s "
+        "call ends would be dropped"
     )
 
 

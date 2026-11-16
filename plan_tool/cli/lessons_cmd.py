@@ -250,14 +250,19 @@ def cmd_lessons_consolidate(args: argparse.Namespace) -> int:
             entries = parse_existing_entries(body)
             if not entries:
                 continue
-            findings = find_lesson_equivalences(
-                entries,
-                (),
-                invoker=invoker,
-                repo_root=ctx.repo_root,
-                resume=not args.no_resume,
-                min_confidence=args.min_confidence,
-            )
+            # The open writer alone records nothing: the sink is what lands
+            # each equivalence call's ``claude_call_end`` in the log.
+            with run_logger.bind_shell_sink(
+                phase="lessons_equivalence", attempt=1
+            ):
+                findings = find_lesson_equivalences(
+                    entries,
+                    (),
+                    invoker=invoker,
+                    repo_root=ctx.repo_root,
+                    resume=not args.no_resume,
+                    min_confidence=args.min_confidence,
+                )
             per_file.append((f, entries, findings))
 
         # 5a. Recurrence weighting: read the warning log and count repeat
