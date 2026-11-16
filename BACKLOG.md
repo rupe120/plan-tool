@@ -366,7 +366,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | #487 · #518 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #487 and #518 (P1) are the infrastructure-plan audit rule and the installed-router phase rules. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
+| **Now — drain candidates (unpicked)** | #487 | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2). These are candidates, not a pick: the lead chooses. #487 (P1) is the infrastructure-plan audit rule. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1), so the drain takes from here. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -965,21 +965,22 @@ working straight down the tiers.
 **#518 — An installed plan-tool skill's router does not name the phase rules a driving session must read, so it skips them (for example the audit stopping rule)**
 
 - **Labels:** Route `direct`
-  · Readiness `ready`
+  · Readiness `evidence-gated` (gate: see Evidence gate)
   · Tier `experienced`
   · Principle `converge-on-correct-plan`
 - **Absorbs #425 and #388 (merged 2026-11-14):** (a) the router's must-read
   list names `integrations/shared/DIRECTIVES.md` § "Which model to run a
-  subcommand with", so a driving session states the backend and model before
-  any model-backed command and passes them explicitly; the mapping stays in
-  the directives and no model ids are copied into the routers. This does not
+  subcommand with", so a driving session applies its selection rule (a
+  configured `.plan-tool/backends.json` supplies the choices) before any
+  model-backed command; the mapping stays in the directives and no model ids
+  are copied into the routers. This does not
   cover a repository with no skill installed, which was #425's motivating case
   and is an install-readiness issue. (b) #388's router-table drift decision
   (generated template or drift lint over the three hand-maintained copies of
   the decision-tree and subcommands tables) stays open and is not part of this
   slice: it is decided only if the full split below is ever taken, because the
   split is what removes most of those copies.
-- **What:** ship the smallest version of the fix. Each integration's router
+- **What:** the smallest version shipped 2026-11-16. Each integration's router
   (`integrations/{claude,codex,cursor}/`) names, per phase (authoring,
   auditing, running and the post-run tail, roadmap), the
   `DIRECTIVES.md` sections the session must read in full before acting in that
@@ -1061,6 +1062,9 @@ working straight down the tiers.
       symlink and the project-`CLAUDE.md` pointer reach.
     - Seed-authoring guidance (#377) and capture rules (#378, including the
       former #379).
+    - A phase row for `jira` export, or for the reconcile verbs apart from the
+      post-run tail: no measured incident broke their rules. Add one only if the
+      re-measurement shows those rules skipped.
   - **Allowed behavior changes:** the installed router's text grows by the
     must-read lists and phase checklists.
   - **Allowed reorganization:** none.
@@ -1089,7 +1093,20 @@ working straight down the tiers.
 - **Origin:** 2026-10-28, a driving session in discord-config. The user
   proposed splitting the skill, not the CLI, to improve skill routing; the
   scope was cut to the router-only slice 2026-11-14.
-- **Status:** ready.
+- **Evidence gate:** the gate is met when a consuming-repo session with the
+  skill installed drives a plan through both audit gates and the post-run tail.
+  Record whether any rule the incident broke was broken again: the audit
+  stopped at the three-snapshot window; a scope move made before surfacing it;
+  an owner answer not recorded as a dated decision line; findings not presented
+  as the plan-gap map; plan steps implemented by hand instead of through `run`;
+  the post-run reconcile and code-review tail skipped. If none was, close this
+  entry; if any was, stop and file the full split as its own entry, per Stop /
+  defer. Closing with "no action" is a valid outcome.
+- **Status:** the router slice shipped 2026-11-16 (a phase table in each router,
+  held in parity and anchor-checked by `tests/test_skill_router_phase_rules.py`
+  and `tests/cli/test_skill_cmd.py`). The installed-router, model-selection and
+  section-exists checks under Verification are pinned by those tests; the
+  re-measurement under the Evidence gate is the open part.
 
 **#389 — A newly added backend is rejected by `plan-tool install-skill --integration` with "invalid choice" until someone edits its hard-coded list of three names** → promoted to IPPT-7 (2026-09-24)
 

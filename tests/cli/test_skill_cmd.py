@@ -18,6 +18,7 @@ import yaml
 
 import plan_tool.cli as cli
 from plan_tool.backend import _packaged_integrations_dir
+from tests.skill_router_phase import LINK_RE, anchors, phase_section
 
 
 def _bundled(integration: str = "claude") -> Path:
@@ -441,3 +442,19 @@ def test_skill_file_discovery_finds_every_router_and_the_tracked_skill() -> None
         "integrations/cursor/SKILL.md",
         ".claude/skills/jira-ticket/SKILL.md",
     } <= names
+
+
+@pytest.mark.parametrize("flags", [[], ["--copy"]], ids=["symlink", "copy"])
+@pytest.mark.parametrize("integration", ("claude", "codex", "cursor"))
+def test_installed_router_links_resolve_against_the_installed_directives(
+    tmp_repo, integration: str, flags: list[str]
+) -> None:
+    """The reader sees the installed pair, not the repo files: both install modes keep the links live."""
+    assert cli.main(tmp_repo.argv("install-skill", "--integration", integration, *flags)) == 0
+    root = ".agents" if integration == "codex" else ".claude"
+    skill_dir = tmp_repo.root / root / "skills" / "plan-tool"
+    router = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+    directives = (skill_dir / "DIRECTIVES.md").read_text(encoding="utf-8")
+    linked = LINK_RE.findall(phase_section(router, f"installed {integration}"))
+    assert linked
+    assert set(linked) <= anchors(directives)
