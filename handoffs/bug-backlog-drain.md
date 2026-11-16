@@ -114,16 +114,30 @@ they resolve.
   `MUTATING_MODES` (move it to a leaf first), fence-check consolidation (identity
   check first).
 - 2026-11-16 — run-log calls with a reachable writer: `fixed a7aee31af` for
-  `lessons consolidate` (no sink bound); refuted for the other four
+  `lessons consolidate` (writer open, no sink bound); refuted for the other four
   (`review_plan_full`, `extract_and_append_review_lessons`, `run_all_done_steps`,
-  `_run_deep_for_step`): their CLI caller binds the sink, pinned by
-  `tests/test_review.py::...::test_claude_calls_land_in_the_run_log` and now
-  `CALLER_BOUND_SITES`. Entry removed in `7db641e34`. Deliberately not filed:
-  those four write no `claude_call_start`, so `runs profile` has no latency
-  sample for them; token totals are complete. Also not filed: the bench's
-  reconcile trial calls `review_plan_full` without a run log, which is the
-  bench's record, not the run log. The no-writer half stays `decision-needed`.
-  Review: pending.
+  `_run_deep_for_step`): `cli/review_cmd.py` binds the sink around them. Runtime
+  coverage exists only for `reconcile_plan`
+  (`tests/test_review.py::TestCmdReviewSaveByDefault::test_claude_calls_land_in_the_run_log`,
+  with `invoker=None`, so not the lessons call); the rest rely on
+  `CALLER_BOUND_SITES`, which checks each call sits inside its caller's bind.
+  Entry removed in `7db641e34`. Deliberately not filed: these sites write no
+  `claude_call_start`, so `runs profile` has no latency sample for them; token
+  totals are complete.
+- 2026-11-16 — review of `HEAD~4..HEAD` (`/code-review high`), pass 1: eight
+  findings. Fixed: the bench's reconcile trial opened a run log but bound no
+  sink, so its records carried no tokens (same class as `lessons consolidate`;
+  now bound, with a test); the coverage guard only searched the caller file for
+  the phase (now checks the call is inside the `with`, verified by mutation);
+  the coverage comment overclaimed `find_lesson_equivalences` (now names the
+  library-only route); this log's test citation and bench claim; the lessons
+  sink is bound once around the loop. Refuted: the `detail` strict-check route
+  to `find_lesson_equivalences` is unlogged but unreachable, since no CLI path
+  sets `strict_check` or `warn_check`. Declined: a `claude_call_start` in
+  `lessons consolidate` (the prompt is rendered per pair inside
+  `find_lesson_equivalences`; same deliberately-not as above); the bind
+  overriding the retry attempt number (every `bind_shell_sink` site does this
+  by design). Pass 2: pending.
 
 ## Deliberately not in this handoff
 
