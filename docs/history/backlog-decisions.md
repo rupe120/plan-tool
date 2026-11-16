@@ -225,6 +225,23 @@ destination-recheck race entry also reshapes, so the two should land together
 if either does. Reopen alongside that race entry, or if the installed set grows
 to files large enough for the second read to matter.
 
+### Run-log call pairing: the `plan_audit` re-prompt key and the raise-path start
+
+Retired 2026-11-16, owner-confirmed; the wrapped-invoker stats symptom stays open
+in `BUG_BACKLOG.md`. (1) A missing-heading re-prompt writes two starts and two
+ends under one `(phase, attempt=pass)` key, but `plan_tool/cli/runs.py` pairs a
+start with the next end per key through a LIFO stack, so sequential calls pair
+correctly and only the identity of the re-prompt is lost. (2) A start written
+before an invoker that raises has no end, which `runs` already reports as an
+`incomplete=True` sample, its documented form for a call that never wrote an
+end. Adding `attempt_failed(failure_kind="transport")` at the four start sites
+(`plan_audit`, `suggest_gates`, `propose_intents`, the risk-profile classifier)
+was built and reverted: nothing reads `attempt_failed`, and `DATA_CONTRACT.md`
+scopes it to `roadmap.py`'s four failure kinds, so it would widen a contract
+for no consumer. Reopen when a `runs` consumer must tell a call that raised
+from one still in flight, or when a ledger analysis needs per-call identity
+within one audit pass.
+
 ## Retired composite records
 
 ### #92 — Plan lineage with model-authored summaries
