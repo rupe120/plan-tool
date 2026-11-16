@@ -1038,33 +1038,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-09-28, `/code-review high` round 2 on the `roadmap-candidate-same-batch-relations` post-run
   review, surfaced by the `CONSTRAINT_ANCHOR` multi-type fix itself.
 
-### The unsinked-call warning names the rate-limit retry loop instead of the call that ran
-
-- **Severity:** MINOR
-- **Files:** `plan_tool/shell.py:_caller_outside_shell` (and its caller
-  `_warn_unsinked_call`); `plan_tool/rate_limit_loop.py` (the frame it names);
-  `tests/test_shell.py` (the existing `_caller_outside_shell` test).
-- **Symptom:** the warning promises to name "the actual call site"
-  (`_caller_outside_shell`'s docstring), but it returns the nearest frame
-  outside `shell.py`. A call routed through the rate-limit retry loop reports
-  that frame, `rate_limit_loop.py:146`, and `phase` is the generic
-  `claude_invoke`; neither identifies which call was unsinked. Observed on two
-  `plan-tool create` runs with an explicit slug (2026-10-01 and 2026-10-02): both
-  printed `claude call at rate_limit_loop.py:145 (phase='claude_invoke')` right
-  after the distill step, and the warning cannot say whether that call is the
-  distill pass, the slug proposal, or another. The gap BACKLOG #177 tracks
-  therefore cannot be located from the warning's own output.
-- **Fix:** skip `rate_limit_loop.py` frames (and any other retry/transport
-  frame that sits between `shell.py` and the caller) when walking the stack, so
-  the warning names the first frame owned by the code that asked for the call.
-  Add a test that a call routed through the loop names its caller, beside the
-  existing `test_shell.py` check.
-- **Approach:** `direct`; readiness `ready`; tier `beginner` — one module plus
-  its test, the acceptance check is the new test, and the existing
-  `_caller_outside_shell` test is the precedent.
-- **Origin:** 2026-10-02, tracing the warning in the `candidate-narrative-review-evidence`
-  `create` log.
-
 ### A partially edited protected References block is restored as a second full copy
 
 - **Files:** `plan_tool/create.py` — `_restore_materialized_evidence_sections` (the `References` branch) and `_references_present`; the render-time check in the plan-body renderer uses the same predicate. Existing tests start at `tests/test_create.py:23762`.

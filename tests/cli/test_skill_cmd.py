@@ -75,6 +75,15 @@ class TestInstallSkill:
                 "`.plan-tool/backends.json` exists, else pass the recommendations"
                 ) in " ".join(router_text.split())
         assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
+        # Every relative link the router cites resolves beside the installed
+        # router (presence only; BACKLOG #443's Non-goals rule out drift checks).
+        links = {
+            t.split("#")[0]
+            for t in re.findall(r"\]\(([^)\s]+)", router_text)
+            if "://" not in t and not t.startswith("#")
+        }
+        assert "DIRECTIVES.md" in links
+        assert sorted(t for t in links if not (router.parent / t).is_file()) == []
         policy = directives.read_text(encoding="utf-8")
         flat = " ".join(policy.split())
         assert "Honor explicit user requests for backend and model" in flat
@@ -392,24 +401,6 @@ class TestInstallSkill:
         assert cli.main(tmp_repo.argv("install-skill", "--force")) == 2
         assert not _dest(tmp_repo).exists()
         assert directives_dest.is_dir()
-
-
-def test_tracked_skill_folder_holds_every_file_its_router_links() -> None:
-    """This repo's tracked skill must carry the siblings its router cites.
-
-    Presence only — deliberately no content-drift check against
-    ``integrations/`` (BACKLOG #443's Non-goals).
-    """
-    skill_dir = Path(__file__).resolve().parents[2] / ".claude" / "skills" / "plan-tool"
-    text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
-    targets = {
-        t
-        for t in re.findall(r"\]\(([^)#\s]+)", text)
-        if "://" not in t
-    }
-    assert "DIRECTIVES.md" in targets
-    missing = sorted(t for t in targets if not (skill_dir / t).is_file())
-    assert missing == []
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
