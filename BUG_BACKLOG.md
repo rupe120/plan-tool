@@ -289,32 +289,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
 
-### Five model-backed calls that can reach a run writer still write no start or end record to the run log, so run-log token totals undercount
-
-- **Files:** `plan_tool/review.py` (`review_plan_full`,
-  `extract_and_append_review_lessons`), `plan_tool/lessons.py`
-  (`find_lesson_equivalences`), `plan_tool/launcher.py` (`_run_deep_for_step`,
-  `run_all_done_steps`); callers `plan_tool/cli/review_cmd.py` (has
-  `_open_run_log()`) and `plan_tool/cli/lessons_cmd.py` (starts a `RunLogWriter`
-  at line 226).
-- **Symptom:** `shell._emit_call_end` drops `claude_call_end` when no sink is
-  installed. None of these five functions receives a `RunLogWriter`, so none
-  can bind one, although each caller already holds or can open one. Their
-  tokens are invisible to run-log analysis.
-- **Fix:** follow `gates.suggest_gates`: add a `run_logger` parameter, emit
-  `claude_call_start` with `prompt_sha256`, and bracket the invoker call with
-  `install_call_end_sink` / `uninstall_call_end_sink`. Pass the writer from the
-  caller. One function per commit; wiring a site moves it from `DEFERRED_SITES`
-  to `LOGGED_SITES` in `tests/test_run_log_call_coverage.py`.
-- **Deliberately not done:** an ambient-writer fallback inside `_emit_call_end`
-  — with no bind there is no ambient writer either.
-- **Approach:** direct.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-10-16, token ledger analysis; split 2026-11-16 from the
-  ten-site entry. Wired 2026-10-16: `apply_finding`,
-  `assess_direct_source_split_from_claude`, `_propose_risk_profile_from_seed`;
-  `plan_audit` emits a start; `prompt_sha256` is on every start.
-
 ### Five model-backed calls have no run writer to bind, or no production caller, so where they log is undecided
 
 - **Files:** `plan_tool/create.py` (`suggest_slug`, called from
@@ -330,14 +304,18 @@ Durable re-open conditions for retired items are recorded in
   `emit_concept_tree` have no production caller (grep, 2026-11-16). Their
   tokens are invisible to run-log analysis, and a `run_logger` parameter alone
   does not give any of them a place to write.
-- **Fix:** decide per site where the record goes (a scratch or per-command log,
-  a buffer flushed once the slug exists) or retire it as deliberately
+- **Fix:** decide per site where the record goes (a per-command pseudo-slug,
+  as `lessons consolidate` already uses with `slug="lessons-consolidate"`; a
+  buffer flushed once the slug exists) or retire it as deliberately
   unlogged with the reason in `docs/history/backlog-decisions.md`; for the two
   uncalled functions, decide wire-or-delete. Then apply the `suggest_gates`
   pattern. All five sit in `DEFERRED_SITES` until then.
 - **Approach:** direct once the destination decision is made.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** 2026-11-16, split from the ten-site run-log entry.
+- **Origin:** 2026-11-16, split from the ten-site run-log entry. The other
+  five sites were already logged through a sink their CLI caller binds, except
+  `find_lesson_equivalences` under `lessons consolidate`, which now binds one;
+  `CALLER_BOUND_SITES` in `tests/test_run_log_call_coverage.py` pins them.
 
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 
