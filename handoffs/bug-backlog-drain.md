@@ -101,60 +101,25 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
-- 2026-11-13 — the loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md`
-  omit the `no_progress` and `no_blocking_findings` stops: `fixed c8bd15643`,
-  entry removed in `ea5396a14`. `docs/ITERATION.md` § "How the loop terminates"
-  now lists every `should_continue` reason with its code, per-command scope and
-  exit codes, pinned by a drift test. Pass-by-pass record and closure (stopped at
-  exit 2); the pass-by-pass record was retired 2026-11-13.
-
-- 2026-11-15 — `completeness_report.py` kept `WHY["open"]` and `_HEADINGS["open"]`,
-  which no report path renders: `fixed ed32f3f77`, entry removed in `0805402b8`.
-  `deferred_kind` still returns `open` (the loop's deferral summary counts it).
-- 2026-11-15 — `--accept`'s clean-tree check misread quoted and renamed paths:
-  `fixed 3ab6d153f`, entry removed in `6d5001351`. It now reads `git status -z`
-  from the git top level, so spaces, non-ASCII names, renames and a nested
-  project root match.
-- 2026-11-15 — the post-commit clean check on paths git keeps reporting as
-  modified: `fixed ae5956a9c` for untracked content in a committed submodule;
-  the filter-modified half is retired by design (record in
-  `docs/history/backlog-decisions.md`). Entry removed in `cfd3b2ed7`.
-- 2026-11-15 — `create --from-existing` read seed sections without stripping
-  frontmatter: `fixed cc09f31ad`, entry removed in `67f8947be`. Seven readers,
-  one test each, plus a test for the distill gate that had none. Two further
-  readers stay unstripped on purpose (the distiller's own output, the tool's
-  rendered plan body); each says so in a comment.
-- 2026-11-15 — run IDs collided within a second (24-bit tail): `fixed 49ff32c94`,
-  entry removed in `e9c43949b`. The tail is `token_hex(8)`; a deterministic test
-  replaces the sampling one.
-- 2026-11-15 — `CLAUDE.md`, `TESTING.md` and backlog #190 cited the missing
-  `prompts/reconcile.md`: `fixed 3d35705c5`, entry removed in `fe72a5791`. The
-  `CLAUDE.md` edit is architect-tier (its own header): it needs review in the
-  pull request. `lessons/general.md` still names the old path as a record of
-  past plans and is left alone.
 - 2026-11-15 — out-of-tree detail archive writes: `pending`, narrowed to
   `detail --split` renames and `evidence-gated` (`detail --force` never writes
   outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
   tree).
-- 2026-11-15 — four live seeds refused for `## References`: `fixed 18438c1a9`
-  for `roadmap-revision-retention.md` and the carved intent seed; the two
-  impact-recurrence seeds described a design closed on 2026-08-11 and were
-  deleted (`0038319ae`, owner decision, recorded in `backlog-decisions.md`).
-- 2026-11-15 — the tracked `.claude/skills/plan-tool/` copy had drifted 87 lines
-  from `integrations/`: untracked and ignored (`e12e7e019`, owner decision,
-  recorded in `backlog-decisions.md`).
-- 2026-11-15 — review of the drain branch, closed as converged (three
-  consecutive low-yield passes; every finding low or nit). Pass 1: eight
-  findings, three refuted with evidence, two declined, three fixed in `20e85619d`.
-  Pass 2: eight findings, five repeats or declines, two fixed
-  (`find_dropped_references` also strips echoed frontmatter; the `open` comment
-  says only what was verified). Pass 3, over the range plus the two decision
-  commits: seven findings, five repeats or declines, two fixed (the two `open`
-  comments agree and name `_render_grouped_report`; the example run ID in the
-  `runs` help, `RUNBOOK.md` and `commands.md` has the current shape). Declined
-  every time: `unexpected_dirty_paths` and the post-commit check treat
-  submodules differently on purpose (one asks "clean before I start?", the other
-  "did the commit absorb what it could?").
+
+- 2026-11-16 — drain survey of `BUG_BACKLOG.md`, no code change: `pending`. The
+  BUG and MINOR sections hold no entry labelled `direct` + `ready`; there is no
+  RISK section. The only unlabelled `direct` candidate is "Ten model-backed calls
+  still write no start or end record to the run log" (BUG): its ten sites match
+  `DEFERRED_SITES` in `tests/test_run_log_call_coverage.py`, so it needs a Route /
+  Readiness label (a `direct` + `ready` read is the likely result; ten sites across
+  seven modules, so one site or module per commit) before pickup. Left unlabelled
+  `direct` entries stay out: `extract_h2_sections` defaults (deferred to a
+  compatibility review), `install-skill` TOCTOU (re-open only on a concurrent-install
+  use case), `renderer.py` `MUTATING_MODES` (blocked on moving it to a leaf), and the
+  fence-check consolidation (needs the identity check first). Every other labelled
+  entry is `plan`, `evidence-gated`, `decision-needed` or `needs investigation`.
+  The 2026-11-13 and 2026-11-15 `fixed` lines were dropped: each fix is an ancestor
+  of `main`.
 
 ## Deliberately not in this handoff
 
