@@ -8,17 +8,18 @@ checklist rules the incident broke stay in it.
 
 from __future__ import annotations
 
-import re
-from pathlib import Path
-
 import pytest
 
-from plan_tool.review import fenced_spans
+from tests.skill_router_phase import (
+    DIRECTIVES,
+    LINK_RE,
+    ROOT,
+    anchors,
+    phase_section,
+    slug,
+)
 
-ROOT = Path(__file__).resolve().parent.parent
 BACKENDS = ("claude", "codex", "cursor")
-DIRECTIVES = ROOT / "integrations/shared/DIRECTIVES.md"
-SECTION_HEADING = "## Read these `DIRECTIVES.md` sections before acting in a phase"
 # phase -> (every section its row links, checklist sentences its row carries)
 PHASES = {
     "Authoring": (
@@ -40,8 +41,8 @@ PHASES = {
         (
             "Three audit snapshots are the minimum window, not a stopping point.",
             "Surface a scope move to the user before making it.",
-            "Record each owner answer as one dated decision line in the plan.",
-            "Present findings as the plan-gap map.",
+            "Record an owner's answer to a product question as one dated decision line in the plan.",
+            "Present in-scope plan-level findings as the plan-gap map.",
         ),
     ),
     "Running": (
@@ -53,8 +54,10 @@ PHASES = {
             "the-two-reconcile-verbs-are-not-interchangeable",
         ),
         (
-            "never mark a step `done` by hand.",
-            "run `reconcile-code <name> --all`, then a code-review pass to convergence.",
+            "with `--commit` unless the user withholds commits (then one step at a time)",
+            "never mark a step `done` by hand-editing.",
+            "run `reconcile-code <name> --all`, then a code-review pass to convergence;",
+            "the reconcile tail has its own stop rule.",
         ),
     ),
     "Roadmap": (
@@ -63,37 +66,6 @@ PHASES = {
     ),
 }
 MODEL_SELECTION = "which-model-to-run-a-subcommand-with"
-LINK_RE = re.compile(r"\]\(DIRECTIVES\.md#([^)]+)\)")
-
-
-def _slug(heading: str) -> str:
-    """GitHub's anchor rule: lowercase, drop punctuation (keep letters, digits, hyphens), spaces to hyphens."""
-    text = heading.replace("`", "").lower()
-    return re.sub(r"[^\w -]", "", text).replace(" ", "-")
-
-
-def _anchors(text: str) -> set[str]:
-    """Anchors of the real headings: a ``#`` line inside a fence is not one, and a
-    repeated heading gets GitHub's ``-1``, ``-2`` suffix."""
-    fenced = fenced_spans(text)
-    seen: dict[str, int] = {}
-    anchors: set[str] = set()
-    for m in re.finditer(r"^#{1,6} (.+)$", text, re.M):
-        if any(start <= m.start() < end for start, end in fenced):
-            continue
-        base = _slug(m.group(1))
-        count = seen.get(base, 0)
-        anchors.add(base if count == 0 else f"{base}-{count}")
-        seen[base] = count + 1
-    return anchors
-
-
-def _phase_section(router_text: str, label: str) -> str:
-    assert router_text.count(SECTION_HEADING) == 1, f"{label} lost its phase table"
-    start = router_text.index(SECTION_HEADING)
-    end = router_text.find("\n## ", start + len(SECTION_HEADING))
-    assert end != -1, f"{label}: no `##` section follows the phase table"
-    return router_text[start:end]
 
 
 def _router(backend: str) -> str:
@@ -110,28 +82,28 @@ def _rows(section: str) -> dict[str, str]:
 
 def test_phase_table_is_identical_across_the_three_routers() -> None:
     """Parity: one phase table, not three drifting copies (#386 asks for the relationship)."""
-    sections = {b: _phase_section(_router(b), b) for b in BACKENDS}
+    sections = {b: phase_section(_router(b), b) for b in BACKENDS}
     assert sections["claude"] == sections["codex"] == sections["cursor"]
 
 
 @pytest.mark.parametrize("backend", BACKENDS)
 def test_every_section_a_router_names_exists_in_directives(backend: str) -> None:
-    anchors = _anchors(DIRECTIVES.read_text(encoding="utf-8"))
-    linked = LINK_RE.findall(_phase_section(_router(backend), backend))
+    known = anchors(DIRECTIVES.read_text(encoding="utf-8"))
+    linked = LINK_RE.findall(phase_section(_router(backend), backend))
     assert linked, f"{backend} router names no DIRECTIVES.md section"
-    missing = [a for a in linked if a not in anchors]
+    missing = [a for a in linked if a not in known]
     assert not missing, f"{backend} router links headings DIRECTIVES.md no longer has: {missing}"
 
 
 @pytest.mark.parametrize("backend", BACKENDS)
 def test_each_phase_row_links_every_section_and_carries_its_checklist(backend: str) -> None:
     """The four broken rules live in the checklist text, so a deleted link or sentence fails."""
-    rows = _rows(_phase_section(_router(backend), backend))
-    for phase, (anchors, sentences) in PHASES.items():
+    rows = _rows(phase_section(_router(backend), backend))
+    for phase, (expected_links, sentences) in PHASES.items():
         row = next((r for name, r in rows.items() if name.startswith(phase)), None)
         assert row is not None, f"{backend} router has no {phase} row"
         linked = LINK_RE.findall(row)
-        assert linked == list(anchors), f"{backend} {phase} row links {linked}"
+        assert linked == list(expected_links), f"{backend} {phase} row links {linked}"
         for sentence in sentences:
             assert sentence in row, f"{backend} {phase} row lost: {sentence}"
 
@@ -139,13 +111,17 @@ def test_each_phase_row_links_every_section_and_carries_its_checklist(backend: s
 @pytest.mark.parametrize("backend", BACKENDS)
 def test_router_names_the_model_selection_section_for_every_phase(backend: str) -> None:
     """From #425: the pointer sits above the table, once, so no phase can skip it."""
-    section = _phase_section(_router(backend), backend)
+    section = phase_section(_router(backend), backend)
     assert section.count(f"DIRECTIVES.md#{MODEL_SELECTION})") == 1
     assert section.index(MODEL_SELECTION) < section.index("| Phase |")
+    # The section's own rule omits --backend/--model when backends.json exists, so the
+    # router must defer to the rule and never tell a session to pass them.
+    assert "apply its selection rule for backend and model" in section
+    assert "explicitly" not in section
 
 
 def test_slug_and_anchor_rules_match_what_the_routers_already_rely_on() -> None:
-    assert _slug("Which model to run a subcommand with") == MODEL_SELECTION
-    assert _slug("Explicit overengineering checkpoints") == "explicit-overengineering-checkpoints"
+    assert slug("Which model to run a subcommand with") == MODEL_SELECTION
+    assert slug("Explicit overengineering checkpoints") == "explicit-overengineering-checkpoints"
     text = "# A\n\n```bash\n# not a heading\n```\n\n## B\n\n## B\n"
-    assert _anchors(text) == {"a", "b", "b-1"}
+    assert anchors(text) == {"a", "b", "b-1"}

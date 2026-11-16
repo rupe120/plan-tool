@@ -18,7 +18,7 @@ import yaml
 
 import plan_tool.cli as cli
 from plan_tool.backend import _packaged_integrations_dir
-from tests.test_skill_router_phase_rules import LINK_RE, _anchors, _phase_section
+from tests.skill_router_phase import LINK_RE, anchors, phase_section
 
 
 def _bundled(integration: str = "claude") -> Path:
@@ -455,6 +455,6 @@ def test_installed_router_links_resolve_against_the_installed_directives(
     skill_dir = tmp_repo.root / root / "skills" / "plan-tool"
     router = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
     directives = (skill_dir / "DIRECTIVES.md").read_text(encoding="utf-8")
-    linked = LINK_RE.findall(_phase_section(router, f"installed {integration}"))
+    linked = LINK_RE.findall(phase_section(router, f"installed {integration}"))
     assert linked
-    assert set(linked) <= _anchors(directives)
+    assert set(linked) <= anchors(directives)
