@@ -6,6 +6,19 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.5.0'></a>
+## 1.5.0 — 2026-11-16
+
+### Added
+
+- `create` prints `create-refused: reason=<token>` on its own stderr line when it refuses a seed or inline description before the slug resolves, so a driver can tell why no run log exists. The tokens are a closed set, listed in `DATA_CONTRACT.md` § "Pre-slug `create` refusals"; the exit code stays `2` (BACKLOG #502).
+
+### Changed
+
+- The plan audit judges an infrastructure plan's isolation, scoping, and least-privilege claims only against the resources the plan's own code creates. A resource the toolchain or platform creates, such as a deployment tool's bootstrap roles, is informational when the plan names it in a closed exception list with a reason; an unlisted toolchain resource is still audited (BACKLOG #487).
+
+- The installed `claude`, `codex`, and `cursor` skill routers name the `DIRECTIVES.md` sections to read in full before each phase (authoring, auditing, running and the post-run tail, roadmap), with a short checklist per phase. No rule changes; each item points at the section that owns it (BACKLOG #518).
+
 <a id='changelog-1.4.0'></a>
 ## 1.4.0 — 2026-11-16
 
