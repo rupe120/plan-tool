@@ -196,6 +196,35 @@ set the outcome. Reopen only if a run log must keep the "interrupted" event and
 reason through a second Ctrl+C. That needs the reason set before the event is
 emitted (`plan_tool/run_log.py`), not a guard at the call site.
 
+### `_append_added_row_prose` copies an artifacts mapping its sole caller no longer uses
+
+Retired 2026-11-15, owner-confirmed. The copy (`dict(artifacts)`) holds a
+handful of stage-artifact keys once per candidate, and the entry confirmed no
+aliasing exists at the call site, so removing it changes cost only. Mutating in
+place also widens the parameter from `Mapping` to a mutable type, a signature
+change for no behavioral gain. Reopen when the mapping grows past a handful of
+keys or a second caller appears.
+
+### `review_plan_full` re-runs the audit-input snapshot capture `cmd_review` already ran
+
+Retired 2026-11-15, owner-confirmed. Both captures are error probes whose
+results are discarded; neither feeds a snapshot onward. `review_plan_full` has
+three callers (`bench.py`, `review.py`, `cli/review_cmd.py`) and its capture is
+the guard for all of them, while `cmd_review`'s preflight capture maps a
+failure to exit 2 before the run log is committed to. Removing or threading
+either one changes an error path on all three callers to save one extra read
+per step's detail file. Reopen with a measured review latency attributable to
+the second capture on a large plan.
+
+### `install-skill` recomputes a resolved path and re-reads source bytes
+
+Retired 2026-11-15, owner-confirmed. The redundancy is one `resolve()` and one
+small file read per invocation, with no correctness effect. The change would
+thread new return values through `_classify_dest`, the function the open
+destination-recheck race entry also reshapes, so the two should land together
+if either does. Reopen alongside that race entry, or if the installed set grows
+to files large enough for the second read to matter.
+
 ## Retired composite records
 
 ### #92 — Plan lineage with model-authored summaries
