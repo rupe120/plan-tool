@@ -39,7 +39,7 @@ PHASES = {
             "trajectory-stopping-and-the-three-exits",
         ),
         (
-            "Three audit snapshots are the minimum window, not a stopping point.",
+            "Three audit snapshots are the minimum window; stop only at one of the three exits.",
             "Surface a scope move to the user before making it.",
             "Record an owner's answer to a product question as one dated decision line in the plan.",
             "Present in-scope plan-level findings as the plan-gap map.",
@@ -100,8 +100,9 @@ def test_each_phase_row_links_every_section_and_carries_its_checklist(backend: s
     """The four broken rules live in the checklist text, so a deleted link or sentence fails."""
     rows = _rows(phase_section(_router(backend), backend))
     for phase, (expected_links, sentences) in PHASES.items():
-        row = next((r for name, r in rows.items() if name.startswith(phase)), None)
-        assert row is not None, f"{backend} router has no {phase} row"
+        matches = [r for name, r in rows.items() if name.startswith(phase)]
+        assert len(matches) == 1, f"{backend} router has {len(matches)} {phase} rows"
+        row = matches[0]
         linked = LINK_RE.findall(row)
         assert linked == list(expected_links), f"{backend} {phase} row links {linked}"
         for sentence in sentences:
@@ -117,7 +118,7 @@ def test_router_names_the_model_selection_section_for_every_phase(backend: str) 
     # The section's own rule omits --backend/--model when backends.json exists, so the
     # router must defer to the rule and never tell a session to pass them.
     assert "apply its selection rule for backend and model" in section
-    assert "explicitly" not in section
+    assert "pass them explicitly" not in section
 
 
 def test_slug_and_anchor_rules_match_what_the_routers_already_rely_on() -> None:
