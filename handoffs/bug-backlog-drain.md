@@ -106,16 +106,24 @@ they resolve.
   outside `plan-details/<slug>/`; none of 1,033 declared pointers is out of
   tree).
 
-- 2026-11-16 — drain survey of `BUG_BACKLOG.md`: `pending`. No RISK section; the
-  BUG and MINOR sections held no `direct` + `ready` entry until the ten-site run-log
-  entry was split (owner decision, 2026-11-16): five sites with a reachable writer
-  are now `direct` · `ready` (first pickup: `review_plan_full`, one function per
-  commit, `suggest_gates` as the pattern); `suggest_slug`, `render_jira_export`,
-  `classify_plan_implementation` and the two uncalled functions are
-  `decision-needed` (no writer to bind). Other unlabelled `direct` entries stay out:
-  `extract_h2_sections` defaults (compatibility review first), `install-skill` TOCTOU
-  (re-open on a concurrent-install use case), `renderer.py` `MUTATING_MODES` (move it
-  to a leaf first), fence-check consolidation (identity check first).
+- 2026-11-16 — drain survey of `BUG_BACKLOG.md`: no RISK section, and no
+  `direct` + `ready` entry in BUG or MINOR until the ten-site run-log entry was
+  split (owner decision). Other unlabelled `direct` entries stay out:
+  `extract_h2_sections` defaults (compatibility review first), `install-skill`
+  TOCTOU (re-open on a concurrent-install use case), `renderer.py`
+  `MUTATING_MODES` (move it to a leaf first), fence-check consolidation (identity
+  check first).
+- 2026-11-16 — run-log calls with a reachable writer: `fixed a7aee31af` for
+  `lessons consolidate` (no sink bound); refuted for the other four
+  (`review_plan_full`, `extract_and_append_review_lessons`, `run_all_done_steps`,
+  `_run_deep_for_step`): their CLI caller binds the sink, pinned by
+  `tests/test_review.py::...::test_claude_calls_land_in_the_run_log` and now
+  `CALLER_BOUND_SITES`. Entry removed in `7db641e34`. Deliberately not filed:
+  those four write no `claude_call_start`, so `runs profile` has no latency
+  sample for them; token totals are complete. Also not filed: the bench's
+  reconcile trial calls `review_plan_full` without a run log, which is the
+  bench's record, not the run log. The no-writer half stays `decision-needed`.
+  Review: pending.
 
 ## Deliberately not in this handoff
 
