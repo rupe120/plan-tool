@@ -54,7 +54,7 @@ PHASES = {
         ),
         (
             "never mark a step `done` by hand.",
-            "run `reconcile-code <name> --all`, then `/code-review` to convergence.",
+            "run `reconcile-code <name> --all`, then a code-review pass to convergence.",
         ),
     ),
     "Roadmap": (
@@ -67,9 +67,9 @@ LINK_RE = re.compile(r"\]\(DIRECTIVES\.md#([^)]+)\)")
 
 
 def _slug(heading: str) -> str:
-    """GitHub's anchor rule: lowercase, drop punctuation but keep hyphens, spaces to hyphens."""
+    """GitHub's anchor rule: lowercase, drop punctuation (keep letters, digits, hyphens), spaces to hyphens."""
     text = heading.replace("`", "").lower()
-    return re.sub(r"[^a-z0-9 _-]", "", text).replace(" ", "-")
+    return re.sub(r"[^\w -]", "", text).replace(" ", "-")
 
 
 def _anchors(text: str) -> set[str]:
