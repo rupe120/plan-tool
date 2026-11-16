@@ -66,12 +66,16 @@ CALLER_BOUND_SITES = {
 # that tracks it. Each entry must not mention a sink call; wiring one moves it
 # to LOGGED_SITES (bind in the site) or CALLER_BOUND_SITES (bind in its caller).
 # The check below sees only the first: a caller-side bind does not trip it.
+_CALLERLESS = (
+    "no production caller; BUG_BACKLOG \"`check_criteria_fulfillment` and "
+    "`emit_concept_tree` make a model call but have no production caller\""
+)
 DEFERRED_SITES = {
     ("create.py", "suggest_slug"): "runs before the slug exists; BACKLOG #177",
-    ("review.py", "check_criteria_fulfillment"): "no production caller; BUG_BACKLOG MINOR",
+    ("review.py", "check_criteria_fulfillment"): _CALLERLESS,
     ("jira.py", "render_jira_export"): "jira opens no run log; BACKLOG #176",
     ("annotate.py", "classify_plan_implementation"): "annotate opens no run log; BACKLOG #176",
-    ("concept_tree.py", "emit_concept_tree"): "no production caller; BUG_BACKLOG MINOR",
+    ("concept_tree.py", "emit_concept_tree"): _CALLERLESS,
 }
 
 

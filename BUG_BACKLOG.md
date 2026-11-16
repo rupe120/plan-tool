@@ -958,8 +958,6 @@ Durable re-open conditions for retired items are recorded in
 - **Fix:** decide per function: delete it with its tests, or wire a production
   caller and bind a call-end sink there. No run-log change is needed while it
   stays callerless.
-- **Deliberately not done:** an ambient-writer fallback inside `_emit_call_end`
-  — with no bind there is no ambient writer either.
 - **Approach:** direct, once wire-or-delete is decided.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** 2026-11-16, split from the ten-site run-log entry. Of the other

@@ -128,8 +128,17 @@ they resolve.
   #176 (`render_jira_export`, `classify_plan_implementation`) and #177
   (`suggest_slug`). It is now a MINOR entry for the two callerless functions
   only; `DEFERRED_SITES` reasons cite the tracking entry; #177 is unparked
-  (`b71e9ce2f` met its condition); #537 names #332 as a known instance. Owner
-  decision.
+  (`b71e9ce2f` met its condition) and `decision-needed`. Owner decision.
+  Review (`HEAD~2..HEAD`, `/code-review high`): ten prose findings, all fixed.
+  #332 is not an instance of #537 (`propose_references` binds a sink and is in
+  `LOGGED_SITES`; #332's own "no sink" claim looks stale, left for its owner);
+  #177 is `decision-needed`, not `ready`, and its 2026-10-02 note is past tense;
+  #176 counts three verbs and notes `reconcile-plan-walk`'s unlisted site; the
+  decision record names logged commands (`verify-all`, not its aliases), states
+  the signature cost directly, and reopens only for latency or `prompt_sha256`;
+  callerless reasons cite their entry; the ambient-writer line left the
+  callerless entry. #537 also names `propose_distilled_seed_from_claude` (binds,
+  unpinned).
 - 2026-11-16 — review of `HEAD~4..HEAD` (`/code-review high`), pass 1: eight
   findings. Fixed: the bench's reconcile trial opened a run log but bound no
   sink, so its records carried no tokens (same class as `lessons consolidate`;

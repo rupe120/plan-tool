@@ -244,18 +244,20 @@ within one audit pass.
 
 ### Run-log calls bound by a caller-side sink write no start
 
-Retired 2026-11-16, owner-confirmed, never filed as an entry. `reconcile-plan`,
-`review-all`, `verify`, `lessons consolidate` and the bench reconcile trial bind
-a call-end sink around an orchestrator, so each call's `claude_call_end` and
-tokens land and `runs list` totals are complete. No `claude_call_start` is
-written, because the prompt is rendered inside the orchestrator
-(`review_plan_full`, `run_all_done_steps`, `verify_plan`,
-`find_lesson_equivalences`), and `plan_tool/cli/runs.py`'s profile pairing skips
-an end with no start, so `runs profile` omits these calls. A start would need a
-`run_logger` parameter on each orchestrator (the orchestrator signature change
-BACKLOG #176 rules out) or a profile that counts an orphan end; nothing reads
-these calls' latency today. Reopen when a `runs profile` consumer needs latency
-or per-call tokens for any of these five commands.
+Retired 2026-11-16, owner-confirmed, never filed as an entry. Four commands
+bind a call-end sink around an orchestrator: `reconcile-plan`, `verify-all`
+(its `--mode` sweep and its `--rollup`; `review-all` and `verify` are aliases
+and log as `verify-all`), `lessons-consolidate`, and the bench reconcile trial.
+Each call's `claude_call_end` and tokens land, so `runs list` totals and
+per-call token counts are complete. No `claude_call_start` is written, because
+the prompt is rendered inside the orchestrator (`review_plan_full`,
+`run_all_done_steps`, `verify_plan`, `find_lesson_equivalences`), and
+`plan_tool/cli/runs.py`'s profile pairing skips an end with no start, so `runs
+profile` omits these calls. A start would need a `run_logger` parameter on each
+orchestrator, which widens four public signatures and their callers, or a
+profile that counts a start-less end; nothing reads these calls' latency today.
+Reopen when a `runs profile` consumer needs latency or `prompt_sha256` for calls
+under these commands.
 
 ## Retired composite records
 
