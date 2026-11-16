@@ -98,5 +98,6 @@ compressing or retiring a handoff.
 | [tracking-and-jira.md](tracking-and-jira.md) | Work tracking, the Jira board and tickets, backlog guards, branch hygiene and settled tracking decisions. |
 | [handoff-directory.md](handoff-directory.md) | This directory's own upkeep: scope fence, owner decisions, open items. |
 | [bug-backlog-drain.md](bug-backlog-drain.md) | Standing procedure, queue order, stop conditions and session log for draining `BUG_BACKLOG.md`. Kept as its own file because sessions append to its log; not a merge candidate. |
+| [backlog-drain.md](backlog-drain.md) | Standing procedure, queue order, stop conditions and session log for taking `BACKLOG.md` entries; defers ranking to the Now board and `docs/TRACKING.md`. Kept as its own file for the same reason as the bug drain. |
 
 Each file opens with a table of its sections, with the date each was opened. Parked backlog routes carry their pickup and fence in `BACKLOG.md` and its arc documents, not here.
