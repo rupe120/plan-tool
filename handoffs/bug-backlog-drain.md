@@ -137,7 +137,21 @@ they resolve.
   `lessons consolidate` (the prompt is rendered per pair inside
   `find_lesson_equivalences`; same deliberately-not as above); the bind
   overriding the retry attempt number (every `bind_shell_sink` site does this
-  by design). Pass 2: pending.
+  by design). Pass 2 (`HEAD~6..HEAD`): eight findings, four of them on the
+  coverage guard pass 1 added, so the review stopped here under exit 2 (the loop
+  is auditing its own edits). Fixed: every call of a caller-bound site in its
+  caller module must sit inside the bind, and calls inside a nested def or lambda
+  no longer count; the bench bind is pinned as a second caller of
+  `review_plan_full`; the deferred-site comment and message name
+  `CALLER_BOUND_SITES`; `_read_log_stats`'s docstring no longer says reconcile
+  trials carry no tokens; the ambient-writer "deliberately not done" line moved
+  to the deferred entry. Declined: the deferred-site check cannot see a
+  caller-side bind (said in its comment); a nested bind with another phase
+  mislabels the phase but still records the tokens; folding the
+  writer-or-`nullcontext` shape into one helper (incidental consolidation,
+  unverified). Surfaced to the owner: a class-wide guard that every function
+  opening a `RunLogWriter` also binds a sink (21 `RunLogWriter.start` sites in
+  12 modules).
 
 ## Deliberately not in this handoff
 
