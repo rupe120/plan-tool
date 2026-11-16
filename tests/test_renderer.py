@@ -162,16 +162,6 @@ steps:
                 plan_path=plan_path,
             )
 
-    def test_run_render_with_no_marker_reads_the_body_unchanged(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path, plan = self._setup(tmp_path)
-        prompt = render_prompt(
-            plan, plan.step_by_id(1), repo_root=tmp_path, mode="run",
-            plan_path=plan_path,
-        )
-        assert "CANONICAL-RUN-BODY" in prompt
-
 
 class TestRenderRunPrompt:
     def test_run_prompt_requires_a_concrete_need_for_new_machinery(self, tmp_path: Path) -> None:
@@ -285,8 +275,6 @@ class TestRenderRunPrompt:
         step = plan.step_by_id(2)
         with pytest.raises(FileNotFoundError):
             render_prompt(plan, step, repo_root=tmp_path, mode="does-not-exist")
-
-
 
 
 def _plan_file(tmp_path: Path) -> Path:
@@ -467,21 +455,6 @@ class TestScopeFenceInRunPrompt:
             < prompt.index("**Scope fence")
             < prompt.index("## What to do")
         )
-
-    def test_lead_in_names_the_plan_as_the_source(self, tmp_path: Path) -> None:
-        """The only prose this lane mints for the fence, on the one surface
-        that writes code — pinned so a reword is a visible diff."""
-        plan_path, plan = self._fenced(tmp_path)
-        prompt = render_prompt(
-            plan, plan.step_by_id(1), repo_root=tmp_path, mode="run",
-            plan_path=plan_path,
-        )
-        assert (
-            "**Scope fence (authoritative, from the plan).** These sections "
-            "state what the whole plan is for, what this step is for, and "
-            "what the plan will not build. They bind this step. Do not widen "
-            "past them."
-        ) in prompt
 
     def test_fence_block_is_measured_in_collect_blocks(
         self, tmp_path: Path

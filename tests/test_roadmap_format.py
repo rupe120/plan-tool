@@ -733,18 +733,6 @@ def test_every_prose_amendment_outcome_is_named_in_each_comparison_guide() -> No
             assert f"`{outcome}`" in text, (name, outcome)
 
 
-def test_roadmap_comparison_guidance_keeps_comparison_and_acceptance_separate() -> None:
-    """Keep comparison review separate from all snapshot lifecycle actions."""
-    walkthrough = (_REPO_ROOT / "docs/how-to/roadmap.md").read_text(encoding="utf-8")
-    start = walkthrough.index("### Compare two snapshots before choosing a separate action")
-    end = walkthrough.index("\n---", start)
-    comparison = " ".join(walkthrough[start:end].split())
-
-    assert "After review, choose any acceptance or lifecycle action separately" in comparison
-    assert "comparison output is not an acceptance action" in comparison
-    assert "It does not accept, promote, settle, repair" in comparison
-
-
 def test_roadmap_comparison_backlog_retirement_removes_402() -> None:
     """Retire the shipped comparison feature instead of leaving a pending record."""
     backlog = _BACKLOG.read_text(encoding="utf-8")

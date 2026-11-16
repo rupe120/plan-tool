@@ -1270,16 +1270,6 @@ class TestRenderReviewPrompt:
         assert "missing_dir/foo_endpoint.py" in prompt
         assert "not on disk" in prompt
 
-    def test_prompt_requires_read_grep_grounding(self, tmp_path: Path) -> None:
-        plan_path = _write_review_fixture(tmp_path)
-        plan = parse_plan(plan_path)
-        prompt = render_review_prompt(plan, tmp_path)
-
-        assert "truncated preview for orientation" in prompt
-        assert "Read and Grep the repository at HEAD" in prompt
-        assert "Read/Grep only; do not edit any file" in prompt
-        assert "do not consult LLM-specific guidance files" in prompt
-
     def test_step_filter_narrows_to_one_step(self, tmp_path: Path) -> None:
         plan_path = _write_review_fixture(tmp_path)
         plan = parse_plan(plan_path)

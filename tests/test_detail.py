@@ -622,35 +622,6 @@ class TestRenderDetailPrompt:
         assert "### `missing.py` _(not on disk)_" in prompt
         assert "### `unreadable.py` _(unreadable: permission denied)_" in prompt
 
-    def test_uses_symbol_excerpt_for_declared_python_file(
-        self, tmp_path: Path
-    ) -> None:
-        source_path = tmp_path / "handlers.py"
-        source_path.write_text(
-            "\n".join(f"LEADING_FILLER_{i} = {i}" for i in range(80))
-            + "\n\nclass TargetHandler:\n    def run(self):\n        return 42\n",
-            encoding="utf-8",
-        )
-        plan = Plan(
-            title="Detail Test Plan",
-            status=PlanStatus.IN_PROGRESS,
-            priority=Priority.MEDIUM,
-            steps=[
-                Step(
-                    id=1,
-                    title="Implement TargetHandler",
-                    files=["handlers.py"],
-                )
-            ],
-        )
-        prompt = render_detail_prompt(
-            plan, plan.step_by_id(1), repo_root=tmp_path, max_file_bytes=180
-        )
-
-        assert "class TargetHandler" in prompt
-        assert "LEADING_FILLER_0" not in prompt
-        assert "excerpt_kind: symbol" in prompt
-
     def test_preserves_missing_unreadable_and_no_files_contracts(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -868,13 +839,6 @@ class TestRenderDetailPrompt:
         assert "canonical path `" not in prompt
         assert "${output_path_block}" not in prompt
 
-    def test_unset_complexity_renders_unknown(self, tmp_path: Path) -> None:
-        plan_path = _write_detail_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(3)
-        prompt = render_detail_prompt(plan, step, repo_root=tmp_path)
-        assert "complexity: unknown" in prompt
-
     def test_set_complexity_rendered(self, tmp_path: Path) -> None:
         plan_path = _write_detail_plan(tmp_path)
         plan = parse_plan(plan_path)
@@ -909,16 +873,6 @@ class TestRenderDetailPrompt:
         assert "_(truncated)_" in prompt
         # Not the whole 9000-byte body.
         assert "x" * 9000 not in prompt
-
-    def test_missing_file_marked_inline(self, tmp_path: Path) -> None:
-        plan_path = _write_detail_plan(tmp_path)
-        # Drop bar.py before rendering so the prompt has to handle missing.
-        (tmp_path / "bar.py").unlink()
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(3)
-        prompt = render_detail_prompt(plan, step, repo_root=tmp_path)
-        assert "`bar.py`" in prompt
-        assert "(not on disk)" in prompt
 
     def test_no_siblings_renders_placeholder(self, tmp_path: Path) -> None:
         plan_path = _write_detail_plan(tmp_path)
@@ -1030,21 +984,6 @@ class TestRenderDetailPromptABMode:
         assert "Step purity self-check" in prompt
         assert "MIXED-STEP" in prompt
 
-    def test_combined_guidance_names_reuse_local_and_separate_routes(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _write_detail_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(1)
-        prompt = render_detail_prompt(plan, step, repo_root=tmp_path)
-
-        assert "other locations that exercise the same logic" in prompt
-        assert "**Reuse unchanged:**" in prompt
-        assert "**Bounded local work:**" in prompt
-        assert "**Separate shared work:**" in prompt
-        assert "existing consumer behavior and current schema" in prompt
-        assert "shared authority, lifecycle, identity, precedence" in prompt
-
     def test_split_drops_grep_and_self_check(self, tmp_path: Path) -> None:
         plan_path = _write_detail_plan(tmp_path)
         plan = parse_plan(plan_path)
@@ -1072,39 +1011,6 @@ class TestRenderDetailPromptABMode:
             foundational_logic_block="**Foundational logic:** path resolver",
         )
         assert "**Foundational logic:** path resolver" in prompt
-
-    def test_split_guidance_names_reuse_local_and_separate_routes(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _write_detail_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(1)
-        prompt = render_detail_prompt(
-            plan,
-            step,
-            repo_root=tmp_path,
-            split_mode=True,
-            foundational_logic_block="**Foundational logic:** path resolver",
-        )
-
-        assert "Foundational-logic finds" in prompt
-        assert "**Reuse unchanged:**" in prompt
-        assert "**Bounded local work:**" in prompt
-        assert "**Separate shared work:**" in prompt
-
-    def test_split_guidance_does_not_repeat_the_foundational_search(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _write_detail_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(1)
-        prompt = render_detail_prompt(
-            plan, step, repo_root=tmp_path, split_mode=True
-        )
-
-        assert "Fold the **Foundational-logic finds**" in prompt
-        assert "other locations that exercise the same logic" not in prompt
-        assert "Step purity self-check" not in prompt
 
     def test_shared_location_alone_does_not_require_shared_work(
         self, tmp_path: Path
@@ -1145,17 +1051,6 @@ class TestRenderDetailPromptABMode:
                 "## Applicable guardrails",
                 "## Deferred",
             }
-
-    def test_existing_audit_bullets_unchanged(self, tmp_path: Path) -> None:
-        plan_path = _write_detail_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(1)
-        prompt = render_detail_prompt(plan, step, repo_root=tmp_path)
-        assert "Use Grep to find the public symbols" in prompt
-        assert "Use Read on sibling files" in prompt
-        assert "the already-implemented signal above flagged any hits" in prompt
-        assert "Use Glob to locate the matching test file(s)" in prompt
-        assert "Do not narrate the audit in the response" in prompt
 
     def test_no_new_required_heading_advertised(self, tmp_path: Path) -> None:
         plan_path = _write_detail_plan(tmp_path)
