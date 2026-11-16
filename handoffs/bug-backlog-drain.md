@@ -121,9 +121,10 @@ they resolve.
   (`tests/test_review.py::TestCmdReviewSaveByDefault::test_claude_calls_land_in_the_run_log`,
   with `invoker=None`, so not the lessons call); the rest rely on
   `CALLER_BOUND_SITES`, which checks each call sits inside its caller's bind.
-  Entry removed in `7db641e34`. Deliberately not filed: these sites write no
-  `claude_call_start`, so `runs profile` has no latency sample for them; token
-  totals are complete.
+  Entry removed in `7db641e34`. Not yet filed, owner decision open: these
+  sites write no `claude_call_start`, and `cli/runs.py`'s profile pairing skips
+  an end with no start, so `runs profile` omits these calls entirely; `runs
+  list` token totals are complete.
 - 2026-11-16 — review of `HEAD~4..HEAD` (`/code-review high`), pass 1: eight
   findings. Fixed: the bench's reconcile trial opened a run log but bound no
   sink, so its records carried no tokens (same class as `lessons consolidate`;
