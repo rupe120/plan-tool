@@ -743,12 +743,11 @@ def _run_reconcile(ctx: BenchTrialContext) -> BenchTrialResult:
     plan_path = ctx.scratch_dir / entry.get("plan_path", "plan.md")
     # The trial's stats come from its run log, which records nothing unless a
     # sink is bound — mirrors ``reconcile-plan``'s CLI bind.
-    sink = (
+    with (
         ctx.run_logger.bind_shell_sink(phase="reconcile_plan", attempt=1)
         if ctx.run_logger is not None
         else contextlib.nullcontext()
-    )
-    with sink:
+    ):
         result = review_plan_full(
             plan_path,
             repo_root=ctx.scratch_dir,
@@ -956,10 +955,10 @@ def _stats_to_fields(stats: ClaudeRunStats) -> dict[str, Any]:
 def _read_log_stats(log_path: Optional[Path]) -> dict[str, Any]:
     """Aggregate token/cost fields from a trial's run-log, None-safe.
 
-    Batch families (proposal / detail / reconcile) emit no per-call token
-    stats, and fake invokers never spawn the streaming path — both leave every
-    field ``None`` here, the same Optional contract ``run_log.ClaudeCallEnd``
-    and ``cli/runs.py`` already tolerate.
+    Fields stay ``None`` when no ``claude_call_end`` carried them — a fake
+    invoker never spawns a backend, and a trial that binds no sink writes no
+    end at all — the same Optional contract ``run_log.ClaudeCallEnd`` and
+    ``cli/runs.py`` already tolerate.
     """
     fields: dict[str, Any] = dict(_EMPTY_STATS_FIELDS)
     if log_path is None or not log_path.is_file():

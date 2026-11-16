@@ -37,32 +37,35 @@ LOGGED_SITES = [
 
 # Sites whose own source binds nothing because a caller binds the sink around
 # them, so their ``claude_call_end`` (and tokens) land under the caller's
-# phase. Each maps to (caller module, phase bound, callee named inside the
-# ``with`` block) — the callee is the site itself or the function that reaches
-# it. ``find_lesson_equivalences``'s other route (``append_lessons`` with
+# phase. Each maps to the (caller module, phase bound, callee) binds that
+# deliver it; the callee is the site itself or the function that reaches it,
+# and every call of it in that caller module must sit inside the bind.
+# ``find_lesson_equivalences``'s other route (``append_lessons`` with
 # ``strict_check``/``warn_check``) is library-only: no CLI path enables either.
 CALLER_BOUND_SITES = {
     ("review.py", "review_plan_full"): (
-        "cli/review_cmd.py", "reconcile_plan", "review_plan_full",
+        ("cli/review_cmd.py", "reconcile_plan", "review_plan_full"),
+        ("bench.py", "reconcile_plan", "review_plan_full"),
     ),
     ("review.py", "extract_and_append_review_lessons"): (
-        "cli/review_cmd.py", "reconcile_plan", "review_plan_full",
+        ("cli/review_cmd.py", "reconcile_plan", "review_plan_full"),
     ),
     ("launcher.py", "run_all_done_steps"): (
-        "cli/review_cmd.py", "review_sweep", "run_all_done_steps",
+        ("cli/review_cmd.py", "review_sweep", "run_all_done_steps"),
     ),
     ("launcher.py", "_run_deep_for_step"): (
-        "cli/review_cmd.py", "verify_rollup", "verify_plan",
+        ("cli/review_cmd.py", "verify_rollup", "verify_plan"),
     ),
     ("lessons.py", "find_lesson_equivalences"): (
-        "cli/lessons_cmd.py", "lessons_equivalence", "find_lesson_equivalences",
+        ("cli/lessons_cmd.py", "lessons_equivalence", "find_lesson_equivalences"),
     ),
 }
 
 # Sites that stay unlogged: no RunLogWriter is reachable from the function or
 # its callers (or there is no production caller). Filed in BUG_BACKLOG.md as
 # decision-needed. Each entry must not mention a sink call; wiring one moves it
-# to LOGGED_SITES.
+# to LOGGED_SITES (bind in the site) or CALLER_BOUND_SITES (bind in its caller).
+# The check below sees only the first: a caller-side bind does not trip it.
 DEFERRED_SITES = {
     ("create.py", "suggest_slug"): "runs before the slug exists",
     ("review.py", "check_criteria_fulfillment"): "no production caller",
@@ -90,43 +93,68 @@ def test_logged_call_site_binds_a_call_end_sink(filename: str, name: str) -> Non
     )
 
 
-def _calls_inside_phase_binds(caller: str, phase: str) -> set[str]:
-    """Names called inside any ``with`` whose context expression carries
-    *phase* as a string constant (``_audit_sink(run_logger, "<phase>")`` or
+def _call_name(call: ast.Call) -> str | None:
+    if isinstance(call.func, ast.Name):
+        return call.func.id
+    if isinstance(call.func, ast.Attribute):
+        return call.func.attr
+    return None
+
+
+def _walk_same_scope(node: ast.AST):
+    """``ast.walk`` that does not enter a nested def or lambda: a call inside
+    one runs whenever that function is called, not inside the enclosing
+    ``with``."""
+    stack = [node]
+    while stack:
+        current = stack.pop()
+        yield current
+        for child in ast.iter_child_nodes(current):
+            if not isinstance(
+                child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
+            ):
+                stack.append(child)
+
+
+def _unbound_calls(caller: str, phase: str, callee: str) -> tuple[int, int]:
+    """Return (calls of *callee* in *caller*, calls not inside a ``with``
+    whose context expression carries *phase* as a string constant —
+    ``_audit_sink(run_logger, "<phase>")`` or
     ``bind_shell_sink(phase="<phase>", ...)``)."""
     tree = ast.parse((PKG / caller).read_text())
-    names: set[str] = set()
+    calls = [
+        n for n in ast.walk(tree)
+        if isinstance(n, ast.Call) and _call_name(n) == callee
+    ]
+    bound: set[int] = set()
     for node in ast.walk(tree):
         if not isinstance(node, ast.With):
             continue
-        binds = any(
+        if not any(
             isinstance(c, ast.Constant) and c.value == phase
             for item in node.items
             for c in ast.walk(item.context_expr)
-        )
-        if not binds:
+        ):
             continue
         for stmt in node.body:
-            for call in ast.walk(stmt):
-                if isinstance(call, ast.Call):
-                    func = call.func
-                    if isinstance(func, ast.Name):
-                        names.add(func.id)
-                    elif isinstance(func, ast.Attribute):
-                        names.add(func.attr)
-    return names
+            for n in _walk_same_scope(stmt):
+                if isinstance(n, ast.Call) and _call_name(n) == callee:
+                    bound.add(id(n))
+    return len(calls), sum(1 for c in calls if id(c) not in bound)
 
 
 @pytest.mark.parametrize(("filename", "name"), sorted(CALLER_BOUND_SITES))
-def test_caller_bound_site_is_called_inside_its_callers_sink(
+def test_every_call_of_a_caller_bound_site_is_inside_its_callers_sink(
     filename: str, name: str
 ) -> None:
-    caller, phase, callee = CALLER_BOUND_SITES[(filename, name)]
     _function_source(filename, name)  # the site still exists
-    assert callee in _calls_inside_phase_binds(caller, phase), (
-        f"{caller} no longer calls {callee} inside a {phase!r} bind; "
-        f"{filename}:{name}'s call ends would be dropped"
-    )
+    for caller, phase, callee in CALLER_BOUND_SITES[(filename, name)]:
+        total, unbound = _unbound_calls(caller, phase, callee)
+        assert total, f"{caller} no longer calls {callee}; update the site list"
+        assert not unbound, (
+            f"{unbound} of {total} {callee} call(s) in {caller} sit outside a "
+            f"{phase!r} bind; {filename}:{name}'s call ends would be dropped"
+        )
 
 
 @pytest.mark.parametrize(("filename", "name"), sorted(DEFERRED_SITES))
@@ -136,6 +164,7 @@ def test_deferred_site_is_still_unlogged_so_the_list_stays_honest(
     source = _function_source(filename, name)
     assert not SINK_RE.search(source), (
         f"{filename}:{name} now logs; move it from DEFERRED_SITES to LOGGED_SITES"
+        " or CALLER_BOUND_SITES"
     )
 
 
