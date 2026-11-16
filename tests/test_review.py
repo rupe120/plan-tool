@@ -9591,11 +9591,11 @@ class TestCheckPlanAudit:
             prompt[start:prompt.index("- **Out-of-scope findings", start)].split()
         )
         assert "own code creates" in clause
-        assert "names one as an exception in its own prose" in clause
-        assert "with a reason" in clause
-        assert "raise no finding against it" in clause
-        assert "does not name still stands as a finding" in clause
+        assert "lists one in its own prose as a named exception with a reason" in clause
+        assert "raise no finding about the resource's own stock behavior" in clause
+        assert "does not list still stands as a finding" in clause
         assert "never covers a resource the plan's own code creates" in clause
+        assert "claim of isolation over an excepted resource is still a finding" in clause
         rules = prompt.index("## Rules")
         findings_format = prompt.index("## Findings format")
         assert rules < start < findings_format
