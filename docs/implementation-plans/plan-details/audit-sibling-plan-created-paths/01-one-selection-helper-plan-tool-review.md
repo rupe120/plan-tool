@@ -100,6 +100,7 @@
   - Never rewrite an archived sidecar. Reads only.
 - Update the docstring that says "Accepts v1 through v3".
 - Behavior to expect and keep: on upgrade, a saved v3 record with siblings reads as stale once. This was owner-confirmed 2026-11-17. Ship between Loom batches.
+- **Freshness compares normalized revisions.** `plan_tool/review_persistence.py:project_saved_completeness_result` compares `normalize_audit_revision(saved)`, which upgrades an older record to the current shape and fills absent digests with `None`, against the current revision, rather than the raw saved dict, so the version number alone never makes a report stale (owner decision 2026-11-17). Without this, the plain dict comparison makes every saved report stale on the version change alone, which the owner did not accept.
 
 **`DATA_CONTRACT.md`**
 - The paragraph that names `AuditInputSnapshot` as the exact-input source (near the arm-clustering `source_plan_fingerprint` text) names the new captured input.
@@ -131,6 +132,11 @@
 - `test_sibling_edit_changes_sibling_paths_digest`.
 - `test_v3_record_decodes_with_sibling_paths_digest_none` — follow the existing v2 legacy case that deletes `project_context_digest` in `tests/test_review_persistence.py`.
 - `test_saved_v4_record_round_trips_through_normalize_audit_revision`.
+
+**`tests/test_review_persistence.py`** (freshness view)
+- `test_saved_v3_report_of_a_plan_without_siblings_stays_current_after_upgrade` — a v3 `audit_revision` whose other fields match the current capture reads `current`.
+- `test_saved_v3_report_of_a_plan_with_siblings_reads_stale_after_upgrade`.
+- `test_a_changed_plan_still_reads_stale_under_normalized_comparison` — the version-tolerant comparison does not hide a real edit.
 
 **Green gate:** every case above must be green, and the existing suite must stay green, before this step is finished. Existing tests that assert `"version": 3` or exact v3 key sets will need updating to v4. That is expected, not a reason to narrow the change.
 

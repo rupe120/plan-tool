@@ -63,8 +63,9 @@ steps:
     paragraph names the v4 digest, and the run-grade evidence paragraph lists audit-revision
     versions 1–4 as supported, worded as "audit-revision version" so it is not read
     as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions
-    of roadmap plans that have siblings change once on upgrade, deliberately; plans
-    with no siblings keep both byte-identical. No destructive operations are touched.
+    of roadmap plans that have siblings change once on upgrade, deliberately. Plans
+    with no siblings keep their fingerprint byte-identical, and their saved reports
+    stay `current` because `plan_tool/review_persistence.py:project_saved_completeness_result` compares `normalize_audit_revision(saved)`, which upgrades an older record to the current shape and fills absent digests with `None`, against the current revision, rather than the raw saved dict, so the version number alone never makes a report stale (owner decision 2026-11-17). No destructive operations are touched.
     Unit tests in `tests/test_review.py` cover the helper with a two-plan roadmap
     fixture (the sibling path is present, own `creates:` are excluded), a no-identity
     plan with other registered plans that declare `creates:` (empty), a plan from
@@ -243,8 +244,10 @@ See the `steps:` block in the frontmatter.
   about 270 sibling paths, roughly 10 KB, per audited plan.
 - Fingerprints and revisions of existing roadmap plans with siblings change
   once on upgrade, so their saved sampler checkpoints, shape-advisory
-  fingerprints and report revisions read as stale once. That is intended;
-  plans without siblings are unaffected.
+  fingerprints and report revisions read as stale once. That is intended
+  (owner-confirmed 2026-11-17; ship between Loom batches). Plans without
+  siblings are unaffected: the freshness view compares normalized revisions, so
+  the v3 to v4 version change alone does not make their reports stale.
 - The model may still raise the finding despite the block. That is not
   tested by the suite; the plan records it as a limit rather than adding a
   finding filter.
@@ -266,8 +269,9 @@ See the `steps:` block in the frontmatter.
   fingerprint unchanged.
 - The public `audit_revision` is version 4 with `sibling_paths_digest`: null
   with no siblings, changed by a sibling `creates:` edit (so a saved report's
-  `view_revision_status` turns `stale`), and `None` when a v1–v3 record is
-  decoded.
+  `view_revision_status` turns `stale`), `None` when a v1–v3 record is
+  decoded; and a saved v3 report of a plan with no siblings still reads
+  `current` after upgrade while one with siblings reads `stale`.
 - Every `${...}` placeholder in `plan-audit.md` is supplied by the renderer.
 - `uv run pytest tests/ -q -n auto` is green.
 
