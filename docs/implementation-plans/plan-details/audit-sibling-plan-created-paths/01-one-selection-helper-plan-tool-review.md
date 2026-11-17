@@ -100,7 +100,7 @@
   - Never rewrite an archived sidecar. Reads only.
 - Update the docstring that says "Accepts v1 through v3".
 - Behavior to expect and keep: on upgrade, a saved v3 record with siblings reads as stale once. This was owner-confirmed 2026-11-17. Ship between Loom batches.
-- **Change both freshness comparisons (new behavior, not existing).** The two sites are `project_saved_completeness_result` (below) and `completeness_report.py`'s `audit_revision_match` (`current_snapshot.revision == saved.audit_revision`); both call one new `review_persistence.py` helper that compares the normalized saved revision. Today `project_saved_completeness_result` returns `"current" if current.revision == audit_revision`, comparing the raw saved dict. `plan_tool/review_persistence.py:project_saved_completeness_result` compares `normalize_audit_revision(saved)`, which upgrades an older record to the current shape and fills absent digests with `None`, against the current revision, rather than the raw saved dict, so the version number alone never makes a report stale (owner decision 2026-11-17). Without this, the plain dict comparison makes every saved report stale on the version change alone, which the owner did not accept.
+- **Version tolerance lives in the normalizer; no comparison code changes.** All three saved-versus-current comparisons receive a normalized revision: `project_saved_completeness_result` and `completeness_report.py`'s `audit_revision_match` read `SavedReview.qualified_result`, which `load_review` stores as `normalize_qualified_result(...)`; `cli/authoring.py`'s freshness tail calls `normalize_qualified_result` itself. Making `normalize_audit_revision` emit version 4 with `sibling_paths_digest` `None` for a v1–v3 record (above) is what keeps a no-sibling report current. Do not add a comparison helper: it would duplicate the normalizer. If a site is found that compares a raw saved dict, stop and surface it rather than patching it alone.
 
 **`DATA_CONTRACT.md`**
 - The paragraph that names `AuditInputSnapshot` as the exact-input source (near the arm-clustering `source_plan_fingerprint` text) names the new captured input.
@@ -134,10 +134,11 @@
 - `test_saved_v4_record_round_trips_through_normalize_audit_revision`.
 
 **`tests/test_review_persistence.py`** (freshness view)
-- `test_saved_v3_report_of_a_plan_without_siblings_stays_current_after_upgrade` — a v3 `audit_revision` whose other fields match the current capture reads `current`.
+- `test_saved_v3_report_of_a_plan_without_siblings_stays_current_after_upgrade` — a saved v3 sidecar loaded through `load_review`, whose other fields match the current capture, reads `current`.
 - `test_saved_v3_report_of_a_plan_with_siblings_reads_stale_after_upgrade`.
-- `test_a_changed_plan_still_reads_stale_under_normalized_comparison` — the version-tolerant comparison does not hide a real edit.
-- `test_completeness_report_counts_a_saved_v3_no_sibling_report_as_a_plan_match` (`tests/test_completeness_report.py`) — the second comparison site uses the same helper.
+- `test_a_changed_plan_still_reads_stale_after_upgrade` — normalization does not hide a real edit.
+- `test_completeness_report_counts_a_saved_v3_no_sibling_report_as_a_plan_match` (`tests/test_completeness_report.py`) — the second comparison site.
+- `test_authoring_tail_does_not_report_a_saved_v3_no_sibling_report_as_moved` (`tests/cli/test_authoring_cmds.py`) — the third comparison site.
 
 **Sibling set form**
 - The set holds `normalize_declared_path` results, deduplicated and sorted; the snapshot field, the digest and step 2's prompt block all use it.
