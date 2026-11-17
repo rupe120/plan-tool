@@ -57,6 +57,7 @@ from plan_tool.scope_fence import (
 )
 
 from plan_tool.roadmap_artifacts import (
+    roadmap_dir,
     COMPONENTS_FILENAME,
     CONSTRAINTS_FILENAME,
     DRAFT_SEED_CROSS_CUTTING_KEY,
@@ -172,6 +173,7 @@ VIOLATION_DRAFT_SEED_UNMATCHED_FENCE = "draft-seed-unmatched-fence"
 VIOLATION_UNDEFINED_SEED_COMPONENT_REFERENCE = "undefined-seed-component-reference"
 VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE = "missing-draft-seed-artifact-reference"
 VIOLATION_BARE_ROADMAP_FILE_CITATION = "bare-roadmap-file-citation"
+VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION = "unresolved-roadmap-file-citation"
 VIOLATION_MISSING_DRAFT_SEED_RISKS = "missing-draft-seed-risks"
 VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING = "bad-draft-seed-guardrail-heading"
 VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME = "duplicate-draft-seed-basename"
@@ -2657,7 +2659,8 @@ def check_component_plan_coverage(envelope: ArtifactEnvelope) -> list[Violation]
 # Local copies of roadmap_versions.ROADMAP_VERSION_NAMESPACE_DIRNAME and
 # SHA256_DIGEST_RE.pattern (this module takes no import of it); a test pins them equal.
 _VERSION_STORE_DIRNAME = ".roadmap-versions"
-_VERSION_ID_PATTERN = "[0-9a-f]{64}"
+_VERSION_ID_LEN = 64
+_VERSION_ID_PATTERN = f"[0-9a-f]{{{_VERSION_ID_LEN}}}"
 _VERSION_STORE_PATH_FORM = f"<repo-relative roadmap folder>/{_VERSION_STORE_DIRNAME}/<version-id>/"
 _DRAFT_SEED_MEMBER_FILENAMES = (
     DOMAIN_FILENAME,
@@ -2676,7 +2679,7 @@ _MEMBER_FILENAME_RE = re.compile(
 _VERSION_STORE_PREFIX_RE = re.compile(
     re.escape(_VERSION_STORE_DIRNAME + "/") + _VERSION_ID_PATTERN + "/"
 )
-_VERSION_STORE_PREFIX_LEN = len(_VERSION_STORE_DIRNAME) + 1 + 64 + 1
+_VERSION_STORE_PREFIX_LEN = len(_VERSION_STORE_DIRNAME) + 1 + _VERSION_ID_LEN + 1
 
 
 def _cited_in_version_store(text: str, name_start: int) -> bool:
@@ -2728,6 +2731,53 @@ def bare_roadmap_file_citations(text: str) -> list[BareRoadmapFileCitation]:
     ]
 
 
+@dataclass(frozen=True)
+class CitationRoots:
+    """Where a version-store citation must resolve: from ``repo_root``, into this roadmap's store."""
+
+    repo_root: Path
+    plans_dir: Path
+    slug: str
+
+
+_CITATION_TOKEN_STOP = frozenset(" \t\r\n`'\"()[]<>")
+
+
+def unresolved_roadmap_file_citations(text: str, roots: CitationRoots) -> list[Violation]:
+    """Each version-store citation that names no stored member file from the repository root.
+
+    Any stored version passes (a hand-edited seed cites the version its text
+    came from); a mistyped id or a missing roadmap-folder prefix does not.
+    """
+    body = _strip_frontmatter(text)
+    versions = roadmap_dir(roots.plans_dir, roots.slug) / _VERSION_STORE_DIRNAME
+    violations: list[Violation] = []
+    for occurrence in _member_filename_occurrences(body):
+        if not occurrence.in_version_store:
+            continue
+        start = occurrence.start
+        while start > 0 and body[start - 1] not in _CITATION_TOKEN_STOP:
+            start -= 1
+        cited = body[start : occurrence.start + len(occurrence.filename)]
+        version_id = body[occurrence.start - _VERSION_ID_LEN - 1 : occurrence.start - 1]
+        expected = versions / version_id / occurrence.filename
+        if expected.is_file() and (roots.repo_root / cited).resolve() == expected.resolve():
+            continue
+        violations.append(
+            Violation(
+                kind=VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
+                artifact=PLANS_FILENAME,
+                row_id=None,
+                message=(
+                    f"the seed cites '{cited}', which names no stored roadmap version file "
+                    "from the repository root — write "
+                    f"'{_VERSION_STORE_PATH_FORM}{occurrence.filename}' with an id that exists"
+                ),
+            )
+        )
+    return violations
+
+
 STACK_BARE_NAME_ROUTE = (
     "revise that row through reviewer feedback so a new accepted version is "
     "published, then regenerate the seed"
@@ -2763,7 +2813,9 @@ def find_bare_roadmap_file_citations(text: str) -> list[Violation]:
     return violations
 
 
-def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
+def validate_draft_seed_content(
+    text: str, *, plan: PlanRow, citation_roots: CitationRoots | None
+) -> list[Violation]:
     """Validate one draft seed's provenance and body references for its plan row."""
     basename = Path(plan.draft_seed_path).name
     if _fenced_code_spans(_strip_frontmatter(text)).unmatched_opening is not None:
@@ -2845,7 +2897,10 @@ def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
                 ),
             )
         )
-    for body_violation in find_bare_roadmap_file_citations(text):
+    body_violations = find_bare_roadmap_file_citations(text)
+    if citation_roots is not None:
+        body_violations += unresolved_roadmap_file_citations(text, citation_roots)
+    for body_violation in body_violations:
         violations.append(
             Violation(
                 kind=body_violation.kind,

@@ -108,6 +108,7 @@ from plan_tool.roadmap_gates import (
     run_constraints_gates,
     run_domain_gates,
     run_plans_gates,
+    CitationRoots,
     find_bare_roadmap_file_citations,
     validate_draft_seed_content,
 )
@@ -2920,7 +2921,7 @@ def _accept_roadmap_seed(
         )
 
     try:
-        classification = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug).get(plan_id)
+        classification = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root).get(plan_id)
     except RoadmapSeedStateError as exc:
         raise RoadmapError(str(exc)) from exc
     if classification is None or classification.state != DRAFT_SEED_STATE_DIGEST_MISMATCHED:
@@ -2939,7 +2940,13 @@ def _accept_roadmap_seed(
             f"roadmap seed '{plan_id}' draft at {source} became unreadable "
             f"between classification and read: {exc}"
         ) from exc
-    violations = tuple(validate_draft_seed_content(text, plan=plan))
+    violations = tuple(
+        validate_draft_seed_content(
+            text,
+            plan=plan,
+            citation_roots=CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+        )
+    )
     if violations:
         return RoadmapSeedAcceptResult(
             outcome=ACCEPT_OUTCOME_REFUSED,
@@ -3038,7 +3045,7 @@ def _reject_unmatched_operator_draft_fences(slug: str, *, plans_dir: Path) -> No
         violation = next(
             (
                 item
-                for item in validate_draft_seed_content(text, plan=plan)
+                for item in validate_draft_seed_content(text, plan=plan, citation_roots=None)
                 if item.kind == VIOLATION_DRAFT_SEED_UNMATCHED_FENCE
             ),
             None,
@@ -3146,7 +3153,7 @@ def _apply_roadmap_seeds(
 
     collisions: list[Path] = []
     try:
-        classifications = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug)
+        classifications = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root)
     except RoadmapSeedStateError as exc:
         raise RoadmapError(str(exc)) from exc
     refused_drafts = _refused_apply_drafts(targets, classifications)
@@ -3191,7 +3198,7 @@ def _apply_roadmap_seeds(
     except (RoadmapArtifactError, RoadmapSeedStateError) as exc:
         raise RoadmapError(str(exc)) from exc
     try:
-        classifications = classify_draft_seeds(fresh_artifact, plans_dir=plans_dir, slug=slug)
+        classifications = classify_draft_seeds(fresh_artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root)
     except RoadmapSeedStateError as exc:
         raise RoadmapError(str(exc)) from exc
     refused_drafts = _refused_apply_drafts(targets, classifications)
@@ -3230,7 +3237,9 @@ def _apply_roadmap_seeds(
     for plan_id, source, _dest in targets:
         source_text = source.read_text(encoding="utf-8")
         violations = validate_draft_seed_content(
-            source_text, plan=fresh_plan_by_id[plan_id]
+            source_text,
+            plan=fresh_plan_by_id[plan_id],
+            citation_roots=CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
         )
         if violations:
             post_classification_refusals.append(
@@ -3710,7 +3719,13 @@ def _materialize_plan_seed(
             continue
 
         lifted = _replace_stack_section(lifted, stack_section)
-        candidate_violations = tuple(validate_draft_seed_content(lifted, plan=plan))
+        candidate_violations = tuple(
+            validate_draft_seed_content(
+                lifted,
+                plan=plan,
+                citation_roots=CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+            )
+        )
         if candidate_violations:
             failure_kind = FAILURE_GATES
             failure_rc = None

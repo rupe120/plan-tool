@@ -747,7 +747,8 @@ persisted record and no `--json` form.
 | `seed-source-unmatched` | a create source (the seed body or the description) has an unmatched opening code fence |
 | `roadmap-seed-unresolved` | a roadmap-tracked seed cannot be tied to its accepted roadmap: no accepted version, a plan row absent from it, or an unreadable roadmap or seed state |
 | `roadmap-seed-not-confirmed` | a roadmap-tracked seed is invalidated or digest-mismatched and the operator declined, or no `-y` was given on a non-interactive run |
-| `roadmap-seed-bare-citation` | a roadmap-tracked seed (draft or promoted copy) names a roadmap member file without its version-store path; `-y` does not override it, and the message names the repair routes for the seed's location |
+| `roadmap-seed-bare-citation` | a roadmap-tracked seed (draft or promoted copy) names a roadmap member file without its version-store path; `-y` does not override it; the message names each file holding a bare name and points at ROADMAP_FORMAT.md § "Draft-seed manifest states" for the routes |
+| `roadmap-seed-unresolved-citation` | a roadmap-tracked seed cites a version-store path that names no stored member file from the repository root (a mistyped id or a missing roadmap-folder prefix); `-y` does not override it |
 
 The set covers only these refusals. Other `create` failures exit non-zero and
 print **no** `create-refused` line: the repo root not found, a failed slug
