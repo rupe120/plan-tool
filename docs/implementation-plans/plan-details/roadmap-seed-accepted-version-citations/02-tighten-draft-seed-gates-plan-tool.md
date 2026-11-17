@@ -88,7 +88,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - **Rejected alternative: a regex that matches any `0N-*.md`.** It would flag unrelated files. The plan names the four members.
 - **Destructive operations and caller effects.**
   - `--refresh-seeds` and `--materialize` still overwrite the draft, hand edits included, and still keep the `seed-refresh-report.md` diff. `--apply` still copies only admitted seeds. Nothing in this step deletes or rewrites a seed.
-  - A roadmap with no accepted head keeps today's behavior. The check is text-only, so it applies the same way there. The no-head test must show that no new head lookup or error appears.
+  - The gates are unconditional. A roadmap with no accepted head never reaches them: every seed route loads the accepted plans artifact first and refuses with `NoPublishedRoadmapVersionError`, as today. The no-head test must show that refusal is unchanged and that no new head lookup or error appears.
   - Legacy bare-name seeds classify `malformed` in `--view` via `classify_draft_seeds`, `--apply` refuses them through its recheck, and `--accept-seed` refuses a seed that still has a bare name.
   - A seed whose names were replaced is accepted.
 - **Sweep for siblings.**
@@ -128,7 +128,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - `test_refresh_seeds_regenerates_a_legacy_seed_under_the_new_contract` — `--refresh-seeds` replaces the bare-name draft with a conforming canned response, and the `seed-refresh-report.md` diff is still written.
 - `test_accept_seed_refuses_a_hand_edited_seed_with_a_bare_name` — acceptance fails with the new message.
 - `test_accept_seed_accepts_a_seed_whose_names_were_replaced` — the same seed with version-store paths is accepted.
-- `test_roadmap_without_an_accepted_head_keeps_todays_behavior` — behavior for a no-head roadmap is the same as before apart from the new form check.
+- `test_roadmap_without_an_accepted_head_keeps_todays_behavior` — a no-head roadmap still refuses with `NoPublishedRoadmapVersionError` before any gate runs.
 - Update the canned seed fixtures that use bare names.
 
 **Green-before-done gate:** every test above must be green, plus the full existing suites for the three files, before this step is finished. Run `tests/test_duplication.py` too, because the new helper must not duplicate an existing function body. Expect red sibling tests during the fixture sweep. Read each one to decide whether it is a missed fixture or a genuine carve-out.

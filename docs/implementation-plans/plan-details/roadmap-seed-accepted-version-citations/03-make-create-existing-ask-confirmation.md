@@ -68,6 +68,7 @@ All in `tests/cli/test_authoring_cmds.py`, unless noted.
 - `test_dash_y_continues_on_a_bare_name_seed` — `yes=True` returns `True` and prints the message.
 - `test_non_tty_without_dash_y_refuses_a_bare_name_seed` — returns `False` with `roadmap-seed-not-confirmed`, and the message names the location's routes.
 - `test_untracked_seed_is_unchanged` — `location=None` returns `True`.
+- `test_invalidated_and_bare_named_promoted_copy_shows_only_the_stale_message` — the stale message wins, matching the draft classifier's first-match order; the bare-name routes are not added.
 - `test_no_accepted_head_keeps_todays_refusal` — no head refuses as before, and the bare-name check never runs.
 - `test_published_flag_selects_the_refresh_wording` — the promoted message differs between `published: true` and not published.
 - `test_create_does_not_copy_source_artifacts_frontmatter_into_the_plan` — a tracked seed with `source_artifacts: [04-roadmap.md]` yields a plan with no `source_artifacts` key and no bare member filename taken from it. This pins existing behavior.

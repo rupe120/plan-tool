@@ -55,6 +55,7 @@ This step makes `_materialize_plan_seed` in `plan_tool/roadmap.py` turn the four
 - **Rewrite the prompt.**
   - Replace the sentence that cites the files "by their literal filenames" with a rule: every time the seed body names a roadmap artifact, write the exact path shown for it.
   - The rule covers `## References`, Architecture, Risks, and fenced text.
+  - The rule also covers accepted artifact text the writer carries over: a member filename that appears in `${domain_artifact}` … `${plans_artifact}` is rewritten to its version-store path, never copied bare. A response that still fails the gates after the bounded retry is the existing materialize failure; no new failure path is added.
   - List the four paths once in the prompt as `${domain_path}` … `${plans_path}`.
   - The `### \`01-domain.md\`` … `### \`04-roadmap.md\`` input headings keep the bare names. They label prompt inputs, not seed text.
   - The prompt must still never ask for a `source_artifacts` key.
