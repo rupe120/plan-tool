@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-accepted-version-citations",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md",
+  "created_at": "2026-11-17T15:15:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "90c1ee3129cf3d42ee8f01d115bec0c5c152b700ae808fe04224e9e51a654ffa",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "f5c02dec8a913330c7af8645c18309e706819c1f07ea9b9f1cdbd0ee157c2de1",
+    "DATA_CONTRACT.md": "0f41d38152c1ceba52db6ac93964dff355e59bc6478b0f4d1e8c02852b81f5a7",
+    "ROADMAP_FORMAT.md": "b46ccfc8b4fa4161e3fcec24508c0c095f3570aeb145a2e42f71190b2e8cf9b6",
+    "docs/explanations/roadmap-plan-handoff.md": "9ad66295dc220c7b86ac9c04c0299942f9384ba87d816925686e61966da076c9",
+    "docs/how-to/roadmap.md": "7fc8a3baa4815958dec19e60a71765945c6a08e9912caa469b8d73d5ef31e262",
+    "plan_tool/cli/authoring.py": "01e97b34fde5ec9c0bbacd2d214cd4e9563f504bfec98647acef43a1d8efe11a",
+    "plan_tool/prompts/roadmap-seed.md": "281fb57c995235cb1285bc491815dff89a0d56e2c403fee06b37b4cea22ac25b",
+    "plan_tool/roadmap.py": "7fc035f6b75c7241aa3fd49ada02b579a3300039df1daf58cf643224df2e08d3",
+    "plan_tool/roadmap_gates.py": "daf50d15ab26b119a84a0e55e2b88b0a486a96e8630956d78934b25c5ebfa459",
+    "plan_tool/roadmap_seed_manifest.py": "074e0a67e7e74b8b16f1ccafbb802c1e6b1967b18992a5f6d090cde80dc8bdf2",
+    "tests/cli/test_authoring_cmds.py": "73e43436daa55e0a366e9755e80d10793962014c9638802b625c0bf311278f9d",
+    "tests/test_roadmap.py": "39bc6bb691a168a45a83a7b3d0c4d8c8f308dd6baa376d330bbdf10c4fc5dcc3",
+    "tests/test_roadmap_gates.py": "9a170ebe3f78fee638e960383460551dd4fd054dfaced1f2bc042db115f22db8",
+    "tests/test_roadmap_seed_manifest.py": "5965618cd7c58fce111f71765b14039dd05d4b947962671cf1e1cde5469f3f9d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md": "0c9bf399ecb5403e82de3ee4ccbf0f58b6bba7154c474b1f83970131c5a8c0c7",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md": "138f7ef00c2c286658b466ebb5088097ae726b19b0a1befcc0aee53ffc416dad",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md": "e388fb216790ce43bb0fe08bb1afdaf2c90d2dbc35d91f0b277e89c09d36883f",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md": "ca3b49396073eb51483fa57df5d93f5588334ce345b5f02688b1c74b82ebc436"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Accepted Version Citations\n\n`roadmap-seed-accepted-version-citations` \u00b7 generated 2026-11-17T15:15:00Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `1d0731a13f0bcd9a714dfcbd24e7ee4f0e7044946ec0cab2c340bc51e37fb679`\n- **Detail bundle digest:** `0b520c40821c26c7f0287e15389075eee0d933ed8d93e191aff99b1b52f7bc0f`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 41815 bytes (+41815 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[real-model-materialize-check]` [confidence: limited]: The manual real-model `--materialize` check has no owning step. The plan promises it in two places. The Testing section says \"Manual real-model check, outside the suite \u2026 after steps 1 and 2 land and before the code merges, one `plan-tool roadmap <slug> --materialize` against a real backend \u2026\". The Acceptance criteria say \"One real-model `--materialize` run, recorded with its outcome in the code pull request, produced a gate-clean seed citing only version-store paths before the code merged.\" Steps 1\u20134 do not claim it. Step 1 states its own verification limit (canned responses only), and step 4's verification covers the suite, symbol checks and docs only. No step is therefore accountable for the run, its recorded outcome, or the stop-and-surface path if the writer falls back to bare names. This is a process criterion, not a design hole, so the gap is small.\n  - Fix: Name the real-model run as an explicit hand-off in step 1's, or step 4's, verification or acceptance text: who runs it, when it runs (after steps 1 and 2, before merge), where the outcome is recorded (the code PR), and that a fallback to bare names after the retry stops the work instead of loosening the gate.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-cc946505]` [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]` [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 1 conceptual-completeness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (not auto-applied; each needs your judgment).\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Accepted Version Citations\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `1d0731a13f0bcd9a714dfcbd24e7ee4f0e7044946ec0cab2c340bc51e37fb679`\n- **Detail bundle digest:** `0b520c40821c26c7f0287e15389075eee0d933ed8d93e191aff99b1b52f7bc0f`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[real-model-materialize-check]` [confidence: limited]: The manual real-model `--materialize` check has no owning step. The plan promises it in two places. The Testing section says \"Manual real-model check, outside the suite \u2026 after steps 1 and 2 land and before the code merges, one `plan-tool roadmap <slug> --materialize` against a real backend \u2026\". The Acceptance criteria say \"One real-model `--materialize` run, recorded with its outcome in the code pull request, produced a gate-clean seed citing only version-store paths before the code merged.\" Steps 1\u20134 do not claim it. Step 1 states its own verification limit (canned responses only), and step 4's verification covers the suite, symbol checks and docs only. No step is therefore accountable for the run, its recorded outcome, or the stop-and-surface path if the writer falls back to bare names. This is a process criterion, not a design hole, so the gap is small.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close 1 conceptual-completeness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (not auto-applied; each needs your judgment).\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-9a6f8906",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The manual real-model `--materialize` check has no owning step. The plan promises it in two places. The Testing section ",
+      "body": "The manual real-model `--materialize` check has no owning step. The plan promises it in two places. The Testing section says \"Manual real-model check, outside the suite \u2026 after steps 1 and 2 land and before the code merges, one `plan-tool roadmap <slug> --materialize` against a real backend \u2026\". The Acceptance criteria say \"One real-model `--materialize` run, recorded with its outcome in the code pull request, produced a gate-clean seed citing only version-store paths before the code merged.\" Steps 1\u20134 do not claim it. Step 1 states its own verification limit (canned responses only), and step 4's verification covers the suite, symbol checks and docs only. No step is therefore accountable for the run, its recorded outcome, or the stop-and-surface path if the writer falls back to bare names. This is a process criterion, not a design hole, so the gap is small.",
+      "suggested_action": "Name the real-model run as an explicit hand-off in step 1's, or step 4's, verification or acceptance text: who runs it, when it runs (after steps 1 and 2, before merge), where the outcome is recorded (the code PR), and that a fallback to bare names after the retry stops the work instead of loosening the gate.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "real-model-materialize-check",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "1d0731a13f0bcd9a714dfcbd24e7ee4f0e7044946ec0cab2c340bc51e37fb679",
+      "detail_bundle_digest": "0b520c40821c26c7f0287e15389075eee0d933ed8d93e191aff99b1b52f7bc0f",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md",
+          "state": "present",
+          "digest": "0c9bf399ecb5403e82de3ee4ccbf0f58b6bba7154c474b1f83970131c5a8c0c7"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md",
+          "state": "present",
+          "digest": "138f7ef00c2c286658b466ebb5088097ae726b19b0a1befcc0aee53ffc416dad"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md",
+          "state": "present",
+          "digest": "e388fb216790ce43bb0fe08bb1afdaf2c90d2dbc35d91f0b277e89c09d36883f"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md",
+          "state": "present",
+          "digest": "ca3b49396073eb51483fa57df5d93f5588334ce345b5f02688b1c74b82ebc436"
+        }
+      ],
+      "source_seed_digest": "54641adf8aecbcbbc910033b86068f4d041838abb803e32f4a299c27f76b3723",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 41815,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}
