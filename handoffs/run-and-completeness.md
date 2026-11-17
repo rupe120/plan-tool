@@ -560,6 +560,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 - Only the four member filenames count; other `0N-` files are deliberately not flagged.
 - `create` refuses a bare-named tracked seed even under `-y` (owner decision 2026-11-17), reason `roadmap-seed-bare-citation`.
 - Plans already created from bare-name seeds are not migrated.
+- Materialize refuses a plans directory outside the repository rather than citing absolute paths (owner-confirmed 2026-11-17).
 
 ### Execution notes
 
@@ -592,7 +593,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | # | Finding | Disposition |
 | --- | --- | --- |
 | 1 | A citation of `.roadmap-versions/<id>/…` with no roadmap-folder prefix passes the gate | **Declined (settled).** Form-only gates with the prefix owned by the seed writer is a plan decision reviewed in PR #253; a non-resolving prefix names no top-level copy and is reported by the cited-path check |
-| 2 | Materialize refuses a plans directory outside the repository, which `render_seed_state_marker` supports with an absolute fallback | **Declined (settled).** The plan requires fail-closed `RoadmapError` there (no repo-relative citation exists), pinned by `test_plans_dir_outside_repo_root_stops_with_roadmap_error_before_any_backend_call`. A known behavior change for out-of-repo plans directories; surfaced in the PR |
+| 2 | Materialize refuses a plans directory outside the repository, which `render_seed_state_marker` supports with an absolute fallback | **Declined (owner-confirmed 2026-11-17).** No setup on this machine keeps plans outside the repo (Loom's roadmaps live under its `docs/implementation-plans/roadmaps/`); an absolute-path fallback was offered and not taken. The plan requires fail-closed `RoadmapError` there (no repo-relative citation exists), pinned by `test_plans_dir_outside_repo_root_stops_with_roadmap_error_before_any_backend_call`. A known behavior change for out-of-repo plans directories; surfaced in the PR |
 | 3 | The body rule flags mentions as well as citations, including a seed whose subject is a member file | **Declined (settled).** A plain presence check that never judges citation versus mention is the plan's stated rule |
 | 4 | `ROADMAP_FORMAT.md` said "any stored version id passes", but any 64-hex id passes | **Fixed.** Says any well-formed id passes, stored or not, and that a mistyped id is caught only by the cited-path check |
 | 5 | With bare names in both `## Stack` and the body, only the Stack route was printed | **Fixed.** Both routes are named; test `test_mixed_stack_and_body_bare_names_name_both_routes` |
