@@ -27,7 +27,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - **Step 1** makes `plan_tool/roadmap.py:_materialize_plan_seed` render version-store paths into the seed prompt. This step depends on it only so regenerated seeds pass the new gate. It reads nothing else from step 1.
 - **`plan_tool/roadmap_gates.py:validate_draft_seed_content(text, *, plan)`** has two early returns, for an unmatched fence and for bad provenance. It then collects component-reference violations. After that it runs the References loop over `DOMAIN_FILENAME`, `CONSTRAINTS_FILENAME`, `COMPONENTS_FILENAME` and `PLANS_FILENAME` against `_draft_seed_sections(text)["references"]`. The loop uses the boundary regex `(?<![A-Za-z0-9_.-])name(?![A-Za-z0-9_.-])`. The Risks check comes last.
 - **`_draft_seed_sections`** drops fenced code. The new body check must not use it.
-- **`plan_tool/roadmap_versions.py`** owns `ROADMAP_VERSION_NAMESPACE_DIRNAME` (`.roadmap-versions`) and `SHA256_DIGEST_RE` (`[0-9a-f]{64}`, ASCII). `roadmap_gates.py` must not import it, so it repeats both as local constants. A test pins them equal.
+- **`plan_tool/roadmap_versions.py`** owns `ROADMAP_VERSION_NAMESPACE_DIRNAME` (`.roadmap-versions`) and `SHA256_DIGEST_RE` (`[0-9a-f]{64}`, ASCII). `plan_tool/roadmap_gates.py` must not import it, so it repeats both as local constants. A test pins them equal.
 - **`PlansFILENAME` caveat:** the fourth member filename is the constant named `PLANS_FILENAME` (`04-roadmap.md`).
 - **Callers of `validate_draft_seed_content`** at HEAD:
   - `plan_tool/roadmap.py`, four sites (`--accept-seed`, the `--apply` recheck, `_reject_unmatched_operator_draft_fences`, materialize candidate validation).
