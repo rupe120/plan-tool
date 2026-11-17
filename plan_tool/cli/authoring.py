@@ -356,7 +356,7 @@ def _bare_citation_repair_routes(location: TrackedSeedLocation, *, published: bo
 def _confirm_invalidated_roadmap_seed(
     location: TrackedSeedLocation | None,
     *,
-    seed_texts: tuple[str, ...] = (),
+    seed_texts: tuple[str, ...],
     yes: bool,
     input_fn=input,
 ) -> bool:
@@ -364,7 +364,7 @@ def _confirm_invalidated_roadmap_seed(
 
     ``seed_texts`` are the texts ``create`` will read (the tracked draft or
     promoted copy, plus any separate provenance source; ``cmd_create`` always
-    passes them, the empty default checks nothing). A bare roadmap file name refuses under ``-y`` too: see
+    passes them; required, so a new caller cannot skip the check by omission). A bare roadmap file name refuses under ``-y`` too: see
     DATA_CONTRACT.md "Pre-slug create refusals".
 
     A promoted ``plan-seeds/`` copy (``location.via_marker``) is validated
@@ -403,7 +403,8 @@ def _confirm_invalidated_roadmap_seed(
                 location.plan_id
             )
             is_stale = entry is not None and entry.get("status") == "invalidated"
-            published = entry is not None and entry.get("published") is True
+            # Same truthiness as roadmap._seed_recorded_published, the one publication test.
+            published = bool((entry or {}).get("published", False))
             classification_detail = ""
             non_current_state = DRAFT_SEED_STATE_STALE if is_stale else None
         else:
@@ -435,13 +436,15 @@ def _confirm_invalidated_roadmap_seed(
     bare = [citation for text in seed_texts for citation in bare_roadmap_file_citations(text)]
     if bare:
         names = ", ".join(sorted({citation.filename for citation in bare}))
+        route_parts = []
+        if any(not citation.in_stack_section for citation in bare):
+            route_parts.append(_bare_citation_repair_routes(location, published=published))
         if any(citation.in_stack_section for citation in bare):
-            routes = (
+            route_parts.append(
                 "a name in the tool-written '## Stack' section comes from an accepted "
                 f"roadmap row value, so {STACK_BARE_NAME_ROUTE}"
             )
-        else:
-            routes = _bare_citation_repair_routes(location, published=published)
+        routes = "; ".join(route_parts)
         error(
             f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
             f"roadmap files without their version-store path ({names}); {routes}"

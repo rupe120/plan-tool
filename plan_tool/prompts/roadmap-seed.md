@@ -58,7 +58,9 @@ Write that exact path every time the seed body names one of these files:
 `## References`, Architecture, Risks, and fenced text included. When accepted
 artifact text you carry over names one of these files by its member filename
 (`01-domain.md`, `02-constraints.md`, `03-components.md`, `04-roadmap.md`),
-replace that name with its path above; never copy a bare name into the seed.
+replace that name with its path above; never copy a bare name into the seed. This includes
+link text: write `[<path>](<path>)` or the path alone, never
+`[04-roadmap.md](<path>)`, because any bare member filename fails the gate.
 
 Keep the accepted scope contract in the prose body. Include a body-level
 `## References` section that cites the four accepted roadmap artifacts; bind the

@@ -1261,7 +1261,7 @@ class TestCreatePreSlugRefusalReason:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=lambda _p: answer
+            location, seed_texts=(), yes=False, input_fn=lambda _p: answer
         )
         assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
 
@@ -1286,7 +1286,7 @@ class TestCreatePreSlugRefusalReason:
             raise exc
 
         assert not _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=interrupted
+            location, seed_texts=(), yes=False, input_fn=interrupted
         )
         assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
 
@@ -1318,9 +1318,9 @@ class TestCreatePreSlugRefusalReason:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=lambda _p: "y"
+            location, seed_texts=(), yes=False, input_fn=lambda _p: "y"
         )
-        assert _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert _confirm_invalidated_roadmap_seed(location, seed_texts=(), yes=True)
         assert self.LINE not in capsys.readouterr().err
 
     def test_token_set_is_closed_and_documented(self) -> None:
@@ -5739,7 +5739,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert _confirm_invalidated_roadmap_seed(
-            location,
+            location, seed_texts=(),
             yes=False,
             input_fn=lambda prompt: prompts.append(prompt) or "n",
         )
@@ -5757,7 +5757,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location,
+            location, seed_texts=(),
             yes=False,
             input_fn=lambda prompt: prompts.append(prompt) or "n",
         )
@@ -5775,7 +5775,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location,
+            location, seed_texts=(),
             yes=False,
             input_fn=lambda prompt: prompts.append(prompt) or "n",
         )
@@ -5792,7 +5792,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert _confirm_invalidated_roadmap_seed(
-            location, yes=True, input_fn=lambda _prompt: "n"
+            location, seed_texts=(), yes=True, input_fn=lambda _prompt: "n"
         )
 
     def test_non_tty_refuses_a_non_current_classification(
@@ -5809,7 +5809,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=lambda _prompt: "yes"
+            location, seed_texts=(), yes=False, input_fn=lambda _prompt: "yes"
         )
         assert "digest-mismatched" in capsys.readouterr().err
 
@@ -5822,7 +5822,7 @@ class TestRoadmapSeedConfirmation:
 
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
-        assert not _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert not _confirm_invalidated_roadmap_seed(location, seed_texts=(), yes=True)
         assert "is no longer present in its roadmap" in capsys.readouterr().err
 
     def test_plan_row_present_only_in_stale_top_level_file_is_still_absent(
@@ -5859,7 +5859,7 @@ class TestRoadmapSeedConfirmation:
 
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
-        assert not _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert not _confirm_invalidated_roadmap_seed(location, seed_texts=(), yes=True)
         assert "is no longer present in its roadmap" in capsys.readouterr().err
 
     def test_no_accepted_head_refuses_with_the_named_error(
@@ -5871,7 +5871,7 @@ class TestRoadmapSeedConfirmation:
 
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
-        assert not _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert not _confirm_invalidated_roadmap_seed(location, seed_texts=(), yes=True)
         assert "has no published version" in capsys.readouterr().err
 
     def test_promoted_copy_validated_against_sidecar_while_row_read_from_head(
@@ -5972,6 +5972,19 @@ class TestBareCitationRefusal:
         assert _REASON_RE.findall(err) == ["roadmap-seed-bare-citation"]
         assert "reviewer feedback" in err and "## Stack" in err
         assert "--refresh-seeds" not in err
+
+    def test_mixed_stack_and_body_bare_names_name_both_routes(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """Neither route alone clears both occurrences, so the refusal names both."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        location = _promoted_location(tmp_path, published=False)
+        mixed = _BARE_TEXT + "\n## Stack\n\n- `h-1` — facet: compute; value: see 02-constraints.md\n"
+        assert not _confirm_invalidated_roadmap_seed(location, seed_texts=(mixed,), yes=True)
+        err = capsys.readouterr().err
+        assert "promoted copy itself" in err
+        assert "reviewer feedback" in err
 
     def test_every_text_create_reads_is_scanned(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
