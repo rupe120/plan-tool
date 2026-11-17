@@ -543,125 +543,81 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 
 ## Roadmap seed version-store citations — review ledger
 
-*Opened 2026-11-17.*
+*Opened 2026-11-17. Closed 2026-11-17 by owner decision after round 6; shipped as PR #254 (plan PR #253).*
 
 | Field | Value |
 | --- | --- |
 | Opened | 2026-11-17 |
-| Change | Plan `roadmap-seed-accepted-version-citations`: draft seeds cite roadmap files by version-store path; both draft-seed gates require it; `create` refuses a bare-named tracked seed even under `-y` |
-| Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
-| Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
-| Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | rounds 1–6 dispositioned; owner call on PR vs round 7 |
+| Change | Plan `roadmap-seed-accepted-version-citations`: draft seeds cite roadmap files by repo-relative version-store path; both draft-seed gates require it and require it to resolve; `create` refuses a bare or unresolved citation even under `-y` |
+| Range | `origin/main` at #253 through the #254 merge (`3026f213b`) |
+| Checks | full suite green (15,298 passed); `reconcile-code --all` no drift (one declined nit); real-model `--materialize` on a fixture roadmap and on a copy of Loom's `loom-aidlc-mvp` |
+| Reviewer | `/code-review high`, six forked report-only rounds |
+| Disposition | **Closed by owner decision** after round 6: findings 10 → 10 → 7 → 10 → 8 → 10, each round's material findings in mechanisms the previous round added; neither converged nor stopped at exit 2 |
 
-### Settled decisions (give to the next reviewer)
+### Settled decisions
 
-- Citations must resolve (owner decision 2026-11-17, reversing the earlier form-only rule): beyond the form check, each version-store citation must name, from the repository root, a stored member file of this roadmap; any stored version passes. `validate_draft_seed_content` takes a required `citation_roots`, `classify_draft_seeds` a required `repo_root`; `create` refuses as `roadmap-seed-unresolved-citation`.
-- `create`'s refusal message states only always-true facts (each file and its bare names) and points at ROADMAP_FORMAT.md § "Draft-seed manifest states" for routes (owner decision 2026-11-17).
-- Only the four member filenames count; other `0N-` files are deliberately not flagged.
-- `create` refuses a bare-named tracked seed even under `-y` (owner decision 2026-11-17), reason `roadmap-seed-bare-citation`.
-- Plans already created from bare-name seeds are not migrated.
-- Materialize refuses a plans directory outside the repository rather than citing absolute paths (owner-confirmed 2026-11-17).
+Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" and § "Draft-seed manifest states", `DATA_CONTRACT.md` pre-slug refusals, and the archived plan).
 
-### Execution notes
-
-- Step 1's executor wrote a test that built the expected path without `roadmaps/`; the test was corrected, the code was right.
-- Step 2's executor wrote the gate code and no tests; 114 fixture tests went red. Fixtures were moved to a `_cite()` helper, eight expectations changed to the plan's new behavior, and 22 listed tests were authored by hand, each verified by mutation.
-- Steps 3 and 4 ran clean.
+- `create` refuses a bare-named tracked seed even under `-y` (`roadmap-seed-bare-citation`), because automated sessions always pass `-y`.
+- Citations must resolve from the repository root to a stored member file of the roadmap; any stored version passes (`unresolved-roadmap-file-citation`, `create` reason `roadmap-seed-unresolved-citation`). This reversed the plan's form-only gates, whose premise, an existing cited-path check for `.md` prose paths, was false.
+- The refusal message states only facts (each file and its bare names) and points at `ROADMAP_FORMAT.md` for state-dependent routes.
+- Materialize refuses a plans directory outside the repository rather than citing absolute paths.
+- Only the four member filenames count, case-insensitively; plans already created from bare-name seeds are not migrated.
 
 ### Real-model check
 
-- **Fixture roadmap, on the code that ships** (commit `19d857bd0`, after review round 5): 2026-11-17, Opus, one `roadmap storefront --materialize plan-order-core` in a fresh throwaway repo whose accepted version is the test suite's fixture roadmap. First attempt, no retry; 0 bare names and 0 unresolved citations under the final gates; 8 citations covering all 4 members; no markdown links to a version path.
-- **Real roadmap, on the code that ships:** 2026-11-17, Opus, one `roadmap loom-aidlc-mvp --materialize connector-registry-seed` in a throwaway repo holding a copy of Loom's `loom-aidlc-mvp` version store (24 versions; head `c7743c56`, about 1 MB of accepted artifacts; Loom itself only read). First attempt, no retry; 0 bare names, 0 unresolved citations; 8 citations covering all 4 members.
-- Superseded: the first run (same day, before review) passed against an older seed prompt and form-only gates, so it no longer covers what ships.
-- Limit, recorded: neither the fixture nor Loom's real accepted head mentions a member filename in its own artifact text, so the carried-over rewrite case is not exercised; it does not occur in the only real roadmap to date. The prompt rule and the gates still cover it.
+- Both on the shipping code, Opus, first attempt, 0 bare and 0 unresolved citations, all four members cited: the test suite's fixture roadmap, and a copy of Loom's `loom-aidlc-mvp` version store (24 versions, head `c7743c56`, Loom only read).
+- Limit, recorded: neither roadmap mentions a member filename in its own artifact text, so rewriting a carried-over name is not exercised by a real run.
 
-### Findings (round 1)
+### Findings
 
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | `_VERSION_STORE_PREFIX_RE` anchored with `$`, which matches before a trailing newline, so a bare name at a line start after a line ending in the version segment counted as cited | **Fixed.** Fixed-width `fullmatch` over the characters directly before the name; test `test_a_line_break_between_prefix_and_name_does_not_count_as_cited`, red on the old code |
-| 2 | The violation messages suggested the roadmap-relative `.roadmap-versions/<id>/…` form, which does not resolve from the repo root | **Fixed (message).** Messages name `<repo-relative roadmap folder>/.roadmap-versions/<version-id>/…`; test red on the old code. Gate acceptance stays form-only per the settled decision |
-| 3 | A Stack-origin bare name was detected only after each model call, spending every retry on an unfixable failure | **Fixed.** Checked once before the loop; fails closed with no backend call; the Stack test asserts no prompt was sent |
-| 4 | `create`'s refusal dropped the Stack-section route and offered `--refresh-seeds`, which cannot fix it | **Fixed.** The refusal names the roadmap-revision route for a Stack-origin name; test added |
-| 5 | Only `seed_body` was scanned when a separate provenance source existed; the tracked file `create` also reads was not | **Fixed.** Every text `create` reads is scanned; test added |
-| 6 | `ROADMAP_FORMAT.md` said `source_artifacts` is read in `roadmap_candidate_run.py`; that name is an unrelated local | **Fixed.** Corrected there and at its source in detail 03 and detail 04 |
-| 7 | The how-to's direct-fallback text said the draft-seed gate refuses bare names in a hand-written seed, which is untracked and never checked | **Fixed.** The text says no gate checks it |
-| 8 | `create` recovered filenames by splitting the message on quotes | **Fixed.** A public structured `bare_roadmap_file_citations()` feeds both the gate messages and `create` |
-| 9 | The promoted-copy route helper re-read `seed-state.json` | **Fixed.** The already-loaded `published` flag is passed in; the extra error path is gone |
-| 10 | Each occurrence copied and scanned the whole preceding text | **Fixed** by finding 1's fixed-width check |
+| Round | # | Finding | Disposition |
+| --- | --- | --- | --- |
+| 1 | 1 | `$` in the version-segment check matched before a newline | fixed (fixed-width check) |
+| 1 | 2 | Messages suggested a folderless path | fixed (message) |
+| 1 | 3 | Stack-origin bare name spent every retry | fixed (pre-check before the loop) |
+| 1 | 4 | `create` dropped the Stack route | fixed |
+| 1 | 5 | Only a separate provenance source was scanned | fixed (every read file) |
+| 1 | 6 | `ROADMAP_FORMAT.md` falsely said `source_artifacts` is read | fixed (doc and detail sources) |
+| 1 | 7 | How-to said hand-written seeds are gated | fixed (doc) |
+| 1 | 8 | Filenames parsed from message prose | fixed (structured helper) |
+| 1 | 9 | Seed state read twice | fixed |
+| 1 | 10 | Whole-prefix rescans | fixed (with 1) |
+| 2 | 1 | Folderless citation passes | declined then, fixed in round 4 by owner decision |
+| 2 | 2 | Out-of-repo plans dir refused | declined (owner-confirmed rule) |
+| 2 | 3 | Mentions flagged as well as citations | declined (settled presence rule) |
+| 2 | 4 | Doc said "any stored id passes" | fixed |
+| 2 | 5 | Mixed Stack and body names got one route | fixed |
+| 2 | 6 | Link text with a bare name flagged | fixed (prompt) |
+| 2 | 7 | Bare input headings in the prompt | declined (settled) |
+| 2 | 8 | Publication truthiness diverged | fixed, later removed |
+| 2 | 9 | `seed_texts` defaulted to checking nothing | fixed (required) |
+| 2 | 10 | Two occurrence dataclasses | declined (cosmetic) |
+| 3 | 1–3 | Repair message wrong for archived, unpublished and per-row cases | fixed (case matrix), later replaced by facts + doc pointer |
+| 3 | 4 | Stack pre-check says "exhausted" | declined (closed `failure_kind` set; raised again rounds 5, 6) |
+| 3 | 5 | Stack violations unattributed | fixed |
+| 3 | 6 | `old.roadmap-versions` counted as cited | fixed (whole segment) |
+| 3 | 7 | Prompt suggested a non-resolving link form | fixed (backticked path) |
+| 4 | 1–2 | Non-resolving citations pass; the claimed cited-path check does not exist | fixed (owner decision: citations must resolve) |
+| 4 | 3–4 | Message missed provenance files and suggested a refusing command | fixed (owner decision: facts + doc pointer) |
+| 4 | 5 | No run-log event for the pre-check | declined (no model call) |
+| 4 | 6 | Symlinked out-of-repo plans dir refused | declined (owner-confirmed rule) |
+| 4 | 7 | Id width hard-coded twice | fixed |
+| 4 | 8–9 | Duplicated route text and publication test | no longer applies |
+| 4 | 10 | Three layers for one check | declined (cosmetic) |
+| 5 | 1–2 | Resolution guessed the citation token: punctuation caused false refusals; absolute and `..` paths passed | fixed (compare the one valid prefix) |
+| 5 | 4–5 | `repo_root` optional for `--view` and `create` | fixed (required) |
+| 5 | 6 | Constant copies | declined (layering) |
+| 5 | 7 | Draft scanned twice | declined (bounded cost) |
+| 5 | 8 | Retry gave a template path | fixed (exact paths) |
+| 6 | 1 | Handoff file corrupted to 56 MB by an empty-slice replace | fixed (restored; unpushed tip amended) |
+| 6 | 2 | Short folderless form still in five docs and the refusal | fixed (sweep) |
+| 6 | 3 | Stack pre-check missed unresolvable citations | fixed |
+| 6 | 5 | Case variants passed | fixed |
+| 6 | 6, 8 | Double `is_file`; duplicated provenance path rule | fixed |
+| 6 | 7, 9, 10 | Constant copies; double scan; explicit `None` on the classifier | declined (as before) |
 
-### Findings (round 2)
+### Open items
 
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | A citation of `.roadmap-versions/<id>/…` with no roadmap-folder prefix passes the gate | **Declined (settled).** Form-only gates with the prefix owned by the seed writer is a plan decision reviewed in PR #253; a non-resolving prefix names no top-level copy and is reported by the cited-path check |
-| 2 | Materialize refuses a plans directory outside the repository, which `render_seed_state_marker` supports with an absolute fallback | **Declined (owner-confirmed 2026-11-17).** No setup on this machine keeps plans outside the repo (Loom's roadmaps live under its `docs/implementation-plans/roadmaps/`); an absolute-path fallback was offered and not taken. The plan requires fail-closed `RoadmapError` there (no repo-relative citation exists), pinned by `test_plans_dir_outside_repo_root_stops_with_roadmap_error_before_any_backend_call`. A known behavior change for out-of-repo plans directories; surfaced in the PR |
-| 3 | The body rule flags mentions as well as citations, including a seed whose subject is a member file | **Declined (settled).** A plain presence check that never judges citation versus mention is the plan's stated rule |
-| 4 | `ROADMAP_FORMAT.md` said "any stored version id passes", but any 64-hex id passes | **Fixed.** Says any well-formed id passes, stored or not, and that a mistyped id is caught only by the cited-path check |
-| 5 | With bare names in both `## Stack` and the body, only the Stack route was printed | **Fixed.** Both routes are named; test `test_mixed_stack_and_body_bare_names_name_both_routes` |
-| 6 | A markdown link whose text is a bare filename is flagged even with a correct target | **Fixed (prompt).** The rule stays a presence check; the seed prompt tells the writer not to use a bare filename as link text |
-| 7 | The prompt's `### 01-domain.md` input headings may nudge bare copies | **Declined (settled).** The plan keeps them because they label prompt inputs; the real-model run wrote no bare name |
-| 8 | `create` tested `published` with `is True`, unlike `roadmap._seed_recorded_published` | **Fixed.** Same truthiness, with a pointer to the owning test |
-| 9 | `seed_texts` defaulted to `()`, so a caller that omitted it checked nothing | **Fixed.** Required keyword; existing callers pass it |
-| 10 | Two near-identical occurrence dataclasses, and violations built in two places | **Declined.** The private occurrence carries offset and cited flag; the public type carries what `create` needs. Consolidating is cosmetic and outside this change |
-
-### Findings (round 3)
-
-The repair-routes message drew a different confirmed finding in each of rounds 1–3 (round 1 #4, round 2 #5, round 3 #1–#3), which is the wrong-shape signal in CLAUDE.md. Round 3 replaced the per-case patching with one message derived from the full case matrix (draft / published promoted / unpublished or relocated promoted, by body / Stack / both), pinned by one parametrized test over all nine cells.
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | For a published promoted copy found through the marker at an archived path, the message said `--refresh-seeds` rewrites "this promoted copy" | **Fixed (matrix).** The message says regeneration rewrites a promoted copy only when published and at its recorded destination, and always offers a hand edit of the file passed to `create` |
-| 2 | The Stack route ignored location: for an unpublished promoted copy, regeneration never rewrites the file `create` reads | **Fixed (matrix).** The Stack case adds the row revision in front of the location's own routes |
-| 3 | The route sent one refused row to roadmap-wide `--refresh-seeds` (N calls, overwrites siblings) | **Fixed (matrix).** The message names per-row `--materialize PLAN_ID`; the matrix test asserts `--refresh-seeds` never appears |
-| 4 | The Stack pre-check reports "exhausted its retry budget" with zero attempts | **Declined.** A distinct value would widen `failure_kind`, a closed four-value set in `DATA_CONTRACT.md`; the violation line printed beneath names the cause and the row-revision route |
-| 5 | The Stack pre-check returned violations with `row_id=None` and no plan prefix | **Fixed.** Attributed to the plan row with the same prefix as the validator; asserted in the Stack test |
-| 6 | No left boundary before `.roadmap-versions`, so `old.roadmap-versions/<id>/04-roadmap.md` counted as cited | **Fixed.** The segment must be a whole path segment; test `test_a_directory_merely_ending_in_roadmap_versions_is_not_the_version_store`, red on the old code |
-| 7 | The prompt suggested `[<path>](<path>)`, a link that does not resolve from the seed's or plan's folder | **Fixed.** The prompt asks for each path alone in backticks |
-
-### Findings (round 4)
-
-Two clusters were surfaced to the owner rather than patched: a false design premise (#1, #2) and a fourth round on the repair message (#3, #4).
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | A citation missing its roadmap-folder prefix passes every gate | **Fixed (owner decision).** Citations must resolve from the repository root; test `test_a_citation_without_its_roadmap_folder_prefix_does_not_resolve` |
-| 2 | ROADMAP_FORMAT and the plan said a non-resolving id is caught by "the plan's cited-path check"; no such check exists for `.md` prose paths (the only existence check covers `.py` anchors in detail `## Input`). The claim was added during bare-audit round 1 without verification | **Fixed.** The resolution check replaces it; ROADMAP_FORMAT, the plan, and details 02 and 04 describe resolution, with one dated reversal note |
-| 3 | The refusal scanned a separate provenance source but told the operator to edit "the file passed to `create`" | **Fixed (owner decision).** The message names each file holding bare names; `_seed_files_create_reads` is tested |
-| 4 | The message suggested `--materialize PLAN_ID`, which refuses a `current` draft | **Fixed (owner decision).** No state-dependent command is computed; the message points at the doc section that owns the routes |
-| 5 | The Stack pre-check emits no run-log attempt or failure event | **Declined.** It makes no model call, so there is no attempt to record; the result carries the violations. A recorded pre-check event would be a run-log contract addition outside this change |
-| 6 | Resolving symlinks before `relative_to` refuses a plans directory symlinked from outside the repo | **Declined (owner-confirmed rule).** That is a plans directory outside the repository, refused by the owner-confirmed rule; the resolution check resolves both sides, so an in-repo symlink is consistent |
-| 7 | The 64-character id width was hard-coded apart from the pattern | **Fixed.** One `_VERSION_ID_LEN` feeds the pattern, the prefix length, and the id slice; the parity test pins the pattern |
-| 8 | Stack route text duplicated the gate constant | **No longer applies.** `create` reuses `STACK_BARE_NAME_ROUTE` in the reshaped message |
-| 9 | Publication test re-implemented inline | **No longer applies.** The reshaped message needs no publication state |
-| 10 | Three layers for one presence check | **Declined.** As in round 2 #10 |
-
-### Findings (round 5)
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | The resolution check found a citation's start by scanning back to a stop character, so `**path**`, `Domain:path`, `a,path` and `|path|` were refused though correct (and `-y` cannot override) | **Fixed (structural).** The check compares the text before `.roadmap-versions/<id>/<name>` with the one valid prefix, the roadmap folder's repo-relative path, and requires no path character before it; a punctuation matrix test, red on the old code |
-| 2 | Absolute and `..` citations passed resolution | **Fixed** by the same comparison; an absolute / `..` / `./` / `~/` matrix test, red on the old code where it passed |
-| 3 | The Stack pre-check reports "exhausted its retry budget" with no attempt | **Declined (again, as round 3 #4).** Widening the closed four-value `failure_kind` set in `DATA_CONTRACT.md` is outside this change; the violation line names the cause and route |
-| 4 | `_cmd_roadmap_view` took `repo_root: Optional[Path] = None`, so a caller could skip resolution by omission | **Fixed.** Required `Path` |
-| 5 | `create`'s confirmation took `repo_root: Path | None` and skipped resolution when `None` | **Fixed.** Required `Path`; the guard is removed; tests pass a real root |
-| 6 | The gate copies `roadmap_versions` constants although importing them would not cycle; the member-filename tuple duplicates `roadmap_seed_manifest`'s | **Declined.** The no-import edge is the layering this plan settled and CLAUDE.md records; the parity test pins the copies. The tuple duplication is outside this change |
-| 7 | The same draft is scanned twice on `create` (classifier, then the refusal) | **Declined.** A bounded cost on one seed per `create`; merging the passes would couple the classifier to the refusal |
-| 8 | Retries got a template path rather than the concrete one | **Fixed.** An unresolved message names the exact path, and a citation-violation retry lists the exact accepted paths; test `test_a_citation_violation_retry_names_the_exact_paths` |
-
-### Findings (round 6)
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | Commit `ee9cbd406` turned this file into 56 MB: an edit sliced from a `### Findings (round 1)` heading that an older section also carries, so the slice was empty and `str.replace("", …)` inserted the block between every character | **Fixed** before the review finished: the file was restored from `19d857bd0`, the edit redone anchored inside this section, and the unpushed tip amended to `9e0482b32`, so the blob never enters history |
-| 2 | `create`'s bare-name message, ROADMAP_FORMAT "Form", the handoff explanation, the how-to and BUG_BACKLOG still showed the folderless `.roadmap-versions/<id>/` form the resolution check refuses | **Fixed** at every site (a vocabulary-sweep miss from the round-4 reversal): each names `<roadmap folder>/.roadmap-versions/<version-id>/…` |
-| 3 | The Stack pre-check ran only the bare-name check, so an unresolvable version-store-shaped row value spent every retry | **Fixed.** The pre-check also runs resolution; test `test_an_unresolvable_stack_citation_fails_before_any_model_call` |
-| 4 | The Stack pre-check still reports "exhausted" | **Declined (third time).** Same reason as round 3 #4 |
-| 5 | Member names matched case-sensitively, so `04-Roadmap.md` passed and opens the top-level copy on a case-insensitive filesystem | **Fixed.** Case-insensitive match; only the exact lowercase name can be a citation; test `test_a_case_variant_of_a_member_name_is_bare` |
-| 6 | `is_file()` called twice per failing citation | **Fixed.** Once per occurrence |
-| 7 | Constant copies instead of importing `roadmap_versions` | **Declined (again).** Layering, as round 5 #6 |
-| 8 | `_seed_files_create_reads` re-derived `_read_seed_body`'s provenance path | **Fixed.** One `_provenance_source_path` helper used by both |
-| 9 | A draft is scanned twice on `create` | **Declined (again).** As round 5 #7 |
-| 10 | `classify_draft_seeds` keeps `repo_root: Path | None` | **Declined.** No default, so `None` is visible at every call site; every production caller passes a real root, and tests use `None` to exercise classification states independent of resolution |
-
+- `tracked` BUG_BACKLOG: bare roadmap file names in prose `create`'s model writes during synthesis (the plan's deferred follow-up).
+- Consumer action, outside this repository: Integration's roadmap-derived plans predate the fix and are not migrated; run `plan-tool roadmap <slug> --refresh-seeds`, then hand-fix or re-create affected plans.
