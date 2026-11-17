@@ -342,7 +342,7 @@ def _confirm_invalidated_roadmap_seed(
     location: TrackedSeedLocation | None,
     *,
     seed_files: Mapping[str, str],
-    repo_root: Path | None,
+    repo_root: Path,
     yes: bool,
     input_fn=input,
 ) -> bool:
@@ -443,25 +443,24 @@ def _confirm_invalidated_roadmap_seed(
         )
         _pre_slug_refusal("roadmap-seed-bare-citation")
         return False
-    if repo_root is not None:
-        roots = CitationRoots(
-            repo_root=repo_root, plans_dir=plans_dir, slug=location.roadmap_slug
+    roots = CitationRoots(
+        repo_root=repo_root, plans_dir=plans_dir, slug=location.roadmap_slug
+    )
+    unresolved = {
+        label: violations
+        for label, text in seed_files.items()
+        if (violations := unresolved_roadmap_file_citations(text, roots))
+    }
+    if unresolved:
+        for label, violations in unresolved.items():
+            for violation in violations:
+                error(f"roadmap seed '{location.plan_id}' ({label}): {violation.message}")
+        error(
+            "Correct each citation, or regenerate the seed; ROADMAP_FORMAT.md "
+            '§ "Draft-seed manifest states" names the routes for drafts and promoted copies.'
         )
-        unresolved = {
-            label: violations
-            for label, text in seed_files.items()
-            if (violations := unresolved_roadmap_file_citations(text, roots))
-        }
-        if unresolved:
-            for label, violations in unresolved.items():
-                for violation in violations:
-                    error(f"roadmap seed '{location.plan_id}' ({label}): {violation.message}")
-            error(
-                "Correct each citation, or regenerate the seed; ROADMAP_FORMAT.md "
-                '§ "Draft-seed manifest states" names the routes for drafts and promoted copies.'
-            )
-            _pre_slug_refusal("roadmap-seed-unresolved-citation")
-            return False
+        _pre_slug_refusal("roadmap-seed-unresolved-citation")
+        return False
     if non_current_state is None:
         return True
     if non_current_state == DRAFT_SEED_STATE_STALE:

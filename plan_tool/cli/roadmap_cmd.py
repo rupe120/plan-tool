@@ -1914,7 +1914,7 @@ def _cmd_roadmap_materialize_owned(
 
 
 def _cmd_roadmap_view(
-    args: argparse.Namespace, *, plans_dir: Path, repo_root: Optional[Path] = None
+    args: argparse.Namespace, *, plans_dir: Path, repo_root: Path
 ) -> int:
     """Render one of the six inspection views over ``args.slug``'s roadmap.
 
