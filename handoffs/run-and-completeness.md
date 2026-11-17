@@ -552,11 +552,12 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
 | Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
 | Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | rounds 1–3 dispositioned; round 4 pending |
+| Disposition | rounds 1–4 dispositioned; round 5 pending |
 
 ### Settled decisions (give to the next reviewer)
 
-- The gates check citation form only (`.roadmap-versions/<64-hex>/` directly before a member filename) and take no repo root; any stored version id passes. The repo-relative prefix is the seed writer's job, and a non-resolving hand-edited prefix is an accepted residual (plan Architecture).
+- Citations must resolve (owner decision 2026-11-17, reversing the earlier form-only rule): beyond the form check, each version-store citation must name, from the repository root, a stored member file of this roadmap; any stored version passes. `validate_draft_seed_content` takes a required `citation_roots`, `classify_draft_seeds` a required `repo_root`; `create` refuses as `roadmap-seed-unresolved-citation`.
+- `create`'s refusal message states only always-true facts (each file and its bare names) and points at ROADMAP_FORMAT.md § "Draft-seed manifest states" for routes (owner decision 2026-11-17).
 - Only the four member filenames count; other `0N-` files are deliberately not flagged.
 - `create` refuses a bare-named tracked seed even under `-y` (owner decision 2026-11-17), reason `roadmap-seed-bare-citation`.
 - Plans already created from bare-name seeds are not migrated.
@@ -616,4 +617,21 @@ The repair-routes message drew a different confirmed finding in each of rounds 1
 | 5 | The Stack pre-check returned violations with `row_id=None` and no plan prefix | **Fixed.** Attributed to the plan row with the same prefix as the validator; asserted in the Stack test |
 | 6 | No left boundary before `.roadmap-versions`, so `old.roadmap-versions/<id>/04-roadmap.md` counted as cited | **Fixed.** The segment must be a whole path segment; test `test_a_directory_merely_ending_in_roadmap_versions_is_not_the_version_store`, red on the old code |
 | 7 | The prompt suggested `[<path>](<path>)`, a link that does not resolve from the seed's or plan's folder | **Fixed.** The prompt asks for each path alone in backticks |
+
+### Findings (round 4)
+
+Two clusters were surfaced to the owner rather than patched: a false design premise (#1, #2) and a fourth round on the repair message (#3, #4).
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | A citation missing its roadmap-folder prefix passes every gate | **Fixed (owner decision).** Citations must resolve from the repository root; test `test_a_citation_without_its_roadmap_folder_prefix_does_not_resolve` |
+| 2 | ROADMAP_FORMAT and the plan said a non-resolving id is caught by "the plan's cited-path check"; no such check exists for `.md` prose paths (the only existence check covers `.py` anchors in detail `## Input`). The claim was added during bare-audit round 1 without verification | **Fixed.** The resolution check replaces it; ROADMAP_FORMAT, the plan, and details 02 and 04 describe resolution, with one dated reversal note |
+| 3 | The refusal scanned a separate provenance source but told the operator to edit "the file passed to `create`" | **Fixed (owner decision).** The message names each file holding bare names; `_seed_files_create_reads` is tested |
+| 4 | The message suggested `--materialize PLAN_ID`, which refuses a `current` draft | **Fixed (owner decision).** No state-dependent command is computed; the message points at the doc section that owns the routes |
+| 5 | The Stack pre-check emits no run-log attempt or failure event | **Declined.** It makes no model call, so there is no attempt to record; the result carries the violations. A recorded pre-check event would be a run-log contract addition outside this change |
+| 6 | Resolving symlinks before `relative_to` refuses a plans directory symlinked from outside the repo | **Declined (owner-confirmed rule).** That is a plans directory outside the repository, refused by the owner-confirmed rule; the resolution check resolves both sides, so an in-repo symlink is consistent |
+| 7 | The 64-character id width was hard-coded apart from the pattern | **Fixed.** One `_VERSION_ID_LEN` feeds the pattern, the prefix length, and the id slice; the parity test pins the pattern |
+| 8 | Stack route text duplicated the gate constant | **No longer applies.** `create` reuses `STACK_BARE_NAME_ROUTE` in the reshaped message |
+| 9 | Publication test re-implemented inline | **No longer applies.** The reshaped message needs no publication state |
+| 10 | Three layers for one presence check | **Declined.** As in round 2 #10 |
 
