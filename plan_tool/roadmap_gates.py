@@ -2658,7 +2658,7 @@ def check_component_plan_coverage(envelope: ArtifactEnvelope) -> list[Violation]
 # SHA256_DIGEST_RE.pattern (this module takes no import of it); a test pins them equal.
 _VERSION_STORE_DIRNAME = ".roadmap-versions"
 _VERSION_ID_PATTERN = "[0-9a-f]{64}"
-_VERSION_STORE_PATH_FORM = f"{_VERSION_STORE_DIRNAME}/<version-id>/"
+_VERSION_STORE_PATH_FORM = f"<repo-relative roadmap folder>/{_VERSION_STORE_DIRNAME}/<version-id>/"
 _DRAFT_SEED_MEMBER_FILENAMES = (
     DOMAIN_FILENAME,
     CONSTRAINTS_FILENAME,
@@ -2672,9 +2672,11 @@ _MEMBER_FILENAME_RE = re.compile(
     + "|".join(re.escape(name) for name in _DRAFT_SEED_MEMBER_FILENAMES)
     + r")(?![A-Za-z0-9_-]|\.[A-Za-z0-9])"
 )
+# Fixed width, so each check reads only the characters directly before the name.
 _VERSION_STORE_PREFIX_RE = re.compile(
-    re.escape(_VERSION_STORE_DIRNAME + "/") + _VERSION_ID_PATTERN + "/$"
+    re.escape(_VERSION_STORE_DIRNAME + "/") + _VERSION_ID_PATTERN + "/"
 )
+_VERSION_STORE_PREFIX_LEN = len(_VERSION_STORE_DIRNAME) + 1 + 64 + 1
 
 
 @dataclass(frozen=True)
@@ -2690,10 +2692,41 @@ def _member_filename_occurrences(text: str) -> list[_MemberFilenameOccurrence]:
         _MemberFilenameOccurrence(
             filename=match.group(1),
             start=match.start(1),
-            in_version_store=_VERSION_STORE_PREFIX_RE.search(text[: match.start(1)]) is not None,
+            in_version_store=_VERSION_STORE_PREFIX_RE.fullmatch(
+                text, max(0, match.start(1) - _VERSION_STORE_PREFIX_LEN), match.start(1)
+            )
+            is not None,
         )
         for match in _MEMBER_FILENAME_RE.finditer(text)
     ]
+
+
+@dataclass(frozen=True)
+class BareRoadmapFileCitation:
+    """One bare member-filename occurrence in a seed body."""
+
+    filename: str
+    in_stack_section: bool
+
+
+def bare_roadmap_file_citations(text: str) -> list[BareRoadmapFileCitation]:
+    """Each member filename in the frontmatter-stripped text, fences kept, lacking its version-store path."""
+    body = _strip_frontmatter(text)
+    stack_spans = h2_section_spans(body, "stack")
+    return [
+        BareRoadmapFileCitation(
+            filename=occurrence.filename,
+            in_stack_section=any(start <= occurrence.start < end for start, end in stack_spans),
+        )
+        for occurrence in _member_filename_occurrences(body)
+        if not occurrence.in_version_store
+    ]
+
+
+STACK_BARE_NAME_ROUTE = (
+    "revise that row through reviewer feedback so a new accepted version is "
+    "published, then regenerate the seed"
+)
 
 
 def find_bare_roadmap_file_citations(text: str) -> list[Violation]:
@@ -2703,21 +2736,16 @@ def find_bare_roadmap_file_citations(text: str) -> list[Violation]:
     kept (unlike ``_draft_seed_sections``): it never judges citation versus mention.
     Takes only text, so a promoted copy with no provenance block can use it.
     """
-    body = _strip_frontmatter(text)
-    stack_spans = h2_section_spans(body, "stack")
     violations: list[Violation] = []
-    for occurrence in _member_filename_occurrences(body):
-        if occurrence.in_version_store:
-            continue
+    for citation in bare_roadmap_file_citations(text):
         message = (
-            f"the seed names '{occurrence.filename}' without its version-store path — "
-            f"write '{_VERSION_STORE_PATH_FORM}{occurrence.filename}' instead"
+            f"the seed names '{citation.filename}' without its version-store path — "
+            f"write '{_VERSION_STORE_PATH_FORM}{citation.filename}' instead"
         )
-        if any(start <= occurrence.start < end for start, end in stack_spans):
+        if citation.in_stack_section:
             message += (
                 " (the occurrence is in the tool-written '## Stack' section, copied from an "
-                "accepted roadmap row value: revise that row through reviewer feedback so a new "
-                "accepted version is published, then regenerate the seed)"
+                f"accepted roadmap row value: {STACK_BARE_NAME_ROUTE})"
             )
         violations.append(
             Violation(

@@ -108,6 +108,7 @@ from plan_tool.roadmap_gates import (
     run_constraints_gates,
     run_domain_gates,
     run_plans_gates,
+    find_bare_roadmap_file_citations,
     validate_draft_seed_content,
 )
 from plan_tool.roadmap_seed_state import (
@@ -3623,6 +3624,17 @@ def _materialize_plan_seed(
         stack=getattr(loaded[1].artifact, "stack", None),
         plan=plan,
     )
+
+    # A bare name in tool-written Stack text comes from an accepted row value no
+    # retry can change, so fail closed before spending a model call.
+    stack_violations = tuple(find_bare_roadmap_file_citations(stack_section))
+    if stack_violations:
+        return RoadmapSeedMaterializeResult(
+            outcome=SEED_MATERIALIZE_OUTCOME_EXHAUSTED,
+            plan_id=plan.id,
+            failure_kind=FAILURE_GATES,
+            violations=stack_violations,
+        )
 
     base_prompt = _render_seed_materialize_prompt(
         slug=slug, plan_id=plan_id, loaded=loaded, citation_paths=citation_paths

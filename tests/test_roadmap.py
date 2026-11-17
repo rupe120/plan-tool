@@ -11332,8 +11332,10 @@ class TestStackSectionBareName:
 
         monkeypatch.setattr(roadmap, "_render_stack_section", render_with_row_value)
 
-        result = _materialize(env, _StubInvoker(_seed_text(), _seed_text()))
+        invoker = _StubInvoker(_seed_text(), _seed_text())
+        result = _materialize(env, invoker)
 
+        assert invoker.prompts == [], "no model call can fix tool-written Stack text"
         assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
         messages = [v.message for v in result.violations if v.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION]
         assert messages and all("## Stack" in m and "reviewer feedback" in m for m in messages)

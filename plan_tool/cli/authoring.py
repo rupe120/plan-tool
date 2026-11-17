@@ -154,7 +154,7 @@ from plan_tool.roadmap_artifacts import (
     RoadmapArtifactError,
     parse_plans_artifact,
 )
-from plan_tool.roadmap_gates import find_bare_roadmap_file_citations
+from plan_tool.roadmap_gates import STACK_BARE_NAME_ROUTE, bare_roadmap_file_citations
 from plan_tool.roadmap_seed_manifest import (
     DRAFT_SEED_STATE_CURRENT,
     DRAFT_SEED_STATE_STALE,
@@ -332,7 +332,7 @@ def _pre_slug_refusal(reason: str) -> None:
     print(f"create-refused: reason={reason}", file=sys.stderr)
 
 
-def _bare_citation_repair_routes(location: TrackedSeedLocation) -> str:
+def _bare_citation_repair_routes(location: TrackedSeedLocation, *, published: bool) -> str:
     """Repair routes for a bare-named seed, keyed on where ``create`` reads it."""
     refresh = f"`plan-tool roadmap {location.roadmap_slug} --refresh-seeds`"
     if not location.via_marker:
@@ -340,8 +340,6 @@ def _bare_citation_repair_routes(location: TrackedSeedLocation) -> str:
             f"regenerate it with {refresh}, or hand-replace each bare name with "
             f"the source version's path and run `--accept-seed {location.plan_id}`"
         )
-    entry = load_seed_state(location.state_path)["seeds"].get(location.plan_id)
-    published = entry is not None and entry.get("published") is True
     refresh_route = (
         f"{refresh} rewrites this promoted copy (the seed state records `published: true`)"
         if published
@@ -358,15 +356,15 @@ def _bare_citation_repair_routes(location: TrackedSeedLocation) -> str:
 def _confirm_invalidated_roadmap_seed(
     location: TrackedSeedLocation | None,
     *,
-    seed_text: str = "",
+    seed_texts: tuple[str, ...] = (),
     yes: bool,
     input_fn=input,
 ) -> bool:
     """Refuse a bare-named tracked seed, then require assent before an unsafe one.
 
-    ``seed_text`` is the exact text ``create`` will read (the draft, or the
-    promoted copy; ``cmd_create`` always passes it, the empty default checks
-    nothing). A bare roadmap file name refuses under ``-y`` too: see
+    ``seed_texts`` are the texts ``create`` will read (the tracked draft or
+    promoted copy, plus any separate provenance source; ``cmd_create`` always
+    passes them, the empty default checks nothing). A bare roadmap file name refuses under ``-y`` too: see
     DATA_CONTRACT.md "Pre-slug create refusals".
 
     A promoted ``plan-seeds/`` copy (``location.via_marker``) is validated
@@ -399,11 +397,13 @@ def _confirm_invalidated_roadmap_seed(
             )
             _pre_slug_refusal("roadmap-seed-unresolved")
             return False
+        published = False
         if location.via_marker:
             entry = load_seed_state(location.state_path)["seeds"].get(
                 location.plan_id
             )
             is_stale = entry is not None and entry.get("status") == "invalidated"
+            published = entry is not None and entry.get("published") is True
             classification_detail = ""
             non_current_state = DRAFT_SEED_STATE_STALE if is_stale else None
         else:
@@ -432,15 +432,16 @@ def _confirm_invalidated_roadmap_seed(
         error(str(exc))
         _pre_slug_refusal("roadmap-seed-unresolved")
         return False
-    bare = find_bare_roadmap_file_citations(seed_text)
+    bare = [citation for text in seed_texts for citation in bare_roadmap_file_citations(text)]
     if bare:
-        try:
-            routes = _bare_citation_repair_routes(location)
-        except RoadmapSeedStateError as exc:
-            error(str(exc))
-            _pre_slug_refusal("roadmap-seed-unresolved")
-            return False
-        names = ", ".join(sorted({v.message.split("'")[1] for v in bare}))
+        names = ", ".join(sorted({citation.filename for citation in bare}))
+        if any(citation.in_stack_section for citation in bare):
+            routes = (
+                "a name in the tool-written '## Stack' section comes from an accepted "
+                f"roadmap row value, so {STACK_BARE_NAME_ROUTE}"
+            )
+        else:
+            routes = _bare_citation_repair_routes(location, published=published)
         error(
             f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
             f"roadmap files without their version-store path ({names}); {routes}"
@@ -829,7 +830,7 @@ def cmd_create(args: argparse.Namespace) -> int:
             return 2
         if not _confirm_invalidated_roadmap_seed(
             tracked_seed_location,
-            seed_text=seed_body if seed_body is not None else description,
+            seed_texts=tuple(text for text in (seed_body, description) if text),
             yes=args.yes,
         ):
             return 2

@@ -5277,3 +5277,15 @@ def test_gate_constants_equal_roadmap_versions_originals() -> None:
     assert roadmap_gates._VERSION_STORE_DIRNAME == ROADMAP_VERSION_NAMESPACE_DIRNAME
     assert roadmap_gates._VERSION_ID_PATTERN == SHA256_DIGEST_RE.pattern
 
+
+
+def test_a_line_break_between_prefix_and_name_does_not_count_as_cited() -> None:
+    """The version segment must directly precede the name; a newline between them leaves it bare."""
+    body = f"See x/.roadmap-versions/{'a' * 64}/\n04-roadmap.md describes the rows."
+    assert len(find_bare_roadmap_file_citations(_seed_with("Architecture", body))) == 1
+
+
+def test_bare_citation_message_names_the_repo_relative_form() -> None:
+    """A repair from the message must resolve from the repo root, not only inside the roadmap folder."""
+    (violation,) = find_bare_roadmap_file_citations(_seed_with("Architecture", "See 01-domain.md."))
+    assert "<repo-relative roadmap folder>/.roadmap-versions/<version-id>/01-domain.md" in violation.message
