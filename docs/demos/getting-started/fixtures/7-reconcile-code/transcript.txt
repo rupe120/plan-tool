@@ -1,0 +1,16 @@
+BAKED TRANSCRIPT. Authored to the shape of a real run; not captured from one.
+Lines marked [real] are verbatim output of the named deterministic command.
+Run the live command on the `live/` branch to see the real thing.
+------------------------------------------------------------------------
+$ plan-tool --model claude-sonnet-5-5 reconcile-code due-dates --all
+Step 1  matches plan
+Step 2  matches plan
+Step 3  DRIFT: acceptance criterion "list shows (due YYYY-MM-DD) after the title" is not met
+        todo/cli.py prints id, status and title only.
+        Edit: append " (due <iso date>)" when due is set; add a listing test.
+Applied 1 edit to code. Plan not modified.
+Report: docs/implementation-plans/plan-details/due-dates/reports/<timestamp>.json
+
+$ uv run pytest -q                      [real]
+...........                                                              [100%]
+11 passed

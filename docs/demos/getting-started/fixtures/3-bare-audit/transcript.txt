@@ -1,0 +1,26 @@
+BAKED TRANSCRIPT. Authored to the shape of a real run; not captured from one.
+Lines marked [real] are verbatim output of the named deterministic command.
+Run the live command on the `live/` branch to see the real thing.
+------------------------------------------------------------------------
+$ plan-tool --model claude-sonnet-5-5 completeness-audit due-dates --iterate --commit
+Detail coverage: 0 of 3 steps (bare plan; missing details are not a defect at this stage)
+Deterministic checks: clean
+Conceptual audit, pass 1 ... 2 findings
+Conceptual audit, pass 2 ... 0 new findings
+Conceptual audit, pass 3 ... 0 new findings
+
+plan-correctness
+  [medium] Acceptance criteria say --overdue lists tasks "before today" but do not say
+           whether a task due today is overdue.
+           Fix: state the boundary in the acceptance criteria and the risks.
+plan-completeness
+  [low]    The plan does not say how `list` orders tasks. (Detail-owned: no ordering is in the seed.)
+
+Report: docs/implementation-plans/plan-details/due-dates/reports/<timestamp>.json
+Exit 0 (findings do not change the exit code)
+
+--- your move (judged hand-edit, not a tool apply) ---
+Applied the medium finding: added "A task due today is not overdue; only a due date
+strictly before today is." to Acceptance criteria and a matching clause to Risks.
+Left the low ordering note alone: the seed fences out sorting.
+Commit, then re-run the audit against the committed snapshot until clean or low-yield.

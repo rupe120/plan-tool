@@ -1,0 +1,4 @@
+(no command output: the seed is authored with an assistant and reviewed by you)
+
+Open docs/implementation-plans/plan-seeds/due-dates.md and read the scope fence
+before continuing.
