@@ -310,9 +310,9 @@ lens exists to produce; keep it in sync as entries land or are added):
   **#262** (one static bare-stage report line saying detail-owned remedies are
   expected and `detail` is the next step, so a user advances to the artifact
   that can resolve the remaining implementation contracts rather than
-  re-sampling the same plan), **#540** (a declared assurance level so robustness
-  findings beyond it stop blocking), **#541** (report plan growth while findings
-  narrow).
+  re-sampling the same plan), **#540** (the completeness audit honors the plan's
+  existing `risk_profile` tier so robustness findings beyond it stop blocking),
+  **#541** (report plan growth while findings narrow).
 - **gate-signal:** the shipped calibrated impact-aware convergence policy
   (high-impact findings and high/critical severities block; evidence-qualified
   low-impact medium findings may be demoted), the settled four-loop blocking
@@ -321,8 +321,8 @@ lens exists to produce; keep it in sync as entries land or are added):
   **#87** (harden the test-authoring gate
   against a dirty working tree), **#472** (a Claude window before the
   first call, so the first send and the reconcile refusal gate stop using the
-  200K default), **#539** (certify a step with a declared command and record
-  exit-stage checks as deferred instead of leaving the choice to the model).
+  200K default), **#539** (certify a step with a declared command and report
+  exit checks as unverified at exit instead of leaving the choice to the model).
 - **heuristic-tuning:** **#216** (the corpus-replay benchmark whose first
   deliverable is each metric's *own* rerun noise floor — the data every other
   threshold here would need before it could be calibrated from a distribution
@@ -3402,41 +3402,44 @@ working straight down the tiers.
   · Readiness `decision-needed` (a per-step `exit_checks:` field, a stage label on each detail test, or both)
   · Tier `architect`
   · Principle `deterministic-non-determinism`
-- **What:** `run` certifies a step only through the plan's `test_command` and the step's `gate:`. A consumer whose integration suites first count in its hosted pipeline has no way to say so. With neither field set, the backend model picks what to run from the detail's "every listed test passes" and runs real-database and container suites mid-step; the directive's "run the full suite to green" after a hand-fixed step pushes the same way.
-- **Evidence:** an integration consumer, 2026-11-16/17. Its owner directed "the integration tests should be performed when we leave local testing", and its `TESTING.md` says local work runs the unit baseline plus affected integration files. Run logs for that consumer's `worker-identity-kinds` steps still show integration files executed inside steps, because its plans set neither `test_command` nor `gate:`.
-- **Effort:** medium: a schema field, gate execution and report rendering, a `DETAIL_FORMAT.md` test-stage label, and directive wording.
-- **Risks / fallout:** a deferred check that nothing runs later; the report and handoff therefore list every deferred check as unverified.
+- **What:** `run` certifies a step only through the plan's `test_command` and the step's `gate:`. A consumer whose integration suites first count in its hosted pipeline has no way to say so. With neither field set, the backend model picks what to run from the detail's "every listed test passes" and runs real-database and container suites mid-step; the directive's "run the full suite to green" after a hand-fixed step pushes the same way, because its example command is this repo's own full pytest run.
+- **What already exists:** `plan_tool/prompts/run.md` tells the executor that a declared `test_command` is the authoritative post-flight gate and that it need not run the full suite itself. Setting `test_command` to the consumer's unit baseline is therefore the available workaround and should stop most mid-step suite runs. It does not cover the remaining gap: the detail still lists integration tests as passing conditions, nothing names them as belonging to exit, and nothing reports them as unverified when the step is certified.
+- **Evidence:** an integration consumer, 2026-11-16/17. Its owner directed "the integration tests should be performed when we leave local testing", and its `TESTING.md` says local work runs the unit baseline plus affected integration files. Run logs for that consumer's `worker-identity-kinds` steps still show integration files executed inside steps; its plans set neither `test_command` nor `gate:`, so the `test_command` workaround was not in effect for those runs.
+- **Naming:** "deferred" is already a step status (`schema.py`, a step parked behind a gate), so these checks are named exit checks and reported as "unverified at exit", not as deferred.
+- **Effort:** medium: a schema field, gate execution and report rendering, executor-prompt wording, a `DETAIL_FORMAT.md` test-stage label, and directive wording.
+- **Risks / fallout:** an exit check that nothing runs later; the report and handoff therefore list every exit check as unverified.
 - **Dependencies:** none.
-- **Outcome:** a plan can declare checks that `run` records as deferred to exit, lists in its report and handoff as unverified, and never executes.
-- **In scope:** `plan_tool/schema.py` (plan and step fields), `plan_tool/launcher.py` gate execution, run report and handoff rendering, `DETAIL_FORMAT.md` test staging, and the hand-fix wording in `integrations/shared/DIRECTIVES.md` ("run the plan's `test_command`").
-- **Out of scope / Non-goals:** running exit checks in any CI; consumer pipeline configuration; the test-authoring gate.
-- **Allowed behavior changes:** a new optional field; a deferred-checks section in the run report and handoff; the directive wording above.
+- **Outcome:** a plan can declare exit checks that `run` never executes, that the executor prompt tells the backend model not to run, and that the run report and handoff list as unverified at exit.
+- **In scope:** `plan_tool/schema.py` (plan and step fields), `plan_tool/launcher.py` gate execution, `plan_tool/prompts/run.md` (exit checks are not run inside the step), run report and handoff rendering, `DETAIL_FORMAT.md` test staging, and the hand-fix wording in `integrations/shared/DIRECTIVES.md` ("run the plan's `test_command`").
+- **Out of scope / Non-goals:** running exit checks in any CI; consumer pipeline configuration; the test-authoring gate; the step `deferred` status.
+- **Allowed behavior changes:** a new optional field; an exit-checks section in the run report and handoff; the executor-prompt and directive wording above.
 - **Allowed reorganization:** none.
-- **Verification:** a fixture plan with an exit check completes a step without executing it and lists it as deferred and unverified.
-- **Stop / defer:** CI wiring for deferred checks is a separate entry.
+- **Verification:** a fixture plan with an exit check completes a step without executing it, its rendered run prompt names the check as not to be run, and its report lists the check as unverified at exit.
+- **Stop / defer:** CI wiring for exit checks is a separate entry.
 - **Quality:** gate-signal — step certification follows a declared command instead of the model's reading of detail prose.
 - **Status:** not started.
 
-**#540 — The completeness audit has no declared assurance level, so a proof-of-concept plan keeps collecting blocking robustness findings**
+**#540 — The completeness audit ignores the plan's declared `risk_profile`, so a low-risk plan keeps collecting blocking robustness findings**
 
 - **Labels:** Route `plan`
-  · Readiness `decision-needed` (level names, and which finding classes each level demotes)
+  · Readiness `decision-needed` (whether the existing `low` / `standard` / `high` tiers are enough or the audit needs finer levels, and which finding classes each tier demotes)
   · Tier `architect`
   · Principle `converge-on-correct-plan`
-- **What:** the conceptual audit judges every plan against production rigor. For a single-owner, loopback-only developer tool it raised a new, narrower robustness gap each round, and nothing in the plan could state how much rigor the stage wants.
-- **Evidence:** an integration consumer's `local-execution-mode` plan, 2026-11-17: thirteen detail-grounded rounds, with planned tests at 91 when the owner asked "are we over engineered?". A hand-written "Scope calibration" section cut them to 43, after which rounds converged. The consumer then added audit levels to its own audit contract to express the same idea.
-- **Look-alikes not merged:** #404 (what the audit may question about intent, not how much rigor applies), #495 (how many passes run), #490 (a decision on one finding, not a plan-wide level).
-- **Effort:** medium to large: a plan field, the audit prompt, severity classification and report rendering.
-- **Risks / fallout:** a level used to wave away real defects; a level therefore demotes only robustness findings beyond it, never correctness findings or contract contradictions.
-- **Dependencies:** none.
-- **Outcome:** a plan declares its assurance level, and the audit reports findings that exceed that level as advisory, naming the level.
-- **In scope:** the plan schema, the conceptual audit prompt and severity classification, report rendering, `PLAN_FORMAT.md`.
-- **Out of scope / Non-goals:** automatic limits on test counts; deterministic checks; per-finding dispositions (#490).
-- **Allowed behavior changes:** a new optional field; severity demotion only when it is set.
+- **What:** plans already carry a paired `risk_profile` / `risk_profile_rationale` declaration (`PLAN_FORMAT.md`, shipped by #181), and #182 feeds it to run-grade detail authoring and review as advisory context. The completeness audit does not read it: `2-risk-profile-2.md` kept the audit's prompts, parsing, reports, routing and blocking out of its scope. The conceptual audit therefore judges every plan against production rigor. For a single-owner, loopback-only developer tool it raised a new, narrower robustness gap each round.
+- **Evidence:** an integration consumer's `local-execution-mode` plan, 2026-11-17: thirteen detail-grounded rounds, with planned tests at 91 when the owner asked "are we over engineered?". A hand-written "Scope calibration" section cut them to 43, after which rounds converged. The consumer then added audit levels to its own audit contract to express the same idea. Not recorded: whether that plan declared a `risk_profile`, and at which tier.
+- **Counter-evidence to reconcile first:** `2-risk-profile-1.md` (§ "Why a seed convention cannot substitute for a persisted field") measured that a proportionality paragraph pasted into a plan body after detail moved the audit only 18 → 17 findings and raised HIGH 3 → 5, because the new findings contradicted ceremony already written into the bundle. The consumer's "Scope calibration" section converged instead. The entry needs the difference stated (for example, whether that section also cut detail-bundle tests rather than only adding prose) before the design treats plan-body calibration as sufficient.
+- **Look-alikes not merged:** #181 / #182 (the shipped tier and its detail-time consumer; this entry extends that tier to the audit rather than adding a second plan-wide field), #404 (what the audit may question about intent, not how much rigor applies), #495 (how many passes run), #490 (a decision on one finding, not a plan-wide level).
+- **Effort:** medium: the audit prompt, severity classification and report rendering; a schema change only if the decision adds levels.
+- **Risks / fallout:** a tier used to wave away real defects; a tier therefore demotes only robustness findings beyond it, never correctness findings or contract contradictions.
+- **Dependencies:** #181 and #182 (shipped).
+- **Outcome:** the completeness audit reads the plan's `risk_profile` and reports robustness findings that exceed that tier as advisory, naming the tier.
+- **In scope:** the conceptual audit prompt and severity classification, completeness report rendering, `PLAN_FORMAT.md` and `docs/how-to/pipeline/audit.md` wording for the tier's audit effect.
+- **Out of scope / Non-goals:** a second plan-wide rigor field; automatic limits on test counts; deterministic checks; per-finding dispositions (#490); changing how `create` proposes the tier.
+- **Allowed behavior changes:** severity demotion of robustness findings for a declared `low` tier only; a legacy omitted pair and `standard` keep today's audit behavior.
 - **Allowed reorganization:** none.
-- **Verification:** one fixture plan audited at two levels yields identical correctness findings and differs only in the severity of robustness findings.
-- **Stop / defer:** level-aware detail generation is a separate entry.
-- **Quality:** convergence — rounds stop when the remaining findings exceed the declared rigor.
+- **Verification:** one fixture plan audited at `low` and at `standard` yields identical correctness findings and differs only in the severity of robustness findings.
+- **Stop / defer:** tier-aware detail generation beyond #182's advisory context is a separate entry.
+- **Quality:** convergence — rounds stop when the remaining findings exceed the declared tier.
 - **Status:** not started.
 
 ### B. Significant UX changes
@@ -4577,7 +4580,8 @@ working straight down the tiers.
 - **Dependencies:** none.
 - **Outcome:** the completeness report shows per-round deltas of planned tests and detail size and flags consecutive rounds of growth with narrowing findings.
 - **In scope:** completeness report rendering and detail-bundle counting.
-- **Out of scope / Non-goals:** blocking on growth; assurance levels (#540).
+- **Look-alikes not merged:** the `finding_churn` and `edit_drift` advisories on `ConvergenceDiagnosis` (both follow finding identity, not plan or detail size).
+- **Out of scope / Non-goals:** blocking on growth; risk-tier-aware audit severity (#540).
 - **Allowed behavior changes:** an advisory report section.
 - **Allowed reorganization:** none.
 - **Verification:** replaying the consumer's saved reports flags the rounds where growth continued.
@@ -8524,7 +8528,7 @@ working straight down the tiers.
 - **Evidence:** the `no-edits-applied` review (2026-10-13)
   re-stated its declined
   items in every reviewer prompt by hand so later rounds would not re-raise them.
-- **Evidence (integration consumer, 2026-11-17):** an owner decision on a completeness finding (a fixed local audit deployment value) could be recorded only as plan prose, and the `decide` command accepts decomposition outcomes only. A tool-heuristic finding (`orphaned-deliverable` on a backlog file) was declined in three consecutive rounds and re-raised each time.
+- **Evidence (integration consumer, 2026-11-17):** an owner decision on a completeness finding (a fixed local audit deployment value) could be recorded only as plan prose, and the `decide` command accepts decomposition outcomes only. A tool-heuristic finding (`orphaned-deliverable` on a backlog file; see #111 for that check's identity model) was declined in three consecutive rounds and re-raised each time.
 - **Effort:** medium: a disposition store keyed by stable finding identity, a
   command to record one, and the audit prompt and report reading it.
 - **Risks / fallout:** a declined finding hides a later real regression at the
