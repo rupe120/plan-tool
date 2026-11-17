@@ -552,7 +552,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
 | Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
 | Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | rounds 1–5 dispositioned; round 6 running (owner-approved) |
+| Disposition | rounds 1–6 dispositioned; owner call on PR vs round 7 |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -649,4 +649,19 @@ Two clusters were surfaced to the owner rather than patched: a false design prem
 | 6 | The gate copies `roadmap_versions` constants although importing them would not cycle; the member-filename tuple duplicates `roadmap_seed_manifest`'s | **Declined.** The no-import edge is the layering this plan settled and CLAUDE.md records; the parity test pins the copies. The tuple duplication is outside this change |
 | 7 | The same draft is scanned twice on `create` (classifier, then the refusal) | **Declined.** A bounded cost on one seed per `create`; merging the passes would couple the classifier to the refusal |
 | 8 | Retries got a template path rather than the concrete one | **Fixed.** An unresolved message names the exact path, and a citation-violation retry lists the exact accepted paths; test `test_a_citation_violation_retry_names_the_exact_paths` |
+
+### Findings (round 6)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | Commit `ee9cbd406` turned this file into 56 MB: an edit sliced from a `### Findings (round 1)` heading that an older section also carries, so the slice was empty and `str.replace("", …)` inserted the block between every character | **Fixed** before the review finished: the file was restored from `19d857bd0`, the edit redone anchored inside this section, and the unpushed tip amended to `9e0482b32`, so the blob never enters history |
+| 2 | `create`'s bare-name message, ROADMAP_FORMAT "Form", the handoff explanation, the how-to and BUG_BACKLOG still showed the folderless `.roadmap-versions/<id>/` form the resolution check refuses | **Fixed** at every site (a vocabulary-sweep miss from the round-4 reversal): each names `<roadmap folder>/.roadmap-versions/<version-id>/…` |
+| 3 | The Stack pre-check ran only the bare-name check, so an unresolvable version-store-shaped row value spent every retry | **Fixed.** The pre-check also runs resolution; test `test_an_unresolvable_stack_citation_fails_before_any_model_call` |
+| 4 | The Stack pre-check still reports "exhausted" | **Declined (third time).** Same reason as round 3 #4 |
+| 5 | Member names matched case-sensitively, so `04-Roadmap.md` passed and opens the top-level copy on a case-insensitive filesystem | **Fixed.** Case-insensitive match; only the exact lowercase name can be a citation; test `test_a_case_variant_of_a_member_name_is_bare` |
+| 6 | `is_file()` called twice per failing citation | **Fixed.** Once per occurrence |
+| 7 | Constant copies instead of importing `roadmap_versions` | **Declined (again).** Layering, as round 5 #6 |
+| 8 | `_seed_files_create_reads` re-derived `_read_seed_body`'s provenance path | **Fixed.** One `_provenance_source_path` helper used by both |
+| 9 | A draft is scanned twice on `create` | **Declined (again).** As round 5 #7 |
+| 10 | `classify_draft_seeds` keeps `repo_root: Path | None` | **Declined.** No default, so `None` is visible at every call site; every production caller passes a real root, and tests use `None` to exercise classification states independent of resolution |
 
