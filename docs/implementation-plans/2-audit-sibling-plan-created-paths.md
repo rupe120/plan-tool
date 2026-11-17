@@ -45,15 +45,19 @@ steps:
     then governs reuse and freshness through `audit_input_fingerprint_matches_disk`
     (used by `plan_tool/completeness_report.py` and `plan_tool/cli/completeness_phases.py`)
     with no edit to those callers. The public `qualified_result.audit_revision` dict
-    in `plan_tool/fingerprint.py:audit_input_revision` moves to version 4 with a
-    `sibling_paths_digest` (`null` when no sibling paths apply), following the
+    moves to audit-revision version 4 at both of its producers, `plan_tool/fingerprint.py:audit_input_revision`
+    and the `"version": 3` literal in `plan_tool/review_persistence.py`, and the
+    validator `plan_tool/review_persistence.py:normalize_audit_revision` accepts it, with a
+    `sibling_paths_digest` (`null` when no sibling paths apply; owner-confirmed
+    2026-11-17, including the one-time stale reading on upgrade; ship between Loom batches), following the
     v2 `source_seed_digest` and v3 `project_context_digest` precedent, so a saved
     report''s `view_revision_status` turns `stale` after a sibling edit; historical
     decoding fills an absent v1–v3 `sibling_paths_digest` with `None`, and reads
     never rewrite archived sidecars. Update `DATA_CONTRACT.md`: the `AuditInputSnapshot`
     paragraph names the new captured input, the `qualified_result.audit_revision`
     paragraph names the v4 digest, and the run-grade evidence paragraph lists
-    versions 1–4 as supported. Saved fingerprints and revisions of roadmap plans
+    audit-revision versions 1–4 as supported, worded as "audit-revision version"
+    so it is not read as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions of roadmap plans
     that have siblings change once on upgrade, deliberately; plans with no siblings
     keep both byte-identical. No destructive operations are touched. Unit tests
     in `tests/test_review.py` cover the helper with a two-plan roadmap fixture (the
@@ -64,7 +68,11 @@ steps:
     an unchanged sibling set leaves it unchanged, and that a plan with no siblings
     keeps its existing fingerprint. Tests in `tests/test_fingerprint.py` show the v4
     revision carries `sibling_paths_digest` (null with no siblings), that a sibling
-    edit changes it, and that a v3 record decodes with `sibling_paths_digest` `None`.'
+    edit changes it, that a v3 record decodes with `sibling_paths_digest` `None`,
+    and that a saved v4 record round-trips through `normalize_audit_revision`.
+    Own-path subtraction compares normalized paths (`normalize_declared_path`,
+    as the deterministic check does), so a sibling path that normalizes to one of
+    the plan''s own `creates:` is excluded; a test covers a `./` variant.'
 - id: 2
   intent: Put the sibling paths in front of the conceptual auditor as planned work,
     so it stops reporting them as missing files.
@@ -262,7 +270,8 @@ See the `steps:` block in the frontmatter.
   same-roadmap sibling's `creates:` path and tells the auditor not to report
   those as missing; for any other plan it states that none apply.
 - The block's set equals the deterministic check's eligible set minus the
-  plan's own paths for a plan with a roadmap identity, and is empty otherwise.
+  plan's own paths, compared after `normalize_declared_path`, for a plan with a
+  roadmap identity, and is empty otherwise.
 - The sibling set is part of the audit input fingerprint and of the public
   `audit_revision` (version 4, `sibling_paths_digest`), so a sibling edit makes a
   prior result stale for reuse and for a saved report's freshness.
