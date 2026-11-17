@@ -61,6 +61,7 @@ steps:
   depends_on_notes:
     1: The writer already emits version-store paths, so tightening the gates does
       not break materialization.
+  detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md
   description: 'Tighten the draft-seed gates in `plan_tool/roadmap_gates.py:validate_draft_seed_content`.
     The check matches exactly the four member filenames (`01-domain.md`, `02-constraints.md`,
     `03-components.md`, `04-roadmap.md`, the constants the References gate already
