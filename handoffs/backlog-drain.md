@@ -96,7 +96,12 @@ Drop a `fixed` line once its change has merged to `main`, and a `refuted`,
 `BUG_BACKLOG.md`, or `docs/history/backlog-decisions.md`; keep `pending` lines
 until they resolve.
 
-*(empty)*
+- 2026-11-17 — Principle triage of the twelve Readiness `ready`, Route `plan`
+  entries with Principle `untriaged` (#89, #142, #149, #156, #180, #198, #202,
+  #230, #312, #332, #377, #385): `fixed da81abc64`. An owner-directed batch,
+  a one-time exception to Queue order step 6 and `docs/TRACKING.md`'s
+  label-on-touch rule; the rule stands. `pending`: #149's `ready` label
+  disagrees with the board's Blocked lane for its plan.
 
 ## Deliberately not in this handoff
 

@@ -8,6 +8,7 @@
 | [Completeness next steps from one blocking verdict — review ledger and session handoff](#completeness-next-steps-from-one-blocking-verdict--review-ledger-and-session-handoff) | 2026-10-10 |
 | [`run` no-edits-applied block and failure receipts — review ledger](#run-no-edits-applied-block-and-failure-receipts--review-ledger) | 2026-10-13 |
 | [Completeness apply retirement implementation](#completeness-apply-retirement-implementation) | 2026-11-04 |
+| [Local-iteration backlog findings #539–#542 — review ledger and priority handoff](#local-iteration-backlog-findings-539542--review-ledger-and-priority-handoff) | 2026-11-17 |
 
 ## Completeness next-step verdict finish — review ledger and session handoff
 
@@ -496,10 +497,45 @@ Final regression evidence after optional documentation follow-through: 14,702 pa
 
 Open items: #519 (unreachable structural opt-in and its comment wording), #520 (stale lessons), #369 (untouched, independent), and the pending Architect-tier review of the `CLAUDE.md` rule edits (A2/G1).
 
+## Local-iteration backlog findings #539–#542 — review ledger and priority handoff
 
+*Opened 2026-11-17.*
 
+| Field | Value |
+| --- | --- |
+| Change | `BACKLOG.md` entries #539–#542 and new #490 evidence, from an integration consumer's local-execution plan |
+| Branch | `docs/backlog-local-iteration-findings` (pushed; PR #252) |
+| Range | `69b609b00` (entries added) through `9ddc8f583` |
+| Checks | `tests/test_backlog_ids.py`, `tests/test_backlog_readability.py` green on each commit |
+| Reviewer | session review of each entry's claims against the code |
+| Disposition | entries corrected; priority pending owner decision |
 
+### Settled decisions
 
+- #540 does not pre-select which `risk_profile` tiers demote findings; that is its readiness decision (owner, 2026-11-17).
+- #540 extends the shipped `risk_profile` tier rather than adding a second plan-wide rigor field.
+- Correctness findings and contract contradictions never demote under any tier.
 
+### Findings
 
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | #540 proposed a new assurance-level field beside the shipped `risk_profile` (#181/#182) and omitted both as look-alikes | **Fixed `535f47b6b`.** Reframed as the audit reading the existing tier; #181/#182 listed |
+| 2 | #540 omitted `2-risk-profile-1.md`'s measurement that a retrofitted plan-body proportionality paragraph raised HIGH 3 → 5 | **Fixed `535f47b6b`.** Recorded as counter-evidence to reconcile before design |
+| 3 | #540's rewrite limited demotion to `low` only, pre-answering its own decision | **Fixed `c4c84ab6b`.** Allowed behavior changes and Verification defer to the readiness decision |
+| 4 | #540 conflicts with the unjudged `risk-profile-3-advisory-effectiveness` seed, which keeps the audit isolated from risk context and rules out audit suppression | **Fixed `9ddc8f583`.** Named as a conflict to resolve first; resolution is `pending` (item 1 below) |
+| 5 | #539 missed the existing workaround (`prompts/run.md` defers to a declared `test_command`) and left that prompt out of scope | **Fixed `535f47b6b`.** Workaround stated; `run.md` in scope, Outcome and Verification |
+| 6 | #539's "deferred checks" collided with the step `deferred` status | **Fixed `535f47b6b`.** Renamed exit checks, reported "unverified at exit" |
+| 7 | #541 lacked the `finding_churn` / `edit_drift` look-alikes; #490's evidence lacked a #111 cross-reference | **Fixed `535f47b6b`.** |
+| 8 | #541's evidence is a placeholder path in the consumer repo, so the replay its readiness waits on cannot run here | `pending` — copy the per-round planned-test and finding counts into the entry |
 
+Checked, no finding: id uniqueness, `sweep` taking no plan name (#542), `decide` accepting decomposition outcomes only (#490), `run`/`--accept` gate behavior (#539).
+
+### Priority (recommendation; the owner decides)
+
+None of the four belongs on the Now board, which lists `direct` + `ready` trust-core (P1/P2) entries.
+
+1. **#540 — highest value, decision first.** P1 with a measured cost (thirteen rounds, 91 → 43 planned tests). Next action is an owner call: reopen the risk-profile-3 seed's audit fence with #540's evidence, or fold #540 into that seed's decision. Placed in T2 with #490 (`BACKLOG.md` § "Priority bands", refreshed 2026-11-17); the decision itself stays `pending`.
+2. **#539 — not urgent.** The consumer can set `test_command` to its unit baseline today. The `DIRECTIVES.md` hand-fix wording (step 3 names this repo's own full pytest run) could be split out as a small `direct` entry if it misleads before #539 is decided. `pending`.
+3. **#541 — not pickable** until item 8 above lands; then a small advisory.
+4. **#542 — an ordinary drain pick.** `direct`, `ready`, P5, small; taken by `backlog-drain.md` in TRACKING order, no special priority.
