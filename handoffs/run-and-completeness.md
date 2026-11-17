@@ -552,7 +552,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
 | Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
 | Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | rounds 1–4 dispositioned; round 5 pending |
+| Disposition | rounds 1–5 dispositioned; owner decision pending on continuing review |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -634,4 +634,17 @@ Two clusters were surfaced to the owner rather than patched: a false design prem
 | 8 | Stack route text duplicated the gate constant | **No longer applies.** `create` reuses `STACK_BARE_NAME_ROUTE` in the reshaped message |
 | 9 | Publication test re-implemented inline | **No longer applies.** The reshaped message needs no publication state |
 | 10 | Three layers for one presence check | **Declined.** As in round 2 #10 |
+
+### Findings (round 5)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | The resolution check found a citation's start by scanning back to a stop character, so `**path**`, `Domain:path`, `a,path` and `|path|` were refused though correct (and `-y` cannot override) | **Fixed (structural).** The check compares the text before `.roadmap-versions/<id>/<name>` with the one valid prefix, the roadmap folder's repo-relative path, and requires no path character before it; a punctuation matrix test, red on the old code |
+| 2 | Absolute and `..` citations passed resolution | **Fixed** by the same comparison; an absolute / `..` / `./` / `~/` matrix test, red on the old code where it passed |
+| 3 | The Stack pre-check reports "exhausted its retry budget" with no attempt | **Declined (again, as round 3 #4).** Widening the closed four-value `failure_kind` set in `DATA_CONTRACT.md` is outside this change; the violation line names the cause and route |
+| 4 | `_cmd_roadmap_view` took `repo_root: Optional[Path] = None`, so a caller could skip resolution by omission | **Fixed.** Required `Path` |
+| 5 | `create`'s confirmation took `repo_root: Path | None` and skipped resolution when `None` | **Fixed.** Required `Path`; the guard is removed; tests pass a real root |
+| 6 | The gate copies `roadmap_versions` constants although importing them would not cycle; the member-filename tuple duplicates `roadmap_seed_manifest`'s | **Declined.** The no-import edge is the layering this plan settled and CLAUDE.md records; the parity test pins the copies. The tuple duplication is outside this change |
+| 7 | The same draft is scanned twice on `create` (classifier, then the refusal) | **Declined.** A bounded cost on one seed per `create`; merging the passes would couple the classifier to the refusal |
+| 8 | Retries got a template path rather than the concrete one | **Fixed.** An unresolved message names the exact path, and a citation-violation retry lists the exact accepted paths; test `test_a_citation_violation_retry_names_the_exact_paths` |
 
