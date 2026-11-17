@@ -6,6 +6,13 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.6.0'></a>
+## 1.6.0 — 2026-11-17
+
+### Added
+
+- A pre-baked getting-started demo (`docs/demos/getting-started/`) builds a disposable repository with one branch per pipeline step, from seed through code review, so each step can be shown instantly and the same step run live on a separate branch.
+
 <a id='changelog-1.5.0'></a>
 ## 1.5.0 — 2026-11-16
 
