@@ -85,7 +85,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
   - It needs a repo root and the loaded head, and it fails for a no-head roadmap.
   - It also rejects a hand-edited seed that cites the version its text came from, which the plan allows.
   - The fixed form check delivers the property: only version-store citations reach a plan.
-- **The tool-owned `## Stack` section is not exempt.** `_materialize_plan_seed` inserts `_render_stack_section` output before `validate_draft_seed_content` runs, and that renderer copies accepted row values verbatim; its fixed template text names no member file. A bare member filename there comes from a roadmap row value and fails materialize closed, with a message naming `## Stack`, since the retry cannot change tool-written text. Rejected: rewriting row text in the renderer, and exempting the section.
+- **The tool-owned `## Stack` section is not exempt.** `_materialize_plan_seed` inserts `_render_stack_section` output before `validate_draft_seed_content` runs, and that renderer copies accepted row values verbatim; its fixed template text names no member file. A bare member filename there comes from a roadmap row value and fails materialize closed, with a message naming `## Stack` and the route: revise that row through reviewer feedback (`docs/how-to/roadmap.md` § 6), which publishes a new accepted version, then regenerate; accepted versions are immutable, so `--refresh-seeds` alone fails the same way every time. The retry cannot change tool-written text. Rejected: rewriting row text in the renderer, and exempting the section.
 - **Rejected alternative: a regex that matches any `0N-*.md`.** It would flag unrelated files. The plan names the four members.
 - **Destructive operations and caller effects.**
   - `--refresh-seeds` and `--materialize` still overwrite the draft, hand edits included, and still keep the `seed-refresh-report.md` diff. `--apply` still copies only admitted seeds. Nothing in this step deletes or rewrites a seed.
@@ -117,7 +117,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - `test_sentence_final_bare_name_is_an_occurrence` — `Derived from 04-roadmap.md.` in prose, and the same line as the last line of a fence, are each rejected; a version-store path followed by `.` is accepted, in the body check and the References gate alike.
 - `test_body_check_takes_only_text_and_needs_no_provenance` — call the public function on text with no provenance block; it returns violations without raising. This pins step 3's reuse.
 - `test_one_violation_per_offending_occurrence` — three bare occurrences yield three violations.
-- `test_stack_row_value_naming_a_member_file_fails_closed` — an accepted hosting row whose value names `02-constraints.md` makes materialize fail with a violation naming `## Stack`; the default stack template alone never trips the check.
+- `test_stack_row_value_naming_a_member_file_fails_closed` — an accepted hosting row whose value names `02-constraints.md` makes materialize fail with a violation naming `## Stack` and the roadmap-revision route; the default stack template alone never trips the check.
 - `test_gate_constants_equal_roadmap_versions_originals` — the local directory name and digest pattern equal `ROADMAP_VERSION_NAMESPACE_DIRNAME` and `SHA256_DIGEST_RE.pattern`.
 
 `tests/test_roadmap_seed_manifest.py`:

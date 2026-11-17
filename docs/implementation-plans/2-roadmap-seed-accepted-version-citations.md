@@ -110,7 +110,9 @@ steps:
     a fence, and as the last component of a top-level-copy path; acceptance of a non-accepted
     version id; the References message naming the path; a case pinning that the required
     paths never trip the body check; and a case pinning that a non-member `0N-` filename
-    such as `01-setup.md` is not flagged. `tests/test_roadmap_seed_manifest.py` and
+    such as `01-setup.md` is not flagged; and a case where an accepted row value names
+    a member file, so the tool-written `## Stack` section fails materialize closed with
+    a message naming the section and the roadmap-revision route. `tests/test_roadmap_seed_manifest.py` and
     `tests/test_roadmap.py` cover the legacy `malformed` classification, `--apply`
     refusal, `--refresh-seeds` repair, the two `--accept-seed` cases, and a roadmap
     with no accepted head still refusing before any gate runs, as today. Update the existing canned seed
@@ -186,7 +188,9 @@ steps:
     the four member filenames (fenced code included), that any stored version id is
     accepted, and that a cited path naming an older version after a later promotion
     is intended, not a defect. § ''Draft-seed manifest states'' records that legacy
-    bare-name seeds classify `malformed`, with the two repair routes, and that a seed''s
+    bare-name seeds classify `malformed`, with the two repair routes, that a bare name
+    in a roadmap row value fails materialize until the row is revised through reviewer
+    feedback, and that a seed''s
     frontmatter never reaches the plan (Architecture, `source_artifacts`). `docs/how-to/roadmap.md`
     § 1''s leftover-files paragraph stops describing a reader opening a bare `04-roadmap.md`
     as the expected path. `docs/explanations/roadmap-plan-handoff.md` describes what
@@ -228,7 +232,7 @@ The problem affects every roadmap, not only older folders with leftovers. A stag
 **Draft-seed gates (`plan_tool/roadmap_gates.py`).**
 - Both gates match exactly the four member filenames, `01-domain.md` through `04-roadmap.md`. Another file whose name starts `0N-` is deliberately not flagged.
 - Both gates are unconditional: they run wherever `validate_draft_seed_content` runs today. Every seed route, and `create`'s confirmation, already refuses with `NoPublishedRoadmapVersionError` before any gate when no accepted head exists, so "a roadmap with no accepted head keeps today's behavior" means that refusal stays as it is; no gate is switched off by head state.
-- The tool-written `## Stack` section is checked like the rest of the body. `_render_stack_section` copies accepted row values verbatim and names no member file in its own template text, so a bare name there can only come from a roadmap row value. Such a seed fails materialize closed, with a message naming the section, and the fix is to correct the roadmap row. Deliberately not done: rewriting row text in the renderer (a new rewrite path), or exempting the section (a bare name would then reach the plan).
+- The tool-written `## Stack` section is checked like the rest of the body. `_render_stack_section` copies accepted row values verbatim and names no member file in its own template text, so a bare name there can only come from a roadmap row value. Such a seed fails materialize closed, with a message naming the section and the route: revise that row through reviewer feedback (`docs/how-to/roadmap.md` § 6), which publishes a new accepted version, then regenerate; accepted versions are immutable, so `--refresh-seeds` alone fails the same way every time. Deliberately not done: rewriting row text in the renderer (a new rewrite path), or exempting the section (a bare name would then reach the plan).
 - Both gates judge the citation's form, not its root: a member filename passes exactly when `.roadmap-versions/<version-id>/` directly precedes it. They take no repo root and keep their current signature at every caller. The repo-relative prefix is the seed writer's responsibility: the writer has `repo_root` and refuses a plans directory outside it. A cited path is relative to the roadmap's repository, and `create` carries seed text verbatim, so the path keeps that meaning even when `create` re-roots the plan under an umbrella root. Deliberately not checked by the gates: whether a hand-edited prefix resolves. A non-resolving path names no top-level copy, so the Guarantee holds, and the plan's existing cited-path check reports it as missing.
 - The References gate (`VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE`) requires the version-store form, and its message names that form.
 - A new body check makes a bare member filename anywhere in the seed body a violation, fenced code included. It is one text-only function that scans the frontmatter-stripped text with fences kept and uses one occurrence rule shared with the References gate (no `[A-Za-z0-9_.-]` before the name; after it, neither `[A-Za-z0-9_-]` nor `.` plus a letter or digit), so a longer filename is not an occurrence and a sentence-final period does not hide one; the full validator and `create`'s check on a promoted copy both call it. `create` copies fenced text into the plan verbatim, so a fence is no safer than prose. Bare means any occurrence whose path does not contain `.roadmap-versions/<version-id>/`. A path to a top-level copy therefore counts as bare, and the required paths never trip the check. This is a plain presence check: it rejects every bare occurrence and never judges whether an occurrence is a citation or a mention.
