@@ -71,7 +71,13 @@ from plan_tool.roadmap_artifacts import (
     plans_design_rows,
     settle_pending_decision,
 )
+from plan_tool import roadmap_gates
+from plan_tool.roadmap_versions import (
+    ROADMAP_VERSION_NAMESPACE_DIRNAME,
+    SHA256_DIGEST_RE,
+)
 from plan_tool.roadmap_gates import (
+    find_bare_roadmap_file_citations,
     COMPONENTS_GATES,
     CONSTRAINTS_GATES,
     DOMAIN_GATES,
@@ -113,6 +119,7 @@ from plan_tool.roadmap_gates import (
     VIOLATION_HOSTING_TOPOLOGY_COHERENCE,
     VIOLATION_INVALID_PLAN_ID_SLUG,
     VIOLATION_MISSING_HOSTING_FACET,
+    VIOLATION_BARE_ROADMAP_FILE_CITATION,
     VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE,
     VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING,
     VIOLATION_MISSING_DRAFT_SEED_RISKS,
@@ -220,6 +227,11 @@ from plan_tool.roadmap_source import (
 )
 from plan_tool.roadmap_relations import RelationKind
 from plan_tool.roadmap_revision import TEXT_FIELDS_BY_ROW_TYPE
+
+
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "plan_tool" / "roadmap_gates.py"
 
@@ -609,10 +621,10 @@ def draft_seed_text(
             "",
             "## References",
             "",
-            f"- `{DOMAIN_FILENAME}`",
-            f"- `{CONSTRAINTS_FILENAME}`",
-            f"- `{COMPONENTS_FILENAME}`",
-            f"- `{PLANS_FILENAME}`",
+            f"- `{_cite(DOMAIN_FILENAME)}`",
+            f"- `{_cite(CONSTRAINTS_FILENAME)}`",
+            f"- `{_cite(COMPONENTS_FILENAME)}`",
+            f"- `{_cite(PLANS_FILENAME)}`",
             "",
         ]
     )
@@ -1119,7 +1131,7 @@ def test_validate_draft_seed_content_accepts_crlf_body_references() -> None:
 def test_validate_draft_seed_content_reports_each_missing_accepted_artifact_reference(
     missing_filename: str,
 ) -> None:
-    text = draft_seed_text().replace(f"- `{missing_filename}`\n", "")
+    text = draft_seed_text().replace(f"- `{_cite(missing_filename)}`\n", "")
 
     (violation,) = validate_draft_seed_content(text, plan=PLAN_ONE)
 
@@ -1171,13 +1183,15 @@ None
         PLANS_FILENAME,
     )
 
+    # The bare `## Context` mentions do not satisfy the References gate, and the
+    # body check flags each one; the frontmatter mentions are never scanned.
     assert [violation.kind for violation in violations] == [
         VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE,
-    ] * 4
+    ] * 4 + [VIOLATION_BARE_ROADMAP_FILE_CITATION] * 4
     assert [
         next(filename for filename in accepted_filenames if filename in violation.message)
         for violation in violations
-    ] == list(accepted_filenames)
+    ] == list(accepted_filenames) * 2
 
 
 def _risks_violations(text: str) -> list:
@@ -1364,9 +1378,11 @@ None
 
     violations = validate_draft_seed_content(text, plan=PLAN_ONE)
 
+    # Fenced mentions never satisfy the References gate, and the body check
+    # scans fenced code, so each bare fenced mention is flagged too.
     assert [violation.kind for violation in violations] == [
         VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE,
-    ] * 4
+    ] * 4 + [VIOLATION_BARE_ROADMAP_FILE_CITATION] * 4
 
 
 def test_validate_draft_seed_content_does_not_count_fenced_content_inside_a_real_references_section() -> (
@@ -1411,9 +1427,11 @@ cat 04-roadmap.md
 
     violations = validate_draft_seed_content(text, plan=PLAN_ONE)
 
+    # Fenced mentions never satisfy the References gate, and the body check
+    # scans fenced code, so each bare fenced mention is flagged too.
     assert [violation.kind for violation in violations] == [
         VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE,
-    ] * 4
+    ] * 4 + [VIOLATION_BARE_ROADMAP_FILE_CITATION] * 4
 
 
 def test_validate_draft_seed_content_rejects_unparseable_provenance() -> None:
@@ -5135,3 +5153,127 @@ def test_components_stage_resolves_a_decision_anchor_to_a_stack_row() -> None:
         decisions=(replace(COMPONENTS_DECISION, anchor="stack-platform"),),
     )
     assert check_decision_records(envelope) == []
+
+
+# --- Version-store citations: the body-wide bare-name check and the References form.
+
+
+def _seed_with(section: str, body: str) -> str:
+    """``draft_seed_text()`` plus one extra H2 section holding ``body``."""
+    return f"{draft_seed_text()}\n## {section}\n\n{body}\n"
+
+
+def _bare_kinds(text: str) -> list[str]:
+    return [
+        violation.kind
+        for violation in validate_draft_seed_content(text, plan=PLAN_ONE)
+        if violation.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION
+    ]
+
+
+def test_bare_member_name_in_architecture_is_rejected() -> None:
+    assert _bare_kinds(_seed_with("Architecture", "Derived from `04-roadmap.md` rows.")) == [
+        VIOLATION_BARE_ROADMAP_FILE_CITATION
+    ]
+
+
+def test_bare_member_name_in_risks_is_rejected() -> None:
+    text = draft_seed_text().replace(
+        "- A risk the accepted roadmap already states.",
+        "- A risk `02-constraints.md` already states.",
+    )
+    assert _bare_kinds(text) == [VIOLATION_BARE_ROADMAP_FILE_CITATION]
+
+
+def test_bare_member_name_inside_a_fence_is_rejected_deliberately() -> None:
+    """The body check keeps fenced code, unlike ``_draft_seed_sections``: create copies fences verbatim."""
+    text = _seed_with("Architecture", "```\ncat 03-components.md\n```")
+    assert _bare_kinds(text) == [VIOLATION_BARE_ROADMAP_FILE_CITATION]
+
+
+def test_top_level_copy_path_is_rejected_by_its_last_component() -> None:
+    text = _seed_with("Architecture", "See `docs/implementation-plans/roadmaps/storefront/01-domain.md`.")
+    assert _bare_kinds(text) == [VIOLATION_BARE_ROADMAP_FILE_CITATION]
+
+
+def test_non_accepted_version_id_is_accepted() -> None:
+    """Any well-formed id passes: a hand-edited seed cites the version its text came from."""
+    other = f"x/.roadmap-versions/{'f' * 64}/04-roadmap.md"
+    text = _seed_with("Architecture", f"Older version: `{other}`.")
+    assert validate_draft_seed_content(text, plan=PLAN_ONE) == []
+
+
+@pytest.mark.parametrize(
+    "segment",
+    ("A" * 64, "a" * 63, ""),
+    ids=("uppercase-hex", "63-hex", "missing-id"),
+)
+def test_malformed_version_id_is_rejected(segment: str) -> None:
+    path = f"x/.roadmap-versions/{segment}/04-roadmap.md".replace("//", "/")
+    assert _bare_kinds(_seed_with("Architecture", f"`{path}`")) == [
+        VIOLATION_BARE_ROADMAP_FILE_CITATION
+    ]
+
+
+def test_references_message_names_the_required_path_form() -> None:
+    text = draft_seed_text().replace(f"- `{_cite(DOMAIN_FILENAME)}`\n", f"- `{DOMAIN_FILENAME}`\n")
+    (missing,) = [
+        violation
+        for violation in validate_draft_seed_content(text, plan=PLAN_ONE)
+        if violation.kind == VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE
+    ]
+    assert f".roadmap-versions/<version-id>/{DOMAIN_FILENAME}" in missing.message
+    assert "literal filename" not in missing.message
+
+
+def test_required_paths_never_trip_the_body_check() -> None:
+    fenced = "\n".join(["```", *(_cite(name) for name in (DOMAIN_FILENAME, PLANS_FILENAME)), "```"])
+    text = _seed_with("Architecture", fenced)
+    assert find_bare_roadmap_file_citations(text) == []
+    assert validate_draft_seed_content(text, plan=PLAN_ONE) == []
+
+
+def test_non_member_numbered_filename_is_not_flagged() -> None:
+    """Only the four member filenames count; another ``0N-`` file is deliberately not flagged."""
+    assert find_bare_roadmap_file_citations(_seed_with("Architecture", "See `01-setup.md`.")) == []
+
+
+def test_name_embedded_in_a_longer_filename_is_not_an_occurrence() -> None:
+    body = "`x01-domain.md` and `01-domain.md.bak` and `04-roadmap.md-old`"
+    assert find_bare_roadmap_file_citations(_seed_with("Architecture", body)) == []
+
+
+def test_sentence_final_bare_name_is_an_occurrence() -> None:
+    """A trailing period is punctuation, not part of a longer filename, in both checks."""
+    assert len(find_bare_roadmap_file_citations(_seed_with("Architecture", "Derived from 04-roadmap.md."))) == 1
+    fenced = _seed_with("Architecture", "```\nDerived from 04-roadmap.md.\n```")
+    assert len(find_bare_roadmap_file_citations(fenced)) == 1
+    period_cited = draft_seed_text().replace(
+        f"- `{_cite(PLANS_FILENAME)}`\n", f"- {_cite(PLANS_FILENAME)}.\n"
+    )
+    assert validate_draft_seed_content(period_cited, plan=PLAN_ONE) == []
+
+
+def test_body_check_takes_only_text_and_needs_no_provenance() -> None:
+    """Step 3 calls this on a promoted copy, which carries no provenance block."""
+    violations = find_bare_roadmap_file_citations("# Promoted copy\n\nSee 01-domain.md for entities.\n")
+    assert [violation.kind for violation in violations] == [VIOLATION_BARE_ROADMAP_FILE_CITATION]
+
+
+def test_one_violation_per_offending_occurrence() -> None:
+    body = "01-domain.md, then 02-constraints.md, then 01-domain.md again"
+    assert len(find_bare_roadmap_file_citations(_seed_with("Architecture", body))) == 3
+
+
+def test_stack_section_occurrence_names_the_roadmap_revision_route() -> None:
+    text = _seed_with("Stack", "- `hosting-1` — facet: compute; value: see 02-constraints.md")
+    (violation,) = find_bare_roadmap_file_citations(text)
+    assert "## Stack" in violation.message
+    assert "reviewer feedback" in violation.message
+
+
+def test_gate_constants_equal_roadmap_versions_originals() -> None:
+    """The gate repeats these facts to avoid importing roadmap_versions; keep them in lockstep."""
+    assert roadmap_gates._VERSION_STORE_DIRNAME == ROADMAP_VERSION_NAMESPACE_DIRNAME
+    assert roadmap_gates._VERSION_ID_PATTERN == SHA256_DIGEST_RE.pattern
+

@@ -41,6 +41,11 @@ from plan_tool.roadmap_seed_state import (
 )
 
 
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
+
+
 SLUG = "demo"
 
 
@@ -78,10 +83,10 @@ def _seed_text(*component_ids: str) -> str:
         "## Expected placement\n\nNone\n\n"
         "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
         "## References\n\n"
-        f"- `{DOMAIN_FILENAME}`\n"
-        f"- `{CONSTRAINTS_FILENAME}`\n"
-        f"- `{COMPONENTS_FILENAME}`\n"
-        f"- `{PLANS_FILENAME}`\n"
+        f"- `{_cite(DOMAIN_FILENAME)}`\n"
+        f"- `{_cite(CONSTRAINTS_FILENAME)}`\n"
+        f"- `{_cite(COMPONENTS_FILENAME)}`\n"
+        f"- `{_cite(PLANS_FILENAME)}`\n"
     )
 
 
@@ -253,7 +258,7 @@ def test_classify_malformed_when_digest_matching_seed_omits_accepted_artifact_re
 ) -> None:
     plans_dir = tmp_path / "plans"
     plan = _plan()
-    text = _seed_text(*plan.component_ids).replace(f"- `{DOMAIN_FILENAME}`\n", "")
+    text = _seed_text(*plan.component_ids).replace(f"- `{_cite(DOMAIN_FILENAME)}`\n", "")
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
@@ -512,3 +517,20 @@ def test_classify_draft_seeds_accepts_a_version_parsed_plans_artifact(tmp_path: 
 
     assert not (_root(plans_dir) / PLANS_FILENAME).exists()
     assert classification[plan.id].state == DRAFT_SEED_STATE_CURRENT
+
+
+def test_classify_malformed_for_a_legacy_bare_name_seed(tmp_path: Path) -> None:
+    """A seed written before version-store citations, digest still current, is malformed."""
+    plans_dir = tmp_path / "plans"
+    plan = _plan()
+    text = _seed_text(*plan.component_ids)
+    for filename in (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME):
+        text = text.replace(_cite(filename), filename)
+    _write_seed(plans_dir, plan, text)
+    _write_state(plans_dir, {plan.id: _entry(plan, text)})
+
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+
+    assert classification[plan.id].state == DRAFT_SEED_STATE_MALFORMED
+    assert ".roadmap-versions/<version-id>/" in classification[plan.id].detail
+

@@ -70,6 +70,11 @@ from plan_tool.roadmap_seed_state import (
 )
 
 
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
+
+
 def _canonical_with_source(source: str) -> str:
     """A canonical-shaped text whose frontmatter carries a ``source`` pointer."""
     return f"---\nsource: {source}\n---\n# Canonical body\n"
@@ -5700,10 +5705,10 @@ def _write_tracked_draft(
         "## Expected placement\n\nNone\n\n"
         "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
         "## References\n\n"
-        f"- `{DOMAIN_FILENAME}`\n"
-        f"- `{CONSTRAINTS_FILENAME}`\n"
-        f"- `{COMPONENTS_FILENAME}`\n"
-        f"- `{PLANS_FILENAME}`\n"
+        f"- `{_cite(DOMAIN_FILENAME)}`\n"
+        f"- `{_cite(CONSTRAINTS_FILENAME)}`\n"
+        f"- `{_cite(COMPONENTS_FILENAME)}`\n"
+        f"- `{_cite(PLANS_FILENAME)}`\n"
     )
     source = root / plan.draft_seed_path
     source.parent.mkdir()

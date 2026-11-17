@@ -52,6 +52,7 @@ from plan_tool.scope_fence import (
     _is_placeholder_section,
     _strip_frontmatter,
     extract_h2_sections,
+    h2_section_spans,
     missing_required_guardrail_headings,
 )
 
@@ -170,6 +171,7 @@ VIOLATION_DRAFT_SEED_PROVENANCE = "draft-seed-provenance"
 VIOLATION_DRAFT_SEED_UNMATCHED_FENCE = "draft-seed-unmatched-fence"
 VIOLATION_UNDEFINED_SEED_COMPONENT_REFERENCE = "undefined-seed-component-reference"
 VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE = "missing-draft-seed-artifact-reference"
+VIOLATION_BARE_ROADMAP_FILE_CITATION = "bare-roadmap-file-citation"
 VIOLATION_MISSING_DRAFT_SEED_RISKS = "missing-draft-seed-risks"
 VIOLATION_BAD_DRAFT_SEED_GUARDRAIL_HEADING = "bad-draft-seed-guardrail-heading"
 VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME = "duplicate-draft-seed-basename"
@@ -2652,6 +2654,82 @@ def check_component_plan_coverage(envelope: ArtifactEnvelope) -> list[Violation]
     return violations
 
 
+# Local copies of roadmap_versions.ROADMAP_VERSION_NAMESPACE_DIRNAME and
+# SHA256_DIGEST_RE.pattern (this module takes no import of it); a test pins them equal.
+_VERSION_STORE_DIRNAME = ".roadmap-versions"
+_VERSION_ID_PATTERN = "[0-9a-f]{64}"
+_VERSION_STORE_PATH_FORM = f"{_VERSION_STORE_DIRNAME}/<version-id>/"
+_DRAFT_SEED_MEMBER_FILENAMES = (
+    DOMAIN_FILENAME,
+    CONSTRAINTS_FILENAME,
+    COMPONENTS_FILENAME,
+    PLANS_FILENAME,
+)
+# Occurrence rule shared by the References gate and the body check: not embedded in a
+# longer filename, and a sentence-final period does not hide the name.
+_MEMBER_FILENAME_RE = re.compile(
+    r"(?<![A-Za-z0-9_.-])("
+    + "|".join(re.escape(name) for name in _DRAFT_SEED_MEMBER_FILENAMES)
+    + r")(?![A-Za-z0-9_-]|\.[A-Za-z0-9])"
+)
+_VERSION_STORE_PREFIX_RE = re.compile(
+    re.escape(_VERSION_STORE_DIRNAME + "/") + _VERSION_ID_PATTERN + "/$"
+)
+
+
+@dataclass(frozen=True)
+class _MemberFilenameOccurrence:
+    filename: str
+    start: int
+    in_version_store: bool
+
+
+def _member_filename_occurrences(text: str) -> list[_MemberFilenameOccurrence]:
+    """Every roadmap member filename in ``text``, flagged when a version-store segment precedes it."""
+    return [
+        _MemberFilenameOccurrence(
+            filename=match.group(1),
+            start=match.start(1),
+            in_version_store=_VERSION_STORE_PREFIX_RE.search(text[: match.start(1)]) is not None,
+        )
+        for match in _MEMBER_FILENAME_RE.finditer(text)
+    ]
+
+
+def find_bare_roadmap_file_citations(text: str) -> list[Violation]:
+    """One violation per roadmap member filename in the seed body lacking its version-store path.
+
+    A plain presence check over the frontmatter-stripped text with fenced code
+    kept (unlike ``_draft_seed_sections``): it never judges citation versus mention.
+    Takes only text, so a promoted copy with no provenance block can use it.
+    """
+    body = _strip_frontmatter(text)
+    stack_spans = h2_section_spans(body, "stack")
+    violations: list[Violation] = []
+    for occurrence in _member_filename_occurrences(body):
+        if occurrence.in_version_store:
+            continue
+        message = (
+            f"the seed names '{occurrence.filename}' without its version-store path — "
+            f"write '{_VERSION_STORE_PATH_FORM}{occurrence.filename}' instead"
+        )
+        if any(start <= occurrence.start < end for start, end in stack_spans):
+            message += (
+                " (the occurrence is in the tool-written '## Stack' section, copied from an "
+                "accepted roadmap row value: revise that row through reviewer feedback so a new "
+                "accepted version is published, then regenerate the seed)"
+            )
+        violations.append(
+            Violation(
+                kind=VIOLATION_BARE_ROADMAP_FILE_CITATION,
+                artifact=PLANS_FILENAME,
+                row_id=None,
+                message=message,
+            )
+        )
+    return violations
+
+
 def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
     """Validate one draft seed's provenance and body references for its plan row."""
     basename = Path(plan.draft_seed_path).name
@@ -2712,16 +2790,13 @@ def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
     sections = _draft_seed_sections(text)
     references = sections.get("references", "")
 
-    for filename in (
-        DOMAIN_FILENAME,
-        CONSTRAINTS_FILENAME,
-        COMPONENTS_FILENAME,
-        PLANS_FILENAME,
-    ):
-        if re.search(
-            rf"(?<![A-Za-z0-9_.-]){re.escape(filename)}(?![A-Za-z0-9_.-])",
-            references,
-        ):
+    cited_in_references = {
+        occurrence.filename
+        for occurrence in _member_filename_occurrences(references)
+        if occurrence.in_version_store
+    }
+    for filename in _DRAFT_SEED_MEMBER_FILENAMES:
+        if filename in cited_in_references:
             continue
         violations.append(
             Violation(
@@ -2731,8 +2806,21 @@ def validate_draft_seed_content(text: str, *, plan: PlanRow) -> list[Violation]:
                 message=(
                     f"plan '{plan.id}' in {PLANS_FILENAME} draft seed "
                     f"'{basename}' is missing accepted artifact reference "
-                    f"'{filename}' in its body 'References' section — add "
-                    f"the literal filename to a '## References' entry"
+                    f"'{filename}' in its body 'References' section — add a "
+                    f"'## References' entry citing it by its version-store path "
+                    f"'{_VERSION_STORE_PATH_FORM}{filename}'"
+                ),
+            )
+        )
+    for body_violation in find_bare_roadmap_file_citations(text):
+        violations.append(
+            Violation(
+                kind=body_violation.kind,
+                artifact=PLANS_FILENAME,
+                row_id=plan.id,
+                message=(
+                    f"plan '{plan.id}' in {PLANS_FILENAME} draft seed "
+                    f"'{basename}': {body_violation.message}"
                 ),
             )
         )

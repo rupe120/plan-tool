@@ -190,6 +190,11 @@ from plan_tool.roadmap_revision_publish import (
     RoadmapPublicationRecoveryError,
 )
 
+
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
+
 MODULE = "plan_tool.cli.roadmap_cmd"
 # ``_cmd_roadmap_materialize`` no longer calls ``materialize_and_diff_one_plan``
 # or constructs ``_MaterializationObserver`` directly — both now live behind
@@ -5100,10 +5105,10 @@ None
 
 ## References
 
-- `{DOMAIN_FILENAME}`
-- `{CONSTRAINTS_FILENAME}`
-- `{COMPONENTS_FILENAME}`
-- `{PLANS_FILENAME}`
+- `{_cite(DOMAIN_FILENAME)}`
+- `{_cite(CONSTRAINTS_FILENAME)}`
+- `{_cite(COMPONENTS_FILENAME)}`
+- `{_cite(PLANS_FILENAME)}`
 """
 
 

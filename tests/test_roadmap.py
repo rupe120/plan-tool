@@ -185,6 +185,8 @@ from plan_tool.roadmap_source_identity import (
     render_pending_generation,
 )
 from plan_tool.roadmap_gates import (
+    VIOLATION_BARE_ROADMAP_FILE_CITATION,
+    find_bare_roadmap_file_citations,
     COMPONENTS_GATES,
     CONSTRAINTS_GATES,
     DOMAIN_GATES,
@@ -206,6 +208,11 @@ from plan_tool.roadmap_gates import (
     run_plans_gates,
 )
 from plan_tool.run_log import RunLogLineTooLarge, RunLogWriter, read_run_events
+
+
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
 
 
 SLUG = "storefront"
@@ -5833,10 +5840,10 @@ def _seed_text(
             "",
             "## References",
             "",
-            f"- `{DOMAIN_FILENAME}`",
-            f"- `{CONSTRAINTS_FILENAME}`",
-            f"- `{COMPONENTS_FILENAME}`",
-            f"- `{PLANS_FILENAME}`",
+            f"- `{_cite(DOMAIN_FILENAME)}`",
+            f"- `{_cite(CONSTRAINTS_FILENAME)}`",
+            f"- `{_cite(COMPONENTS_FILENAME)}`",
+            f"- `{_cite(PLANS_FILENAME)}`",
             "",
         ]
     )
@@ -6475,7 +6482,7 @@ class TestSeedPromptCitesVersionStorePaths:
         paths = _version_store_paths(env)
         cited = _seed_text()
         for filename, path in paths.items():
-            cited = cited.replace(f"`{filename}`", f"`{path}`")
+            cited = cited.replace(f"`{_cite(filename)}`", f"`{path}`")
 
         result = _materialize(env, _StubInvoker(cited))
 
@@ -6884,7 +6891,7 @@ class TestMaterializePlanSeed:
         self, env: _Env
     ) -> None:
         _prepare_seed_materialization(env)
-        invalid = _seed_text().replace(f"- `{DOMAIN_FILENAME}`\n", "")
+        invalid = _seed_text().replace(f"- `{_cite(DOMAIN_FILENAME)}`\n", "")
         message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[0].message
         target = resolve_draft_seed_path(
             env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path
@@ -7052,8 +7059,8 @@ class TestMaterializePlanSeed:
         # The seed fixture already owns Risks and References.
         candidate = candidate.replace("## Risks\n\nRisks body.\n", "")
         candidate = candidate.replace(
-            f"- `{DOMAIN_FILENAME}`",
-            f"- `src/checkout.py#proof` — CHECKOUT-CONTRACT\n- `{DOMAIN_FILENAME}`",
+            f"- `{_cite(DOMAIN_FILENAME)}`",
+            f"- `src/checkout.py#proof` — CHECKOUT-CONTRACT\n- `{_cite(DOMAIN_FILENAME)}`",
         )
         _materialize(env, _StubInvoker(candidate))
         roadmap.materialize_plan_seed(
@@ -8888,7 +8895,7 @@ class TestAcceptRoadmapSeed:
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
         invalid = _seed_text(components=(), cross_cutting=True).replace(
-            f"- `{PLANS_FILENAME}`\n", ""
+            f"- `{_cite(PLANS_FILENAME)}`\n", ""
         )
         source.write_text(invalid, encoding="utf-8")
         sidecar = seed_state_path(env.roadmap_root)
@@ -9616,7 +9623,7 @@ class TestApplyRoadmapSeeds:
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
         invalid = _seed_text(components=(), cross_cutting=True).replace(
-            f"- `{DOMAIN_FILENAME}`\n", ""
+            f"- `{_cite(DOMAIN_FILENAME)}`\n", ""
         )
         original_classify = roadmap.classify_draft_seeds
         classify_calls = 0
@@ -11202,3 +11209,136 @@ def test_accept_legacy_publication_keeps_root_and_nested_file_untouched(tmp_path
     assert "HAND-EDITED-AUTH" in old.read_text()
     assert nested.read_text() == "retained bytes"
     assert "publication_layout" not in load_seed_state(path)["seeds"][_PLAN_AUTH.id]
+
+
+_MEMBER_FILENAMES = (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME)
+
+
+def _bare(text: str) -> str:
+    """``text`` with each version-store citation turned back into a legacy bare filename."""
+    for filename in _MEMBER_FILENAMES:
+        text = text.replace(_cite(filename), filename)
+    return text
+
+
+class TestLegacyBareNameSeedRoutes:
+    """A seed written before version-store citations is refused until a route clears it."""
+
+    @staticmethod
+    def _make_auth_draft_legacy(env: _ApplyEnv) -> tuple[Path, str]:
+        source = resolve_draft_seed_path(env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path)
+        legacy = _bare(source.read_text(encoding="utf-8"))
+        assert DOMAIN_FILENAME in legacy and _cite(DOMAIN_FILENAME) not in legacy
+        source.write_text(legacy, encoding="utf-8")
+        return source, legacy
+
+    def test_apply_refuses_a_legacy_bare_name_seed(self, tmp_path: Path) -> None:
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        _source, legacy = self._make_auth_draft_legacy(env)
+        _set_seed_state_value(env, _PLAN_AUTH.id, "digest", digest_text(legacy))
+
+        result = apply_roadmap_seeds(
+            env.slug, repo_root=env.repo_root, plans_dir=env.plans_dir, allow_apply=True, yes=True
+        )
+
+        assert result.outcome == APPLY_OUTCOME_REFUSED
+        assert result.refused_drafts[0].state == DRAFT_SEED_STATE_MALFORMED
+        assert not env.plan_seeds_dir.exists()
+
+    def test_accept_seed_refuses_a_hand_edited_seed_with_a_bare_name(self, tmp_path: Path) -> None:
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        source, legacy = self._make_auth_draft_legacy(env)
+
+        result = accept_roadmap_seed(
+            env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+
+        assert result.outcome == ACCEPT_OUTCOME_REFUSED
+        assert any(v.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION for v in result.violations)
+        assert source.read_text(encoding="utf-8") == legacy
+
+    def test_accept_seed_accepts_a_seed_whose_names_were_replaced(self, tmp_path: Path) -> None:
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        source, legacy = self._make_auth_draft_legacy(env)
+        repaired = legacy
+        for filename in _MEMBER_FILENAMES:
+            repaired = re.sub(
+                rf"(?<![A-Za-z0-9_./-]){re.escape(filename)}", _cite(filename), repaired
+            )
+        repaired += "\nHAND-EDIT-KEPT\n"
+        source.write_text(repaired, encoding="utf-8")
+
+        result = accept_roadmap_seed(
+            env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+
+        assert result.outcome == ACCEPT_OUTCOME_ACCEPTED
+        assert "HAND-EDIT-KEPT" in source.read_text(encoding="utf-8")
+
+    def test_roadmap_without_an_accepted_head_keeps_todays_behavior(self, tmp_path: Path) -> None:
+        """No head refuses before any gate runs, bare-name seed or not."""
+        env = _apply_env(tmp_path)
+        env.write_draft("plan-seed-drafts/auth.md", _bare(_seed_text()), plan_id=_PLAN_AUTH.id)
+        env.roadmap_root.joinpath(PLANS_FILENAME).write_text(_plans_artifact_text(), encoding="utf-8")
+
+        with pytest.raises(NoPublishedRoadmapVersionError):
+            apply_roadmap_seeds(
+                env.slug, repo_root=env.repo_root, plans_dir=env.plans_dir, allow_apply=True, yes=True
+            )
+        assert not env.plan_seeds_dir.exists()
+
+
+class TestLegacyBareNameSeedRegeneration:
+    def test_refresh_seeds_regenerates_a_legacy_seed_under_the_new_contract(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        refresh_roadmap_seeds(
+            SLUG,
+            repo_root=env.repo_root,
+            plans_dir=env.plans_dir,
+            invoker=_StubInvoker(_seed_text(), _seed_text(components=(), cross_cutting=True)),
+        )
+        order_path = resolve_draft_seed_path(env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path)
+        order_path.write_text(_bare(order_path.read_text(encoding="utf-8")), encoding="utf-8")
+
+        result = refresh_roadmap_seeds(
+            SLUG,
+            repo_root=env.repo_root,
+            plans_dir=env.plans_dir,
+            invoker=_StubInvoker(
+                _seed_text(marker="REGENERATED"), _seed_text(components=(), cross_cutting=True)
+            ),
+        )
+
+        assert result.outcome == SEED_REFRESH_OUTCOME_APPLIED
+        regenerated = order_path.read_text(encoding="utf-8")
+        assert "REGENERATED" in regenerated
+        assert find_bare_roadmap_file_citations(regenerated) == []
+        assert (env.plans_file.parent / "seed-refresh-report.md").is_file()
+
+
+class TestStackSectionBareName:
+    def test_stack_row_value_naming_a_member_file_fails_closed(
+        self, env: _Env, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Tool-written text the retry cannot change: the bare name fails materialize, naming the route."""
+        _prepare_seed_materialization(env)
+        real_render = roadmap._render_stack_section
+
+        def render_with_row_value(**kwargs: Any) -> str:
+            return real_render(**kwargs) + "\n- `hosting-x` — facet: compute; value: per 02-constraints.md\n"
+
+        monkeypatch.setattr(roadmap, "_render_stack_section", render_with_row_value)
+
+        result = _materialize(env, _StubInvoker(_seed_text(), _seed_text()))
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
+        messages = [v.message for v in result.violations if v.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION]
+        assert messages and all("## Stack" in m and "reviewer feedback" in m for m in messages)
+
+    def test_default_stack_template_never_trips_the_bare_name_check(self) -> None:
+        for stack in (None, (), (StackRow(id="stack-p", concern="platform", open=True),)):
+            assert find_bare_roadmap_file_citations(f"# Seed\n\n{_render_stack_only(stack)}") == []
+
