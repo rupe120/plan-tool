@@ -64,8 +64,12 @@ steps:
     versions 1–4 as supported, worded as "audit-revision version" so it is not read
     as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions
     of roadmap plans that have siblings change once on upgrade, deliberately. Plans
-    with no siblings keep their fingerprint byte-identical, and their saved reports
-    stay `current` because `plan_tool/review_persistence.py:project_saved_completeness_result` compares `normalize_audit_revision(saved)`, which upgrades an older record to the current shape and fills absent digests with `None`, against the current revision, rather than the raw saved dict, so the version number alone never makes a report stale (owner decision 2026-11-17). No destructive operations are touched.
+    with no siblings keep their fingerprint byte-identical. This step also changes
+    `plan_tool/review_persistence.py:project_saved_completeness_result`, which today
+    compares the raw saved dict, to compare `normalize_audit_revision(saved)` (which
+    upgrades an older record to the current shape and fills absent digests with
+    `None`) against the current revision, so the version number alone never makes a
+    report stale and no-sibling reports stay `current` (owner decision 2026-11-17). No destructive operations are touched.
     Unit tests in `tests/test_review.py` cover the helper with a two-plan roadmap
     fixture (the sibling path is present, own `creates:` are excluded), a no-identity
     plan with other registered plans that declare `creates:` (empty), a plan from
@@ -246,8 +250,9 @@ See the `steps:` block in the frontmatter.
   once on upgrade, so their saved sampler checkpoints, shape-advisory
   fingerprints and report revisions read as stale once. That is intended
   (owner-confirmed 2026-11-17; ship between Loom batches). Plans without
-  siblings are unaffected: the freshness view compares normalized revisions, so
-  the v3 to v4 version change alone does not make their reports stale.
+  siblings are unaffected once step 1 changes the freshness view to compare
+  normalized revisions (today it compares the raw dict), so the v3 to v4 version
+  change alone does not make their reports stale.
 - The model may still raise the finding despite the block. That is not
   tested by the suite; the plan records it as a limit rather than adding a
   finding filter.
@@ -283,6 +288,9 @@ See the `steps:` block in the frontmatter.
 - The block's set equals the deterministic check's eligible set minus the
   plan's own paths, compared after `normalize_declared_path`, for a plan with a
   roadmap identity, and is empty otherwise.
+- `project_saved_completeness_result` compares the normalized saved revision,
+  so a saved v3 report of a plan with no siblings reads `current` after upgrade
+  and one with siblings reads `stale`.
 - The sibling set is part of the audit input fingerprint and of the public
   `audit_revision` (version 4, `sibling_paths_digest`), so a sibling edit makes a
   prior result stale for reuse and for a saved report's freshness.

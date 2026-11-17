@@ -100,7 +100,7 @@
   - Never rewrite an archived sidecar. Reads only.
 - Update the docstring that says "Accepts v1 through v3".
 - Behavior to expect and keep: on upgrade, a saved v3 record with siblings reads as stale once. This was owner-confirmed 2026-11-17. Ship between Loom batches.
-- **Freshness compares normalized revisions.** `plan_tool/review_persistence.py:project_saved_completeness_result` compares `normalize_audit_revision(saved)`, which upgrades an older record to the current shape and fills absent digests with `None`, against the current revision, rather than the raw saved dict, so the version number alone never makes a report stale (owner decision 2026-11-17). Without this, the plain dict comparison makes every saved report stale on the version change alone, which the owner did not accept.
+- **Change the freshness comparison (new behavior, not existing).** Today `project_saved_completeness_result` returns `"current" if current.revision == audit_revision`, comparing the raw saved dict. `plan_tool/review_persistence.py:project_saved_completeness_result` compares `normalize_audit_revision(saved)`, which upgrades an older record to the current shape and fills absent digests with `None`, against the current revision, rather than the raw saved dict, so the version number alone never makes a report stale (owner decision 2026-11-17). Without this, the plain dict comparison makes every saved report stale on the version change alone, which the owner did not accept.
 
 **`DATA_CONTRACT.md`**
 - The paragraph that names `AuditInputSnapshot` as the exact-input source (near the arm-clustering `source_plan_fingerprint` text) names the new captured input.
