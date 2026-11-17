@@ -11339,6 +11339,8 @@ class TestStackSectionBareName:
         assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
         messages = [v.message for v in result.violations if v.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION]
         assert messages and all("## Stack" in m and "reviewer feedback" in m for m in messages)
+        assert all(v.row_id == _PLAN_ORDER.id for v in result.violations)
+        assert all(m.startswith(f"plan '{_PLAN_ORDER.id}' draft seed") for m in messages)
 
     def test_default_stack_template_never_trips_the_bare_name_check(self) -> None:
         for stack in (None, (), (StackRow(id="stack-p", concern="platform", open=True),)):

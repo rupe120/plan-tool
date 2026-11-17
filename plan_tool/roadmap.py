@@ -3627,7 +3627,16 @@ def _materialize_plan_seed(
 
     # A bare name in tool-written Stack text comes from an accepted row value no
     # retry can change, so fail closed before spending a model call.
-    stack_violations = tuple(find_bare_roadmap_file_citations(stack_section))
+    basename = Path(plan.draft_seed_path).name
+    stack_violations = tuple(
+        Violation(
+            kind=violation.kind,
+            artifact=violation.artifact,
+            row_id=plan.id,
+            message=f"plan '{plan.id}' draft seed '{basename}': {violation.message}",
+        )
+        for violation in find_bare_roadmap_file_citations(stack_section)
+    )
     if stack_violations:
         return RoadmapSeedMaterializeResult(
             outcome=SEED_MATERIALIZE_OUTCOME_EXHAUSTED,

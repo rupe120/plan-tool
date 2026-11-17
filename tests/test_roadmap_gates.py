@@ -5289,3 +5289,12 @@ def test_bare_citation_message_names_the_repo_relative_form() -> None:
     """A repair from the message must resolve from the repo root, not only inside the roadmap folder."""
     (violation,) = find_bare_roadmap_file_citations(_seed_with("Architecture", "See 01-domain.md."))
     assert "<repo-relative roadmap folder>/.roadmap-versions/<version-id>/01-domain.md" in violation.message
+
+
+def test_a_directory_merely_ending_in_roadmap_versions_is_not_the_version_store() -> None:
+    """The version segment must be a whole path segment, not the tail of another directory name."""
+    for prefix in ("old.roadmap-versions", "foo.roadmap-versions", "x-.roadmap-versions"):
+        body = f"`docs/{prefix}/{'a' * 64}/04-roadmap.md`"
+        assert len(find_bare_roadmap_file_citations(_seed_with("Architecture", body))) == 1, prefix
+    good = f"`docs/x/.roadmap-versions/{'a' * 64}/04-roadmap.md` and `.roadmap-versions/{'a' * 64}/01-domain.md`"
+    assert find_bare_roadmap_file_citations(_seed_with("Architecture", good)) == []

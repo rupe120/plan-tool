@@ -2679,6 +2679,14 @@ _VERSION_STORE_PREFIX_RE = re.compile(
 _VERSION_STORE_PREFIX_LEN = len(_VERSION_STORE_DIRNAME) + 1 + 64 + 1
 
 
+def _cited_in_version_store(text: str, name_start: int) -> bool:
+    """True when ``.roadmap-versions/<id>/`` directly precedes the name as a whole path segment."""
+    segment_start = name_start - _VERSION_STORE_PREFIX_LEN
+    if segment_start < 0 or not _VERSION_STORE_PREFIX_RE.fullmatch(text, segment_start, name_start):
+        return False
+    return segment_start == 0 or not re.match(r"[A-Za-z0-9_.-]", text[segment_start - 1])
+
+
 @dataclass(frozen=True)
 class _MemberFilenameOccurrence:
     filename: str
@@ -2692,10 +2700,7 @@ def _member_filename_occurrences(text: str) -> list[_MemberFilenameOccurrence]:
         _MemberFilenameOccurrence(
             filename=match.group(1),
             start=match.start(1),
-            in_version_store=_VERSION_STORE_PREFIX_RE.fullmatch(
-                text, max(0, match.start(1) - _VERSION_STORE_PREFIX_LEN), match.start(1)
-            )
-            is not None,
+            in_version_store=_cited_in_version_store(text, match.start(1)),
         )
         for match in _MEMBER_FILENAME_RE.finditer(text)
     ]
