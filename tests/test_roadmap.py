@@ -37,7 +37,7 @@ from plan_tool.scope_fence import (
 from plan_tool import roadmap_impact_snapshot
 from plan_tool.create import validate_from_existing_seed
 from plan_tool.renderer import prompts_dir
-from roadmap_accepted_fixtures import advance_accepted_head, publish_accepted_root
+from roadmap_accepted_fixtures import BRIEF_BYTES, advance_accepted_head, publish_accepted_root
 from subprocess_doubles import _FakeProc
 from plan_tool.roadmap import (
     ACCEPT_OUTCOME_ACCEPTED,
@@ -167,6 +167,7 @@ from plan_tool.roadmap_artifacts import (
 )
 from plan_tool.roadmap_versions import (
     ACCEPTED_HEAD_FILENAME,
+    create_root_version,
     accepted_head_path,
     is_roadmap_enrolled,
     load_accepted_version,
@@ -210,9 +211,44 @@ from plan_tool.roadmap_gates import (
 from plan_tool.run_log import RunLogLineTooLarge, RunLogWriter, read_run_events
 
 
+@functools.cache
+def _default_version_id() -> str:
+    """The version id ``_Env.publish_accepted()`` stores for the default fixture artifacts."""
+    texts = (_domain_text(), _constraints_text(), _components_text(), _plans_artifact_text())
+    return create_root_version(
+        roadmap_slug=SLUG,
+        brief_digest=hashlib.sha256(BRIEF_BYTES).hexdigest(),
+        artifact_digests=tuple(hashlib.sha256(t.encode("utf-8")).hexdigest() for t in texts),
+    ).version_id
+
+
+_CITATION_DIR_RE = re.compile(r"[\w./-]*\.roadmap-versions/[0-9a-f]{64}/")
+
+
+def _retarget_citations(text: str, version_dir: str) -> str:
+    """Point ``_cite`` citations at ``version_dir``, the env's real accepted version folder."""
+    default_dir = re.compile(
+        rf"docs/implementation-plans/roadmaps/{SLUG}/\.roadmap-versions/[0-9a-f]{{64}}/"
+    )
+    return default_dir.sub(lambda _m: version_dir, text)
+
+
+def _env_retarget(env: Any, text: str) -> str:
+    """``text`` with ``_cite`` citations pointed at ``env``'s accepted version, when one exists."""
+    slug = getattr(env, "slug", SLUG)
+    version = load_accepted_version(plans_dir=env.plans_dir, slug=slug)
+    if version is None:
+        return text
+    version_dir = version_directory_path(env.plans_dir, slug, version.record.version_id)
+    return _retarget_citations(text, version_dir.relative_to(env.repo_root).as_posix() + "/")
+
+
 def _cite(filename: str) -> str:
-    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
-    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
+    """The repo-relative path of ``filename`` in the default accepted version, which resolves."""
+    return (
+        f"docs/implementation-plans/roadmaps/{SLUG}/.roadmap-versions/"
+        f"{_default_version_id()}/{filename}"
+    )
 
 
 SLUG = "storefront"
@@ -475,7 +511,12 @@ class _StubInvoker:
     def __call__(self, prompt: str) -> tuple[int, str]:
         self.prompts.append(prompt)
         index = min(len(self.prompts) - 1, len(self._replies) - 1)
-        return self._replies[index]
+        rc, reply = self._replies[index]
+        # A seed reply cites the version the prompt names, as a conforming writer does.
+        cited = _CITATION_DIR_RE.search(prompt)
+        if cited is not None and isinstance(reply, str):
+            reply = _retarget_citations(reply, cited.group(0))
+        return rc, reply
 
     @property
     def calls(self) -> int:
@@ -5917,7 +5958,7 @@ def _prepare_seed_materialization(env: _Env, *, plans: Optional[str] = None) -> 
     _ensure_plans_prompt(env)
     env.publish_accepted(plans=plans)
     (env.prompts / "roadmap-seed.md").write_text(
-        "Seed ${slug} / ${plan_id}\n${domain_artifact}\n"
+        "Seed ${slug} / ${plan_id}\n${plans_path}\n${domain_artifact}\n"
         "${constraints_artifact}\n${components_artifact}\n${plans_artifact}\n",
         encoding="utf-8",
     )
@@ -5944,7 +5985,7 @@ def _stacked(
         stack=constraints.stack,
         plan=plan,
     )
-    return roadmap._replace_stack_section(text, section)
+    return roadmap._replace_stack_section(_env_retarget(env, text), section)
 
 
 def _written_draft(env: _Env, plan: PlanRow = _PLAN_ORDER) -> str:
@@ -6321,7 +6362,7 @@ class TestMaterializedStackSection:
         _materialize(env, _StubInvoker(_seed_text()))
 
         assert roadmap_gates.validate_draft_seed_content(
-            _written_draft(env), plan=_PLAN_ORDER
+            _written_draft(env), plan=_PLAN_ORDER, citation_roots=None
         ) == []
 
 
@@ -6878,7 +6919,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         _prepare_seed_materialization(env)
         invalid = _seed_text(components=("component-missing",))
-        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER, citation_roots=None)[
             0
         ].message
         invoker = _StubInvoker(invalid, _seed_text())
@@ -6892,7 +6933,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         _prepare_seed_materialization(env)
         invalid = _seed_text().replace(f"- `{_cite(DOMAIN_FILENAME)}`\n", "")
-        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[0].message
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER, citation_roots=None)[0].message
         target = resolve_draft_seed_path(
             env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path
         )
@@ -6922,7 +6963,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         _prepare_seed_materialization(env)
         invalid = self._without_guardrail("Audit guardrails")
-        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER, citation_roots=None)[
             0
         ].message
         invoker = _StubInvoker(invalid, _seed_text())
@@ -8220,7 +8261,7 @@ class TestMaterializeAndDiffOnePlan:
             env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path
         )
         target.parent.mkdir(parents=True)
-        target.write_text(_seed_text(marker="OLD"), encoding="utf-8")
+        target.write_text(_env_retarget(env, _seed_text(marker="OLD")), encoding="utf-8")
         refreshed = _seed_text(marker="REFRESHED")
 
         updated, failure = roadmap.materialize_and_diff_one_plan(
@@ -8249,7 +8290,7 @@ class TestMaterializeAndDiffOnePlan:
         )
         archive = target.parent / "archive" / "order-core.replaced.md"
         archive.parent.mkdir(parents=True)
-        archive.write_text(_seed_text(marker="ARCHIVED"), encoding="utf-8")
+        archive.write_text(_env_retarget(env, _seed_text(marker="ARCHIVED")), encoding="utf-8")
 
         changes, failure = roadmap.materialize_and_diff_one_plan(
             SLUG,
@@ -8439,18 +8480,16 @@ class _ApplyEnv:
         return self.repo_root / "docs" / "implementation-plans" / "plan-seeds"
 
     def write_plans(self, artifact: PlansArtifact) -> None:
-        """Publish ``artifact`` as the accepted head's plans member."""
-        publish_accepted_root(
-            self.plans_dir,
-            self.slug,
-            (
-                _domain_text(),
-                _constraints_text(),
-                _components_text(),
-                render_plans_artifact(artifact),
-            ),
-            writer_token=self.writer_token,
-        )
+        """Publish ``artifact`` as the accepted head's plans member.
+
+        A later call advances the head, keeping earlier versions stored as the real
+        store does, so a draft citing an earlier version still resolves.
+        """
+        texts = (_domain_text(), _constraints_text(), _components_text(), render_plans_artifact(artifact))
+        if load_accepted_version(plans_dir=self.plans_dir, slug=self.slug) is None:
+            publish_accepted_root(self.plans_dir, self.slug, texts, writer_token=self.writer_token)
+        else:
+            advance_accepted_head(self.plans_dir, self.slug, texts)
 
     def write_draft(
         self,
@@ -8463,6 +8502,7 @@ class _ApplyEnv:
     ) -> Path:
         path = resolve_draft_seed_path(self.plans_dir, self.slug, rel_path)
         path.parent.mkdir(parents=True, exist_ok=True)
+        text = _env_retarget(self, text)
         path.write_text(text, encoding="utf-8")
         if plan_id is not None:
             state_path = seed_state_path(self.roadmap_root)
@@ -8502,7 +8542,7 @@ class TestAcceptRoadmapSeed:
         source = resolve_draft_seed_path(
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
-        text = _seed_text(components=(), cross_cutting=True, marker="HAND-EDITED-AUTH")
+        text = _env_retarget(env, _seed_text(components=(), cross_cutting=True, marker="HAND-EDITED-AUTH"))
         source.write_text(text, encoding="utf-8")
         return source, text
 
@@ -8817,6 +8857,7 @@ class TestAcceptRoadmapSeed:
         for title in REQUIRED_GUARDRAIL_HEADINGS:
             old_auth = old_auth.replace(f"## {title}\n\nNone\n\n", "")
         assert "guardrails" not in old_auth
+        old_auth = _env_retarget(env, old_auth)
         source = env.write_draft(
             _PLAN_AUTH.draft_seed_path, old_auth, plan_id=_PLAN_AUTH.id
         )
@@ -8826,7 +8867,7 @@ class TestAcceptRoadmapSeed:
                 plans_dir=env.plans_dir, slug=env.slug
             )
             return roadmap.classify_draft_seeds(
-                artifact, plans_dir=env.plans_dir, slug=env.slug
+                artifact, plans_dir=env.plans_dir, slug=env.slug, repo_root=None
             )[_PLAN_AUTH.id]
 
         classification = classify()
@@ -8868,6 +8909,7 @@ class TestAcceptRoadmapSeed:
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
         invalid = _seed_text(components=("component-missing",))
+        invalid = _env_retarget(env, invalid)
         source.write_text(invalid, encoding="utf-8")
         sidecar = seed_state_path(env.roadmap_root)
         before = sidecar.read_bytes()
@@ -8897,6 +8939,7 @@ class TestAcceptRoadmapSeed:
         invalid = _seed_text(components=(), cross_cutting=True).replace(
             f"- `{_cite(PLANS_FILENAME)}`\n", ""
         )
+        invalid = _env_retarget(env, invalid)
         source.write_text(invalid, encoding="utf-8")
         sidecar = seed_state_path(env.roadmap_root)
         before = sidecar.read_bytes()
@@ -10666,6 +10709,7 @@ class TestAcceptedVersionSeedRoutes:
         )
         edited = _seed_text(components=(), cross_cutting=True, marker="HEAD-EDITED-AUTH")
         source = env.write_draft("plan-seed-drafts/auth-v2.md", edited)
+        edited = source.read_text(encoding="utf-8")
         state_path = seed_state_path(env.roadmap_root)
         state = load_seed_state(state_path)
         state["seeds"][_PLAN_AUTH.id]["published"] = True
@@ -11216,9 +11260,7 @@ _MEMBER_FILENAMES = (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME,
 
 def _bare(text: str) -> str:
     """``text`` with each version-store citation turned back into a legacy bare filename."""
-    for filename in _MEMBER_FILENAMES:
-        text = text.replace(_cite(filename), filename)
-    return text
+    return _CITATION_DIR_RE.sub("", text)
 
 
 class TestLegacyBareNameSeedRoutes:
@@ -11269,7 +11311,7 @@ class TestLegacyBareNameSeedRoutes:
                 rf"(?<![A-Za-z0-9_./-]){re.escape(filename)}", _cite(filename), repaired
             )
         repaired += "\nHAND-EDIT-KEPT\n"
-        source.write_text(repaired, encoding="utf-8")
+        source.write_text(_env_retarget(env, repaired), encoding="utf-8")
 
         result = accept_roadmap_seed(
             env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir

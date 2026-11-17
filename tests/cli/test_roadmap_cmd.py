@@ -42,6 +42,8 @@ over the real orchestrator.
 
 from __future__ import annotations
 
+import re
+
 import argparse
 import contextlib
 import hashlib
@@ -191,8 +193,20 @@ from plan_tool.roadmap_revision_publish import (
 )
 
 
+def _cite_accepted(text: str, tmp_path: Path, slug: str) -> str:
+    """``text`` with ``_cite`` citations pointed at ``slug``'s accepted version under ``tmp_path``."""
+    from plan_tool.roadmap_versions import load_accepted_version, version_directory_path
+
+    plans_dir = tmp_path / "docs" / "implementation-plans"
+    version = load_accepted_version(plans_dir=plans_dir, slug=slug)
+    assert version is not None, "publish the accepted roadmap before citing it"
+    version_dir = version_directory_path(plans_dir, slug, version.record.version_id)
+    real = version_dir.relative_to(tmp_path).as_posix() + "/"
+    return re.sub(r"[\w./-]*\.roadmap-versions/[0-9a-f]{64}/", lambda _m: real, text)
+
+
 def _cite(filename: str) -> str:
-    """A well-formed version-store citation; the draft-seed gates check form, not resolution."""
+    """A well-formed version-store citation; it resolves only where a test retargets it to a stored version."""
     return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
 
 MODULE = "plan_tool.cli.roadmap_cmd"
@@ -4891,10 +4905,13 @@ decisions: []
 `plan-b` and `plan-a`.
 """
         (root / "04-roadmap.md").write_text(plans_text, encoding="utf-8")
+        publish_accepted_root(
+            tmp_path / "docs" / "implementation-plans", "my-roadmap", with_minimal_upstream(plans_text)
+        )
         seeds = root / "seeds"
         seeds.mkdir()
-        plan_a = _draft_seed_text(body="# Seed a\n")
-        plan_b = _draft_seed_text(body="# Seed b\n")
+        plan_a = _cite_accepted(_draft_seed_text(body="# Seed a\n"), tmp_path, "my-roadmap")
+        plan_b = _cite_accepted(_draft_seed_text(body="# Seed b\n"), tmp_path, "my-roadmap")
         (seeds / "plan-a.md").write_text(plan_a, encoding="utf-8")
         (seeds / "plan-b.md").write_text(plan_b, encoding="utf-8")
         write_seed_state(
@@ -4965,10 +4982,13 @@ decisions: []
 `plan-z` and `plan-a`.
 """
         (root / "04-roadmap.md").write_text(plans_text, encoding="utf-8")
+        publish_accepted_root(
+            tmp_path / "docs" / "implementation-plans", "my-roadmap", with_minimal_upstream(plans_text)
+        )
         seeds = root / "seeds"
         seeds.mkdir()
-        plan_a = _draft_seed_text(body="# Seed a\n")
-        plan_z = _draft_seed_text(body="# Seed z\n")
+        plan_a = _cite_accepted(_draft_seed_text(body="# Seed a\n"), tmp_path, "my-roadmap")
+        plan_z = _cite_accepted(_draft_seed_text(body="# Seed z\n"), tmp_path, "my-roadmap")
         (seeds / "plan-a.md").write_text(plan_a, encoding="utf-8")
         (seeds / "plan-z.md").write_text(plan_z, encoding="utf-8")
         write_seed_state(
@@ -5149,8 +5169,8 @@ decisions: []
     (root / "04-roadmap.md").write_text(plans_text, encoding="utf-8")
     seeds = root / "seeds"
     seeds.mkdir()
-    plan_a = _draft_seed_text(body="# Seed a\n")
-    plan_b = _draft_seed_text(body="# Seed b\n")
+    plan_a = _cite_accepted(_draft_seed_text(body="# Seed a\n"), tmp_path, "my-roadmap")
+    plan_b = _cite_accepted(_draft_seed_text(body="# Seed b\n"), tmp_path, "my-roadmap")
     (seeds / "plan-a.md").write_text(plan_a, encoding="utf-8")
     (seeds / "plan-b.md").write_text(plan_b, encoding="utf-8")
     write_seed_state(
@@ -6898,6 +6918,8 @@ class TestViewDispatch:
             "artifact": loaded.plans,
             "plans_dir": tmp_path.resolve() / "docs" / "implementation-plans",
             "slug": loaded.slug,
+            # --view resolves citations from the repository root, so it passes it.
+            "repo_root": tmp_path.resolve(),
         }
         assert captured["args"][1].classifications is classifications
 

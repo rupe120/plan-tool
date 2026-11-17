@@ -181,9 +181,9 @@ def test_promoted_seed_needs_no_confirmation_once_its_draft_is_archived(
     monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
 
     assert _confirm_invalidated_roadmap_seed(
-        locate_tracked_seed(promoted, repo_root=tmp_path), seed_texts=(),
+        locate_tracked_seed(promoted, repo_root=tmp_path), seed_files={},
         yes=False,
-        input_fn=lambda _prompt: "n",
+        input_fn=lambda _prompt: "n", repo_root=None
     )
 
 
@@ -209,10 +209,10 @@ def test_promoted_seed_still_requires_assent_when_invalidated_after_draft_archiv
 
     location = locate_tracked_seed(promoted, repo_root=tmp_path)
     assert not _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=False, input_fn=lambda _prompt: "n"
+        location, seed_files={}, yes=False, input_fn=lambda _prompt: "n", repo_root=None
     )
     assert _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=True, input_fn=lambda _prompt: "n"
+        location, seed_files={}, yes=True, input_fn=lambda _prompt: "n", repo_root=None
     )
 
 
@@ -228,7 +228,7 @@ def test_corrupt_accepted_head_is_an_error_message_not_a_traceback(
     monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
 
     assert not _confirm_invalidated_roadmap_seed(
-        locate_tracked_seed(source, repo_root=tmp_path), seed_texts=(), yes=True, input_fn=lambda _prompt: "yes"
+        locate_tracked_seed(source, repo_root=tmp_path), seed_files={}, yes=True, input_fn=lambda _prompt: "yes", repo_root=None
     )
     assert capsys.readouterr().err.strip()
 
@@ -245,13 +245,13 @@ def test_create_requires_an_explicit_assent_for_an_invalidated_seed(
 
     location = locate_tracked_seed(source, repo_root=tmp_path)
     assert not _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=False, input_fn=lambda _prompt: "n"
+        location, seed_files={}, yes=False, input_fn=lambda _prompt: "n", repo_root=None
     )
     assert _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=False, input_fn=lambda _prompt: "yes"
+        location, seed_files={}, yes=False, input_fn=lambda _prompt: "yes", repo_root=None
     )
     assert _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=True, input_fn=lambda _prompt: "n"
+        location, seed_files={}, yes=True, input_fn=lambda _prompt: "n", repo_root=None
     )
 
 
@@ -267,10 +267,10 @@ def test_create_requires_assent_for_an_invalidated_seed_in_renamed_directory(
 
     location = locate_tracked_seed(source, repo_root=tmp_path)
     assert not _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=False, input_fn=lambda _prompt: "n"
+        location, seed_files={}, yes=False, input_fn=lambda _prompt: "n", repo_root=None
     )
     assert _confirm_invalidated_roadmap_seed(
-        location, seed_texts=(), yes=False, input_fn=lambda _prompt: "yes"
+        location, seed_files={}, yes=False, input_fn=lambda _prompt: "yes", repo_root=None
     )
 
 
