@@ -65,7 +65,7 @@ steps:
     1: The writer already emits version-store paths, so tightening the gates does
       not break materialization.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md
-  status: current
+  status: done
   description: 'Tighten the draft-seed gates in `plan_tool/roadmap_gates.py:validate_draft_seed_content`.
     The check matches exactly the four member filenames (`01-domain.md`, `02-constraints.md`,
     `03-components.md`, `04-roadmap.md`, the constants the References gate already
@@ -132,6 +132,7 @@ steps:
   depends_on_notes:
     2: Provides the text-only bare-name function that create's refusal calls.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md
+  status: current
   description: 'Make `create --from-existing` refuse a tracked seed that fails the
     bare-name check, with or without `-y`, and name its repair routes (owner decision,
     2026-11-17: automated sessions always pass `-y`, so a confirmation `-y` answers
