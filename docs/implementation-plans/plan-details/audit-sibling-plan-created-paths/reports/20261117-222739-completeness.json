@@ -1,0 +1,140 @@
+{
+  "version": 4,
+  "plan_slug": "audit-sibling-plan-created-paths",
+  "plan_path": "docs/implementation-plans/2-audit-sibling-plan-created-paths.md",
+  "created_at": "2026-11-17T22:27:39Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ac6e9162042d79eb1506d3191f503c292c6cd32404f6af009f9961ed4674ecf5",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "da1b47fb863f7bd92e74214ade0a47802e13bc076eb0186bc3684ee182443e8a",
+    "DATA_CONTRACT.md": "e2176065d634a2cc6f43afc7b8d27b121ca6044290bf99efb4abca10cac741e6",
+    "integrations/shared/DIRECTIVES.md": "adba6252d3b9824b9f4370f7c77f8e95f163bdf97ffb988e17825520df4ebd11",
+    "plan_tool/completeness_report.py": "02b707e84ff3a9a86ecbc931480a8fc4cbbc3a74bc52c415004a59c9e19a0096",
+    "plan_tool/fingerprint.py": "eb82d9ac7c7df2469824997701fe8286e01bcefc1547546350bd89e594668171",
+    "plan_tool/prompts/plan-audit.md": "39e3046df3e155fa4447b7f0bd98a1bc09c4d596c0c51787a66c8b400ab650d1",
+    "plan_tool/review.py": "f2bd4998dd8986e1906eac0d1810a1fbd36247da33e4ea117e0b76c7d66e4bec",
+    "plan_tool/review_persistence.py": "81fa43b559e93d49c41c5a9cb8c238786024616c11f1ef6b5364375f9e42a68e",
+    "tests/test_completeness_report.py": "b5d4e05570814414fbc9c66c3e9769bd7641e6c679d3e4ff38ffaf58f45bc63a",
+    "tests/test_review.py": "57d18d0244275ad48703baddaba6566039fcabe15a39222c36ae8b94d7649141",
+    "tests/test_review_persistence.py": "6bc6accad98820de9a46fb676c2036b008f67acc6d62f46a87b4d187f63036ab"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md": "03b96e94dd2bc0314c4544433dc29919607a6bb3d97c56528e04a3d90ba80ffb",
+    "docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md": "8191a560eb8f3578d95e11089602d474a4776ce291d3dd3ac85143843b519c27",
+    "docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md": "0fe0649b9fcebb3a9002f1ba381fdb203433e5a9963adbd533d9b1e253cccbad"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Audit Sibling Plan Created Paths\n\n`audit-sibling-plan-created-paths` \u00b7 generated 2026-11-17T22:27:39Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[revision-freshness-compare-sites]` [confidence: limited]: Step 1 says \"`plan_tool/cli/authoring.py` and `plan_tool/gate_status.py` read a revision without comparing it and need no edit.\" That is false for `authoring.py`. Around `authoring.py:2283` it runs `current = AuditInputSnapshot.capture(path, repo_root).revision` and then `if current != revision: return _FRESHNESS_MOVED`. That is a third saved-versus-current comparison, beside the two Step 1 names: `review_persistence.py:project_saved_completeness_result` and `completeness_report.py`'s `audit_revision_match`. The plan's \"both call one new helper\" rule, and the acceptance criterion \"Both saved-versus-current revision comparisons\", leave it out. `gate_status.py` is correct: it reads the revision and takes freshness from `project_saved_completeness_result`. The plan never says whether the `authoring.py` compare should use the new helper. Its `revision` already comes through `normalize_qualified_result`, so it may not need to. Left unstated, an implementer can leave a raw `!=` or wrap it for no reason, and the authoring tail can disagree with `status` on a no-sibling v3 report.\n  - Fix: Correct the claim in Step 1 and the acceptance criterion. Name `authoring.py`'s freshness compare as a third comparison site, and state whether it uses the new helper or already receives a normalized revision. Add a test that a saved v3 no-sibling report is not reported as moved by the authoring tail.\n- MEDIUM `[saved-revision-already-normalized]` [confidence: limited]: Step 1 and Risks say the freshness checks \"today compare the raw saved dict\". The code suggests this is only partly true. `normalize_qualified_result` (around `review_persistence.py:258`) already stores `normalize_audit_revision(audit_revision)`. The sidecar load path (around lines 1696\u20131722) also normalizes. `normalize_audit_revision` ends with a literal `\"version\": 3`, even for v1 and v2 input. So the revision these comparisons see may already be upgraded, with no raw version left to differ. The plan does not say which load paths give a raw dict and which a normalized one. The helper may then be redundant at some sites and needed at others.\n  - Fix: State, per comparison site, whether the saved revision arrives raw or normalized. Scope the helper to the sites that need it. Pin both outcomes with a test at each of the three sites: a no-sibling v3 report reads `current`, and a v3 report whose plan now has siblings reads `stale`.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[sibling-selection-double-identity]` [confidence: limited]: Step 1's helper calls `_sibling_roadmap_identity`, then `_eligible_planned_paths`, which computes the identity again for the audited plan and for each candidate sibling. Failures fail closed to an empty set. The plan does not say the repeated read is accepted. This is advisory only.\n  - Fix: State in Step 1 that the repeated identity read is accepted, or that one identity result is reused. I did not run any tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d7ada3b5]` [confidence: limited]: The plan's `## Acceptance criteria` names `audit_revision`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-04cdfdd7]` [confidence: limited]: The plan's `## Acceptance criteria` names `audit_revision_match`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-180edce2]` [confidence: limited]: The plan's `## Acceptance criteria` names `normalize_declared_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4a8662ad]` [confidence: limited]: The plan's `## Acceptance criteria` names `project_saved_completeness_result`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d34da8de]` [confidence: limited]: The plan's `## Acceptance criteria` names `sibling_paths_digest`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit audit-sibling-plan-created-paths --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Audit Sibling Plan Created Paths\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[sibling-selection-double-identity]` [confidence: limited]: Step 1's helper calls `_sibling_roadmap_identity`, then `_eligible_planned_paths`, which computes the identity again for the audited plan and for each candidate sibling. Failures fail closed to an empty set. The plan does not say the repeated read is accepted. This is advisory only.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `audit_revision`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `audit_revision_match`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `normalize_declared_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `project_saved_completeness_result`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `sibling_paths_digest`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit audit-sibling-plan-created-paths --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-e2a07cd6",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 says \"`plan_tool/cli/authoring.py` and `plan_tool/gate_status.py` read a revision without comparing it and need n",
+      "body": "Step 1 says \"`plan_tool/cli/authoring.py` and `plan_tool/gate_status.py` read a revision without comparing it and need no edit.\" That is false for `authoring.py`. Around `authoring.py:2283` it runs `current = AuditInputSnapshot.capture(path, repo_root).revision` and then `if current != revision: return _FRESHNESS_MOVED`. That is a third saved-versus-current comparison, beside the two Step 1 names: `review_persistence.py:project_saved_completeness_result` and `completeness_report.py`'s `audit_revision_match`. The plan's \"both call one new helper\" rule, and the acceptance criterion \"Both saved-versus-current revision comparisons\", leave it out. `gate_status.py` is correct: it reads the revision and takes freshness from `project_saved_completeness_result`. The plan never says whether the `authoring.py` compare should use the new helper. Its `revision` already comes through `normalize_qualified_result`, so it may not need to. Left unstated, an implementer can leave a raw `!=` or wrap it for no reason, and the authoring tail can disagree with `status` on a no-sibling v3 report.",
+      "suggested_action": "Correct the claim in Step 1 and the acceptance criterion. Name `authoring.py`'s freshness compare as a third comparison site, and state whether it uses the new helper or already receives a normalized revision. Add a test that a saved v3 no-sibling report is not reported as moved by the authoring tail.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "revision-freshness-compare-sites",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-74cdf66b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 and Risks say the freshness checks \"today compare the raw saved dict\". The code suggests this is only partly true",
+      "body": "Step 1 and Risks say the freshness checks \"today compare the raw saved dict\". The code suggests this is only partly true. `normalize_qualified_result` (around `review_persistence.py:258`) already stores `normalize_audit_revision(audit_revision)`. The sidecar load path (around lines 1696\u20131722) also normalizes. `normalize_audit_revision` ends with a literal `\"version\": 3`, even for v1 and v2 input. So the revision these comparisons see may already be upgraded, with no raw version left to differ. The plan does not say which load paths give a raw dict and which a normalized one. The helper may then be redundant at some sites and needed at others.",
+      "suggested_action": "State, per comparison site, whether the saved revision arrives raw or normalized. Scope the helper to the sites that need it. Pin both outcomes with a test at each of the three sites: a no-sibling v3 report reads `current`, and a v3 report whose plan now has siblings reads `stale`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "saved-revision-already-normalized",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-69ebd813",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1's helper calls `_sibling_roadmap_identity`, then `_eligible_planned_paths`, which computes the identity again for",
+      "body": "Step 1's helper calls `_sibling_roadmap_identity`, then `_eligible_planned_paths`, which computes the identity again for the audited plan and for each candidate sibling. Failures fail closed to an empty set. The plan does not say the repeated read is accepted. This is advisory only.",
+      "suggested_action": "State in Step 1 that the repeated identity read is accepted, or that one identity result is reused. I did not run any tests.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "sibling-selection-double-identity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "614ebfbe724086a3ee8e8fb142be9347023f94f05d7cec52d7bb64fc6561c088",
+    "detail_bundle_digest": "d94a44f41a1cfd8d90729a1d775bc573addbb21d20ecb60193ad2a38bae70344",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md",
+        "state": "present",
+        "digest": "03b96e94dd2bc0314c4544433dc29919607a6bb3d97c56528e04a3d90ba80ffb"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md",
+        "state": "present",
+        "digest": "8191a560eb8f3578d95e11089602d474a4776ce291d3dd3ac85143843b519c27"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md",
+        "state": "present",
+        "digest": "0fe0649b9fcebb3a9002f1ba381fdb203433e5a9963adbd533d9b1e253cccbad"
+      }
+    ],
+    "source_seed_digest": "e821cd44feac40293613cc7853a800643943a28a1e66d827dfb9af692f8beb7e",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}
