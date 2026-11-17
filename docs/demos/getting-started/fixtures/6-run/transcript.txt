@@ -1,0 +1,29 @@
+BAKED TRANSCRIPT. Authored to the shape of a real run; not captured from one.
+Lines marked [real] are verbatim output of the named deterministic command.
+Run the live command on the `live/` branch to see the real thing.
+------------------------------------------------------------------------
+$ plan-tool --model claude-sonnet-5-5 run due-dates --all --commit
+Step 1/3 Store an optional due date on tasks
+  claude: edited todo/model.py, todo/store.py, tests/test_store.py
+  test-authoring gate: test file changed ... ok
+  test_command: uv run pytest -q ... pass
+  committed
+Step 2/3 Accept --due when adding a task
+  claude: edited todo/cli.py, tests/test_cli.py
+  test-authoring gate ... ok   test_command ... pass   committed
+Step 3/3 Add list --overdue and show due dates
+  claude: edited todo/cli.py, tests/test_cli.py
+  test-authoring gate ... ok   test_command ... pass   committed
+All steps done.
+
+$ plan-tool status due-dates            [real]
+Due dates for tasks  (due-dates.md)
+  status=completed  priority=medium  progress=3/3
+
+  [x] 1. Store an optional due date on tasks [feature]  (low)
+  [x] 2. Accept --due when adding a task [feature]  (low)  deps=[1]
+  [x] 3. Add list --overdue and show due dates [feature]  (low)  deps=[2]
+
+$ uv run pytest -q                      [real]
+..........                                                               [100%]
+10 passed

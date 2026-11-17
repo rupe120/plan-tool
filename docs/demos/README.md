@@ -6,6 +6,7 @@ to their example inputs and artifacts.
 
 | Demo | What it shows | Status |
 | --- | --- | --- |
+| [Getting started: pre-baked walkthrough](getting-started/README.md) | Eight checkpoint branches, seed through code review, each with its output baked in so no step waits on a command; the real command for each step runs on a separate branch. | Ready to build and step through; transcripts and findings are authored, not captured from a live run. |
 | [Planning a dark-mode toggle](planning-demo.md) | A brief becomes a plan, detailed steps and local Jira stories. | Assistant-led guide and [reading samples](dark-mode-example.md) ready for reading; bounded live planning/local-export rehearsal passes with confirmed advisory-only audits; remote refresh pending. |
 | [TTRPG world-builder roadmap](roadmap-demo.md) | A project concept becomes a roadmap, seeds and detailed plans. | Assistant-led runbook reviewed against roadmap contracts; no fresh TTRPG run or publication. |
 

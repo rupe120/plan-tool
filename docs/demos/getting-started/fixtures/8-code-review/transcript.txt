@@ -1,0 +1,24 @@
+BAKED TRANSCRIPT. Authored to the shape of a real run; not captured from one.
+Lines marked [real] are verbatim output of the named deterministic command.
+Run the live command on the `live/` branch to see the real thing.
+------------------------------------------------------------------------
+> /code-review
+
+Reviewing 3 commits (demo/5-detail-audit..HEAD), 5 files
+
+1 finding
+  [medium] todo/store.py:_from_row  A due value that is not an ISO date (for example a
+           hand-edited file with "due": "soon") raises a raw ValueError from
+           date.fromisoformat, so every command shows a traceback and the whole task file
+           becomes unreadable.
+           Scenario: {"id": 1, "title": "x", "due": "soon"}  ->  `todo list` traceback.
+           Verified: no existing test pins a traceback for this input.
+
+Applied: StoreError raised by _from_row, caught in main, printed as "error: ...", exit 2.
+Added test_corrupt_stored_due_date_is_a_clear_error_not_a_traceback.
+
+Round 2: 0 findings.
+
+$ uv run pytest -q                      [real]
+............                                                             [100%]
+12 passed

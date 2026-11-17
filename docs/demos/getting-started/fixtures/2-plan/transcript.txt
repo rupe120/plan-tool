@@ -1,0 +1,23 @@
+BAKED TRANSCRIPT. Authored to the shape of a real run; not captured from one.
+Lines marked [real] are verbatim output of the named deterministic command.
+Run the live command on the `live/` branch to see the real thing.
+------------------------------------------------------------------------
+$ plan-tool --model claude-opus-5-5 create due-dates --from-existing docs/implementation-plans/plan-seeds/due-dates.md
+Reading seed: docs/implementation-plans/plan-seeds/due-dates.md
+Intent from seed Outcome: A task can carry an optional due date, and `todo list --overdue` ...
+Proposing steps (1 call) ... 3 steps
+Synthesizing plan body ... done
+Post-write convergence (--iterate default) ... deterministic checks clean
+Wrote docs/implementation-plans/due-dates.md
+Registered in .plan-tool/plans.json
+
+$ plan-tool validate due-dates          [real]
+OK: <repo>/docs/implementation-plans/due-dates.md
+
+$ plan-tool status due-dates            [real]
+Due dates for tasks  (due-dates.md)
+  status=planning  priority=medium  progress=0/3
+
+  [ ] 1. Store an optional due date on tasks [feature]  (low)
+  [ ] 2. Accept --due when adding a task [feature]  (low)  deps=[1]
+  [ ] 3. Add list --overdue and show due dates [feature]  (low)  deps=[2]
