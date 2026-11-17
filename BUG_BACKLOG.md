@@ -265,10 +265,11 @@ Durable re-open conditions for retired items are recorded in
 - **Fix:** roadmap seed citations name the accepted version by repo-relative
   version-store path throughout the seed body, the draft-seed gates require
   it, and `create` carries it. This changes the draft-seed contract, so it
-  goes through the plan pipeline. Seed:
-  `docs/implementation-plans/plan-seeds/roadmap-seed-accepted-version-citations.md`
-  (plan not yet created), which settles the form, the legacy-seed rule and
-  the `source_artifacts` departure. Shipped 2026-10-10 as a separate direct change: a stderr warning naming
+  goes through the plan pipeline. Plan:
+  `docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md`
+  (plan-authored 2026-11-17, execution pending; its seed, archived under
+  `docs/implementation-plans/plan-seeds/archive/`, settles the form, the
+  legacy-seed rule and the `source_artifacts` departure). Shipped 2026-10-10 as a separate direct change: a stderr warning naming
   leftover top-level `0N-*.md` files beside an accepted head, on
   `roadmap --view`, `--materialize`, `--refresh-seeds`, `--accept-seed`, and
   `--apply`. Deliberately not warned: `create --from-existing <seed>`, the

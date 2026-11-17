@@ -1,0 +1,133 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-accepted-version-citations",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md",
+  "created_at": "2026-11-17T14:50:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "aac08655c1ae19c003f59e780392e13dfcb103243e61771984e2fbef09eb1276",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "f5c02dec8a913330c7af8645c18309e706819c1f07ea9b9f1cdbd0ee157c2de1",
+    "ROADMAP_FORMAT.md": "b46ccfc8b4fa4161e3fcec24508c0c095f3570aeb145a2e42f71190b2e8cf9b6",
+    "docs/explanations/roadmap-plan-handoff.md": "9ad66295dc220c7b86ac9c04c0299942f9384ba87d816925686e61966da076c9",
+    "docs/how-to/roadmap.md": "7fc8a3baa4815958dec19e60a71765945c6a08e9912caa469b8d73d5ef31e262",
+    "plan_tool/cli/authoring.py": "01e97b34fde5ec9c0bbacd2d214cd4e9563f504bfec98647acef43a1d8efe11a",
+    "plan_tool/prompts/roadmap-seed.md": "281fb57c995235cb1285bc491815dff89a0d56e2c403fee06b37b4cea22ac25b",
+    "plan_tool/roadmap.py": "7fc035f6b75c7241aa3fd49ada02b579a3300039df1daf58cf643224df2e08d3",
+    "plan_tool/roadmap_gates.py": "daf50d15ab26b119a84a0e55e2b88b0a486a96e8630956d78934b25c5ebfa459",
+    "plan_tool/roadmap_seed_manifest.py": "074e0a67e7e74b8b16f1ccafbb802c1e6b1967b18992a5f6d090cde80dc8bdf2",
+    "tests/cli/test_authoring_cmds.py": "73e43436daa55e0a366e9755e80d10793962014c9638802b625c0bf311278f9d",
+    "tests/test_roadmap.py": "39bc6bb691a168a45a83a7b3d0c4d8c8f308dd6baa376d330bbdf10c4fc5dcc3",
+    "tests/test_roadmap_gates.py": "9a170ebe3f78fee638e960383460551dd4fd054dfaced1f2bc042db115f22db8",
+    "tests/test_roadmap_seed_manifest.py": "5965618cd7c58fce111f71765b14039dd05d4b947962671cf1e1cde5469f3f9d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md": "56cbda9647a43e459b7146987df205fc9b89cd23939d7d41f3f2570186390d49",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md": "a80dc633e20049b5ff27845749f93f806dfd8fcd9c0d213fed5b2b2fcec653b9",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md": "cb2be9b8ec37bd1ffa15f84f45d17bc164dd6e6adb8cda3541694693b8b34082",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md": "c1b2cce61572362e4be948ea829417589959d3b8e8dd06e7705d9b80c35cc0b2"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Accepted Version Citations\n\n`roadmap-seed-accepted-version-citations` \u00b7 generated 2026-11-17T14:50:31Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring.\n\n    plan-tool reconcile-plan-walk roadmap-seed-accepted-version-citations  # optional interactive review of the saved findings\n\n- MEDIUM `[source-artifacts-guarantee]` [confidence: limited]: The guarantee depends on a fact the plan leaves unchecked until the end. The stated guarantee is `\"the audit never grounds on a top-level copy of a cited roadmap artifact.\"` The body check covers only the seed body. The `source_artifacts` paragraph says only that \"The plan records whether `create` drops a stray `source_artifacts` key or leaves it inert\", and step 4 (docs and backlog) does that recording. If `create` copies seed frontmatter into the plan, a hand-edited seed with a bare name in a `source_artifacts` key passes the gates, because `parse_draft_seed_provenance` ignores the key. That bare name then reaches the plan, which breaks the acceptance criterion \"no roadmap file name that a plan carries from a draft seed passing the gates names a top-level `01-domain.md` \u2026 `04-roadmap.md`, in any section\". `rg source_artifacts plan_tool` finds no consumer in `create`. That is weak evidence the key is dropped, but it is not the check step 4 promises.\n  - Fix: Make the `create` frontmatter check an explicit precondition of the guarantee, stated in the plan body and acceptance criteria. If the key can reach the plan, say how the guarantee still holds. Do not leave this as a note recorded in step 4 after the fact.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring. Correct plan contracts through a session-directed edit before authoring details.\n\n- MEDIUM `[version-id-form]` [confidence: limited]: Step 2 (tighten the draft-seed gates) says `.roadmap-versions/<version-id>/` must directly precede the filename \"for any well-formed version id\". It also says `roadmap_gates.py` \"gains no import\". The plan never says what well-formed means. In code, `_require_digest` in `plan_tool/roadmap_versions.py` accepts only a lowercase SHA-256 (`SHA256_DIGEST_RE`), and the namespace directory name is `ROADMAP_VERSION_NAMESPACE_DIRNAME` (`.roadmap-versions`). Without a stated rule, one implementer matches any non-empty segment and another matches 64 lowercase hex characters. They would disagree on whether `.roadmap-versions/foo/04-roadmap.md` is accepted.\n  - Fix: State in the plan that \"well-formed\" means a lowercase 64-hex digest and that the gate pattern uses the `.roadmap-versions` directory name. Say whether the gate repeats those two facts locally or reuses a constant that adds no import.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-cc946505]` [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]` [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Accepted Version Citations\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[version-id-form]` [confidence: limited]: Step 2 (tighten the draft-seed gates) says `.roadmap-versions/<version-id>/` must directly precede the filename \"for any well-formed version id\". It also says `roadmap_gates.py` \"gains no import\". The plan never says what well-formed means. In code, `_require_digest` in `plan_tool/roadmap_versions.py` accepts only a lowercase SHA-256 (`SHA256_DIGEST_RE`), and the namespace directory name is `ROADMAP_VERSION_NAMESPACE_DIRNAME` (`.roadmap-versions`). Without a stated rule, one implementer matches any non-empty segment and another matches 64 lowercase hex characters. They would disagree on whether `.roadmap-versions/foo/04-roadmap.md` is accepted.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-22a4a777",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The guarantee depends on a fact the plan leaves unchecked until the end. The stated guarantee is `\"the audit never groun",
+      "body": "The guarantee depends on a fact the plan leaves unchecked until the end. The stated guarantee is `\"the audit never grounds on a top-level copy of a cited roadmap artifact.\"` The body check covers only the seed body. The `source_artifacts` paragraph says only that \"The plan records whether `create` drops a stray `source_artifacts` key or leaves it inert\", and step 4 (docs and backlog) does that recording. If `create` copies seed frontmatter into the plan, a hand-edited seed with a bare name in a `source_artifacts` key passes the gates, because `parse_draft_seed_provenance` ignores the key. That bare name then reaches the plan, which breaks the acceptance criterion \"no roadmap file name that a plan carries from a draft seed passing the gates names a top-level `01-domain.md` \u2026 `04-roadmap.md`, in any section\". `rg source_artifacts plan_tool` finds no consumer in `create`. That is weak evidence the key is dropped, but it is not the check step 4 promises.",
+      "suggested_action": "Make the `create` frontmatter check an explicit precondition of the guarantee, stated in the plan body and acceptance criteria. If the key can reach the plan, say how the guarantee still holds. Do not leave this as a note recorded in step 4 after the fact.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "source-artifacts-guarantee",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-90966ea4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (tighten the draft-seed gates) says `.roadmap-versions/<version-id>/` must directly precede the filename \"for any",
+      "body": "Step 2 (tighten the draft-seed gates) says `.roadmap-versions/<version-id>/` must directly precede the filename \"for any well-formed version id\". It also says `roadmap_gates.py` \"gains no import\". The plan never says what well-formed means. In code, `_require_digest` in `plan_tool/roadmap_versions.py` accepts only a lowercase SHA-256 (`SHA256_DIGEST_RE`), and the namespace directory name is `ROADMAP_VERSION_NAMESPACE_DIRNAME` (`.roadmap-versions`). Without a stated rule, one implementer matches any non-empty segment and another matches 64 lowercase hex characters. They would disagree on whether `.roadmap-versions/foo/04-roadmap.md` is accepted.",
+      "suggested_action": "State in the plan that \"well-formed\" means a lowercase 64-hex digest and that the gate pattern uses the `.roadmap-versions` directory name. Say whether the gate repeats those two facts locally or reuses a constant that adds no import.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "version-id-form",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "aac08655c1ae19c003f59e780392e13dfcb103243e61771984e2fbef09eb1276",
+    "detail_bundle_digest": "f7a3a0b47b30a8f0202b8c20ac4e8bfd9dd3465909b93b93b605320c7bee8418",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "54641adf8aecbcbbc910033b86068f4d041838abb803e32f4a299c27f76b3723",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

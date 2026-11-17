@@ -1,0 +1,4 @@
+# Written by plan-tool: its runtime state under .plan-tool/ is ignored by
+# default. Tracked and never overwritten, so the team can edit it: delete a
+# line to commit that state. A file already tracked stays tracked.
+/mutation.lock
