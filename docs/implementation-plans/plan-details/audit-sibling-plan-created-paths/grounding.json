@@ -1,0 +1,17 @@
+{
+  "plan_slug": "audit-sibling-plan-created-paths",
+  "grounded_at": "2026-11-17T21:43:37Z",
+  "plan_fingerprint": "80c16d0510fa9092b7293500d6037c466e9e4b44198a4fbd5301d06df1fb36ac",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "c0dfd57414a4f2dd6a40f6db0632c8c1d9e690a12da64b85f5f95f56b987a7e0",
+    "DATA_CONTRACT.md": "e2176065d634a2cc6f43afc7b8d27b121ca6044290bf99efb4abca10cac741e6",
+    "integrations/shared/DIRECTIVES.md": "adba6252d3b9824b9f4370f7c77f8e95f163bdf97ffb988e17825520df4ebd11",
+    "plan_tool/prompts/plan-audit.md": "39e3046df3e155fa4447b7f0bd98a1bc09c4d596c0c51787a66c8b400ab650d1",
+    "plan_tool/review.py": "f2bd4998dd8986e1906eac0d1810a1fbd36247da33e4ea117e0b76c7d66e4bec",
+    "plan_tool/review_persistence.py": "81fa43b559e93d49c41c5a9cb8c238786024616c11f1ef6b5364375f9e42a68e",
+    "tests/test_review.py": "57d18d0244275ad48703baddaba6566039fcabe15a39222c36ae8b94d7649141",
+    "tests/test_review_persistence.py": "6bc6accad98820de9a46fb676c2036b008f67acc6d62f46a87b4d187f63036ab"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

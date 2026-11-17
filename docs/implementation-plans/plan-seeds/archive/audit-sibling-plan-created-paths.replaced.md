@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-audit-sibling-plan-created-paths.md`.
+> Preserved here for history; do not edit.
+
 # Plan seed: the conceptual audit knows the paths sibling roadmap plans create
 
 This file is a `plan-tool create` input. Use it via:
