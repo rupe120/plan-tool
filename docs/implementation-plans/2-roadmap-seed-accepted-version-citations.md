@@ -165,6 +165,7 @@ steps:
     2: The shipped gate names and messages are what the format doc describes.
     3: The create confirmation behavior is what the manifest-states section and the
       backlog removal depend on.
+  detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md
   description: 'Bring the docs and the backlog in line with the new citation contract.
     `ROADMAP_FORMAT.md` § ''Draft seeds under the roadmap slug'' states the repo-relative
     version-store citation form, that a cited path is relative to the roadmap''s repository
