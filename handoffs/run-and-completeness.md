@@ -9,6 +9,7 @@
 | [`run` no-edits-applied block and failure receipts — review ledger](#run-no-edits-applied-block-and-failure-receipts--review-ledger) | 2026-10-13 |
 | [Completeness apply retirement implementation](#completeness-apply-retirement-implementation) | 2026-11-04 |
 | [Local-iteration backlog findings #539–#542 — review ledger and priority handoff](#local-iteration-backlog-findings-539542--review-ledger-and-priority-handoff) | 2026-11-17 |
+| [Roadmap seed version-store citations — review ledger](#roadmap-seed-version-store-citations--review-ledger) | 2026-11-17 |
 
 ## Completeness next-step verdict finish — review ledger and session handoff
 
@@ -539,3 +540,50 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 2. **#539 — not urgent.** The consumer can set `test_command` to its unit baseline today. The `DIRECTIVES.md` hand-fix wording (step 3 names this repo's own full pytest run) could be split out as a small `direct` entry if it misleads before #539 is decided. `pending`.
 3. **#541 — not pickable** until item 8 above lands; then a small advisory.
 4. **#542 — an ordinary drain pick.** `direct`, `ready`, P5, small; taken by `backlog-drain.md` in TRACKING order, no special priority.
+
+## Roadmap seed version-store citations — review ledger
+
+*Opened 2026-11-17.*
+
+| Field | Value |
+| --- | --- |
+| Opened | 2026-11-17 |
+| Change | Plan `roadmap-seed-accepted-version-citations`: draft seeds cite roadmap files by version-store path; both draft-seed gates require it; `create` refuses a bare-named tracked seed even under `-y` |
+| Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
+| Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
+| Reviewer | `/code-review high`, forked session, report-only |
+| Disposition | round 1 dispositioned; round 2 pending |
+
+### Settled decisions (give to the next reviewer)
+
+- The gates check citation form only (`.roadmap-versions/<64-hex>/` directly before a member filename) and take no repo root; any stored version id passes. The repo-relative prefix is the seed writer's job, and a non-resolving hand-edited prefix is an accepted residual (plan Architecture).
+- Only the four member filenames count; other `0N-` files are deliberately not flagged.
+- `create` refuses a bare-named tracked seed even under `-y` (owner decision 2026-11-17), reason `roadmap-seed-bare-citation`.
+- Plans already created from bare-name seeds are not migrated.
+
+### Execution notes
+
+- Step 1's executor wrote a test that built the expected path without `roadmaps/`; the test was corrected, the code was right.
+- Step 2's executor wrote the gate code and no tests; 114 fixture tests went red. Fixtures were moved to a `_cite()` helper, eight expectations changed to the plan's new behavior, and 22 listed tests were authored by hand, each verified by mutation.
+- Steps 3 and 4 ran clean.
+
+### Real-model check
+
+- 2026-11-17, Opus, one `roadmap storefront --materialize plan-order-core` on a throwaway repo whose accepted version is the test suite's fixture roadmap: first attempt, 0 bare names, 9 version-store citations covering all 4 members, all resolving.
+- Limit: the fixture artifacts never mention a member filename, so the carried-over rewrite case is not exercised. `pending`: owner choice between a run on a copy of a real roadmap, a seeded fixture, or recording this limit.
+
+### Findings (round 1)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | `_VERSION_STORE_PREFIX_RE` anchored with `$`, which matches before a trailing newline, so a bare name at a line start after a line ending in the version segment counted as cited | **Fixed.** Fixed-width `fullmatch` over the characters directly before the name; test `test_a_line_break_between_prefix_and_name_does_not_count_as_cited`, red on the old code |
+| 2 | The violation messages suggested the roadmap-relative `.roadmap-versions/<id>/…` form, which does not resolve from the repo root | **Fixed (message).** Messages name `<repo-relative roadmap folder>/.roadmap-versions/<version-id>/…`; test red on the old code. Gate acceptance stays form-only per the settled decision |
+| 3 | A Stack-origin bare name was detected only after each model call, spending every retry on an unfixable failure | **Fixed.** Checked once before the loop; fails closed with no backend call; the Stack test asserts no prompt was sent |
+| 4 | `create`'s refusal dropped the Stack-section route and offered `--refresh-seeds`, which cannot fix it | **Fixed.** The refusal names the roadmap-revision route for a Stack-origin name; test added |
+| 5 | Only `seed_body` was scanned when a separate provenance source existed; the tracked file `create` also reads was not | **Fixed.** Every text `create` reads is scanned; test added |
+| 6 | `ROADMAP_FORMAT.md` said `source_artifacts` is read in `roadmap_candidate_run.py`; that name is an unrelated local | **Fixed.** Corrected there and at its source in detail 03 and detail 04 |
+| 7 | The how-to's direct-fallback text said the draft-seed gate refuses bare names in a hand-written seed, which is untracked and never checked | **Fixed.** The text says no gate checks it |
+| 8 | `create` recovered filenames by splitting the message on quotes | **Fixed.** A public structured `bare_roadmap_file_citations()` feeds both the gate messages and `create` |
+| 9 | The promoted-copy route helper re-read `seed-state.json` | **Fixed.** The already-loaded `published` flag is passed in; the extra error path is gone |
+| 10 | Each occurrence copied and scanned the whole preceding text | **Fixed** by finding 1's fixed-width check |
+
