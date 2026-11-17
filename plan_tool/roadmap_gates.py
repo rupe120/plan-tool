@@ -2673,7 +2673,9 @@ _DRAFT_SEED_MEMBER_FILENAMES = (
 _MEMBER_FILENAME_RE = re.compile(
     r"(?<![A-Za-z0-9_.-])("
     + "|".join(re.escape(name) for name in _DRAFT_SEED_MEMBER_FILENAMES)
-    + r")(?![A-Za-z0-9_-]|\.[A-Za-z0-9])"
+    + r")(?![A-Za-z0-9_-]|\.[A-Za-z0-9])",
+    # A case variant opens the same top-level copy on a case-insensitive filesystem.
+    re.IGNORECASE,
 )
 # Fixed width, so each check reads only the characters directly before the name.
 _VERSION_STORE_PREFIX_RE = re.compile(
@@ -2701,9 +2703,11 @@ def _member_filename_occurrences(text: str) -> list[_MemberFilenameOccurrence]:
     """Every roadmap member filename in ``text``, flagged when a version-store segment precedes it."""
     return [
         _MemberFilenameOccurrence(
-            filename=match.group(1),
+            filename=match.group(1).lower(),
             start=match.start(1),
-            in_version_store=_cited_in_version_store(text, match.start(1)),
+            # Only the exact member name can be a citation; a case variant is bare.
+            in_version_store=match.group(1) == match.group(1).lower()
+            and _cited_in_version_store(text, match.start(1)),
         )
         for match in _MEMBER_FILENAME_RE.finditer(text)
     ]
@@ -2764,6 +2768,7 @@ def unresolved_roadmap_file_citations(text: str, roots: CitationRoots) -> list[V
             continue
         version_id = body[occurrence.start - _VERSION_ID_LEN - 1 : occurrence.start - 1]
         expected = folder / _VERSION_STORE_DIRNAME / version_id / occurrence.filename
+        stored = expected.is_file()
         if folder_rel is not None:
             prefix = f"{folder_rel}/{_VERSION_STORE_DIRNAME}/{version_id}/"
             start = occurrence.start - len(prefix)
@@ -2771,7 +2776,7 @@ def unresolved_roadmap_file_citations(text: str, roots: CitationRoots) -> list[V
                 start >= 0
                 and body[start : occurrence.start] == prefix
                 and (start == 0 or not _PATH_CHAR.match(body[start - 1]))
-                and expected.is_file()
+                and stored
             ):
                 continue
         exact = (
@@ -2779,7 +2784,7 @@ def unresolved_roadmap_file_citations(text: str, roots: CitationRoots) -> list[V
             if folder_rel is not None
             else f"{_VERSION_STORE_PATH_FORM}{occurrence.filename}"
         )
-        stored = "" if expected.is_file() else " (no stored version has that id)"
+        not_stored = "" if stored else " (no stored version has that id)"
         violations.append(
             Violation(
                 kind=VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
@@ -2787,7 +2792,7 @@ def unresolved_roadmap_file_citations(text: str, roots: CitationRoots) -> list[V
                 row_id=None,
                 message=(
                     f"the seed's citation of '{occurrence.filename}' is not this roadmap's "
-                    f"repo-relative version-store path{stored} — write '{exact}'"
+                    f"repo-relative version-store path{not_stored} — write '{exact}'"
                 ),
             )
         )

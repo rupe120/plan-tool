@@ -437,7 +437,7 @@ def _confirm_invalidated_roadmap_seed(
         error(
             f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
             f"roadmap files without their version-store path ({where}). Replace each "
-            "with its repo-relative `.roadmap-versions/<version-id>/` path, or "
+            "with its repo-relative `<roadmap folder>/.roadmap-versions/<version-id>/` path, or "
             "regenerate the seed; ROADMAP_FORMAT.md § \"Draft-seed manifest states\" "
             f"names the routes for drafts and promoted copies.{stack_note}"
         )
@@ -1434,10 +1434,19 @@ def _seed_files_create_reads(
     files: dict[str, str] = {}
     if description:
         files[str(source_path)] = description
-    provenance = read_canonical_provenance(description or "")
-    if seed_body and provenance is not None:
-        files[str((source_path.parent / provenance.source).resolve())] = seed_body
+    source = _provenance_source_path(source_path, description or "")
+    if seed_body and source is not None:
+        files[str(source)] = seed_body
     return files
+
+
+def _provenance_source_path(canonical_path: Path, canonical_text: str) -> Optional[Path]:
+    """The separate seed file a canonical's provenance names, or ``None`` when there is none."""
+    provenance = read_canonical_provenance(canonical_text)
+    if provenance is None:
+        return None
+    seed_path = (canonical_path.parent / provenance.source).resolve()
+    return None if seed_path == canonical_path else seed_path
 
 
 def _read_seed_body(canonical_path: Path, canonical_text: str) -> Optional[str]:
@@ -1454,11 +1463,8 @@ def _read_seed_body(canonical_path: Path, canonical_text: str) -> Optional[str]:
     canonical text still populates the body, but the richer prose the
     provenance promised is silently missing otherwise.
     """
-    provenance = read_canonical_provenance(canonical_text)
-    if provenance is None:
-        return None
-    seed_path = (canonical_path.parent / provenance.source).resolve()
-    if seed_path == canonical_path:
+    seed_path = _provenance_source_path(canonical_path, canonical_text)
+    if seed_path is None:
         return None
     if not seed_path.is_file():
         warn(

@@ -111,6 +111,7 @@ from plan_tool.roadmap_gates import (
     VIOLATION_BARE_ROADMAP_FILE_CITATION,
     VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
     CitationRoots,
+    unresolved_roadmap_file_citations,
     find_bare_roadmap_file_citations,
     validate_draft_seed_content,
 )
@@ -3646,7 +3647,13 @@ def _materialize_plan_seed(
             row_id=plan.id,
             message=f"plan '{plan.id}' draft seed '{basename}': {violation.message}",
         )
-        for violation in find_bare_roadmap_file_citations(stack_section)
+        for violation in (
+            *find_bare_roadmap_file_citations(stack_section),
+            *unresolved_roadmap_file_citations(
+                stack_section,
+                CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+            ),
+        )
     )
     if stack_violations:
         return RoadmapSeedMaterializeResult(
