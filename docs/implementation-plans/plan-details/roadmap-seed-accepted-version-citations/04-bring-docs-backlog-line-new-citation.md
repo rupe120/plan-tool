@@ -88,6 +88,7 @@ This step is `change_type: non-code`, so the test-authoring gate does not apply 
 
 ## Acceptance criteria
 
+- This step does not run the manual real-model `--materialize` check. The orchestrating session runs it in the post-run tail, records the outcome in the code pull request, and stops and surfaces a fallback to bare names (plan § Testing).
 - `ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" states the version-store citation form, the repository-relative rule under `create` re-rooting, the body-wide bare-name rule including fenced code, acceptance of any stored version id, and that citing an older version after a later promotion is intended.
 - `ROADMAP_FORMAT.md` § "Draft-seed manifest states" says a legacy bare-name seed classifies `malformed`, names both repair routes, and says seed frontmatter never reaches the plan.
 - No sentence in `docs/how-to/roadmap.md` describes opening a bare `04-roadmap.md` as the expected path.

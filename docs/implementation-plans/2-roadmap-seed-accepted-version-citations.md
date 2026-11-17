@@ -198,7 +198,8 @@ steps:
     names in prose `create`''s model writes during synthesis. Verification for this
     non-code step: the full suite passes with `uv run pytest tests/ -q -n auto`, every
     symbol cited in the docs exists (checked with `rg`), and no doc still tells a
-    seed writer to use a literal bare filename.'
+    seed writer to use a literal bare filename. This step does not perform the manual
+    real-model `--materialize` check; it hands it off to the post-run tail (Testing).'
 ---
 # Roadmap Seed Accepted Version Citations
 
@@ -363,7 +364,10 @@ See the `steps:` block in the frontmatter.
 - `uv run pytest tests/ -q -n auto` is green, including the doc-drift guards
   for `ROADMAP_FORMAT.md`.
 - Manual real-model check, outside the suite (tests are hermetic and never
-  spawn a backend): after steps 1 and 2 land and before the code merges, one
+  spawn a backend). Owner: the orchestrating session, in the post-run tail
+  beside `reconcile-code` and code review, not a `run` step, since a step's
+  executor must not spawn a backend itself. After steps 1 and 2 land and
+  before the code merges, one
   `plan-tool roadmap <slug> --materialize` against a real backend, on a
   throwaway roadmap with an accepted head, writes a seed that passes the
   gates and names every member file by its version-store path. The canned
