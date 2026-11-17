@@ -41,8 +41,7 @@ This step makes `_materialize_plan_seed` in `plan_tool/roadmap.py` turn the four
 
 - **Compute the paths in `_materialize_plan_seed`**, right after `loaded` is read.
   - Resolve each `item.path` and `repo_root`, then use `Path.relative_to(...).as_posix()`.
-  - The existing helper near `resolved.relative_to(Path(repo_root).resolve()).as_posix()` in `plan_tool/roadmap.py` is the pattern to follow. Reuse it if its contract fits.
-  - Do not write a second normalizer if that helper can be reused unchanged.
+  - Do not reuse `_brief_reference` in `plan_tool/roadmap.py`: on a path outside `repo_root` it catches the `ValueError` and returns the absolute path, which is the silent fallback this step forbids. Call `resolved.relative_to(Path(repo_root).resolve()).as_posix()` directly, the same expression without the fallback.
 - **Fail closed outside the repository.**
   - Catch `ValueError` from `relative_to` and raise `RoadmapError`.
   - The message names the plans directory and `repo_root`, and says no repo-relative citation exists.
