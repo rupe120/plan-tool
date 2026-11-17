@@ -310,7 +310,9 @@ lens exists to produce; keep it in sync as entries land or are added):
   **#262** (one static bare-stage report line saying detail-owned remedies are
   expected and `detail` is the next step, so a user advances to the artifact
   that can resolve the remaining implementation contracts rather than
-  re-sampling the same plan).
+  re-sampling the same plan), **#540** (a declared assurance level so robustness
+  findings beyond it stop blocking), **#541** (report plan growth while findings
+  narrow).
 - **gate-signal:** the shipped calibrated impact-aware convergence policy
   (high-impact findings and high/critical severities block; evidence-qualified
   low-impact medium findings may be demoted), the settled four-loop blocking
@@ -319,7 +321,8 @@ lens exists to produce; keep it in sync as entries land or are added):
   **#87** (harden the test-authoring gate
   against a dirty working tree), **#472** (a Claude window before the
   first call, so the first send and the reconcile refusal gate stop using the
-  200K default).
+  200K default), **#539** (certify a step with a declared command and record
+  exit-stage checks as deferred instead of leaving the choice to the model).
 - **heuristic-tuning:** **#216** (the corpus-replay benchmark whose first
   deliverable is each metric's *own* rerun noise floor — the data every other
   threshold here would need before it could be calibrated from a distribution
@@ -3393,6 +3396,49 @@ working straight down the tiers.
   section.
 - **Status:** not started.
 
+**#539 — A plan cannot mark a check as belonging to exit from local development, so `run` steps run integration suites inside the local iteration loop**
+
+- **Labels:** Route `plan`
+  · Readiness `decision-needed` (a per-step `exit_checks:` field, a stage label on each detail test, or both)
+  · Tier `architect`
+  · Principle `deterministic-non-determinism`
+- **What:** `run` certifies a step only through the plan's `test_command` and the step's `gate:`. A consumer whose integration suites first count in its hosted pipeline has no way to say so. With neither field set, the backend model picks what to run from the detail's "every listed test passes" and runs real-database and container suites mid-step; the directive's "run the full suite to green" after a hand-fixed step pushes the same way.
+- **Evidence:** an integration consumer, 2026-11-16/17. Its owner directed "the integration tests should be performed when we leave local testing", and its `TESTING.md` says local work runs the unit baseline plus affected integration files. Run logs for that consumer's `worker-identity-kinds` steps still show integration files executed inside steps, because its plans set neither `test_command` nor `gate:`.
+- **Effort:** medium: a schema field, gate execution and report rendering, a `DETAIL_FORMAT.md` test-stage label, and directive wording.
+- **Risks / fallout:** a deferred check that nothing runs later; the report and handoff therefore list every deferred check as unverified.
+- **Dependencies:** none.
+- **Outcome:** a plan can declare checks that `run` records as deferred to exit, lists in its report and handoff as unverified, and never executes.
+- **In scope:** `plan_tool/schema.py` (plan and step fields), `plan_tool/launcher.py` gate execution, run report and handoff rendering, `DETAIL_FORMAT.md` test staging, and the hand-fix wording in `integrations/shared/DIRECTIVES.md` ("run the plan's `test_command`").
+- **Out of scope / Non-goals:** running exit checks in any CI; consumer pipeline configuration; the test-authoring gate.
+- **Allowed behavior changes:** a new optional field; a deferred-checks section in the run report and handoff; the directive wording above.
+- **Allowed reorganization:** none.
+- **Verification:** a fixture plan with an exit check completes a step without executing it and lists it as deferred and unverified.
+- **Stop / defer:** CI wiring for deferred checks is a separate entry.
+- **Quality:** gate-signal — step certification follows a declared command instead of the model's reading of detail prose.
+- **Status:** not started.
+
+**#540 — The completeness audit has no declared assurance level, so a proof-of-concept plan keeps collecting blocking robustness findings**
+
+- **Labels:** Route `plan`
+  · Readiness `decision-needed` (level names, and which finding classes each level demotes)
+  · Tier `architect`
+  · Principle `converge-on-correct-plan`
+- **What:** the conceptual audit judges every plan against production rigor. For a single-owner, loopback-only developer tool it raised a new, narrower robustness gap each round, and nothing in the plan could state how much rigor the stage wants.
+- **Evidence:** an integration consumer's `local-execution-mode` plan, 2026-11-17: thirteen detail-grounded rounds, with planned tests at 91 when the owner asked "are we over engineered?". A hand-written "Scope calibration" section cut them to 43, after which rounds converged. The consumer then added audit levels to its own audit contract to express the same idea.
+- **Look-alikes not merged:** #404 (what the audit may question about intent, not how much rigor applies), #495 (how many passes run), #490 (a decision on one finding, not a plan-wide level).
+- **Effort:** medium to large: a plan field, the audit prompt, severity classification and report rendering.
+- **Risks / fallout:** a level used to wave away real defects; a level therefore demotes only robustness findings beyond it, never correctness findings or contract contradictions.
+- **Dependencies:** none.
+- **Outcome:** a plan declares its assurance level, and the audit reports findings that exceed that level as advisory, naming the level.
+- **In scope:** the plan schema, the conceptual audit prompt and severity classification, report rendering, `PLAN_FORMAT.md`.
+- **Out of scope / Non-goals:** automatic limits on test counts; deterministic checks; per-finding dispositions (#490).
+- **Allowed behavior changes:** a new optional field; severity demotion only when it is set.
+- **Allowed reorganization:** none.
+- **Verification:** one fixture plan audited at two levels yields identical correctness findings and differs only in the severity of robustness findings.
+- **Stop / defer:** level-aware detail generation is a separate entry.
+- **Quality:** convergence — rounds stop when the remaining findings exceed the declared rigor.
+- **Status:** not started.
+
 ### B. Significant UX changes
 
 **#262 — Bare-stage report header: one static line that detail is the next step**
@@ -3695,6 +3741,26 @@ working straight down the tiers.
   completeness verbs.
 
 **#69 — Close (or explicitly document) the standalone `reconcile-plan` unattended-apply gap** → promoted to IPPT-13 (2026-09-27)
+
+**#542 — `sweep` archives every completed plan at once and takes no plan name**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `write-for-the-human`
+- **What:** archiving one finished plan means archiving all of them; an operator who wants one moved cannot do it with the tool.
+- **Evidence:** an integration consumer, 2026-11-16: a dry run to archive one finished plan listed 19 completed plans. It was not applied, because other documents cite the unrelated plans' paths.
+- **Effort:** small: an optional positional name and a filter.
+- **Risks / fallout:** none beyond the new argument.
+- **Dependencies:** none.
+- **Outcome:** `sweep <name>` archives only the named completed plan; bare `sweep` keeps its current behavior.
+- **In scope:** the `sweep` subcommand.
+- **Out of scope / Non-goals:** archive layout; updating inbound citations.
+- **Allowed behavior changes:** the optional name.
+- **Allowed reorganization:** none.
+- **Verification:** with two completed plans, `sweep <one> --dry-run` lists one.
+- **Stop / defer:** citation rewriting after an archive is a separate entry.
+- **Status:** not started.
 
 ### C. Investigations / decision-making
 
@@ -4496,6 +4562,28 @@ working straight down the tiers.
   the reusable capability is its optional, human-controlled reconciliation
   protocol rather than Integration-specific connector behavior.
 - **Status:** parked 2026-11-14.
+
+**#541 — Nothing reports that a plan keeps growing while audit findings narrow, the shape that signals over-engineering**
+
+- **Labels:** Route `direct`
+  · Readiness `evidence-gated` (replay the saved reports named below first)
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **Escalate to plan if:** the signal should gate a stage transition rather than stay advisory.
+- **What:** convergence diagnostics follow finding identity, not plan size. Rounds that each add tests and mechanisms to close a narrower finding read as progress.
+- **Evidence:** the same consumer session as #540; its saved completeness reports under `<integration-consumer-root>/docs/implementation-plans/plan-details/local-execution-mode/reports/` cover all thirteen rounds.
+- **Effort:** small to medium: counting planned tests and detail size per round and rendering a delta.
+- **Risks / fallout:** a false alarm on plans that legitimately grow during detail; the signal stays advisory.
+- **Dependencies:** none.
+- **Outcome:** the completeness report shows per-round deltas of planned tests and detail size and flags consecutive rounds of growth with narrowing findings.
+- **In scope:** completeness report rendering and detail-bundle counting.
+- **Out of scope / Non-goals:** blocking on growth; assurance levels (#540).
+- **Allowed behavior changes:** an advisory report section.
+- **Allowed reorganization:** none.
+- **Verification:** replaying the consumer's saved reports flags the rounds where growth continued.
+- **Stop / defer:** none.
+- **Quality:** convergence.
+- **Status:** not started.
 
 ### D. Process / hygiene
 
@@ -8436,6 +8524,7 @@ working straight down the tiers.
 - **Evidence:** the `no-edits-applied` review (2026-10-13)
   re-stated its declined
   items in every reviewer prompt by hand so later rounds would not re-raise them.
+- **Evidence (integration consumer, 2026-11-17):** an owner decision on a completeness finding (a fixed local audit deployment value) could be recorded only as plan prose, and the `decide` command accepts decomposition outcomes only. A tool-heuristic finding (`orphaned-deliverable` on a backlog file) was declined in three consecutive rounds and re-raised each time.
 - **Effort:** medium: a disposition store keyed by stable finding identity, a
   command to record one, and the audit prompt and report reading it.
 - **Risks / fallout:** a declined finding hides a later real regression at the
