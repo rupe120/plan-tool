@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md`.
+> Preserved here for history; do not edit.
+
 # Plan seed: roadmap draft seeds cite the accepted roadmap version, not bare filenames
 
 This file is a `plan-tool create` input. Use it via:
