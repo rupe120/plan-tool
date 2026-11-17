@@ -355,6 +355,16 @@ See the `steps:` block in the frontmatter.
   behavior.
 - `uv run pytest tests/ -q -n auto` is green, including the doc-drift guards
   for `ROADMAP_FORMAT.md`.
+- Manual real-model check, outside the suite (tests are hermetic and never
+  spawn a backend): after steps 1 and 2 land and before the code merges, one
+  `plan-tool roadmap <slug> --materialize` against a real backend, on a
+  throwaway roadmap with an accepted head, writes a seed that passes the
+  gates and names every member file by its version-store path. The canned
+  responses above prove the gates and the prompt wiring; only this run shows
+  the real seed writer complies. If it falls back to bare names after the
+  bounded retry, stop and surface it: the remedy is a scoped follow-up (a
+  deterministic rewrite of bare member names to the paths the writer was
+  given), never a looser gate.
 
 ## Acceptance criteria
 
@@ -367,6 +377,9 @@ See the `steps:` block in the frontmatter.
 - `ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" states the new
   citation form, and the roadmap-seed prompt and both draft-seed gates agree
   with it.
+- One real-model `--materialize` run, recorded with its outcome in the code
+  pull request, produced a gate-clean seed citing only version-store paths
+  before the code merged.
 - Backlog reconciliation: the final step removes the originating
   `BUG_BACKLOG.md` entry only after full shipment, and leaves or updates any
   deferred follow-up. Authoring this plan does not remove it.
