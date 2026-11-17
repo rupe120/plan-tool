@@ -3383,8 +3383,35 @@ class RoadmapSeedMaterializeResult:
     violations: tuple[Violation, ...] = ()
 
 
+def _version_store_citation_paths(
+    loaded: Sequence[_LoadedArtifact], *, repo_root: Path, plans_dir: Path
+) -> dict[str, str]:
+    """Repo-relative POSIX version-store path per stage, keyed ``<artifact_key>_path``.
+
+    Fails closed outside ``repo_root``: no repo-relative citation exists, and a
+    bare member name would be the silent fallback this exists to prevent.
+    """
+    root = Path(repo_root).resolve()
+    paths: dict[str, str] = {}
+    for item in loaded:
+        try:
+            paths[f"{item.stage.artifact_key}_path"] = (
+                Path(item.path).resolve().relative_to(root).as_posix()
+            )
+        except ValueError:
+            raise RoadmapError(
+                f"plans directory {plans_dir} is outside repo root {root}, so the "
+                "accepted roadmap version has no repo-relative path to cite in a seed"
+            ) from None
+    return paths
+
+
 def _render_seed_materialize_prompt(
-    *, slug: str, plan_id: str, loaded: Sequence[_LoadedArtifact]
+    *,
+    slug: str,
+    plan_id: str,
+    loaded: Sequence[_LoadedArtifact],
+    citation_paths: Mapping[str, str],
 ) -> str:
     """Render the standalone prompt for one accepted roadmap plan row."""
     template_path = prompts_dir() / "roadmap-seed.md"
@@ -3400,6 +3427,7 @@ def _render_seed_materialize_prompt(
 
     variables = {"slug": slug, "plan_id": plan_id}
     variables.update({f"{item.stage.artifact_key}_artifact": item.text for item in loaded})
+    variables.update(citation_paths)
     template_text = read_roadmap_text(
         template_path, error_for_read_failure=unreadable_prompt_input
     )
@@ -3581,6 +3609,10 @@ def _materialize_plan_seed(
     if plan is None:
         raise RoadmapError(f"roadmap '{slug}' has no plan id '{plan_id}' in {PLANS_FILENAME}")
 
+    citation_paths = _version_store_citation_paths(
+        loaded, repo_root=repo_root, plans_dir=plans_dir
+    )
+
     # The version id comes from the same read as the artifacts (the member
     # directory is named for it), so the stack can never cite another version.
     stack_section = _render_stack_section(
@@ -3592,7 +3624,9 @@ def _materialize_plan_seed(
         plan=plan,
     )
 
-    base_prompt = _render_seed_materialize_prompt(slug=slug, plan_id=plan_id, loaded=loaded)
+    base_prompt = _render_seed_materialize_prompt(
+        slug=slug, plan_id=plan_id, loaded=loaded, citation_paths=citation_paths
+    )
     corrections: tuple[str, ...] = ()
     failure_kind: str | None = None
     failure_rc: int | None = None

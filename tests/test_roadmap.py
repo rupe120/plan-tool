@@ -170,6 +170,7 @@ from plan_tool.roadmap_versions import (
     accepted_head_path,
     is_roadmap_enrolled,
     load_accepted_version,
+    version_directory_path,
     version_namespace_path,
 )
 from plan_tool.roadmap_feedback_ledger import (
@@ -6389,6 +6390,101 @@ class TestSeedTechnologyStackLines:
         assert "concern: store-engine; choice: relational store" in draft
 
 
+def _use_shipped_seed_template(env: _Env) -> None:
+    """Replace the synthetic seed template with the shipped one (same fixture dir)."""
+    (env.prompts / "roadmap-seed.md").write_text(_seed_prompt_text(), encoding="utf-8")
+
+
+def _version_store_paths(env: _Env) -> dict[str, str]:
+    version = load_accepted_version(plans_dir=env.plans_dir, slug=SLUG)
+    assert version is not None
+    return {
+        filename: (
+            version_directory_path(env.plans_dir, SLUG, version.record.version_id) / filename
+        )
+        .relative_to(env.repo_root)
+        .as_posix()
+        for filename in (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME)
+    }
+
+
+class TestSeedPromptCitesVersionStorePaths:
+    def test_seed_prompt_contains_each_version_store_path(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        _use_shipped_seed_template(env)
+        invoker = _StubInvoker(_seed_text())
+
+        _materialize(env, invoker)
+
+        prompt = invoker.prompts[0]
+        for path in _version_store_paths(env).values():
+            assert f"`{path}`" in prompt
+
+    def test_seed_prompt_leaves_no_unresolved_placeholder(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        _use_shipped_seed_template(env)
+        invoker = _StubInvoker(_seed_text())
+
+        _materialize(env, invoker)
+
+        assert "${" not in invoker.prompts[0]
+
+    def test_seed_prompt_placeholders_are_a_subset_of_the_variable_map(self, env: _Env) -> None:
+        # The variable map lives in the caller, so render with the shipped
+        # template and require that no placeholder survives substitution.
+        used = set(re.findall(r"\$\{(\w+)\}", _seed_prompt_text()))
+        _prepare_seed_materialization(env)
+        env.publish_accepted()
+        loaded = roadmap.load_accepted_roadmap_artifacts(plans_dir=env.plans_dir, slug=SLUG)
+        paths = roadmap._version_store_citation_paths(
+            loaded, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+        supplied = {"slug", "plan_id"} | {
+            f"{item.stage.artifact_key}_artifact" for item in loaded
+        } | set(paths)
+
+        assert used <= supplied
+        assert {"domain_path", "constraints_path", "components_path", "plans_path"} <= used
+
+    def test_seed_prompt_no_longer_asks_for_literal_filenames(self) -> None:
+        text = _flattened(_seed_prompt_text())
+
+        assert "literal filenames" not in text
+        assert "source_artifacts" not in text
+
+    def test_plans_dir_outside_repo_root_stops_with_roadmap_error_before_any_backend_call(
+        self, env: _Env, tmp_path_factory: pytest.TempPathFactory
+    ) -> None:
+        _prepare_seed_materialization(env)
+        invoker = _StubInvoker(_seed_text())
+
+        with pytest.raises(roadmap.RoadmapError, match="outside repo root"):
+            roadmap.materialize_plan_seed(
+                SLUG,
+                _PLAN_ORDER.id,
+                repo_root=tmp_path_factory.mktemp("elsewhere"),
+                plans_dir=env.plans_dir,
+                invoker=invoker,
+            )
+
+        assert invoker.prompts == []
+
+    def test_conforming_response_citing_version_store_paths_is_written(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        _use_shipped_seed_template(env)
+        paths = _version_store_paths(env)
+        cited = _seed_text()
+        for filename, path in paths.items():
+            cited = cited.replace(f"`{filename}`", f"`{path}`")
+
+        result = _materialize(env, _StubInvoker(cited))
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_APPLIED
+        draft = _written_draft(env)
+        for path in paths.values():
+            assert f"`{path}`" in draft
+
+
 class TestSeedPromptTemplate:
     def test_seed_prompt_preserves_selected_row_responsibilities_and_source_references(self) -> None:
         text = _flattened(_seed_prompt_text())
@@ -6448,6 +6544,10 @@ class TestSeedPromptTemplate:
             "constraints_artifact",
             "components_artifact",
             "plans_artifact",
+            "domain_path",
+            "constraints_path",
+            "components_path",
+            "plans_path",
         }
 
     def test_seed_prompt_names_draft_seed_provenance_keys(self) -> None:
