@@ -91,6 +91,7 @@ steps:
   - 1
   depends_on_notes:
     1: the selection helper and the captured snapshot field the renderer reads
+  detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md
   description: 'Add a sibling-planned-paths input block to `plan_tool/prompts/plan-audit.md`
     as a new `${sibling_planned_paths_block}` placeholder beside the existing input
     blocks. It lists each sibling `creates:` path one per line and tells the auditor
