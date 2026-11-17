@@ -66,7 +66,11 @@ steps:
     uses); another file whose name starts `0N-` is deliberately not flagged. Both
     checks judge the citation''s form only, so they need no repo root: an occurrence
     of a member filename passes exactly when `.roadmap-versions/<version-id>/` directly
-    precedes it, for any well-formed version id. The id does not have to be the accepted
+    precedes it, for any well-formed version id: a lowercase 64-hex SHA-256 digest,
+    the form `roadmap_versions.SHA256_DIGEST_RE` accepts, under the `.roadmap-versions`
+    directory (`ROADMAP_VERSION_NAMESPACE_DIRNAME`). The gate repeats both facts as
+    local constants, and a test pins them equal to the `roadmap_versions` originals.
+    The id does not have to be the accepted
     one, because a hand-edited seed cites the version its text came from. The repo-relative
     prefix in front of that segment is step 1''s writer''s responsibility, not the
     gates''. (a) The References gate (`VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE`)
@@ -121,7 +125,9 @@ steps:
     seed, and a roadmap with no accepted head, keep today''s behavior. Destructive
     operations: none; `create` reads the seed and never rewrites it. Tests in `tests/cli/test_authoring_cmds.py`:
     the draft legacy seed and the promoted legacy copy each prompt and name both routes;
-    `-y` continues; untracked and no-head cases are unchanged. One integration case
+    `-y` continues; untracked and no-head cases are unchanged; a tracked seed whose
+    frontmatter carries `source_artifacts: [04-roadmap.md]` yields a plan with no
+    `source_artifacts` key and no bare member filename copied from it. One integration case
     covers a stage-run roadmap with no top-level files plus a stale top-level `04-roadmap.md`
     beside an accepted head: a seed regenerated with a canned response carries into
     the plan body only version-store paths that name existing files holding the accepted
@@ -152,8 +158,8 @@ steps:
     version id is accepted, and that a cited path naming an older
     version after a later promotion is intended, not a defect. § ''Draft-seed manifest
     states'' records that legacy bare-name seeds classify `malformed`, with the two
-    repair routes. Also record, after checking `create`''s frontmatter handling, whether
-    a stray `source_artifacts` key is dropped by `create` or left inert. `docs/how-to/roadmap.md`
+    repair routes, and that a seed''s frontmatter never reaches the plan (Architecture,
+    `source_artifacts`). `docs/how-to/roadmap.md`
     § 1''s leftover-files paragraph stops describing a reader opening a bare `04-roadmap.md`
     as the expected path. `docs/explanations/roadmap-plan-handoff.md` describes what
     References carries in the new form. Sweep these surfaces by vocabulary (''literal
@@ -197,7 +203,7 @@ The problem affects every roadmap, not only older folders with leftovers. A stag
 - A new body check makes a bare member filename anywhere in the seed body a violation, fenced code included. `create` copies fenced text into the plan verbatim, so a fence is no safer than prose. Bare means any occurrence whose path does not contain `.roadmap-versions/<version-id>/`. A path to a top-level copy therefore counts as bare, and the required paths never trip the check. This is a plain presence check: it rejects every bare occurrence and never judges whether an occurrence is a citation or a mention.
 - Both gates accept a version-store path naming any stored version, not only the accepted one. The hand-edit route cites the version a seed's text was written from, which can be older than the accepted head.
 
-**`source_artifacts`.** This deliberately departs from the source entry's Fix, which renders that key in the new form too. The prompt never asks for the key, and `parse_draft_seed_provenance` ignores it (`roadmap_components` and `cross_cutting` are its only keys), so the seed body stays the one citation surface. The plan records whether `create` drops a stray `source_artifacts` key or leaves it inert.
+**`source_artifacts`.** This deliberately departs from the source entry's Fix, which renders that key in the new form too. The prompt never asks for the key, and `parse_draft_seed_provenance` ignores it (`roadmap_components` and `cross_cutting` are its only keys), so the seed body stays the one citation surface. A stray `source_artifacts` key, bare name included, cannot reach a plan, and the guarantee depends on that: plan frontmatter is serialized only by `write_plan` from the `Plan` schema, which forbids extra fields, and the sections `create` copies come from frontmatter-stripped seed text (`_strip_frontmatter`). Step 3 pins it with a test. Bare names the model might write from frontmatter into new prose are the deferred synthesis case, not this one.
 
 **Guarantee: "the audit never grounds on a top-level copy of a cited roadmap artifact."** Mechanism: every roadmap file name in a seed that passes the draft-seed gates is a version-store path, and `create` copies seed text into the plan. Owners: the seed writer and the draft-seed gates. Order: the draft-seed contract and gates change first, then `create`'s confirmation for a tracked seed that fails the check.
 
