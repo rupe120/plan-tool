@@ -170,7 +170,7 @@ certification of decomposition quality, full outcome coverage or execution readi
 ## References
 
 A roadmap draft seed's References section carries repo-relative version-store paths
-(`.roadmap-versions/<version-id>/0N-*.md`) for each cited member file, never a bare
+(`<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md`, the roadmap folder given repo-relative) for each cited member file, never a bare
 `0N-*.md` name; `create` copies them into the plan References unchanged.
 
 Integration code/document paths below are relative to the inspected checkout at the

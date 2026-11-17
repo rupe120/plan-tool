@@ -218,7 +218,7 @@ Durable re-open conditions for retired items are recorded in
   which carry no rule about how a plan names a roadmap artifact in prose the
   model writes rather than copies from the seed.
 - **Symptom:** a roadmap draft seed cites each roadmap file by its
-  `.roadmap-versions/<version-id>/0N-*.md` path, and `create --from-existing`
+  `<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md` path, and `create --from-existing`
   copies that text into the plan. Prose the model writes while synthesizing
   the plan (step text, acceptance criteria, risks it restates) can still name
   `04-roadmap.md` bare. A reader or audit that opens that name reaches the

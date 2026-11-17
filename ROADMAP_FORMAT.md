@@ -594,8 +594,10 @@ paths share a basename.
 **Citing roadmap files.** A seed names each roadmap member file by its
 accepted version's version-store path:
 
-- **Form:** `.roadmap-versions/<version-id>/0N-*.md`, for example
-  `.roadmap-versions/<version-id>/04-roadmap.md`.
+- **Form:** `<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md`, where the roadmap folder is its
+  repo-relative path, for example
+  `docs/implementation-plans/roadmaps/<slug>/.roadmap-versions/<version-id>/04-roadmap.md`.
+  A citation without the folder does not resolve and is refused.
 - **Repository-relative:** the path is relative to the roadmap's repository,
   and stays so when `create` later re-roots the plan under another directory.
 - **Body-wide bare-name rule:** a bare member filename (the four constants in

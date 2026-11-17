@@ -641,7 +641,7 @@ the workflows that exercise them, and the entities they govern. This is seed
 authorship, not materialization repartitioning an accepted row.
 
 Write a seed following [`SEED_FORMAT.md`](../../SEED_FORMAT.md) that cites the
-four artifacts resolved through the accepted head, each by its repo-relative `.roadmap-versions/<version-id>/0N-*.md` path (a hand-written seed is untracked, so no gate checks it: a bare member filename here reaches the plan and its audit), binds its rules and entity
+four artifacts resolved through the accepted head, each by its repo-relative `<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md` path (a hand-written seed is untracked, so no gate checks it: a bare member filename here reaches the plan and its audit), binds its rules and entity
 IDs, fences settled decisions (including rejected alternatives and reasons), and
 names the constraints it discharges. Then use ordinary `create --from-existing`.
 Do not edit immutable roadmap artifacts directly; use the feedback and review
