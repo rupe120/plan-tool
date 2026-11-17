@@ -1,0 +1,183 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-accepted-version-citations",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md",
+  "created_at": "2026-11-17T14:59:05Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "7298dd914b8f8a2908756f311bb2145757af7fc5f6e9d9e789358283fd3c81c1",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "f5c02dec8a913330c7af8645c18309e706819c1f07ea9b9f1cdbd0ee157c2de1",
+    "ROADMAP_FORMAT.md": "b46ccfc8b4fa4161e3fcec24508c0c095f3570aeb145a2e42f71190b2e8cf9b6",
+    "docs/explanations/roadmap-plan-handoff.md": "9ad66295dc220c7b86ac9c04c0299942f9384ba87d816925686e61966da076c9",
+    "docs/how-to/roadmap.md": "7fc8a3baa4815958dec19e60a71765945c6a08e9912caa469b8d73d5ef31e262",
+    "plan_tool/cli/authoring.py": "01e97b34fde5ec9c0bbacd2d214cd4e9563f504bfec98647acef43a1d8efe11a",
+    "plan_tool/prompts/roadmap-seed.md": "281fb57c995235cb1285bc491815dff89a0d56e2c403fee06b37b4cea22ac25b",
+    "plan_tool/roadmap.py": "7fc035f6b75c7241aa3fd49ada02b579a3300039df1daf58cf643224df2e08d3",
+    "plan_tool/roadmap_gates.py": "daf50d15ab26b119a84a0e55e2b88b0a486a96e8630956d78934b25c5ebfa459",
+    "plan_tool/roadmap_seed_manifest.py": "074e0a67e7e74b8b16f1ccafbb802c1e6b1967b18992a5f6d090cde80dc8bdf2",
+    "tests/cli/test_authoring_cmds.py": "73e43436daa55e0a366e9755e80d10793962014c9638802b625c0bf311278f9d",
+    "tests/test_roadmap.py": "39bc6bb691a168a45a83a7b3d0c4d8c8f308dd6baa376d330bbdf10c4fc5dcc3",
+    "tests/test_roadmap_gates.py": "9a170ebe3f78fee638e960383460551dd4fd054dfaced1f2bc042db115f22db8",
+    "tests/test_roadmap_seed_manifest.py": "5965618cd7c58fce111f71765b14039dd05d4b947962671cf1e1cde5469f3f9d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md": "ec17f6cfb562d8ce79be8e5d5d0055908efe04f9b6a714ebdf43ca999dffb7c2",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md": "8ea7966cc244e0bcd7fa343252b150c819e2e014b124cc756d6b43d85658587e",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md": "bbd3274d87ec83efa208264765c6e2ac70f1a641d162beb43987f5dd974fbf67",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md": "1ff4d0cbea139c5bf6cea0c4ad2cb897a99e3ff3319a4fabffecc8740f391646"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Accepted Version Citations\n\n`roadmap-seed-accepted-version-citations` \u00b7 generated 2026-11-17T14:59:04Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a1a46b1be1a22edbea40bc856469fee06874fe3f0e4f94726ff32bb27be0fa2b`\n- **Detail bundle digest:** `e8d8bb5f94f8776fc39844a0c5e846bd68a0b400551a72d200144f49691ec3f7`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 50311 bytes (+50311 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[bare-name-gate-scope-no-head]` [confidence: limited]: Step 2 (`validate_draft_seed_content` body check) applies the bare-name rule at every caller and has no access to head state, but the plan also promises \"An untracked seed, and a roadmap with no accepted head, keep their current behavior\" (Testing, Architecture \"Legacy seeds\"; step 2's tests: \"a roadmap with no accepted head keeping today's behavior\"). `classify_draft_seeds`, `--accept-seed` and `_reject_unmatched_operator_draft_fences` run the shared validator with no head check, so a bare name is rejected there whether or not a head exists. Two implementers could read this as \"gate off when no head\" (needs a new argument, which step 2 forbids) or \"gate always on; only `create` confirmation is head-conditional\" (which is what step 2's design delivers). The acceptance criterion (\"While an accepted head exists\u2026\") reads the first way. State which behaviors are head-conditional: the gate is unconditional, and only step 3's confirmation and step 1's materialize path depend on the head.\n  - Fix: State once in the Architecture \"Draft-seed gates\" paragraph and in step 2 and step 3's no-head test wording that the form check is unconditional, and that \"keeps today's behavior\" for a no-head roadmap covers only `create`'s confirmation and the materialize path.\n- MEDIUM `[seed-quote-of-bare-names]` [confidence: limited]: Step 1 asks the seed writer for version-store paths everywhere, and step 2's body check rejects any bare member filename, \"fenced code included\" and \"never judges citation versus mention\". The accepted artifacts that the prompt pastes in (`${domain_artifact}` \u2026 `${plans_artifact}`) can themselves mention member filenames such as `04-roadmap.md`. A seed that carries that text forward, in Architecture, Risks or a fence, fails the gate. The plan does not say what the prompt tells the writer to do with bare names found in carried-over artifact text (rewrite to the version-store path, or drop), or what happens when the bounded retry still fails. Step 1's tests only prove a canned conforming response passes; its own \"Verification limit\" concedes real-model compliance is unmeasured. The prompt rewrite should tell the writer to rewrite or avoid any member filename that appears in text it carries over, so the retry has a satisfiable instruction.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Step 1 does not say how the writer handles roadmap file names that appear inside artifact text it carries into the seed, so the gate can reject a faithful carry-over.\n  - Fix: Add one sentence to step 1's prompt requirements telling the writer to replace any member filename found in carried-over artifact text with its version-store path, and note that the bounded retry's failure is the existing materialize failure.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[promoted-copy-message-precedence]` [confidence: limited]: Step 3 adds a bare-name arm to `_confirm_invalidated_roadmap_seed` for a promoted copy, but the function already picks one message from `non_current_state`. At HEAD the promoted arm sets `DRAFT_SEED_STATE_STALE` when the sidecar entry is `invalidated`. A promoted copy that is both invalidated and bare-named has two applicable messages and two route sets (re-promote versus repair), and step 3 does not say which is shown or whether both are named. Define the precedence, for example: stale message first with the bare-name routes appended, or the combined message.\n  - Fix: Specify in step 3 how the stale and bare-name conditions combine into one message for a promoted copy (and for a draft that is both `stale` and bare-named), and add one test for the combined case.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-cc946505]` [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]` [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-roadmap-gates-py]` [confidence: limited]: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md:## Input cites `roadmap_gates.py`, but code anchor path `roadmap_gates.py` does not exist.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files first (design gaps; not auto-applied under #85), then 1 conceptual-completeness gap(s).\n- 1 conceptual gap(s) are listed in the report as advisory (outside the blocking set).\n- Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 3 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Accepted Version Citations\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a1a46b1be1a22edbea40bc856469fee06874fe3f0e4f94726ff32bb27be0fa2b`\n- **Detail bundle digest:** `e8d8bb5f94f8776fc39844a0c5e846bd68a0b400551a72d200144f49691ec3f7`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-roadmap-gates-py]` [confidence: limited]: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md:## Input cites `roadmap_gates.py`, but code anchor path `roadmap_gates.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[promoted-copy-message-precedence]` [confidence: limited]: Step 3 adds a bare-name arm to `_confirm_invalidated_roadmap_seed` for a promoted copy, but the function already picks one message from `non_current_state`. At HEAD the promoted arm sets `DRAFT_SEED_STATE_STALE` when the sidecar entry is `invalidated`. A promoted copy that is both invalidated and bare-named has two applicable messages and two route sets (re-promote versus repair), and step 3 does not say which is shown or whether both are named. Define the precedence, for example: stale message first with the bare-name routes appended, or the combined message.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-seed-accepted-version-citations` \u2014 interactively review the finding(s) the iterate loop left open.\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files first (design gaps; not auto-applied under #85), then 1 conceptual-completeness gap(s).\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 3 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-593b20d5",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`validate_draft_seed_content` body check) applies the bare-name rule at every caller and has no access to head s",
+      "body": "Step 2 (`validate_draft_seed_content` body check) applies the bare-name rule at every caller and has no access to head state, but the plan also promises \"An untracked seed, and a roadmap with no accepted head, keep their current behavior\" (Testing, Architecture \"Legacy seeds\"; step 2's tests: \"a roadmap with no accepted head keeping today's behavior\"). `classify_draft_seeds`, `--accept-seed` and `_reject_unmatched_operator_draft_fences` run the shared validator with no head check, so a bare name is rejected there whether or not a head exists. Two implementers could read this as \"gate off when no head\" (needs a new argument, which step 2 forbids) or \"gate always on; only `create` confirmation is head-conditional\" (which is what step 2's design delivers). The acceptance criterion (\"While an accepted head exists\u2026\") reads the first way. State which behaviors are head-conditional: the gate is unconditional, and only step 3's confirmation and step 1's materialize path depend on the head.",
+      "suggested_action": "State once in the Architecture \"Draft-seed gates\" paragraph and in step 2 and step 3's no-head test wording that the form check is unconditional, and that \"keeps today's behavior\" for a no-head roadmap covers only `create`'s confirmation and the materialize path.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "bare-name-gate-scope-no-head",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-27e9a8dc",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 asks the seed writer for version-store paths everywhere, and step 2's body check rejects any bare member filename",
+      "body": "Step 1 asks the seed writer for version-store paths everywhere, and step 2's body check rejects any bare member filename, \"fenced code included\" and \"never judges citation versus mention\". The accepted artifacts that the prompt pastes in (`${domain_artifact}` \u2026 `${plans_artifact}`) can themselves mention member filenames such as `04-roadmap.md`. A seed that carries that text forward, in Architecture, Risks or a fence, fails the gate. The plan does not say what the prompt tells the writer to do with bare names found in carried-over artifact text (rewrite to the version-store path, or drop), or what happens when the bounded retry still fails. Step 1's tests only prove a canned conforming response passes; its own \"Verification limit\" concedes real-model compliance is unmeasured. The prompt rewrite should tell the writer to rewrite or avoid any member filename that appears in text it carries over, so the retry has a satisfiable instruction.",
+      "suggested_action": "Add one sentence to step 1's prompt requirements telling the writer to replace any member filename found in carried-over artifact text with its version-store path, and note that the bounded retry's failure is the existing materialize failure.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-quote-of-bare-names",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "Step 1 does not say how the writer handles roadmap file names that appear inside artifact text it carries into the seed, so the gate can reject a faithful carry-over."
+    },
+    {
+      "id": "plan-plan-completeness-5cb76fff",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 adds a bare-name arm to `_confirm_invalidated_roadmap_seed` for a promoted copy, but the function already picks o",
+      "body": "Step 3 adds a bare-name arm to `_confirm_invalidated_roadmap_seed` for a promoted copy, but the function already picks one message from `non_current_state`. At HEAD the promoted arm sets `DRAFT_SEED_STATE_STALE` when the sidecar entry is `invalidated`. A promoted copy that is both invalidated and bare-named has two applicable messages and two route sets (re-promote versus repair), and step 3 does not say which is shown or whether both are named. Define the precedence, for example: stale message first with the bare-name routes appended, or the combined message.",
+      "suggested_action": "Specify in step 3 how the stale and bare-name conditions combine into one message for a promoted copy (and for a draft that is both `stale` and bare-named), and add one test for the combined case.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "promoted-copy-message-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step2-data-contract-834ad70f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `roadmap_gates.py`",
+      "body": "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md:## Input cites `roadmap_gates.py`, but code anchor path `roadmap_gates.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-roadmap-gates-py",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "a1a46b1be1a22edbea40bc856469fee06874fe3f0e4f94726ff32bb27be0fa2b",
+      "detail_bundle_digest": "e8d8bb5f94f8776fc39844a0c5e846bd68a0b400551a72d200144f49691ec3f7",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md",
+          "state": "present",
+          "digest": "ec17f6cfb562d8ce79be8e5d5d0055908efe04f9b6a714ebdf43ca999dffb7c2"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md",
+          "state": "present",
+          "digest": "8ea7966cc244e0bcd7fa343252b150c819e2e014b124cc756d6b43d85658587e"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md",
+          "state": "present",
+          "digest": "bbd3274d87ec83efa208264765c6e2ac70f1a641d162beb43987f5dd974fbf67"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md",
+          "state": "present",
+          "digest": "1ff4d0cbea139c5bf6cea0c4ad2cb897a99e3ff3319a4fabffecc8740f391646"
+        }
+      ],
+      "source_seed_digest": "54641adf8aecbcbbc910033b86068f4d041838abb803e32f4a299c27f76b3723",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 50311,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}
