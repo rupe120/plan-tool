@@ -154,7 +154,7 @@ from plan_tool.roadmap_artifacts import (
     RoadmapArtifactError,
     parse_plans_artifact,
 )
-from plan_tool.roadmap_gates import STACK_BARE_NAME_ROUTE, bare_roadmap_file_citations
+from plan_tool.roadmap_gates import bare_roadmap_file_citations
 from plan_tool.roadmap_seed_manifest import (
     DRAFT_SEED_STATE_CURRENT,
     DRAFT_SEED_STATE_STALE,
@@ -332,25 +332,41 @@ def _pre_slug_refusal(reason: str) -> None:
     print(f"create-refused: reason={reason}", file=sys.stderr)
 
 
-def _bare_citation_repair_routes(location: TrackedSeedLocation, *, published: bool) -> str:
-    """Repair routes for a bare-named seed, keyed on where ``create`` reads it."""
-    refresh = f"`plan-tool roadmap {location.roadmap_slug} --refresh-seeds`"
-    if not location.via_marker:
-        return (
-            f"regenerate it with {refresh}, or hand-replace each bare name with "
-            f"the source version's path and run `--accept-seed {location.plan_id}`"
+def _bare_citation_repair_routes(
+    location: TrackedSeedLocation, *, published: bool, in_stack: bool
+) -> str:
+    """One repair message valid for every seed location and occurrence origin.
+
+    Regeneration is per row (``--materialize PLAN_ID``) and rewrites a promoted
+    copy only at its recorded destination when published; a hand edit of the
+    file ``create`` read always works. A Stack-origin name needs the roadmap
+    row revised first, because the tool rewrites that section from the row.
+    """
+    materialize = f"`plan-tool roadmap {location.roadmap_slug} --materialize {location.plan_id}`"
+    if location.via_marker:
+        regenerate = (
+            f"{materialize} rewrites this promoted copy only when the seed state records "
+            "`published: true` and this file is its recorded destination"
+            + ("" if published else " (it does not record `published: true`)")
         )
-    refresh_route = (
-        f"{refresh} rewrites this promoted copy (the seed state records `published: true`)"
-        if published
-        else f"{refresh} does not rewrite this promoted copy (the seed state does not "
-        "record `published: true`)"
-    )
-    return (
-        f"{refresh_route}; otherwise, or to keep hand edits, hand-replace each bare "
-        "name with the source version's path in the promoted copy itself, which "
-        "`create` reads directly"
-    )
+        hand_edit = (
+            "hand-replace each bare name with the source version's path in the file "
+            "passed to `create`, which `create` reads directly"
+        )
+    else:
+        regenerate = f"{materialize} regenerates this draft"
+        hand_edit = (
+            "hand-replace each bare name with the source version's path in the file "
+            f"passed to `create`, then run `--accept-seed {location.plan_id}`"
+        )
+    routes = f"{regenerate}; or {hand_edit}"
+    if in_stack:
+        routes = (
+            "a name in the tool-written '## Stack' section comes from an accepted roadmap "
+            "row value, so first revise that row through reviewer feedback so a new "
+            f"accepted version is published; then {routes}"
+        )
+    return routes
 
 
 def _confirm_invalidated_roadmap_seed(
@@ -436,15 +452,11 @@ def _confirm_invalidated_roadmap_seed(
     bare = [citation for text in seed_texts for citation in bare_roadmap_file_citations(text)]
     if bare:
         names = ", ".join(sorted({citation.filename for citation in bare}))
-        route_parts = []
-        if any(not citation.in_stack_section for citation in bare):
-            route_parts.append(_bare_citation_repair_routes(location, published=published))
-        if any(citation.in_stack_section for citation in bare):
-            route_parts.append(
-                "a name in the tool-written '## Stack' section comes from an accepted "
-                f"roadmap row value, so {STACK_BARE_NAME_ROUTE}"
-            )
-        routes = "; ".join(route_parts)
+        routes = _bare_citation_repair_routes(
+            location,
+            published=published,
+            in_stack=any(citation.in_stack_section for citation in bare),
+        )
         error(
             f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
             f"roadmap files without their version-store path ({names}); {routes}"

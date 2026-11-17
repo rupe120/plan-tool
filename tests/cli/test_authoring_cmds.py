@@ -5927,37 +5927,45 @@ class TestBareCitationRefusal:
     def _no_prompt(self, prompt: str) -> str:
         raise AssertionError(f"a bare-name refusal must not prompt: {prompt}")
 
-    def test_draft_legacy_seed_refuses_and_names_draft_routes(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    @pytest.mark.parametrize(
+        ("where", "published", "origin"),
+        [
+            (where, published, origin)
+            for where, published in (("draft", False), ("promoted", True), ("promoted", False))
+            for origin in ("body", "stack", "both")
+        ],
+    )
+    def test_repair_message_is_right_for_every_location_and_origin(
+        self,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+        where: str,
+        published: bool,
+        origin: str,
     ) -> None:
+        """The case matrix behind the one repair message: no cell is told a route that cannot work."""
         from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
 
-        source = _write_tracked_draft(tmp_path, risk_text="See 04-roadmap.md.")
-        monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
-        assert not _confirm_invalidated_roadmap_seed(
-            _draft_location(source, tmp_path),
-            seed_texts=(source.read_text(encoding="utf-8"),),
-            yes=False,
-            input_fn=self._no_prompt,
-        )
-        err = capsys.readouterr().err
-        assert _REASON_RE.findall(err) == ["roadmap-seed-bare-citation"]
-        assert "--refresh-seeds" in err and "--accept-seed slice" in err
+        body = _BARE_TEXT if origin in ("body", "both") else _PROMOTED_CLEAN_TEXT
+        stack = "\n## Stack\n\n- `h-1` — facet: compute; value: see 02-constraints.md\n"
+        text = body + (stack if origin in ("stack", "both") else "")
+        if where == "draft":
+            location = _draft_location(_write_tracked_draft(tmp_path), tmp_path)
+        else:
+            location = _promoted_location(tmp_path, published=published)
 
-    def test_promoted_legacy_copy_refuses_and_names_promoted_routes(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
-
-        location = _promoted_location(tmp_path, published=True)
-        assert not _confirm_invalidated_roadmap_seed(
-            location, seed_texts=(_BARE_TEXT,), yes=False, input_fn=self._no_prompt
-        )
+        assert not _confirm_invalidated_roadmap_seed(location, seed_texts=(text,), yes=True)
         err = capsys.readouterr().err
+
         assert _REASON_RE.findall(err) == ["roadmap-seed-bare-citation"]
-        assert "--refresh-seeds" in err and "`published: true`" in err
-        assert "promoted copy itself" in err
-        assert "--accept-seed" not in err  # create reads the promoted copy directly
+        assert "--materialize slice" in err  # per row, never the roadmap-wide refresh
+        assert "--refresh-seeds" not in err
+        assert "file passed to `create`" in err  # the hand edit always works
+        assert ("--accept-seed slice" in err) == (where == "draft")
+        if where == "promoted":
+            assert "only when the seed state records `published: true`" in err
+            assert ("it does not record `published: true`" in err) == (not published)
+        assert ("reviewer feedback" in err) == (origin in ("stack", "both"))
 
     def test_stack_origin_bare_name_names_the_roadmap_revision_route(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
@@ -5973,19 +5981,6 @@ class TestBareCitationRefusal:
         assert "reviewer feedback" in err and "## Stack" in err
         assert "--refresh-seeds" not in err
 
-    def test_mixed_stack_and_body_bare_names_name_both_routes(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        """Neither route alone clears both occurrences, so the refusal names both."""
-        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
-
-        location = _promoted_location(tmp_path, published=False)
-        mixed = _BARE_TEXT + "\n## Stack\n\n- `h-1` — facet: compute; value: see 02-constraints.md\n"
-        assert not _confirm_invalidated_roadmap_seed(location, seed_texts=(mixed,), yes=True)
-        err = capsys.readouterr().err
-        assert "promoted copy itself" in err
-        assert "reviewer feedback" in err
-
     def test_every_text_create_reads_is_scanned(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
@@ -5997,21 +5992,6 @@ class TestBareCitationRefusal:
             location, seed_texts=(_PROMOTED_CLEAN_TEXT, _BARE_TEXT), yes=True
         )
         assert _REASON_RE.findall(capsys.readouterr().err) == ["roadmap-seed-bare-citation"]
-
-    def test_published_flag_selects_the_refresh_wording(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
-
-        messages = {}
-        for published in (True, False):
-            location = _promoted_location(tmp_path / str(published), published=published)
-            assert not _confirm_invalidated_roadmap_seed(
-                location, seed_texts=(_BARE_TEXT,), yes=True
-            )
-            messages[published] = capsys.readouterr().err
-        assert "rewrites this promoted copy" in messages[True]
-        assert "does not rewrite this promoted copy" in messages[False]
 
     def test_promoted_copy_with_no_bare_name_and_no_provenance_block_does_not_prompt(
         self, tmp_path: Path
