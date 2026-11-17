@@ -552,7 +552,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
 | Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
 | Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | round 1 dispositioned; round 2 pending |
+| Disposition | rounds 1 and 2 dispositioned; round 3 pending |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -586,4 +586,19 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | 8 | `create` recovered filenames by splitting the message on quotes | **Fixed.** A public structured `bare_roadmap_file_citations()` feeds both the gate messages and `create` |
 | 9 | The promoted-copy route helper re-read `seed-state.json` | **Fixed.** The already-loaded `published` flag is passed in; the extra error path is gone |
 | 10 | Each occurrence copied and scanned the whole preceding text | **Fixed** by finding 1's fixed-width check |
+
+### Findings (round 2)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | A citation of `.roadmap-versions/<id>/…` with no roadmap-folder prefix passes the gate | **Declined (settled).** Form-only gates with the prefix owned by the seed writer is a plan decision reviewed in PR #253; a non-resolving prefix names no top-level copy and is reported by the cited-path check |
+| 2 | Materialize refuses a plans directory outside the repository, which `render_seed_state_marker` supports with an absolute fallback | **Declined (settled).** The plan requires fail-closed `RoadmapError` there (no repo-relative citation exists), pinned by `test_plans_dir_outside_repo_root_stops_with_roadmap_error_before_any_backend_call`. A known behavior change for out-of-repo plans directories; surfaced in the PR |
+| 3 | The body rule flags mentions as well as citations, including a seed whose subject is a member file | **Declined (settled).** A plain presence check that never judges citation versus mention is the plan's stated rule |
+| 4 | `ROADMAP_FORMAT.md` said "any stored version id passes", but any 64-hex id passes | **Fixed.** Says any well-formed id passes, stored or not, and that a mistyped id is caught only by the cited-path check |
+| 5 | With bare names in both `## Stack` and the body, only the Stack route was printed | **Fixed.** Both routes are named; test `test_mixed_stack_and_body_bare_names_name_both_routes` |
+| 6 | A markdown link whose text is a bare filename is flagged even with a correct target | **Fixed (prompt).** The rule stays a presence check; the seed prompt tells the writer not to use a bare filename as link text |
+| 7 | The prompt's `### 01-domain.md` input headings may nudge bare copies | **Declined (settled).** The plan keeps them because they label prompt inputs; the real-model run wrote no bare name |
+| 8 | `create` tested `published` with `is True`, unlike `roadmap._seed_recorded_published` | **Fixed.** Same truthiness, with a pointer to the owning test |
+| 9 | `seed_texts` defaulted to `()`, so a caller that omitted it checked nothing | **Fixed.** Required keyword; existing callers pass it |
+| 10 | Two near-identical occurrence dataclasses, and violations built in two places | **Declined.** The private occurrence carries offset and cited flag; the public type carries what `create` needs. Consolidating is cosmetic and outside this change |
 
