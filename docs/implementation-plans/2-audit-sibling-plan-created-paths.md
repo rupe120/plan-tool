@@ -24,9 +24,11 @@ steps:
   - plan_tool/review.py
   - plan_tool/review_persistence.py
   - plan_tool/fingerprint.py
+  - plan_tool/completeness_report.py
   - DATA_CONTRACT.md
   - tests/test_review.py
   - tests/test_review_persistence.py
+  - tests/test_completeness_report.py
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md
@@ -47,9 +49,12 @@ steps:
     is added. Fold the set into `_audit_input_fingerprint` as its own framed label,
     added only when the set is non-empty (the same pattern as `project_context`),
     so fingerprints of plans with no siblings stay byte-identical. The fingerprint
-    then governs reuse and freshness through `audit_input_fingerprint_matches_disk`
+    then governs conceptual-call reuse through `audit_input_fingerprint_matches_disk`
     (used by `plan_tool/completeness_report.py` and `plan_tool/cli/completeness_phases.py`)
-    with no edit to those callers. The public `qualified_result.audit_revision` dict
+    with no edit to those callers. The sibling set holds normalized, deduplicated
+    paths (`normalize_declared_path`, dropping a `(…)` annotation or leading `./`),
+    sorted; that one form is the snapshot field, the digest input and the prompt
+    block, and a test covers an annotated and a `./` sibling path. The public `qualified_result.audit_revision` dict
     moves to audit-revision version 4 at both of its producers, `plan_tool/fingerprint.py:audit_input_revision`
     and the `"version": 3` literal in `plan_tool/review_persistence.py`, and the validator
     `plan_tool/review_persistence.py:normalize_audit_revision` accepts it, with a
@@ -65,11 +70,15 @@ steps:
     as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions
     of roadmap plans that have siblings change once on upgrade, deliberately. Plans
     with no siblings keep their fingerprint byte-identical. This step also changes
-    `plan_tool/review_persistence.py:project_saved_completeness_result`, which today
-    compares the raw saved dict, to compare `normalize_audit_revision(saved)` (which
-    upgrades an older record to the current shape and fills absent digests with
-    `None`) against the current revision, so the version number alone never makes a
-    report stale and no-sibling reports stay `current` (owner decision 2026-11-17). No destructive operations are touched.
+    the two places that compare a saved revision with the current one, which today
+    compare the raw saved dict: `plan_tool/review_persistence.py:project_saved_completeness_result`
+    and the `audit_revision_match` freshness check in `plan_tool/completeness_report.py`.
+    Both call one new helper in `review_persistence.py` that compares
+    `normalize_audit_revision(saved)` (which upgrades an older record to the current
+    shape and fills absent digests with `None`) against the current revision, so the
+    version number alone never makes a report stale and no-sibling reports stay
+    `current` (owner decision 2026-11-17). `plan_tool/cli/authoring.py` and
+    `plan_tool/gate_status.py` read a revision without comparing it and need no edit. No destructive operations are touched.
     Unit tests in `tests/test_review.py` cover the helper with a two-plan roadmap
     fixture (the sibling path is present, own `creates:` are excluded), a no-identity
     plan with other registered plans that declare `creates:` (empty), a plan from
@@ -99,7 +108,7 @@ steps:
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md
   description: 'Add a sibling-planned-paths input block to `plan_tool/prompts/plan-audit.md`
     as a new `${sibling_planned_paths_block}` placeholder beside the existing input
-    blocks. It lists each sibling `creates:` path one per line and tells the auditor
+    blocks. It lists each sibling path from step 1''s normalized set, one per line, and tells the auditor
     that a listed path is a sibling plan''s planned work and is not reported as missing.
     When the set is empty, the block renders an explicit statement that no sibling
     plan paths apply, never an empty slot. Supply the block from `render_plan_audit_prompt`
@@ -288,9 +297,13 @@ See the `steps:` block in the frontmatter.
 - The block's set equals the deterministic check's eligible set minus the
   plan's own paths, compared after `normalize_declared_path`, for a plan with a
   roadmap identity, and is empty otherwise.
-- `project_saved_completeness_result` compares the normalized saved revision,
-  so a saved v3 report of a plan with no siblings reads `current` after upgrade
-  and one with siblings reads `stale`.
+- Both saved-versus-current revision comparisons (`project_saved_completeness_result`
+  and `completeness_report.py`'s `audit_revision_match`) go through one helper
+  that compares the normalized saved revision, so a saved v3 report of a plan
+  with no siblings reads `current` and counts as a plan match after upgrade, and
+  one with siblings reads `stale`.
+- The sibling set is normalized and deduplicated, and that one form is listed
+  in the prompt, captured in the snapshot and digested.
 - The sibling set is part of the audit input fingerprint and of the public
   `audit_revision` (version 4, `sibling_paths_digest`), so a sibling edit makes a
   prior result stale for reuse and for a saved report's freshness.

@@ -47,7 +47,7 @@
 - **Put the placeholder beside the other input blocks.** One way: on its own line near `${carried_findings_block}` and `${project_context_block}`, with a short lead-in so the block reads as an input section. Do not put it on the `${intent_block}${scope_contract_block}` line, which is joined without a separator on purpose.
 - **Block text, when the set is non-empty:**
   - A one-line statement that the listed paths are planned work of other plans in the same roadmap and must not be reported as missing files.
-  - The paths, one per line. Use a fenced block or a bullet list; either way keep one path per line.
+  - The paths from step 1's normalized, deduplicated set, one per line, exactly as captured in the snapshot. Use a fenced block or a bullet list; either way keep one path per line.
   - Take the paths in the order step 1 stored them (sorted). Do not re-sort or re-select.
 - **Block text, when the set is empty:** an explicit sentence saying no sibling plan paths apply to this plan. This follows the repo's "state the empty case" preference. It must not render an empty string.
 - **Source of the set:**
