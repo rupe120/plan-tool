@@ -28,7 +28,7 @@ Step 2 makes a draft seed with a bare name `malformed`, so the draft path reache
 - **`_confirm_invalidated_roadmap_seed(location, *, yes, input_fn=input)`** already loads the accepted version, finds the plan row, and splits on `location.via_marker`. The draft arm calls `classify_draft_seeds`. The promoted arm reads only `load_seed_state(location.state_path)["seeds"]` for `status == "invalidated"`.
 - **`cmd_create`** calls `locate_tracked_seed(source_path, repo_root=repo_root)`, then this function, and returns 2 on refusal. `PRE_SLUG_REFUSAL_REASONS` holds the closed set of `create-refused: reason=` tokens, documented in `DATA_CONTRACT.md` and drift-guarded by `tests/test_data_contract.py`; this step adds one, `roadmap-seed-bare-citation`, because `roadmap-seed-not-confirmed` would misdescribe a refusal `-y` cannot clear.
 - **`TrackedSeedLocation`** (`plan_tool/roadmap_seed_state.py`) carries `plan_id`, `roadmap_slug`, `state_path`, `via_marker`. The seed state entry carries a `published` bool.
-- **`source_artifacts`** appears in `plan_tool/roadmap_candidate_run.py` only; `plan_tool/create.py` never reads it. The frontmatter case below pins that `create` does not copy it, with no new code.
+- **`source_artifacts`** is read by no module (the `source_artifacts` name in `plan_tool/roadmap_candidate_run.py` is an unrelated local variable); `plan_tool/create.py` never reads it. The frontmatter case below pins that `create` does not copy it, with no new code.
 - **Verification limit:** these checks prove citation form, not that a quoted passage matches the cited file.
 
 ## Files (creates vs edits)

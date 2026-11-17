@@ -759,8 +759,9 @@ is revised through reviewer feedback so a new accepted version is published.
 `create --from-existing` refuses a seed with a bare name, with or without
 `-y` (reason `roadmap-seed-bare-citation`); repair a promoted copy by hand, or
 with `--refresh-seeds` when the seed is published. Seed frontmatter never
-reaches the plan: `source_artifacts` is read only in
-`plan_tool/roadmap_candidate_run.py`, and `create` never copies it
+reaches the plan: no module reads a seed's `source_artifacts` key (the
+`source_artifacts` name in `plan_tool/roadmap_candidate_run.py` is an
+unrelated local variable), and `create` never copies it
 (`test_create_does_not_copy_source_artifacts_frontmatter_into_the_plan`).
 
 `Testing` and `Acceptance criteria` are evidence-only sections that a roadmap
