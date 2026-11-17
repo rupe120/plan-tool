@@ -5,7 +5,7 @@ intent: A plan derived from a roadmap draft seed cites the accepted roadmap vers
   it was derived from, so a completeness audit or a reader opening a cited roadmap
   artifact reads the accepted content and never an inert top-level `0N-*.md` copy
   left beside the accepted head.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -183,7 +183,7 @@ steps:
     3: The create refusal is what the manifest-states section and the backlog removal
       depend on.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md
-  status: current
+  status: done
   description: 'Bring the docs and the backlog in line with the new citation contract.
     `ROADMAP_FORMAT.md` § ''Draft seeds under the roadmap slug'' states the repo-relative
     version-store citation form, that a cited path is relative to the roadmap''s repository

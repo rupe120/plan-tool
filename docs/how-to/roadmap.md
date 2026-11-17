@@ -73,7 +73,7 @@ Every roadmap stores its content once, as immutable versions under an accepted h
 1. Move or delete the listed paths, then run `plan-tool roadmap my-project --from-existing docs/concepts/my-project.md` again. Deleting `feedback-ledger.yaml` discards its feedback rows.
 2. Start a successor slug from the brief (see the table above).
 
-**An enrolled folder with leftovers.** A folder that already has an accepted head keeps working. Delete the leftover top-level `0N-*.md` files, `source.json`, `.roadmap-baselines/`, and `.roadmap-rollbacks/`; no command reads any of them. A reader that opens a bare `04-roadmap.md` would ground on the superseded copy, so `--view`, `--materialize`, `--refresh-seeds`, `--accept-seed`, and `--apply` print a warning on stderr naming each top-level `0N-*.md` file that sits beside an accepted head. The warning never changes an exit code or a rendered view.
+**An enrolled folder with leftovers.** A folder that already has an accepted head keeps working. Delete the leftover top-level `0N-*.md` files, `source.json`, `.roadmap-baselines/`, and `.roadmap-rollbacks/`; no command reads any of them. New draft seeds cite each file by its accepted version's `.roadmap-versions/<version-id>/0N-*.md` path, so no reader needs a top-level copy. The leftovers can still mislead a reader who opens one by hand, so `--view`, `--materialize`, `--refresh-seeds`, `--accept-seed`, and `--apply` print a warning on stderr naming each top-level `0N-*.md` file that sits beside an accepted head. The warning never changes an exit code or a rendered view.
 
 A roadmap folder holds only these files: the version store (`.roadmap-versions/`, which holds the accepted-head record), the feedback ledger, `seed-state.json`, `INDEX.md`, the draft-seed directory, and `.plan-tool/evidence/` inside the roadmap folder (not the repository's run-log `.plan-tool/`).
 
@@ -641,7 +641,7 @@ the workflows that exercise them, and the entities they govern. This is seed
 authorship, not materialization repartitioning an accepted row.
 
 Write a seed following [`SEED_FORMAT.md`](../../SEED_FORMAT.md) that cites the
-four artifacts resolved through the accepted head, binds its rules and entity
+four artifacts resolved through the accepted head, each by its repo-relative `.roadmap-versions/<version-id>/0N-*.md` path (the draft-seed gate refuses a bare member filename), binds its rules and entity
 IDs, fences settled decisions (including rejected alternatives and reasons), and
 names the constraints it discharges. Then use ordinary `create --from-existing`.
 Do not edit immutable roadmap artifacts directly; use the feedback and review

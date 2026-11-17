@@ -591,6 +591,26 @@ per-plan materializer. `classify_draft_seeds` checks its recorded identity and
 `check_draft_seed_bundle_alignment` continues to reject plan rows whose draft
 paths share a basename.
 
+**Citing roadmap files.** A seed names each roadmap member file by its
+accepted version's version-store path:
+
+- **Form:** `.roadmap-versions/<version-id>/0N-*.md`, for example
+  `.roadmap-versions/<version-id>/04-roadmap.md`.
+- **Repository-relative:** the path is relative to the roadmap's repository,
+  and stays so when `create` later re-roots the plan under another directory.
+- **Body-wide bare-name rule:** a bare member filename (the four constants in
+  `plan_tool/roadmap_artifacts.py`) anywhere in the body, fenced code
+  included, is a `bare-roadmap-file-citation` violation
+  (`find_bare_roadmap_file_citations`, called by
+  `validate_draft_seed_content`). A path to a top-level copy is a violation
+  too.
+- **Any stored version id passes.** The gate judges form only. It never
+  resolves the id, and it never checks that a quoted passage matches its file;
+  that is deliberately not checked.
+- **An older version after a later promotion is intended.** A seed that cites
+  the version it was written against is not a defect; the cited path still
+  names a stored, immutable file.
+
 An unmatched opening code fence in a draft body is a materialization refusal
 from `validate_draft_seed_content`; add its matching closing fence before the
 draft can become a seed.
@@ -721,7 +741,7 @@ invalidated or content-valid draft is trusted.
 
 A draft whose body fails `validate_draft_seed_content` is `malformed`. Besides
 the provenance, component, and fence checks, the body carries a `## References`
-section citing the four accepted artifacts by filename and a non-empty
+section citing the four accepted artifacts by version-store path and a non-empty
 `## Risks` section (`missing-draft-seed-risks`). Presence is the only
 observable: a fenced example or a `_(TODO)_`-style placeholder does not count,
 and what a risk says is not judged (`create` refuses a risk with no source
@@ -729,6 +749,19 @@ text). A plan row whose artifacts state no risk says so in one line. A draft
 written before the `Risks` requirement is `malformed` until `--refresh-seeds`
 regenerates it, or a hand edit adds the section and `--accept-seed PLAN_ID`
 records it (a hand edit first classifies `digest-mismatched`).
+
+A legacy seed that names a bare member file is `malformed` too, and repairs
+the same two ways: `--refresh-seeds` regenerates it under the version-store
+prompt, or a hand edit plus `--accept-seed PLAN_ID` records it (a hand edit
+first classifies `digest-mismatched`). A bare name inside a roadmap row value
+copied into the seed (the `## Stack` section) fails materialize until the row
+is revised through reviewer feedback so a new accepted version is published.
+`create --from-existing` refuses a seed with a bare name, with or without
+`-y` (reason `roadmap-seed-bare-citation`); repair a promoted copy by hand, or
+with `--refresh-seeds` when the seed is published. Seed frontmatter never
+reaches the plan: `source_artifacts` is read only in
+`plan_tool/roadmap_candidate_run.py`, and `create` never copies it
+(`test_create_does_not_copy_source_artifacts_frontmatter_into_the_plan`).
 
 `Testing` and `Acceptance criteria` are evidence-only sections that a roadmap
 seed does not carry. They are deliberately not gated here: `create` refuses a
