@@ -552,7 +552,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
 | Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
 | Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | rounds 1–5 dispositioned; owner decision pending on continuing review |
+| Disposition | rounds 1–5 dispositioned; round 6 running (owner-approved) |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -571,8 +571,10 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 
 ### Real-model check
 
-- 2026-11-17, Opus, one `roadmap storefront --materialize plan-order-core` on a throwaway repo whose accepted version is the test suite's fixture roadmap: first attempt, 0 bare names, 9 version-store citations covering all 4 members, all resolving.
-- Limit: the fixture artifacts never mention a member filename, so the carried-over rewrite case is not exercised. `pending`: owner choice between a run on a copy of a real roadmap, a seeded fixture, or recording this limit.
+- **Fixture roadmap, on the code that ships** (commit `19d857bd0`, after review round 5): 2026-11-17, Opus, one `roadmap storefront --materialize plan-order-core` in a fresh throwaway repo whose accepted version is the test suite's fixture roadmap. First attempt, no retry; 0 bare names and 0 unresolved citations under the final gates; 8 citations covering all 4 members; no markdown links to a version path.
+- **Real roadmap, on the code that ships:** 2026-11-17, Opus, one `roadmap loom-aidlc-mvp --materialize connector-registry-seed` in a throwaway repo holding a copy of Loom's `loom-aidlc-mvp` version store (24 versions; head `c7743c56`, about 1 MB of accepted artifacts; Loom itself only read). First attempt, no retry; 0 bare names, 0 unresolved citations; 8 citations covering all 4 members.
+- Superseded: the first run (same day, before review) passed against an older seed prompt and form-only gates, so it no longer covers what ships.
+- Limit, recorded: neither the fixture nor Loom's real accepted head mentions a member filename in its own artifact text, so the carried-over rewrite case is not exercised; it does not occur in the only real roadmap to date. The prompt rule and the gates still cover it.
 
 ### Findings (round 1)
 
