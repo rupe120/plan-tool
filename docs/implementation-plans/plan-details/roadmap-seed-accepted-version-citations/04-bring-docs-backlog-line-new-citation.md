@@ -50,7 +50,7 @@ After steps 1–3, a new draft seed cites each roadmap file as `.roadmap-version
   - **Form:** a seed names each member file by `.roadmap-versions/<version-id>/0N-*.md`, written relative to the roadmap's repository.
   - **Re-rooting:** the path stays relative to the roadmap's repository even when `create` later re-roots the plan.
   - **Body-wide rule:** a bare member filename (the four constants in `plan_tool/roadmap_artifacts.py`) is a violation anywhere in the body, fenced code included. A path to a top-level copy is also a violation.
-  - **Version id:** any stored version id passes, because the gate judges form only.
+  - **Version id:** any stored version id passes; a citation must resolve to a stored member file from the repository root.
   - **Older version after promotion:** a seed that cites an older version after a later promotion is intended, not a defect. Cite the gate function and its violation code by their landed names.
   - Do not state that the gate checks a quoted passage against its file. Say it is deliberately not checked, per the plan's "## Out of scope".
 - **`ROADMAP_FORMAT.md` § "Draft-seed manifest states".**

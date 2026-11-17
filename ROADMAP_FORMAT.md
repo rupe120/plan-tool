@@ -604,11 +604,14 @@ accepted version's version-store path:
   (`find_bare_roadmap_file_citations`, called by
   `validate_draft_seed_content`). A path to a top-level copy is a violation
   too.
-- **Any well-formed version id passes.** The gate judges form only: a
-  lowercase 64-hex id passes whether or not that version is stored, so a
-  mistyped or invented id is not caught here (the cited path then names no
-  file, which the plan's cited-path check reports). It never checks that a
-  quoted passage matches its file; that is deliberately not checked.
+- **A citation must resolve.** Wherever the repository root is known (every
+  seed route, `--view`, and `create`), each version-store citation must name,
+  from the repository root, a stored member file of this roadmap. Any stored
+  version passes; a mistyped or invented id, or a path missing its
+  roadmap-folder prefix, is an `unresolved-roadmap-file-citation` violation
+  (`unresolved_roadmap_file_citations`), and `create` refuses it as
+  `roadmap-seed-unresolved-citation`. The gate never checks that a quoted
+  passage matches its file; that is deliberately not checked.
 - **An older version after a later promotion is intended.** A seed that cites
   the version it was written against is not a defect; the cited path still
   names a stored, immutable file.
