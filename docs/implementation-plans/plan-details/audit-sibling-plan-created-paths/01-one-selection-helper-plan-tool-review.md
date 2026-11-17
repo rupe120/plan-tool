@@ -52,7 +52,7 @@
 - **Existing files (edits only):**
   - `plan_tool/review.py`:
     - Add the selection helper.
-    - Lift the uncertain-evidence exception tuple into one module constant, used by both the helper and `_eligible_planned_paths`. Selection logic is unchanged.
+    - Name the four uncertain-evidence classes (`OSError`, `UnicodeError`, `ValueError`, `ManifestError`) in the new helper. Do not edit `_eligible_planned_paths`: the deterministic check stays untouched. `test_sibling_selection_treats_each_uncertain_class_like_the_deterministic_check` makes `_sibling_roadmap_identity` raise each class and checks the deterministic check returns own paths only and the helper returns an empty set.
   - `plan_tool/review_persistence.py`:
     - Add the `AuditInputSnapshot` field and the `capture` change.
     - Add the `_audit_input_fingerprint` parameter and its label.
