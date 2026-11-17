@@ -1,0 +1,116 @@
+{
+  "version": 4,
+  "plan_slug": "audit-sibling-plan-created-paths",
+  "plan_path": "docs/implementation-plans/2-audit-sibling-plan-created-paths.md",
+  "created_at": "2026-11-17T21:52:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "117c9b944edac1abe7f29b885e727a0b16802de7590da1778eaa965702f1a306",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "da1b47fb863f7bd92e74214ade0a47802e13bc076eb0186bc3684ee182443e8a",
+    "DATA_CONTRACT.md": "e2176065d634a2cc6f43afc7b8d27b121ca6044290bf99efb4abca10cac741e6",
+    "integrations/shared/DIRECTIVES.md": "adba6252d3b9824b9f4370f7c77f8e95f163bdf97ffb988e17825520df4ebd11",
+    "plan_tool/fingerprint.py": "eb82d9ac7c7df2469824997701fe8286e01bcefc1547546350bd89e594668171",
+    "plan_tool/prompts/plan-audit.md": "39e3046df3e155fa4447b7f0bd98a1bc09c4d596c0c51787a66c8b400ab650d1",
+    "plan_tool/review.py": "f2bd4998dd8986e1906eac0d1810a1fbd36247da33e4ea117e0b76c7d66e4bec",
+    "plan_tool/review_persistence.py": "81fa43b559e93d49c41c5a9cb8c238786024616c11f1ef6b5364375f9e42a68e",
+    "tests/test_review.py": "57d18d0244275ad48703baddaba6566039fcabe15a39222c36ae8b94d7649141",
+    "tests/test_review_persistence.py": "6bc6accad98820de9a46fb676c2036b008f67acc6d62f46a87b4d187f63036ab"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md": "037a7ed2268b82643fb1a58a3d430e53affbcf5454645d45205369a351cbedf4",
+    "docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md": "d260bd88bff9073ab4ca397132b09281b3ee39ea2a00b2b123d1495aab61ce96",
+    "docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md": "0fe0649b9fcebb3a9002f1ba381fdb203433e5a9963adbd533d9b1e253cccbad"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Audit Sibling Plan Created Paths\n\n`audit-sibling-plan-created-paths` \u00b7 generated 2026-11-17T21:52:40Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `9450fa7700558084cdf94d23fdbaee93d9525e6c5bde2288926c8fccc6d36a0b`\n- **Detail bundle digest:** `f1e8a3b2f564750d654ad42322cb01e695f10b842e5bd7e7769b868e2bce1baf`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 30508 bytes (+30508 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[no-sibling-byte-identity]` [confidence: limited]: The plan says plans without siblings keep their saved fingerprints and revisions unchanged, but the audit-revision version bump from 3 to 4 changes the revision for every plan. Step 1 (`Add one selection helper\u2026`) says \"plans with no siblings keep both byte-identical\". The Risks section says \"plans without siblings are unaffected\", and an acceptance criterion repeats the claim. At HEAD, `plan_tool/fingerprint.py:audit_input_revision` writes `\"version\": 3` for every plan and `normalize_audit_revision` writes the same literal in its `normalized` dict. Moving both to 4 adds `sibling_paths_digest` (null) and changes `version` in every plan's `qualified_result.audit_revision`. The fingerprint claim holds, because the label is added only when the set is non-empty. The revision claim is false. Under the \"ship between Loom batches\" decision, every saved report would read `stale` once on upgrade, which is a wider effect than the plan states. Plan intent: \"Saved fingerprints and revisions of roadmap plans that have siblings change once on upgrade, deliberately; plans with no siblings keep both byte-identical.\"\n  - Fix: State that the sibling-free guarantee covers the audit input fingerprint only, and that the public revision changes once for all plans because its version and key set change. Correct the claim at all three sites: step 1, the Risks entry, and the acceptance criterion. Add a test that a sibling-free v4 revision differs from its v3 form only by `version` and the null `sibling_paths_digest`. Alternatively, state that the one-time stale reading applies to every saved report and confirm it with the owner.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d7ada3b5]` [confidence: limited]: The plan's `## Acceptance criteria` names `audit_revision`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-180edce2]` [confidence: limited]: The plan's `## Acceptance criteria` names `normalize_declared_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d34da8de]` [confidence: limited]: The plan's `## Acceptance criteria` names `sibling_paths_digest`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit audit-sibling-plan-created-paths --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Audit Sibling Plan Created Paths\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `9450fa7700558084cdf94d23fdbaee93d9525e6c5bde2288926c8fccc6d36a0b`\n- **Detail bundle digest:** `f1e8a3b2f564750d654ad42322cb01e695f10b842e5bd7e7769b868e2bce1baf`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `audit_revision`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `normalize_declared_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `sibling_paths_digest`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit audit-sibling-plan-created-paths --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a1363447",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan says plans without siblings keep their saved fingerprints and revisions unchanged, but the audit-revision versi",
+      "body": "The plan says plans without siblings keep their saved fingerprints and revisions unchanged, but the audit-revision version bump from 3 to 4 changes the revision for every plan. Step 1 (`Add one selection helper\u2026`) says \"plans with no siblings keep both byte-identical\". The Risks section says \"plans without siblings are unaffected\", and an acceptance criterion repeats the claim. At HEAD, `plan_tool/fingerprint.py:audit_input_revision` writes `\"version\": 3` for every plan and `normalize_audit_revision` writes the same literal in its `normalized` dict. Moving both to 4 adds `sibling_paths_digest` (null) and changes `version` in every plan's `qualified_result.audit_revision`. The fingerprint claim holds, because the label is added only when the set is non-empty. The revision claim is false. Under the \"ship between Loom batches\" decision, every saved report would read `stale` once on upgrade, which is a wider effect than the plan states. Plan intent: \"Saved fingerprints and revisions of roadmap plans that have siblings change once on upgrade, deliberately; plans with no siblings keep both byte-identical.\"",
+      "suggested_action": "State that the sibling-free guarantee covers the audit input fingerprint only, and that the public revision changes once for all plans because its version and key set change. Correct the claim at all three sites: step 1, the Risks entry, and the acceptance criterion. Add a test that a sibling-free v4 revision differs from its v3 form only by `version` and the null `sibling_paths_digest`. Alternatively, state that the one-time stale reading applies to every saved report and confirm it with the owner.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "no-sibling-byte-identity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "9450fa7700558084cdf94d23fdbaee93d9525e6c5bde2288926c8fccc6d36a0b",
+      "detail_bundle_digest": "f1e8a3b2f564750d654ad42322cb01e695f10b842e5bd7e7769b868e2bce1baf",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md",
+          "state": "present",
+          "digest": "037a7ed2268b82643fb1a58a3d430e53affbcf5454645d45205369a351cbedf4"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md",
+          "state": "present",
+          "digest": "d260bd88bff9073ab4ca397132b09281b3ee39ea2a00b2b123d1495aab61ce96"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md",
+          "state": "present",
+          "digest": "0fe0649b9fcebb3a9002f1ba381fdb203433e5a9963adbd533d9b1e253cccbad"
+        }
+      ],
+      "source_seed_digest": "e821cd44feac40293613cc7853a800643943a28a1e66d827dfb9af692f8beb7e",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 30508,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,17 +1,22 @@
 {
   "plan_slug": "audit-sibling-plan-created-paths",
-  "grounded_at": "2026-11-17T21:43:37Z",
-  "plan_fingerprint": "80c16d0510fa9092b7293500d6037c466e9e4b44198a4fbd5301d06df1fb36ac",
+  "grounded_at": "2026-11-17T21:52:40Z",
+  "plan_fingerprint": "117c9b944edac1abe7f29b885e727a0b16802de7590da1778eaa965702f1a306",
   "code_fingerprint": {
-    "BUG_BACKLOG.md": "c0dfd57414a4f2dd6a40f6db0632c8c1d9e690a12da64b85f5f95f56b987a7e0",
+    "BUG_BACKLOG.md": "da1b47fb863f7bd92e74214ade0a47802e13bc076eb0186bc3684ee182443e8a",
     "DATA_CONTRACT.md": "e2176065d634a2cc6f43afc7b8d27b121ca6044290bf99efb4abca10cac741e6",
     "integrations/shared/DIRECTIVES.md": "adba6252d3b9824b9f4370f7c77f8e95f163bdf97ffb988e17825520df4ebd11",
+    "plan_tool/fingerprint.py": "eb82d9ac7c7df2469824997701fe8286e01bcefc1547546350bd89e594668171",
     "plan_tool/prompts/plan-audit.md": "39e3046df3e155fa4447b7f0bd98a1bc09c4d596c0c51787a66c8b400ab650d1",
     "plan_tool/review.py": "f2bd4998dd8986e1906eac0d1810a1fbd36247da33e4ea117e0b76c7d66e4bec",
     "plan_tool/review_persistence.py": "81fa43b559e93d49c41c5a9cb8c238786024616c11f1ef6b5364375f9e42a68e",
     "tests/test_review.py": "57d18d0244275ad48703baddaba6566039fcabe15a39222c36ae8b94d7649141",
     "tests/test_review_persistence.py": "6bc6accad98820de9a46fb676c2036b008f67acc6d62f46a87b4d187f63036ab"
   },
-  "step_authoring_fingerprints": {},
+  "step_authoring_fingerprints": {
+    "1": "58029a88b03068b14d28ba071235aad87f7cc02036b57c7f9022e47d856dfcf5",
+    "2": "64de846d798e2e862a1f3e861f42048964b0be256466cc535ae23b07f8bfaf89",
+    "3": "476c172ecdac467190ecf937f79986d6d8c28f45d7de68fc0a523297dc20d30b"
+  },
   "schema_version": 1
 }
