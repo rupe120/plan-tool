@@ -70,6 +70,11 @@ from plan_tool.roadmap_seed_state import (
 )
 
 
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; it resolves only where a test retargets it to a stored version."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
+
+
 def _canonical_with_source(source: str) -> str:
     """A canonical-shaped text whose frontmatter carries a ``source`` pointer."""
     return f"---\nsource: {source}\n---\n# Canonical body\n"
@@ -1256,7 +1261,7 @@ class TestCreatePreSlugRefusalReason:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=lambda _p: answer
+            location, seed_files={}, yes=False, input_fn=lambda _p: answer, repo_root=tmp_path
         )
         assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
 
@@ -1281,7 +1286,7 @@ class TestCreatePreSlugRefusalReason:
             raise exc
 
         assert not _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=interrupted
+            location, seed_files={}, yes=False, input_fn=interrupted, repo_root=tmp_path
         )
         assert self._reasons(capsys.readouterr().err) == ["roadmap-seed-not-confirmed"]
 
@@ -1313,9 +1318,9 @@ class TestCreatePreSlugRefusalReason:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=lambda _p: "y"
+            location, seed_files={}, yes=False, input_fn=lambda _p: "y", repo_root=tmp_path
         )
-        assert _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert _confirm_invalidated_roadmap_seed(location, seed_files={}, yes=True, repo_root=tmp_path)
         assert self.LINE not in capsys.readouterr().err
 
     def test_token_set_is_closed_and_documented(self) -> None:
@@ -5667,6 +5672,8 @@ def _write_tracked_draft(
     recorded_text: str | None = None,
     publish: bool = True,
     head_has_plan_row: bool = True,
+    risk_text: str = "A risk the accepted roadmap already states.",
+    frontmatter_extra: str = "",
 ) -> Path:
     """Write a tracked draft seed whose roadmap is published as an accepted root."""
     from tests.roadmap_accepted_fixtures import publish_accepted_root, with_minimal_upstream
@@ -5695,16 +5702,28 @@ def _write_tracked_draft(
             plans_dir, slug, with_minimal_upstream(render_plans_artifact(artifact))
         )
     text = (
-        "---\nroadmap_components:\n  - component-a\n---\n# Seed\n\n"
+        f"---\nroadmap_components:\n  - component-a\n{frontmatter_extra}---\n# Seed\n\n"
         "## Scope guardrails\n\nNone\n\n## Audit guardrails\n\nNone\n\n"
         "## Expected placement\n\nNone\n\n"
-        "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
+        f"## Risks\n\n- {risk_text}\n\n"
         "## References\n\n"
-        f"- `{DOMAIN_FILENAME}`\n"
-        f"- `{CONSTRAINTS_FILENAME}`\n"
-        f"- `{COMPONENTS_FILENAME}`\n"
-        f"- `{PLANS_FILENAME}`\n"
+        f"- `{_cite(DOMAIN_FILENAME)}`\n"
+        f"- `{_cite(CONSTRAINTS_FILENAME)}`\n"
+        f"- `{_cite(COMPONENTS_FILENAME)}`\n"
+        f"- `{_cite(PLANS_FILENAME)}`\n"
     )
+    if publish:
+        # Cite the version just published, so the tracked seed resolves from tmp_path.
+        from plan_tool.roadmap_versions import load_accepted_version, version_directory_path
+
+        version = load_accepted_version(plans_dir=plans_dir, slug=slug)
+        assert version is not None
+        real = version_directory_path(plans_dir, slug, version.record.version_id)
+        text = re.sub(
+            r"[\w./-]*\.roadmap-versions/[0-9a-f]{64}/",
+            lambda _m: real.relative_to(tmp_path).as_posix() + "/",
+            text,
+        )
     source = root / plan.draft_seed_path
     source.parent.mkdir()
     source.write_text(text, encoding="utf-8")
@@ -5732,9 +5751,9 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert _confirm_invalidated_roadmap_seed(
-            location,
+            location, seed_files={},
             yes=False,
-            input_fn=lambda prompt: prompts.append(prompt) or "n",
+            input_fn=lambda prompt: prompts.append(prompt) or "n", repo_root=tmp_path
         )
         assert prompts == []
 
@@ -5750,9 +5769,9 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location,
+            location, seed_files={},
             yes=False,
-            input_fn=lambda prompt: prompts.append(prompt) or "n",
+            input_fn=lambda prompt: prompts.append(prompt) or "n", repo_root=tmp_path
         )
         assert "is invalidated by a roadmap revision" in prompts[0]
 
@@ -5768,9 +5787,9 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location,
+            location, seed_files={},
             yes=False,
-            input_fn=lambda prompt: prompts.append(prompt) or "n",
+            input_fn=lambda prompt: prompts.append(prompt) or "n", repo_root=tmp_path
         )
         assert "classifies as 'digest-mismatched'" in prompts[0]
 
@@ -5785,7 +5804,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert _confirm_invalidated_roadmap_seed(
-            location, yes=True, input_fn=lambda _prompt: "n"
+            location, seed_files={}, yes=True, input_fn=lambda _prompt: "n", repo_root=tmp_path
         )
 
     def test_non_tty_refuses_a_non_current_classification(
@@ -5802,7 +5821,7 @@ class TestRoadmapSeedConfirmation:
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
         assert not _confirm_invalidated_roadmap_seed(
-            location, yes=False, input_fn=lambda _prompt: "yes"
+            location, seed_files={}, yes=False, input_fn=lambda _prompt: "yes", repo_root=tmp_path
         )
         assert "digest-mismatched" in capsys.readouterr().err
 
@@ -5815,7 +5834,7 @@ class TestRoadmapSeedConfirmation:
 
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
-        assert not _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert not _confirm_invalidated_roadmap_seed(location, seed_files={}, yes=True, repo_root=tmp_path)
         assert "is no longer present in its roadmap" in capsys.readouterr().err
 
     def test_plan_row_present_only_in_stale_top_level_file_is_still_absent(
@@ -5852,7 +5871,7 @@ class TestRoadmapSeedConfirmation:
 
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
-        assert not _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert not _confirm_invalidated_roadmap_seed(location, seed_files={}, yes=True, repo_root=tmp_path)
         assert "is no longer present in its roadmap" in capsys.readouterr().err
 
     def test_no_accepted_head_refuses_with_the_named_error(
@@ -5864,7 +5883,7 @@ class TestRoadmapSeedConfirmation:
 
         location = locate_tracked_seed(source, repo_root=tmp_path)
         assert location is not None
-        assert not _confirm_invalidated_roadmap_seed(location, yes=True)
+        assert not _confirm_invalidated_roadmap_seed(location, seed_files={}, yes=True, repo_root=tmp_path)
         assert "has no published version" in capsys.readouterr().err
 
     def test_promoted_copy_validated_against_sidecar_while_row_read_from_head(
@@ -5882,7 +5901,296 @@ class TestRoadmapSeedConfirmation:
         )
         source.unlink()  # the draft is archived once its promotion lands
 
-        assert _confirm_invalidated_roadmap_seed(location, yes=False)
+        assert _confirm_invalidated_roadmap_seed(
+            location, seed_files={"seed.md": _PROMOTED_CLEAN_TEXT}, yes=False, repo_root=tmp_path
+        )
+
+
+_BARE_TEXT = "## Risks\n\n- See 04-roadmap.md for the plan row.\n"
+_PROMOTED_CLEAN_TEXT = "# Seed\n\n## Risks\n\n- A risk the accepted roadmap already states.\n"
+_REASON_RE = re.compile(r"create-refused: reason=(\S+)")
+
+
+def _promoted_location(
+    tmp_path: Path, *, published: bool, status: str = "current"
+) -> TrackedSeedLocation:
+    """A tracked seed read through its promoted copy, with the state's ``published`` flag set."""
+    from plan_tool.roadmap_seed_state import load_seed_state
+
+    _write_tracked_draft(tmp_path, status=status)
+    state_path = seed_state_path(roadmap_dir(tmp_path / "custom-plans", "demo"))
+    state = load_seed_state(state_path)
+    state["seeds"]["slice"]["published"] = published
+    write_seed_state(state_path, state)
+    return TrackedSeedLocation(
+        plan_id="slice", roadmap_slug="demo", state_path=state_path, via_marker=True
+    )
+
+
+def _draft_location(source: Path, tmp_path: Path) -> TrackedSeedLocation:
+    location = locate_tracked_seed(source, repo_root=tmp_path)
+    assert location is not None
+    return location
+
+
+class TestBareCitationRefusal:
+    """A bare roadmap file name refuses before any confirmation, and ``-y`` is not consulted."""
+
+    def _no_prompt(self, prompt: str) -> str:
+        raise AssertionError(f"a bare-name refusal must not prompt: {prompt}")
+
+    @pytest.mark.parametrize(
+        ("where", "published", "origin"),
+        [
+            (where, published, origin)
+            for where, published in (("draft", False), ("promoted", True), ("promoted", False))
+            for origin in ("body", "stack", "both")
+        ],
+    )
+    def test_repair_message_is_right_for_every_location_and_origin(
+        self,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+        where: str,
+        published: bool,
+        origin: str,
+    ) -> None:
+        """The case matrix behind the one repair message: no cell is told a route that cannot work."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        body = _BARE_TEXT if origin in ("body", "both") else _PROMOTED_CLEAN_TEXT
+        stack = "\n## Stack\n\n- `h-1` — facet: compute; value: see 02-constraints.md\n"
+        text = body + (stack if origin in ("stack", "both") else "")
+        if where == "draft":
+            location = _draft_location(_write_tracked_draft(tmp_path), tmp_path)
+        else:
+            location = _promoted_location(tmp_path, published=published)
+
+        assert not _confirm_invalidated_roadmap_seed(location, seed_files={"seed.md": text}, yes=True, repo_root=tmp_path)
+        err = capsys.readouterr().err
+
+        assert _REASON_RE.findall(err) == ["roadmap-seed-bare-citation"]
+        # Only always-true facts in every cell: the file, its names, and the doc
+        # that owns the state-dependent routes.
+        assert "seed.md:" in err
+        assert '§ "Draft-seed manifest states"' in err
+        assert "--refresh-seeds" not in err and "--materialize" not in err
+        assert ("reviewer feedback" in err) == (origin in ("stack", "both"))
+
+    def test_stack_origin_bare_name_names_the_roadmap_revision_route(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """Refresh rewrites Stack from the same accepted row, so only a row revision fixes it."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        location = _promoted_location(tmp_path, published=True)
+        stack_text = "## Stack\n\n- `hosting-1` — facet: compute; value: see 02-constraints.md\n"
+        assert not _confirm_invalidated_roadmap_seed(location, seed_files={"seed.md": stack_text}, yes=True, repo_root=tmp_path)
+        err = capsys.readouterr().err
+        assert _REASON_RE.findall(err) == ["roadmap-seed-bare-citation"]
+        assert "reviewer feedback" in err and "## Stack" in err
+        assert "--refresh-seeds" not in err
+
+    def test_unresolved_citation_refuses_under_dash_y(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """A mistyped version id names no stored file; create refuses it like a bare name."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path)
+        text = re.sub(r"(\.roadmap-versions/)[0-9a-f]{64}/", lambda m: m.group(1) + "f" * 64 + "/", source.read_text(encoding="utf-8"))
+        assert not _confirm_invalidated_roadmap_seed(
+            _draft_location(source, tmp_path), seed_files={"seed.md": text}, repo_root=tmp_path, yes=True
+        )
+        err = capsys.readouterr().err
+        assert _REASON_RE.findall(err) == ["roadmap-seed-unresolved-citation"]
+        assert "not this roadmap's repo-relative version-store path" in err
+        assert "no stored version has that id" in err
+
+    def test_resolving_citations_pass_the_refusal(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path)
+        assert _confirm_invalidated_roadmap_seed(
+            _draft_location(source, tmp_path),
+            seed_files={"seed.md": source.read_text(encoding="utf-8")},
+            repo_root=tmp_path,
+            yes=True,
+        )
+        assert _REASON_RE.findall(capsys.readouterr().err) == []
+
+    def test_every_text_create_reads_is_scanned(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """A clean separate source does not hide a bare name in the tracked file create also reads."""
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        location = _promoted_location(tmp_path, published=True)
+        assert not _confirm_invalidated_roadmap_seed(
+            location, seed_files={"source.md": _PROMOTED_CLEAN_TEXT, "seed.md": _BARE_TEXT}, yes=True, repo_root=tmp_path
+        )
+        err = capsys.readouterr().err
+        assert _REASON_RE.findall(err) == ["roadmap-seed-bare-citation"]
+        assert "seed.md: 04-roadmap.md" in err and "source.md:" not in err
+
+    def test_promoted_copy_with_no_bare_name_and_no_provenance_block_does_not_prompt(
+        self, tmp_path: Path
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        location = _promoted_location(tmp_path, published=True)
+        assert _confirm_invalidated_roadmap_seed(
+            location, seed_files={"seed.md": _PROMOTED_CLEAN_TEXT}, yes=False, input_fn=self._no_prompt, repo_root=tmp_path
+        )
+
+    def test_dash_y_does_not_override_a_bare_name_refusal(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, risk_text="See 04-roadmap.md.")
+        assert not _confirm_invalidated_roadmap_seed(
+            _draft_location(source, tmp_path),
+            seed_files={"seed.md": source.read_text(encoding="utf-8")},
+            yes=True,
+            input_fn=self._no_prompt, repo_root=tmp_path
+        )
+        assert _REASON_RE.findall(capsys.readouterr().err) == ["roadmap-seed-bare-citation"]
+
+    def test_bare_name_refusal_needs_no_tty(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, risk_text="See 04-roadmap.md.")
+        monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: False)
+        assert not _confirm_invalidated_roadmap_seed(
+            _draft_location(source, tmp_path),
+            seed_files={"seed.md": source.read_text(encoding="utf-8")},
+            yes=False, repo_root=tmp_path
+        )
+        assert _REASON_RE.findall(capsys.readouterr().err) == ["roadmap-seed-bare-citation"]
+
+    def test_untracked_seed_is_unchanged(self, tmp_path: Path) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        assert _confirm_invalidated_roadmap_seed(None, seed_files={"seed.md": _BARE_TEXT}, yes=False, repo_root=tmp_path)
+
+    @pytest.mark.parametrize("promoted", [False, True], ids=["draft", "promoted"])
+    def test_invalidated_and_bare_named_seed_refuses_on_the_bare_name(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str], promoted: bool
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        if promoted:
+            location = _promoted_location(tmp_path, published=True, status="invalidated")
+            text = _BARE_TEXT
+        else:
+            source = _write_tracked_draft(
+                tmp_path, status="invalidated", risk_text="See 04-roadmap.md."
+            )
+            location = _draft_location(source, tmp_path)
+            text = source.read_text(encoding="utf-8")
+        assert not _confirm_invalidated_roadmap_seed(
+            location, seed_files={"seed.md": text}, yes=True, input_fn=self._no_prompt, repo_root=tmp_path
+        )
+        assert _REASON_RE.findall(capsys.readouterr().err) == ["roadmap-seed-bare-citation"]
+
+    def test_clean_invalidated_seed_keeps_todays_confirmation(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, status="invalidated")
+        text = source.read_text(encoding="utf-8")
+        location = _draft_location(source, tmp_path)
+        monkeypatch.setattr("plan_tool.cli.authoring.sys.stdin.isatty", lambda: True)
+        prompts: list[str] = []
+        assert not _confirm_invalidated_roadmap_seed(
+            location, seed_files={"seed.md": text}, yes=False, input_fn=lambda p: prompts.append(p) or "n", repo_root=tmp_path
+        )
+        assert "is invalidated by a roadmap revision" in prompts[0]
+        assert _confirm_invalidated_roadmap_seed(location, seed_files={"seed.md": text}, yes=True, repo_root=tmp_path)
+
+    def test_no_accepted_head_keeps_todays_refusal(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(tmp_path, publish=False, risk_text="See 04-roadmap.md.")
+        assert not _confirm_invalidated_roadmap_seed(
+            _draft_location(source, tmp_path),
+            seed_files={"seed.md": source.read_text(encoding="utf-8")},
+            yes=True, repo_root=tmp_path
+        )
+        err = capsys.readouterr().err
+        assert "has no published version" in err
+        assert _REASON_RE.findall(err) == ["roadmap-seed-unresolved"]
+
+    def test_create_does_not_copy_source_artifacts_frontmatter_into_the_plan(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Frontmatter ``source_artifacts`` is neither a bare citation nor read by ``create``.
+
+        Pins existing behavior: the bare-name check strips frontmatter, and
+        ``plan_tool/create.py`` has no reader for the key, so it cannot reach a plan.
+        """
+        from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+
+        source = _write_tracked_draft(
+            tmp_path, frontmatter_extra="source_artifacts:\n  - 04-roadmap.md\n"
+        )
+        text = source.read_text(encoding="utf-8")
+        assert "04-roadmap.md" in text
+        assert _confirm_invalidated_roadmap_seed(
+            _draft_location(source, tmp_path), seed_files={"seed.md": text}, yes=False, repo_root=tmp_path
+        )
+        import plan_tool.create as create_module
+
+        assert "source_artifacts" not in Path(create_module.__file__).read_text(encoding="utf-8")
+
+
+@pytest.mark.integration
+def test_regenerated_seed_cites_only_existing_version_store_paths(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A seed citing the accepted version's files passes; a stale top-level copy is never cited."""
+    from plan_tool.cli.authoring import _confirm_invalidated_roadmap_seed
+    from plan_tool.roadmap_seed_state import load_seed_state
+    from plan_tool.roadmap_versions import load_accepted_version, version_directory_path
+
+    source = _write_tracked_draft(tmp_path)
+    plans_dir = tmp_path / "custom-plans"
+    root = roadmap_dir(plans_dir, "demo")
+    stale = root / PLANS_FILENAME
+    stale.write_text("stale top-level copy, not the accepted bytes\n", encoding="utf-8")
+    accepted = load_accepted_version(plans_dir=plans_dir, slug="demo")
+    assert accepted is not None
+    store = version_directory_path(plans_dir, "demo", accepted.record.version_id)
+    cited = {
+        name: (store / name).relative_to(tmp_path).as_posix()
+        for name in (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME)
+    }
+    text = source.read_text(encoding="utf-8")
+    text = re.sub(r"(?m)^- `docs/[^`]*/(\d\d-[a-z]+\.md)`$", "- `{\\1}`", text)
+    for name, path in cited.items():
+        text = text.replace("{" + name + "}", path)
+    source.write_text(text, encoding="utf-8")
+    state_path = seed_state_path(root)
+    state = load_seed_state(state_path)
+    state["seeds"]["slice"]["digest"] = digest_text(text)
+    write_seed_state(state_path, state)
+
+    assert _confirm_invalidated_roadmap_seed(
+        _draft_location(source, tmp_path), seed_files={"seed.md": text}, yes=False, repo_root=tmp_path
+    )
+    assert "create-refused" not in capsys.readouterr().err
+    for name, path in cited.items():
+        assert path in text
+        assert (tmp_path / path).read_bytes() == (store / name).read_bytes()
+    assert str(stale.relative_to(tmp_path)) not in text
 
 
 @pytest.mark.integration
@@ -6427,3 +6735,20 @@ class TestAuthoringRunEndResult:
 
         assert truncated is True
         assert sum(len(p.encode("utf-8")) for p in kept) <= 2000
+
+
+def test_seed_files_create_reads_includes_a_separate_provenance_source(tmp_path: Path) -> None:
+    """A legacy canonical's provenance source is read by create, so it is scanned and named by path."""
+    from plan_tool.cli.authoring import _seed_files_create_reads
+
+    canonical = tmp_path / "canonical.md"
+    canonical_text = "---\nsource: original.md\n---\n# Canonical\n"
+    files = _seed_files_create_reads(canonical, canonical_text, "See 04-roadmap.md.\n")
+
+    assert files == {
+        str(canonical): canonical_text,
+        str((tmp_path / "original.md").resolve()): "See 04-roadmap.md.\n",
+    }
+    assert _seed_files_create_reads(canonical, "# No provenance\n", None) == {
+        str(canonical): "# No provenance\n"
+    }

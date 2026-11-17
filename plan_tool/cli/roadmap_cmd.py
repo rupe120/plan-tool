@@ -1790,7 +1790,7 @@ def _cmd_roadmap_materialize_owned(
 
                 try:
                     classifications = classify_draft_seeds(
-                        artifact, plans_dir=plans_dir, slug=args.slug
+                        artifact, plans_dir=plans_dir, slug=args.slug, repo_root=repo_root
                     )
                 except RoadmapSeedStateError as exc:
                     error(str(exc))
@@ -1914,7 +1914,7 @@ def _cmd_roadmap_materialize_owned(
 
 
 def _cmd_roadmap_view(
-    args: argparse.Namespace, *, plans_dir: Path, repo_root: Optional[Path] = None
+    args: argparse.Namespace, *, plans_dir: Path, repo_root: Path
 ) -> int:
     """Render one of the six inspection views over ``args.slug``'s roadmap.
 
@@ -1935,7 +1935,7 @@ def _cmd_roadmap_view(
         else:
             try:
                 classifications = classify_draft_seeds(
-                    loaded.plans, plans_dir=plans_dir, slug=loaded.slug
+                    loaded.plans, plans_dir=plans_dir, slug=loaded.slug, repo_root=repo_root
                 )
                 seed_lifecycle = summarize_seed_lifecycle(loaded, classifications)
             except RoadmapSeedStateError as exc:
@@ -1944,7 +1944,7 @@ def _cmd_roadmap_view(
     elif args.view == "seeds":
         try:
             classifications = (
-                classify_draft_seeds(loaded.plans, plans_dir=plans_dir, slug=loaded.slug)
+                classify_draft_seeds(loaded.plans, plans_dir=plans_dir, slug=loaded.slug, repo_root=repo_root)
                 if loaded.plans is not None
                 else {}
             )
@@ -1960,7 +1960,7 @@ def _cmd_roadmap_view(
         unavailable_reason: Optional[str] = None
         try:
             classifications = (
-                classify_draft_seeds(loaded.plans, plans_dir=plans_dir, slug=loaded.slug)
+                classify_draft_seeds(loaded.plans, plans_dir=plans_dir, slug=loaded.slug, repo_root=repo_root)
                 if loaded.plans is not None
                 else {}
             )
@@ -2260,7 +2260,7 @@ def _create_handoff_lines(
         error(f"cannot print create handoff: {bijection_error}")
         return []
     try:
-        classifications = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug)
+        classifications = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root)
     except RoadmapSeedStateError as exc:
         error(f"cannot print create handoff: {exc}")
         return []

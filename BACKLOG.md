@@ -310,7 +310,9 @@ lens exists to produce; keep it in sync as entries land or are added):
   **#262** (one static bare-stage report line saying detail-owned remedies are
   expected and `detail` is the next step, so a user advances to the artifact
   that can resolve the remaining implementation contracts rather than
-  re-sampling the same plan).
+  re-sampling the same plan), **#540** (the completeness audit honors the plan's
+  existing `risk_profile` tier so robustness findings beyond it stop blocking),
+  **#541** (report plan growth while findings narrow).
 - **gate-signal:** the shipped calibrated impact-aware convergence policy
   (high-impact findings and high/critical severities block; evidence-qualified
   low-impact medium findings may be demoted), the settled four-loop blocking
@@ -319,7 +321,8 @@ lens exists to produce; keep it in sync as entries land or are added):
   **#87** (harden the test-authoring gate
   against a dirty working tree), **#472** (a Claude window before the
   first call, so the first send and the reconcile refusal gate stop using the
-  200K default).
+  200K default), **#539** (certify a step with a declared command and report
+  exit checks as unverified at exit instead of leaving the choice to the model).
 - **heuristic-tuning:** **#216** (the corpus-replay benchmark whose first
   deliverable is each metric's *own* rerun noise floor — the data every other
   threshold here would need before it could be calibrated from a distribution
@@ -344,13 +347,18 @@ backlog entries below **and the authored plans** in
 mission-aligned one is the cheapest path to shipped value, but *authored ≠
 priority*; the mission decides.
 
-**Current queue facts (checked 2026-11-16):**
+**Current queue facts (checked 2026-11-17):**
 
 1. **`BUG_BACKLOG.md` has no entry that is both Route `direct` and Readiness
-   `ready`.** Its live entries are `plan`-route, `evidence-gated` or
-   `decision-needed`, plus a few unlabelled `direct` entries that each wait on
-   a prerequisite or a decision. Each entry owns its own readiness and
-   approach.
+   `ready`**, in `BUG` or `MINOR`. Two `BUG` entries are Route `plan` and
+   Readiness `ready`, and they lead the execution order: `create`'s single
+   "record unbuilt upstreams and stop" step, and the audit reporting a sibling
+   plan's created path as missing (the bare `0N-*.md` citation entry shipped
+   2026-11-17 in PR #254). None is routed by `backlog-arc-roadmap.md`; each goes through
+   `plan-tool create`, so a drain surfaces it rather than taking it. The
+   other live entries are promotion stubs, `evidence-gated`,
+   `decision-needed`, or unlabelled entries whose Approach waits on a
+   prerequisite or a decision.
 2. **#102 is promoted (IPPT-11, 2026-09-27) and remains independent of the
    delivered seed-ingestion route.** Its future alias-matching decision does
    not reopen the source-selection or preparation contract.
@@ -366,7 +374,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | *(none)* | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2), excluding entries an arc document routes (#66; #488 in `backlog-arc-roadmap.md`) and experiments (#534). None remains as of 2026-11-16. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1) either, so the drain has no candidate until an entry is triaged to `direct` + `ready`. |
+| **Now — drain candidates (unpicked)** | *(none)* | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2), excluding entries an arc document routes (#66; #488 in `backlog-arc-roadmap.md`) and experiments (#534). None remains as of 2026-11-17. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1) either, so the drain has no candidate until an entry is triaged to `direct` + `ready`. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -389,19 +397,44 @@ competes for the next session?"
 
 **Priority bands:**
 
-- **T2 — convergence & structural-remedy machinery (P1/P3):** **#71**
-  (theoretical — decision-first).
+Refreshed 2026-11-17. Promotion stubs (the Jira ticket owns the brief) and
+entries labelled Readiness `parked` (listed on the board's Parked lane) are
+not ranked here. Entries with Principle `untriaged` are placed once touched and
+triaged (`docs/TRACKING.md` § "Labels every entry carries").
+
+- **T2 — convergence & structural-remedy machinery (P1/P3):** **#490**
+  (`plan`, `ready` — record an operator decision on an audit finding so the
+  next audit does not re-raise it; consumer evidence added 2026-11-17) ·
+  **#540** (`decision-needed` — the completeness audit honoring the plan's
+  `risk_profile`; resolve its conflict with the `risk-profile-3` seed's
+  audit fence first). **#488** is P1 and `ready` but routed by
+  `backlog-arc-roadmap.md`. **#71** is parked. Also `plan`, `ready`:
+  **#156** (the audit sampler keys on `[out-of-scope-deferred]` so a
+  scope-bound audit reaches its dry tail) · **#180** (`split` / `merge` /
+  `scope-out` repair detail H1s and report surviving step references).
 - **T3 — deterministic verifiability & grounding (P2), larger:** **#66**
-  (contract-trace audit mode).
-- **T4 — grounding/workflow refinements (P3) + blocked:** **#69**, **#38**,
-  **#30**.
-- **T5 — export leg / UX / hygiene / cosmetic:** **#107** (deferred pending a demonstrated export blocker), **#102**,
-  **#56**, **#89** (`--commit` for
-  `reconcile-code`/`reconcile-plan` — observed orphaning gap, see its entry's
-  "Evidence it recurs"), and the Bucket D
-  consolidation cluster **#79**–**#81** — where **#79 carries a warning**: four
-  of its five original "duplicated helper" claims were wrong in the direction
-  that breaks things, so treat every line of it as a claim to re-verify.
+  (contract-trace audit mode) · **#539** (`decision-needed` — exit checks
+  reported as unverified; setting `test_command` is the interim workaround) ·
+  **#202** (each acceptance criterion names its test, checked to exist) ·
+  **#312** (`detail` grounds on the reference text `create` already fetched)
+  · **#332** (a run-log sink for `create`'s developer-doc research call).
+  **#385** is P2 and `ready` but routed by `backlog-arc-roadmap.md`.
+- **T4 — grounding/workflow refinements (P3) + blocked:** **#142** (link
+  local plan-story ids to Jira keys by bracket token) · **#198** (plan
+  provenance trailers on green and archive commits). Its former members #69,
+  #38 and #30 are promoted (IPPT-13, IPPT-14, IPPT-15).
+- **T5 — export leg / UX / hygiene / cosmetic, and P4:** the P4 `plan`
+  entries **#230** (`--time-budget` at durable batch boundaries) and **#89**
+  (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
+  see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entries
+  **#520**, **#542**, **#497**, **#486**; the P5 `plan` entries **#377**
+  (installed skills author and validate seeds) and **#149** (compact detail
+  schema; its plan is on the board's Blocked lane despite the `ready` label);
+  **#56**; and the Bucket D consolidation pair
+  **#79**–**#80** — where **#79 carries a warning**: four of its five original
+  "duplicated helper" claims were wrong in the direction that breaks things,
+  so treat every line of it as a claim to re-verify. **#107** and **#81** are
+  parked; **#102** is promoted (IPPT-11).
 
 ### Readiness lens (concrete vs. theoretical)
 
@@ -881,7 +914,7 @@ working straight down the tiers.
 
 **#385 — `roadmap --view status --json`: one machine-readable state projection**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `deterministic-non-determinism` (a machine-readable state projection, as #538 is for `create` refusals)
 - **What:** no roadmap view emits JSON
   (`--view {summary,walk,ledger,index,seeds,html}` are all human renders). A caller that wants to know where a roadmap *is* — whether it has an
   accepted head and which version, which feedback rows are open or awaiting
@@ -1263,7 +1296,7 @@ working straight down the tiers.
 
 **#332 — Install the run-log sink for developer-doc research in `create`**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `deterministic-non-determinism`
 - **What:** the developer-doc research call (`propose_references`) runs with no
   run-log sink, so its usage, cost and failure evidence are lost and the call
   warns that nothing saved them. Install the run-log sink for it, so the
@@ -1662,7 +1695,7 @@ working straight down the tiers.
 
 **#312 — Ground `detail` authoring in the plan's fetched reference-doc content instead of a bare link list**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `deterministic-non-determinism`
 - **What:** `detail.py` hands each step's authoring prompt only the plan's
   `## References` bullets — title/url/one-line description, lifted verbatim
   by `extract_plan_references` — and instructs the subprocess to
@@ -1717,7 +1750,7 @@ working straight down the tiers.
 
 **#156 — Make the conceptual-audit sampler key on the `[out-of-scope-deferred]` tag (currently prompt/operator convention only)**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `converge-on-correct-plan`
 - **What:** The scope-contract reconciliation (see [Scope contract and
   anti-creep](docs/TRACKING.md#scope-contract-and-anti-creep) and `prompts/plan-audit.md`) has
   the audit emit valid-but-adjacent findings tagged `[out-of-scope-deferred]`
@@ -1906,7 +1939,7 @@ working straight down the tiers.
 
 **#230 — Extend the shipped `--time-budget` stop to durable batch boundaries**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `survive-interruption`
 - **What:** `--time-budget` already stops the convergence loops cleanly. Extend
   the same cooperative deadline posture to the two long-lived surfaces that do
   not route through `convergence.should_continue`: the non-reconcile `run`
@@ -1970,7 +2003,7 @@ working straight down the tiers.
 
 **#142 — Jira ID-linking sweep: map local plan-story IDs to real Jira keys via summary bracket-token**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `keep-the-plan-true-to-code` (re-grounds plans' story status markers against live Jira state)
 - **What:** A read-only sweep that scans a Jira project and links each local
   plan-story ID (the epic-scoped label the plans use, e.g. `AIHARD-S38b`,
   `VNDSFTP-S29`, `NOTIF-S01`) to its real Jira issue key (e.g. `PS-197`) and
@@ -2427,7 +2460,7 @@ working straight down the tiers.
 
 **#198 — Plan provenance in git: structured trailers on green and archive commits, and `list --archived` read from the git log**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `keep-the-plan-true-to-code` (records which plans landed in the tree; also serves `write-for-the-human`)
 - **What:** make "which plans were actually implemented, and where did that land
   in git?" answerable by machine, using git as the only store. Two parts:
   **(a)** structured `Plan-Slug: <slug>` and `Plan-Step: <n>` trailers on
@@ -2494,7 +2527,7 @@ working straight down the tiers.
 
 **#202 — Acceptance-criterion test references: each criterion names its test, and the check verifies the test exists**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `deterministic-non-determinism`
 - **What:** the run-grade detail format requires each `## Acceptance criteria`
   bullet to name the test function(s) that assert it, and a deterministic check
   verifies that every named test function exists in the repo. A criterion with
@@ -3138,7 +3171,7 @@ working straight down the tiers.
 - **Labels:** Route `plan`
   · Readiness `ready`
   · Tier `architect` — it changes the guidance available to every driving assistant before plan creation
-  · Principle `untriaged`
+  · Principle `write-for-the-human`
 - **What:** give an assistant driving `plan-tool` from chat an explicit route
   from a requested outcome or selected backlog item to a reviewable seed file,
   before it invokes `create --from-existing`. The installed guidance must make
@@ -3393,6 +3426,53 @@ working straight down the tiers.
   section.
 - **Status:** not started.
 
+**#539 — A plan cannot mark a check as belonging to exit from local development, so `run` steps run integration suites inside the local iteration loop**
+
+- **Labels:** Route `plan`
+  · Readiness `decision-needed` (a per-step `exit_checks:` field, a stage label on each detail test, or both)
+  · Tier `architect`
+  · Principle `deterministic-non-determinism`
+- **What:** `run` certifies a step only through the plan's `test_command` and the step's `gate:`. A consumer whose integration suites first count in its hosted pipeline has no way to say so. With neither field set, the backend model picks what to run from the detail's "every listed test passes" and runs real-database and container suites mid-step; the directive's "run the full suite to green" after a hand-fixed step pushes the same way, because its example command is this repo's own full pytest run.
+- **What already exists:** `plan_tool/prompts/run.md` tells the executor that a declared `test_command` is the authoritative post-flight gate and that it need not run the full suite itself. Setting `test_command` to the consumer's unit baseline is therefore the available workaround and should stop most mid-step suite runs. It does not cover the remaining gap: the detail still lists integration tests as passing conditions, nothing names them as belonging to exit, and nothing reports them as unverified when the step is certified.
+- **Evidence:** an integration consumer, 2026-11-16/17. Its owner directed "the integration tests should be performed when we leave local testing", and its `TESTING.md` says local work runs the unit baseline plus affected integration files. Run logs for that consumer's `worker-identity-kinds` steps still show integration files executed inside steps; its plans set neither `test_command` nor `gate:`, so the `test_command` workaround was not in effect for those runs.
+- **Naming:** "deferred" is already a step status (`schema.py`, a step parked behind a gate), so these checks are named exit checks and reported as "unverified at exit", not as deferred.
+- **Effort:** medium: a schema field, gate execution and report rendering, executor-prompt wording, a `DETAIL_FORMAT.md` test-stage label, and directive wording.
+- **Risks / fallout:** an exit check that nothing runs later; the report and handoff therefore list every exit check as unverified.
+- **Dependencies:** none.
+- **Outcome:** a plan can declare exit checks that `run` never executes, that the executor prompt tells the backend model not to run, and that the run report and handoff list as unverified at exit.
+- **In scope:** `plan_tool/schema.py` (plan and step fields), `plan_tool/launcher.py` gate execution, `plan_tool/prompts/run.md` (exit checks are not run inside the step), run report and handoff rendering, `DETAIL_FORMAT.md` test staging, and the hand-fix wording in `integrations/shared/DIRECTIVES.md` ("run the plan's `test_command`").
+- **Out of scope / Non-goals:** running exit checks in any CI; consumer pipeline configuration; the test-authoring gate; the step `deferred` status.
+- **Allowed behavior changes:** a new optional field; an exit-checks section in the run report and handoff; the executor-prompt and directive wording above.
+- **Allowed reorganization:** none.
+- **Verification:** a fixture plan with an exit check completes a step without executing it, its rendered run prompt names the check as not to be run, and its report lists the check as unverified at exit.
+- **Stop / defer:** CI wiring for exit checks is a separate entry.
+- **Quality:** gate-signal — step certification follows a declared command instead of the model's reading of detail prose.
+- **Status:** not started.
+
+**#540 — The completeness audit ignores the plan's declared `risk_profile`, so a low-risk plan keeps collecting blocking robustness findings**
+
+- **Labels:** Route `plan`
+  · Readiness `decision-needed` (whether the existing `low` / `standard` / `high` tiers are enough or the audit needs finer levels, and which finding classes each tier demotes)
+  · Tier `architect`
+  · Principle `converge-on-correct-plan`
+- **What:** plans already carry a paired `risk_profile` / `risk_profile_rationale` declaration (`PLAN_FORMAT.md`, shipped by #181), and #182 feeds it to run-grade detail authoring and review as advisory context. The completeness audit does not read it: `2-risk-profile-2.md` kept the audit's prompts, parsing, reports, routing and blocking out of its scope. The conceptual audit therefore judges every plan against production rigor. For a single-owner, loopback-only developer tool it raised a new, narrower robustness gap each round.
+- **Evidence:** an integration consumer's `local-execution-mode` plan, 2026-11-17: thirteen detail-grounded rounds, with planned tests at 91 when the owner asked "are we over engineered?". A hand-written "Scope calibration" section cut them to 43, after which rounds converged. The consumer then added audit levels to its own audit contract to express the same idea. Not recorded: whether that plan declared a `risk_profile`, and at which tier.
+- **Counter-evidence to reconcile first:** `2-risk-profile-1.md` (§ "Why a seed convention cannot substitute for a persisted field") measured that a proportionality paragraph pasted into a plan body after detail moved the audit only 18 → 17 findings and raised HIGH 3 → 5, because the new findings contradicted ceremony already written into the bundle. The consumer's "Scope calibration" section converged instead. The entry needs the difference stated (for example, whether that section also cut detail-bundle tests rather than only adding prose) before the design treats plan-body calibration as sufficient.
+- **Conflict to resolve first:** the unjudged seed `plan-seeds/risk-profile-3-advisory-effectiveness.md` keeps authoring context "isolated from completeness-audit behavior and cache reuse" and rules out "audit suppression" without evidence that a smaller boundary cannot hold the invariant. That fence repeats #182's scope choice; no decision record makes it do-not-reopen. The readiness decision either reopens it with this entry's evidence or folds this entry into that seed's decision.
+- **Look-alikes not merged:** #181 / #182 (the shipped tier and its detail-time consumer; this entry extends that tier to the audit rather than adding a second plan-wide field), #404 (what the audit may question about intent, not how much rigor applies), #495 (how many passes run), #490 (a decision on one finding, not a plan-wide level).
+- **Effort:** medium: the audit prompt, severity classification and report rendering; a schema change only if the decision adds levels.
+- **Risks / fallout:** a tier used to wave away real defects; a tier therefore demotes only robustness findings beyond it, never correctness findings or contract contradictions.
+- **Dependencies:** #181 and #182 (shipped).
+- **Outcome:** the completeness audit reads the plan's `risk_profile` and reports robustness findings that exceed that tier as advisory, naming the tier.
+- **In scope:** the conceptual audit prompt and severity classification, completeness report rendering, `PLAN_FORMAT.md` and `docs/how-to/pipeline/audit.md` wording for the tier's audit effect.
+- **Out of scope / Non-goals:** a second plan-wide rigor field; automatic limits on test counts; deterministic checks; per-finding dispositions (#490); changing how `create` proposes the tier.
+- **Allowed behavior changes:** severity demotion of robustness findings for the tiers the readiness decision names; which tiers demote, and how a legacy omitted pair is treated, are left to that decision.
+- **Allowed reorganization:** none.
+- **Verification:** one fixture plan audited at two tiers the decision treats differently yields identical correctness findings and differs only in the severity of robustness findings.
+- **Stop / defer:** tier-aware detail generation beyond #182's advisory context is a separate entry.
+- **Quality:** convergence — rounds stop when the remaining findings exceed the declared tier.
+- **Status:** not started.
+
 ### B. Significant UX changes
 
 **#262 — Bare-stage report header: one static line that detail is the next step**
@@ -3566,7 +3646,7 @@ working straight down the tiers.
 
 **#149 — Compact `detail` output: a compact required-H2 authoring schema (phase B is the only phase) — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `write-for-the-human`
 - **What:** make `plan-tool detail` output less verbose with a **compact
   required detail schema** that changes what `detail` authors by default: merge
   Summary+Why into a single `Intent` and drop the Table of Contents. This is
@@ -3695,6 +3775,26 @@ working straight down the tiers.
   completeness verbs.
 
 **#69 — Close (or explicitly document) the standalone `reconcile-plan` unattended-apply gap** → promoted to IPPT-13 (2026-09-27)
+
+**#542 — `sweep` archives every completed plan at once and takes no plan name**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `write-for-the-human`
+- **What:** archiving one finished plan means archiving all of them; an operator who wants one moved cannot do it with the tool.
+- **Evidence:** an integration consumer, 2026-11-16: a dry run to archive one finished plan listed 19 completed plans. It was not applied, because other documents cite the unrelated plans' paths.
+- **Effort:** small: an optional positional name and a filter.
+- **Risks / fallout:** none beyond the new argument.
+- **Dependencies:** none.
+- **Outcome:** `sweep <name>` archives only the named completed plan; bare `sweep` keeps its current behavior.
+- **In scope:** the `sweep` subcommand.
+- **Out of scope / Non-goals:** archive layout; updating inbound citations.
+- **Allowed behavior changes:** the optional name.
+- **Allowed reorganization:** none.
+- **Verification:** with two completed plans, `sweep <one> --dry-run` lists one.
+- **Stop / defer:** citation rewriting after an archive is a separate entry.
+- **Status:** not started.
 
 ### C. Investigations / decision-making
 
@@ -4497,6 +4597,29 @@ working straight down the tiers.
   protocol rather than Integration-specific connector behavior.
 - **Status:** parked 2026-11-14.
 
+**#541 — Nothing reports that a plan keeps growing while audit findings narrow, the shape that signals over-engineering**
+
+- **Labels:** Route `direct`
+  · Readiness `evidence-gated` (replay the saved reports named below first)
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **Escalate to plan if:** the signal should gate a stage transition rather than stay advisory.
+- **What:** convergence diagnostics follow finding identity, not plan size. Rounds that each add tests and mechanisms to close a narrower finding read as progress.
+- **Evidence:** the same consumer session as #540; its saved completeness reports under `<integration-consumer-root>/docs/implementation-plans/plan-details/local-execution-mode/reports/` cover all thirteen rounds.
+- **Effort:** small to medium: counting planned tests and detail size per round and rendering a delta.
+- **Risks / fallout:** a false alarm on plans that legitimately grow during detail; the signal stays advisory.
+- **Dependencies:** none.
+- **Outcome:** the completeness report shows per-round deltas of planned tests and detail size and flags consecutive rounds of growth with narrowing findings.
+- **In scope:** completeness report rendering and detail-bundle counting.
+- **Look-alikes not merged:** the `finding_churn` and `edit_drift` advisories on `ConvergenceDiagnosis` (both follow finding identity, not plan or detail size).
+- **Out of scope / Non-goals:** blocking on growth; risk-tier-aware audit severity (#540).
+- **Allowed behavior changes:** an advisory report section.
+- **Allowed reorganization:** none.
+- **Verification:** replaying the consumer's saved reports flags the rounds where growth continued.
+- **Stop / defer:** none.
+- **Quality:** convergence.
+- **Status:** not started.
+
 ### D. Process / hygiene
 
 **#536 — Batch `commit_all`'s per-path git calls**
@@ -5073,7 +5196,7 @@ working straight down the tiers.
 - **Labels:** Route `plan`
   · Readiness `ready` (sequence after the BUG_BACKLOG.md entry on `--commit` staging the whole tree; see Dependencies)
   · Tier `experienced`
-  · Principle `untriaged` — commit hygiene; it may bear on `survive-interruption`, which the entry does not say
+  · Principle `survive-interruption` (a mutating verb leaves its saved report uncommitted)
 - **What:** `--commit` is accepted by four surfaces — `run` (per-step green
   commits), `detail`, `completeness-audit`, and `manifest sweep`/archive.
   `reconcile-plan` and `reconcile-code` mutate the repo (plan-side or
@@ -5517,7 +5640,7 @@ working straight down the tiers.
 
 **#180 — Structural renumbering: fix detail-file H1s and report surviving step references after split/merge/scope-out**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `converge-on-correct-plan`
 - **What:** `plan-tool split` (and the same renumber path used by `merge` and
   `scope-out`) renames detail files and repairs `depends_on`, but leaves every
   human-readable step reference stale. After a split it does not update: the
@@ -8013,7 +8136,7 @@ working straight down the tiers.
   - `step-completion-and-handoff` `20261010-004244` `[next-step-availability]`: "`workflow-catalog-core` owns `workflow-run` progress and `current_step`, while this plan owns handoff availability", with no transition boundary between them.
   - `chat-output-streaming` `20261010-010406` `[repository-reference-status-ordering]`: chat-output-streaming says `repository-browse-and-reference` depends on it, while repository-browse says it consumes the chat path, "so no status supplier exis[ts]".
   - `cdk-infrastructure-and-environments` `20261010-012102` `[fargate-executable-artifact]`: the CDK plan provisions Fargate engine execution but excludes application-artifact delivery, and `isolated-engine-worker` plans its image only in step 10.
-  These conflicts were caught by per-plan audits, so the gate as worded ("a per-plan audit passes clean") is not met. Coverage was incidental, though: the counterpart audit did not report any of them, and some correctness findings were grounded on a stale roadmap copy (BUG_BACKLOG "Roadmap-derived plans cite bare `0N-*.md` names…"). Whether incidental one-sided detection is enough is the decision this entry's gate now needs.
+  These conflicts were caught by per-plan audits, so the gate as worded ("a per-plan audit passes clean") is not met. Coverage was incidental, though: the counterpart audit did not report any of them, and some correctness findings were grounded on a stale roadmap copy (bare `0N-*.md` citations in roadmap-derived plans; draft seeds now cite version-store paths). Whether incidental one-sided detection is enough is the decision this entry's gate now needs.
 - **Evidence update (2026-10-10, later the same day):** the per-plan loop
   could not converge on the between-plan contracts. Through audit rounds 6-9
   of `isolated-engine-worker`, `step-completion-and-handoff`,
@@ -8436,6 +8559,7 @@ working straight down the tiers.
 - **Evidence:** the `no-edits-applied` review (2026-10-13)
   re-stated its declined
   items in every reviewer prompt by hand so later rounds would not re-raise them.
+- **Evidence (integration consumer, 2026-11-17):** an owner decision on a completeness finding (a fixed local audit deployment value) could be recorded only as plan prose, and the `decide` command accepts decomposition outcomes only. A tool-heuristic finding (`orphaned-deliverable` on a backlog file; see #111 for that check's identity model) was declined in three consecutive rounds and re-raised each time.
 - **Effort:** medium: a disposition store keyed by stable finding identity, a
   command to record one, and the audit prompt and report reading it.
 - **Risks / fallout:** a declined finding hides a later real regression at the

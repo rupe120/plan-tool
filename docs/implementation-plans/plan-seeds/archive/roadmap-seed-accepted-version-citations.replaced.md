@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md`.
+> Preserved here for history; do not edit.
+
 # Plan seed: roadmap draft seeds cite the accepted roadmap version, not bare filenames
 
 This file is a `plan-tool create` input. Use it via:
@@ -50,6 +53,10 @@ stale-copy case.
     to a top-level copy counts as bare and the required paths never trip it.
     This is a plain presence check: it rejects every bare occurrence and
     never has to judge whether one is a citation or a mention.
+  - Both gates accept a version-store path naming any stored version, not
+    only the accepted one. The hand-edit route below cites the version a
+    seed's text was written from, which can be older than the accepted head;
+    a gate that required the accepted version would refuse that route.
 - Legacy draft seeds with bare names: regenerated, or hand-edited and
   accepted, never rewritten by the tool (Architecture, "Legacy seeds").
 - `source_artifacts`, deliberately departing from the source entry's Fix,

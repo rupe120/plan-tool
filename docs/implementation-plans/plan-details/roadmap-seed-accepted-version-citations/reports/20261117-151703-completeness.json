@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-accepted-version-citations",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md",
+  "created_at": "2026-11-17T15:17:03Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fe011ad082e11a4a79986868251f4b5ff61befff1d3842d507dc1db01f779222",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "f5c02dec8a913330c7af8645c18309e706819c1f07ea9b9f1cdbd0ee157c2de1",
+    "DATA_CONTRACT.md": "0f41d38152c1ceba52db6ac93964dff355e59bc6478b0f4d1e8c02852b81f5a7",
+    "ROADMAP_FORMAT.md": "b46ccfc8b4fa4161e3fcec24508c0c095f3570aeb145a2e42f71190b2e8cf9b6",
+    "docs/explanations/roadmap-plan-handoff.md": "9ad66295dc220c7b86ac9c04c0299942f9384ba87d816925686e61966da076c9",
+    "docs/how-to/roadmap.md": "7fc8a3baa4815958dec19e60a71765945c6a08e9912caa469b8d73d5ef31e262",
+    "plan_tool/cli/authoring.py": "01e97b34fde5ec9c0bbacd2d214cd4e9563f504bfec98647acef43a1d8efe11a",
+    "plan_tool/prompts/roadmap-seed.md": "281fb57c995235cb1285bc491815dff89a0d56e2c403fee06b37b4cea22ac25b",
+    "plan_tool/roadmap.py": "7fc035f6b75c7241aa3fd49ada02b579a3300039df1daf58cf643224df2e08d3",
+    "plan_tool/roadmap_gates.py": "daf50d15ab26b119a84a0e55e2b88b0a486a96e8630956d78934b25c5ebfa459",
+    "plan_tool/roadmap_seed_manifest.py": "074e0a67e7e74b8b16f1ccafbb802c1e6b1967b18992a5f6d090cde80dc8bdf2",
+    "tests/cli/test_authoring_cmds.py": "73e43436daa55e0a366e9755e80d10793962014c9638802b625c0bf311278f9d",
+    "tests/test_roadmap.py": "39bc6bb691a168a45a83a7b3d0c4d8c8f308dd6baa376d330bbdf10c4fc5dcc3",
+    "tests/test_roadmap_gates.py": "9a170ebe3f78fee638e960383460551dd4fd054dfaced1f2bc042db115f22db8",
+    "tests/test_roadmap_seed_manifest.py": "5965618cd7c58fce111f71765b14039dd05d4b947962671cf1e1cde5469f3f9d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md": "062773f91d0847ed7a959d6fc55ba948185422e8245e69f94f212c3f59a67aec",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md": "138f7ef00c2c286658b466ebb5088097ae726b19b0a1befcc0aee53ffc416dad",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md": "e388fb216790ce43bb0fe08bb1afdaf2c90d2dbc35d91f0b277e89c09d36883f",
+    "docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md": "48faeaf24c7dc7d134dd09b3595b9ca249a80f12f3c498b4c8477946b7e8e602"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Accepted Version Citations\n\n`roadmap-seed-accepted-version-citations` \u00b7 generated 2026-11-17T15:17:03Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8b0dae7e1636787288670cd6cdba33d1e8357db9191fd705c35176992220efec`\n- **Detail bundle digest:** `dbd35b6e6c57375c8bffa173dedd8f7e2e6e2995c49b0cd9c94e04c40f1cc8ea`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 42122 bytes (+42122 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[stack-section-bare-name-repair]` [confidence: limited]: A bare member filename in a roadmap row value makes `--materialize` and `--refresh-seeds` fail on every attempt, and the plan names no repair route that works. The Architecture section says `_render_stack_section` copies row values verbatim and that such a seed \"fails materialize closed, with a message naming the section, and the fix is to correct the roadmap row.\" `_render_stack_section` in `plan_tool/roadmap.py` interpolates free-text cells: `row.value`, `product`, `concern` and `choice`. The tool writes this section, so step 1's prompt instruction to replace bare names cannot reach it, and the bounded retry cannot clear it. An accepted roadmap version is immutable, so \"correct the roadmap row\" is a new roadmap revision, and the plan does not say so. Step 2's test list has no case for a bare name in the Stack section. Step 2 only says \"Each message names the offending occurrence\", which does not require naming the section. An operator with a row like `value: see 03-components.md` gets a repeated refusal and no route to follow. Step 3's `create` refusal also names only `--refresh-seeds` and `--accept-seed`, and neither clears a Stack-sourced name.\n  - Fix: Specify that the materialize failure for a Stack-section occurrence names the section and tells the operator to revise the accepted roadmap row, since regenerating the seed cannot clear it. Add a step 2 test case for a bare name in the tool-written Stack section, and state the same route in step 4's `ROADMAP_FORMAT.md` edit.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-cc946505]` [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]` [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Accepted Version Citations\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8b0dae7e1636787288670cd6cdba33d1e8357db9191fd705c35176992220efec`\n- **Detail bundle digest:** `dbd35b6e6c57375c8bffa173dedd8f7e2e6e2995c49b0cd9c94e04c40f1cc8ea`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit roadmap-seed-accepted-version-citations --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-05f2cb04",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "A bare member filename in a roadmap row value makes `--materialize` and `--refresh-seeds` fail on every attempt, and the",
+      "body": "A bare member filename in a roadmap row value makes `--materialize` and `--refresh-seeds` fail on every attempt, and the plan names no repair route that works. The Architecture section says `_render_stack_section` copies row values verbatim and that such a seed \"fails materialize closed, with a message naming the section, and the fix is to correct the roadmap row.\" `_render_stack_section` in `plan_tool/roadmap.py` interpolates free-text cells: `row.value`, `product`, `concern` and `choice`. The tool writes this section, so step 1's prompt instruction to replace bare names cannot reach it, and the bounded retry cannot clear it. An accepted roadmap version is immutable, so \"correct the roadmap row\" is a new roadmap revision, and the plan does not say so. Step 2's test list has no case for a bare name in the Stack section. Step 2 only says \"Each message names the offending occurrence\", which does not require naming the section. An operator with a row like `value: see 03-components.md` gets a repeated refusal and no route to follow. Step 3's `create` refusal also names only `--refresh-seeds` and `--accept-seed`, and neither clears a Stack-sourced name.",
+      "suggested_action": "Specify that the materialize failure for a Stack-section occurrence names the section and tells the operator to revise the accepted roadmap row, since regenerating the seed cannot clear it. Add a step 2 test case for a bare name in the tool-written Stack section, and state the same route in step 4's `ROADMAP_FORMAT.md` edit.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-section-bare-name-repair",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "8b0dae7e1636787288670cd6cdba33d1e8357db9191fd705c35176992220efec",
+      "detail_bundle_digest": "dbd35b6e6c57375c8bffa173dedd8f7e2e6e2995c49b0cd9c94e04c40f1cc8ea",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/01-make-seed-writer-cite-each-roadmap-file.md",
+          "state": "present",
+          "digest": "062773f91d0847ed7a959d6fc55ba948185422e8245e69f94f212c3f59a67aec"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/02-tighten-draft-seed-gates-plan-tool.md",
+          "state": "present",
+          "digest": "138f7ef00c2c286658b466ebb5088097ae726b19b0a1befcc0aee53ffc416dad"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md",
+          "state": "present",
+          "digest": "e388fb216790ce43bb0fe08bb1afdaf2c90d2dbc35d91f0b277e89c09d36883f"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md",
+          "state": "present",
+          "digest": "48faeaf24c7dc7d134dd09b3595b9ca249a80f12f3c498b4c8477946b7e8e602"
+        }
+      ],
+      "source_seed_digest": "54641adf8aecbcbbc910033b86068f4d041838abb803e32f4a299c27f76b3723",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 42122,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

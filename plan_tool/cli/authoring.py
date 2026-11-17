@@ -34,7 +34,7 @@ import re
 import sys
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Iterable, Mapping, Optional
 
 
 _TRACKED_SEED_MARKER_RE = re.compile(
@@ -153,6 +153,12 @@ from plan_tool.pathutil import literal_path
 from plan_tool.roadmap_artifacts import (
     RoadmapArtifactError,
     parse_plans_artifact,
+)
+from plan_tool.roadmap_gates import (
+    STACK_BARE_NAME_ROUTE,
+    CitationRoots,
+    bare_roadmap_file_citations,
+    unresolved_roadmap_file_citations,
 )
 from plan_tool.roadmap_seed_manifest import (
     DRAFT_SEED_STATE_CURRENT,
@@ -320,6 +326,8 @@ PRE_SLUG_REFUSAL_REASONS = (
     "seed-source-unmatched",
     "roadmap-seed-unresolved",
     "roadmap-seed-not-confirmed",
+    "roadmap-seed-bare-citation",
+    "roadmap-seed-unresolved-citation",
 )
 
 
@@ -331,9 +339,19 @@ def _pre_slug_refusal(reason: str) -> None:
 
 
 def _confirm_invalidated_roadmap_seed(
-    location: TrackedSeedLocation | None, *, yes: bool, input_fn=input
+    location: TrackedSeedLocation | None,
+    *,
+    seed_files: Mapping[str, str],
+    repo_root: Path,
+    yes: bool,
+    input_fn=input,
 ) -> bool:
-    """Require an explicit assent before ``create`` consumes an unsafe seed.
+    """Refuse a bare-named tracked seed, then require assent before an unsafe one.
+
+    ``seed_files`` maps each file ``create`` will read (the tracked draft or
+    promoted copy, plus any separate provenance source) to its text; required,
+    so a new caller cannot skip the check by omission. A bare roadmap file name refuses under ``-y`` too: see
+    DATA_CONTRACT.md "Pre-slug create refusals".
 
     A promoted ``plan-seeds/`` copy (``location.via_marker``) is validated
     against the sidecar's persisted lifecycle status rather than
@@ -374,7 +392,7 @@ def _confirm_invalidated_roadmap_seed(
             non_current_state = DRAFT_SEED_STATE_STALE if is_stale else None
         else:
             classification = classify_draft_seeds(
-                artifact, plans_dir=plans_dir, slug=location.roadmap_slug
+                artifact, plans_dir=plans_dir, slug=location.roadmap_slug, repo_root=repo_root
             ).get(location.plan_id)
             if classification is None:
                 error(
@@ -397,6 +415,51 @@ def _confirm_invalidated_roadmap_seed(
     ) as exc:
         error(str(exc))
         _pre_slug_refusal("roadmap-seed-unresolved")
+        return False
+    bare_by_file = {
+        label: citations
+        for label, text in seed_files.items()
+        if (citations := bare_roadmap_file_citations(text))
+    }
+    if bare_by_file:
+        # Only always-true facts: which file holds which names. The routes depend
+        # on seed state, so they live in one maintained doc section.
+        where = "; ".join(
+            f"{label}: {', '.join(sorted({c.filename for c in citations}))}"
+            for label, citations in bare_by_file.items()
+        )
+        stack_note = (
+            " A name in the tool-written '## Stack' section comes from an accepted "
+            f"roadmap row value: {STACK_BARE_NAME_ROUTE}."
+            if any(c.in_stack_section for cs in bare_by_file.values() for c in cs)
+            else ""
+        )
+        error(
+            f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
+            f"roadmap files without their version-store path ({where}). Replace each "
+            "with its repo-relative `<roadmap folder>/.roadmap-versions/<version-id>/` path, or "
+            "regenerate the seed; ROADMAP_FORMAT.md § \"Draft-seed manifest states\" "
+            f"names the routes for drafts and promoted copies.{stack_note}"
+        )
+        _pre_slug_refusal("roadmap-seed-bare-citation")
+        return False
+    roots = CitationRoots(
+        repo_root=repo_root, plans_dir=plans_dir, slug=location.roadmap_slug
+    )
+    unresolved = {
+        label: violations
+        for label, text in seed_files.items()
+        if (violations := unresolved_roadmap_file_citations(text, roots))
+    }
+    if unresolved:
+        for label, violations in unresolved.items():
+            for violation in violations:
+                error(f"roadmap seed '{location.plan_id}' ({label}): {violation.message}")
+        error(
+            "Correct each citation, or regenerate the seed; ROADMAP_FORMAT.md "
+            '§ "Draft-seed manifest states" names the routes for drafts and promoted copies.'
+        )
+        _pre_slug_refusal("roadmap-seed-unresolved-citation")
         return False
     if non_current_state is None:
         return True
@@ -779,7 +842,10 @@ def cmd_create(args: argparse.Namespace) -> int:
             _pre_slug_refusal("roadmap-seed-unresolved")
             return 2
         if not _confirm_invalidated_roadmap_seed(
-            tracked_seed_location, yes=args.yes
+            tracked_seed_location,
+            seed_files=_seed_files_create_reads(source_path, description, seed_body),
+            repo_root=repo_root,
+            yes=args.yes,
         ):
             return 2
 
@@ -1361,6 +1427,28 @@ def _stamp_grounding(
         return None
 
 
+def _seed_files_create_reads(
+    source_path: Path, description: Optional[str], seed_body: Optional[str]
+) -> dict[str, str]:
+    """Each file ``create`` reads for a seed, by path, to its text."""
+    files: dict[str, str] = {}
+    if description:
+        files[str(source_path)] = description
+    source = _provenance_source_path(source_path, description or "")
+    if seed_body and source is not None:
+        files[str(source)] = seed_body
+    return files
+
+
+def _provenance_source_path(canonical_path: Path, canonical_text: str) -> Optional[Path]:
+    """The separate seed file a canonical's provenance names, or ``None`` when there is none."""
+    provenance = read_canonical_provenance(canonical_text)
+    if provenance is None:
+        return None
+    seed_path = (canonical_path.parent / provenance.source).resolve()
+    return None if seed_path == canonical_path else seed_path
+
+
 def _read_seed_body(canonical_path: Path, canonical_text: str) -> Optional[str]:
     """Read the original seed file referenced by ``canonical_text``'s provenance.
 
@@ -1375,11 +1463,8 @@ def _read_seed_body(canonical_path: Path, canonical_text: str) -> Optional[str]:
     canonical text still populates the body, but the richer prose the
     provenance promised is silently missing otherwise.
     """
-    provenance = read_canonical_provenance(canonical_text)
-    if provenance is None:
-        return None
-    seed_path = (canonical_path.parent / provenance.source).resolve()
-    if seed_path == canonical_path:
+    seed_path = _provenance_source_path(canonical_path, canonical_text)
+    if seed_path is None:
         return None
     if not seed_path.is_file():
         warn(

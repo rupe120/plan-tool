@@ -41,6 +41,11 @@ from plan_tool.roadmap_seed_state import (
 )
 
 
+def _cite(filename: str) -> str:
+    """A well-formed version-store citation; it resolves only where a test retargets it to a stored version."""
+    return f"docs/implementation-plans/roadmaps/storefront/.roadmap-versions/{'0' * 64}/{filename}"
+
+
 SLUG = "demo"
 
 
@@ -78,10 +83,10 @@ def _seed_text(*component_ids: str) -> str:
         "## Expected placement\n\nNone\n\n"
         "## Risks\n\n- A risk the accepted roadmap already states.\n\n"
         "## References\n\n"
-        f"- `{DOMAIN_FILENAME}`\n"
-        f"- `{CONSTRAINTS_FILENAME}`\n"
-        f"- `{COMPONENTS_FILENAME}`\n"
-        f"- `{PLANS_FILENAME}`\n"
+        f"- `{_cite(DOMAIN_FILENAME)}`\n"
+        f"- `{_cite(CONSTRAINTS_FILENAME)}`\n"
+        f"- `{_cite(COMPONENTS_FILENAME)}`\n"
+        f"- `{_cite(PLANS_FILENAME)}`\n"
     )
 
 
@@ -120,7 +125,7 @@ def test_classify_current_when_digest_matches_and_content_validates(tmp_path: Pa
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_CURRENT
     assert classification[plan.id].detail == ""
@@ -138,7 +143,7 @@ def test_classify_current_for_a_draft_that_carries_a_stack_section(tmp_path: Pat
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_CURRENT
     assert classification[plan.id].detail == ""
@@ -158,7 +163,7 @@ def test_classify_current_for_seed_text_carrying_the_stack_section(tmp_path: Pat
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_CURRENT
 
@@ -170,7 +175,7 @@ def test_classify_missing_when_no_file_exists(tmp_path: Path, with_entry: bool) 
     if with_entry:
         _write_state(plans_dir, {plan.id: _entry(plan, _seed_text(*plan.component_ids))})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_MISSING
 
@@ -199,7 +204,7 @@ def test_classify_digest_mismatched_without_a_known_good_digest(
     monkeypatch.setattr(Path, "read_text", unreadable)
     try:
         classification = classify_draft_seeds(
-            _artifact(plan), plans_dir=plans_dir, slug=SLUG
+            _artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None
         )
     finally:
         monkeypatch.undo()
@@ -215,7 +220,7 @@ def test_classify_digest_mismatched_when_file_changes(tmp_path: Path) -> None:
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
     source.write_text(text + "hand edit\n", encoding="utf-8")
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_DIGEST_MISMATCHED
 
@@ -229,7 +234,7 @@ def test_stale_takes_precedence_over_malformed(tmp_path: Path) -> None:
         plans_dir, {plan.id: _entry(plan, invalid_text, status="invalidated")}
     )
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_STALE
 
@@ -241,7 +246,7 @@ def test_classify_malformed_includes_validation_detail(tmp_path: Path) -> None:
     _write_seed(plans_dir, plan, invalid_text)
     _write_state(plans_dir, {plan.id: _entry(plan, invalid_text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     result = classification[plan.id]
     assert result.state == DRAFT_SEED_STATE_MALFORMED
@@ -253,11 +258,11 @@ def test_classify_malformed_when_digest_matching_seed_omits_accepted_artifact_re
 ) -> None:
     plans_dir = tmp_path / "plans"
     plan = _plan()
-    text = _seed_text(*plan.component_ids).replace(f"- `{DOMAIN_FILENAME}`\n", "")
+    text = _seed_text(*plan.component_ids).replace(f"- `{_cite(DOMAIN_FILENAME)}`\n", "")
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_MALFORMED
     assert DOMAIN_FILENAME in classification[plan.id].detail
@@ -274,7 +279,7 @@ def test_classify_malformed_when_digest_matching_seed_has_no_risks(tmp_path: Pat
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_MALFORMED
     assert "## Risks" in classification[plan.id].detail
@@ -304,7 +309,7 @@ def test_classify_unreadable_file_uses_sidecar_status(
 
     monkeypatch.setattr(Path, "read_text", unreadable)
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == expected_state
 
@@ -316,7 +321,7 @@ def test_path_escaping_takes_precedence_over_missing(tmp_path: Path) -> None:
     entry["draft_seed_path"] = "../outside.md"
     _write_state(plans_dir, {plan.id: entry})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_PATH_ESCAPING
     assert "must not contain" in classification[plan.id].detail
@@ -328,7 +333,7 @@ def test_duplicate_takes_precedence_over_every_other_state(tmp_path: Path) -> No
     second = _plan("second")
 
     classification = classify_draft_seeds(
-        _artifact(first, second), plans_dir=plans_dir, slug=SLUG
+        _artifact(first, second), plans_dir=plans_dir, slug=SLUG, repo_root=None
     )
 
     assert {item.state for item in classification.values()} == {DRAFT_SEED_STATE_DUPLICATE}
@@ -343,7 +348,7 @@ def test_classify_accepts_legacy_seed_paths(tmp_path: Path) -> None:
     _write_seed(plans_dir, plan, text)
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
 
-    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert classification[plan.id].state == DRAFT_SEED_STATE_CURRENT
 
@@ -366,7 +371,7 @@ def test_classification_returns_every_plan_and_never_writes(tmp_path: Path) -> N
     before_mtimes = {path: path.stat().st_mtime_ns for path in before_bytes}
 
     classification = classify_draft_seeds(
-        _artifact(first, second), plans_dir=plans_dir, slug=SLUG
+        _artifact(first, second), plans_dir=plans_dir, slug=SLUG, repo_root=None
     )
 
     assert set(classification) == {"first", "second"}
@@ -508,7 +513,24 @@ def test_classify_draft_seeds_accepts_a_version_parsed_plans_artifact(tmp_path: 
     _write_state(plans_dir, {plan.id: _entry(plan, text)})
     parsed = parse_plans_artifact(render_plans_artifact(_artifact(plan)))
 
-    classification = classify_draft_seeds(parsed, plans_dir=plans_dir, slug=SLUG)
+    classification = classify_draft_seeds(parsed, plans_dir=plans_dir, slug=SLUG, repo_root=None)
 
     assert not (_root(plans_dir) / PLANS_FILENAME).exists()
     assert classification[plan.id].state == DRAFT_SEED_STATE_CURRENT
+
+
+def test_classify_malformed_for_a_legacy_bare_name_seed(tmp_path: Path) -> None:
+    """A seed written before version-store citations, digest still current, is malformed."""
+    plans_dir = tmp_path / "plans"
+    plan = _plan()
+    text = _seed_text(*plan.component_ids)
+    for filename in (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME):
+        text = text.replace(_cite(filename), filename)
+    _write_seed(plans_dir, plan, text)
+    _write_state(plans_dir, {plan.id: _entry(plan, text)})
+
+    classification = classify_draft_seeds(_artifact(plan), plans_dir=plans_dir, slug=SLUG, repo_root=None)
+
+    assert classification[plan.id].state == DRAFT_SEED_STATE_MALFORMED
+    assert ".roadmap-versions/<version-id>/" in classification[plan.id].detail
+

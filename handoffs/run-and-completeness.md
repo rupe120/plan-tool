@@ -8,6 +8,8 @@
 | [Completeness next steps from one blocking verdict — review ledger and session handoff](#completeness-next-steps-from-one-blocking-verdict--review-ledger-and-session-handoff) | 2026-10-10 |
 | [`run` no-edits-applied block and failure receipts — review ledger](#run-no-edits-applied-block-and-failure-receipts--review-ledger) | 2026-10-13 |
 | [Completeness apply retirement implementation](#completeness-apply-retirement-implementation) | 2026-11-04 |
+| [Local-iteration backlog findings #539–#542 — review ledger and priority handoff](#local-iteration-backlog-findings-539542--review-ledger-and-priority-handoff) | 2026-11-17 |
+| [Roadmap seed version-store citations — review ledger](#roadmap-seed-version-store-citations--review-ledger) | 2026-11-17 |
 
 ## Completeness next-step verdict finish — review ledger and session handoff
 
@@ -496,10 +498,126 @@ Final regression evidence after optional documentation follow-through: 14,702 pa
 
 Open items: #519 (unreachable structural opt-in and its comment wording), #520 (stale lessons), #369 (untouched, independent), and the pending Architect-tier review of the `CLAUDE.md` rule edits (A2/G1).
 
+## Local-iteration backlog findings #539–#542 — review ledger and priority handoff
 
+*Opened 2026-11-17.*
 
+| Field | Value |
+| --- | --- |
+| Change | `BACKLOG.md` entries #539–#542 and new #490 evidence, from an integration consumer's local-execution plan |
+| Branch | `docs/backlog-local-iteration-findings` (pushed; PR #252) |
+| Range | `69b609b00` (entries added) through `9ddc8f583` |
+| Checks | `tests/test_backlog_ids.py`, `tests/test_backlog_readability.py` green on each commit |
+| Reviewer | session review of each entry's claims against the code |
+| Disposition | entries corrected; priority pending owner decision |
 
+### Settled decisions
 
+- #540 does not pre-select which `risk_profile` tiers demote findings; that is its readiness decision (owner, 2026-11-17).
+- #540 extends the shipped `risk_profile` tier rather than adding a second plan-wide rigor field.
+- Correctness findings and contract contradictions never demote under any tier.
 
+### Findings
 
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | #540 proposed a new assurance-level field beside the shipped `risk_profile` (#181/#182) and omitted both as look-alikes | **Fixed `535f47b6b`.** Reframed as the audit reading the existing tier; #181/#182 listed |
+| 2 | #540 omitted `2-risk-profile-1.md`'s measurement that a retrofitted plan-body proportionality paragraph raised HIGH 3 → 5 | **Fixed `535f47b6b`.** Recorded as counter-evidence to reconcile before design |
+| 3 | #540's rewrite limited demotion to `low` only, pre-answering its own decision | **Fixed `c4c84ab6b`.** Allowed behavior changes and Verification defer to the readiness decision |
+| 4 | #540 conflicts with the unjudged `risk-profile-3-advisory-effectiveness` seed, which keeps the audit isolated from risk context and rules out audit suppression | **Fixed `9ddc8f583`.** Named as a conflict to resolve first; resolution is `pending` (item 1 below) |
+| 5 | #539 missed the existing workaround (`prompts/run.md` defers to a declared `test_command`) and left that prompt out of scope | **Fixed `535f47b6b`.** Workaround stated; `run.md` in scope, Outcome and Verification |
+| 6 | #539's "deferred checks" collided with the step `deferred` status | **Fixed `535f47b6b`.** Renamed exit checks, reported "unverified at exit" |
+| 7 | #541 lacked the `finding_churn` / `edit_drift` look-alikes; #490's evidence lacked a #111 cross-reference | **Fixed `535f47b6b`.** |
+| 8 | #541's evidence is a placeholder path in the consumer repo, so the replay its readiness waits on cannot run here | `pending` — copy the per-round planned-test and finding counts into the entry |
 
+Checked, no finding: id uniqueness, `sweep` taking no plan name (#542), `decide` accepting decomposition outcomes only (#490), `run`/`--accept` gate behavior (#539).
+
+### Priority (recommendation; the owner decides)
+
+None of the four belongs on the Now board, which lists `direct` + `ready` trust-core (P1/P2) entries.
+
+1. **#540 — highest value, decision first.** P1 with a measured cost (thirteen rounds, 91 → 43 planned tests). Next action is an owner call: reopen the risk-profile-3 seed's audit fence with #540's evidence, or fold #540 into that seed's decision. Placed in T2 with #490 (`BACKLOG.md` § "Priority bands", refreshed 2026-11-17); the decision itself stays `pending`.
+2. **#539 — not urgent.** The consumer can set `test_command` to its unit baseline today. The `DIRECTIVES.md` hand-fix wording (step 3 names this repo's own full pytest run) could be split out as a small `direct` entry if it misleads before #539 is decided. `pending`.
+3. **#541 — not pickable** until item 8 above lands; then a small advisory.
+4. **#542 — an ordinary drain pick.** `direct`, `ready`, P5, small; taken by `backlog-drain.md` in TRACKING order, no special priority.
+
+## Roadmap seed version-store citations — review ledger
+
+*Opened 2026-11-17. Closed 2026-11-17 by owner decision after round 6; shipped as PR #254 (plan PR #253).*
+
+| Field | Value |
+| --- | --- |
+| Opened | 2026-11-17 |
+| Change | Plan `roadmap-seed-accepted-version-citations`: draft seeds cite roadmap files by repo-relative version-store path; both draft-seed gates require it and require it to resolve; `create` refuses a bare or unresolved citation even under `-y` |
+| Range | `origin/main` at #253 through the #254 merge (`3026f213b`) |
+| Checks | full suite green (15,298 passed); `reconcile-code --all` no drift (one declined nit); real-model `--materialize` on a fixture roadmap and on a copy of Loom's `loom-aidlc-mvp` |
+| Reviewer | `/code-review high`, six forked report-only rounds |
+| Disposition | **Closed by owner decision** after round 6: findings 10 → 10 → 7 → 10 → 8 → 10, each round's material findings in mechanisms the previous round added; neither converged nor stopped at exit 2 |
+
+### Settled decisions
+
+Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" and § "Draft-seed manifest states", `DATA_CONTRACT.md` pre-slug refusals, and the archived plan).
+
+- `create` refuses a bare-named tracked seed even under `-y` (`roadmap-seed-bare-citation`), because automated sessions always pass `-y`.
+- Citations must resolve from the repository root to a stored member file of the roadmap; any stored version passes (`unresolved-roadmap-file-citation`, `create` reason `roadmap-seed-unresolved-citation`). This reversed the plan's form-only gates, whose premise, an existing cited-path check for `.md` prose paths, was false.
+- The refusal message states only facts (each file and its bare names) and points at `ROADMAP_FORMAT.md` for state-dependent routes.
+- Materialize refuses a plans directory outside the repository rather than citing absolute paths.
+- Only the four member filenames count, case-insensitively; plans already created from bare-name seeds are not migrated.
+
+### Real-model check
+
+- Both on the shipping code, Opus, first attempt, 0 bare and 0 unresolved citations, all four members cited: the test suite's fixture roadmap, and a copy of Loom's `loom-aidlc-mvp` version store (24 versions, head `c7743c56`, Loom only read).
+- Limit, recorded: neither roadmap mentions a member filename in its own artifact text, so rewriting a carried-over name is not exercised by a real run.
+
+### Findings
+
+| Round | # | Finding | Disposition |
+| --- | --- | --- | --- |
+| 1 | 1 | `$` in the version-segment check matched before a newline | fixed (fixed-width check) |
+| 1 | 2 | Messages suggested a folderless path | fixed (message) |
+| 1 | 3 | Stack-origin bare name spent every retry | fixed (pre-check before the loop) |
+| 1 | 4 | `create` dropped the Stack route | fixed |
+| 1 | 5 | Only a separate provenance source was scanned | fixed (every read file) |
+| 1 | 6 | `ROADMAP_FORMAT.md` falsely said `source_artifacts` is read | fixed (doc and detail sources) |
+| 1 | 7 | How-to said hand-written seeds are gated | fixed (doc) |
+| 1 | 8 | Filenames parsed from message prose | fixed (structured helper) |
+| 1 | 9 | Seed state read twice | fixed |
+| 1 | 10 | Whole-prefix rescans | fixed (with 1) |
+| 2 | 1 | Folderless citation passes | declined then, fixed in round 4 by owner decision |
+| 2 | 2 | Out-of-repo plans dir refused | declined (owner-confirmed rule) |
+| 2 | 3 | Mentions flagged as well as citations | declined (settled presence rule) |
+| 2 | 4 | Doc said "any stored id passes" | fixed |
+| 2 | 5 | Mixed Stack and body names got one route | fixed |
+| 2 | 6 | Link text with a bare name flagged | fixed (prompt) |
+| 2 | 7 | Bare input headings in the prompt | declined (settled) |
+| 2 | 8 | Publication truthiness diverged | fixed, later removed |
+| 2 | 9 | `seed_texts` defaulted to checking nothing | fixed (required) |
+| 2 | 10 | Two occurrence dataclasses | declined (cosmetic) |
+| 3 | 1–3 | Repair message wrong for archived, unpublished and per-row cases | fixed (case matrix), later replaced by facts + doc pointer |
+| 3 | 4 | Stack pre-check says "exhausted" | declined (closed `failure_kind` set; raised again rounds 5, 6) |
+| 3 | 5 | Stack violations unattributed | fixed |
+| 3 | 6 | `old.roadmap-versions` counted as cited | fixed (whole segment) |
+| 3 | 7 | Prompt suggested a non-resolving link form | fixed (backticked path) |
+| 4 | 1–2 | Non-resolving citations pass; the claimed cited-path check does not exist | fixed (owner decision: citations must resolve) |
+| 4 | 3–4 | Message missed provenance files and suggested a refusing command | fixed (owner decision: facts + doc pointer) |
+| 4 | 5 | No run-log event for the pre-check | declined (no model call) |
+| 4 | 6 | Symlinked out-of-repo plans dir refused | declined (owner-confirmed rule) |
+| 4 | 7 | Id width hard-coded twice | fixed |
+| 4 | 8–9 | Duplicated route text and publication test | no longer applies |
+| 4 | 10 | Three layers for one check | declined (cosmetic) |
+| 5 | 1–2 | Resolution guessed the citation token: punctuation caused false refusals; absolute and `..` paths passed | fixed (compare the one valid prefix) |
+| 5 | 4–5 | `repo_root` optional for `--view` and `create` | fixed (required) |
+| 5 | 6 | Constant copies | declined (layering) |
+| 5 | 7 | Draft scanned twice | declined (bounded cost) |
+| 5 | 8 | Retry gave a template path | fixed (exact paths) |
+| 6 | 1 | Handoff file corrupted to 56 MB by an empty-slice replace | fixed (restored; unpushed tip amended) |
+| 6 | 2 | Short folderless form still in five docs and the refusal | fixed (sweep) |
+| 6 | 3 | Stack pre-check missed unresolvable citations | fixed |
+| 6 | 5 | Case variants passed | fixed |
+| 6 | 6, 8 | Double `is_file`; duplicated provenance path rule | fixed |
+| 6 | 7, 9, 10 | Constant copies; double scan; explicit `None` on the classifier | declined (as before) |
+
+### Open items
+
+- `tracked` BUG_BACKLOG: bare roadmap file names in prose `create`'s model writes during synthesis (the plan's deferred follow-up).
+- Consumer action, outside this repository: Integration's roadmap-derived plans predate the fix and are not migrated; run `plan-tool roadmap <slug> --refresh-seeds`, then hand-fix or re-create affected plans.

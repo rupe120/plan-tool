@@ -37,7 +37,7 @@ from plan_tool.scope_fence import (
 from plan_tool import roadmap_impact_snapshot
 from plan_tool.create import validate_from_existing_seed
 from plan_tool.renderer import prompts_dir
-from roadmap_accepted_fixtures import advance_accepted_head, publish_accepted_root
+from roadmap_accepted_fixtures import BRIEF_BYTES, advance_accepted_head, publish_accepted_root
 from subprocess_doubles import _FakeProc
 from plan_tool.roadmap import (
     ACCEPT_OUTCOME_ACCEPTED,
@@ -167,9 +167,11 @@ from plan_tool.roadmap_artifacts import (
 )
 from plan_tool.roadmap_versions import (
     ACCEPTED_HEAD_FILENAME,
+    create_root_version,
     accepted_head_path,
     is_roadmap_enrolled,
     load_accepted_version,
+    version_directory_path,
     version_namespace_path,
 )
 from plan_tool.roadmap_feedback_ledger import (
@@ -184,6 +186,9 @@ from plan_tool.roadmap_source_identity import (
     render_pending_generation,
 )
 from plan_tool.roadmap_gates import (
+    VIOLATION_BARE_ROADMAP_FILE_CITATION,
+    VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
+    find_bare_roadmap_file_citations,
     COMPONENTS_GATES,
     CONSTRAINTS_GATES,
     DOMAIN_GATES,
@@ -205,6 +210,46 @@ from plan_tool.roadmap_gates import (
     run_plans_gates,
 )
 from plan_tool.run_log import RunLogLineTooLarge, RunLogWriter, read_run_events
+
+
+@functools.cache
+def _default_version_id() -> str:
+    """The version id ``_Env.publish_accepted()`` stores for the default fixture artifacts."""
+    texts = (_domain_text(), _constraints_text(), _components_text(), _plans_artifact_text())
+    return create_root_version(
+        roadmap_slug=SLUG,
+        brief_digest=hashlib.sha256(BRIEF_BYTES).hexdigest(),
+        artifact_digests=tuple(hashlib.sha256(t.encode("utf-8")).hexdigest() for t in texts),
+    ).version_id
+
+
+_CITATION_DIR_RE = re.compile(r"[\w./-]*\.roadmap-versions/[0-9a-f]{64}/")
+
+
+def _retarget_citations(text: str, version_dir: str) -> str:
+    """Point ``_cite`` citations at ``version_dir``, the env's real accepted version folder."""
+    default_dir = re.compile(
+        rf"docs/implementation-plans/roadmaps/{SLUG}/\.roadmap-versions/[0-9a-f]{{64}}/"
+    )
+    return default_dir.sub(lambda _m: version_dir, text)
+
+
+def _env_retarget(env: Any, text: str) -> str:
+    """``text`` with ``_cite`` citations pointed at ``env``'s accepted version, when one exists."""
+    slug = getattr(env, "slug", SLUG)
+    version = load_accepted_version(plans_dir=env.plans_dir, slug=slug)
+    if version is None:
+        return text
+    version_dir = version_directory_path(env.plans_dir, slug, version.record.version_id)
+    return _retarget_citations(text, version_dir.relative_to(env.repo_root).as_posix() + "/")
+
+
+def _cite(filename: str) -> str:
+    """The repo-relative path of ``filename`` in the default accepted version, which resolves."""
+    return (
+        f"docs/implementation-plans/roadmaps/{SLUG}/.roadmap-versions/"
+        f"{_default_version_id()}/{filename}"
+    )
 
 
 SLUG = "storefront"
@@ -467,7 +512,12 @@ class _StubInvoker:
     def __call__(self, prompt: str) -> tuple[int, str]:
         self.prompts.append(prompt)
         index = min(len(self.prompts) - 1, len(self._replies) - 1)
-        return self._replies[index]
+        rc, reply = self._replies[index]
+        # A seed reply cites the version the prompt names, as a conforming writer does.
+        cited = _CITATION_DIR_RE.search(prompt)
+        if cited is not None and isinstance(reply, str):
+            reply = _retarget_citations(reply, cited.group(0))
+        return rc, reply
 
     @property
     def calls(self) -> int:
@@ -5832,10 +5882,10 @@ def _seed_text(
             "",
             "## References",
             "",
-            f"- `{DOMAIN_FILENAME}`",
-            f"- `{CONSTRAINTS_FILENAME}`",
-            f"- `{COMPONENTS_FILENAME}`",
-            f"- `{PLANS_FILENAME}`",
+            f"- `{_cite(DOMAIN_FILENAME)}`",
+            f"- `{_cite(CONSTRAINTS_FILENAME)}`",
+            f"- `{_cite(COMPONENTS_FILENAME)}`",
+            f"- `{_cite(PLANS_FILENAME)}`",
             "",
         ]
     )
@@ -5909,7 +5959,7 @@ def _prepare_seed_materialization(env: _Env, *, plans: Optional[str] = None) -> 
     _ensure_plans_prompt(env)
     env.publish_accepted(plans=plans)
     (env.prompts / "roadmap-seed.md").write_text(
-        "Seed ${slug} / ${plan_id}\n${domain_artifact}\n"
+        "Seed ${slug} / ${plan_id}\n${plans_path}\n${domain_artifact}\n"
         "${constraints_artifact}\n${components_artifact}\n${plans_artifact}\n",
         encoding="utf-8",
     )
@@ -5936,7 +5986,7 @@ def _stacked(
         stack=constraints.stack,
         plan=plan,
     )
-    return roadmap._replace_stack_section(text, section)
+    return roadmap._replace_stack_section(_env_retarget(env, text), section)
 
 
 def _written_draft(env: _Env, plan: PlanRow = _PLAN_ORDER) -> str:
@@ -6313,7 +6363,7 @@ class TestMaterializedStackSection:
         _materialize(env, _StubInvoker(_seed_text()))
 
         assert roadmap_gates.validate_draft_seed_content(
-            _written_draft(env), plan=_PLAN_ORDER
+            _written_draft(env), plan=_PLAN_ORDER, citation_roots=None
         ) == []
 
 
@@ -6389,6 +6439,101 @@ class TestSeedTechnologyStackLines:
         assert "concern: store-engine; choice: relational store" in draft
 
 
+def _use_shipped_seed_template(env: _Env) -> None:
+    """Replace the synthetic seed template with the shipped one (same fixture dir)."""
+    (env.prompts / "roadmap-seed.md").write_text(_seed_prompt_text(), encoding="utf-8")
+
+
+def _version_store_paths(env: _Env) -> dict[str, str]:
+    version = load_accepted_version(plans_dir=env.plans_dir, slug=SLUG)
+    assert version is not None
+    return {
+        filename: (
+            version_directory_path(env.plans_dir, SLUG, version.record.version_id) / filename
+        )
+        .relative_to(env.repo_root)
+        .as_posix()
+        for filename in (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME)
+    }
+
+
+class TestSeedPromptCitesVersionStorePaths:
+    def test_seed_prompt_contains_each_version_store_path(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        _use_shipped_seed_template(env)
+        invoker = _StubInvoker(_seed_text())
+
+        _materialize(env, invoker)
+
+        prompt = invoker.prompts[0]
+        for path in _version_store_paths(env).values():
+            assert f"`{path}`" in prompt
+
+    def test_seed_prompt_leaves_no_unresolved_placeholder(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        _use_shipped_seed_template(env)
+        invoker = _StubInvoker(_seed_text())
+
+        _materialize(env, invoker)
+
+        assert "${" not in invoker.prompts[0]
+
+    def test_seed_prompt_placeholders_are_a_subset_of_the_variable_map(self, env: _Env) -> None:
+        # The variable map lives in the caller, so render with the shipped
+        # template and require that no placeholder survives substitution.
+        used = set(re.findall(r"\$\{(\w+)\}", _seed_prompt_text()))
+        _prepare_seed_materialization(env)
+        env.publish_accepted()
+        loaded = roadmap.load_accepted_roadmap_artifacts(plans_dir=env.plans_dir, slug=SLUG)
+        paths = roadmap._version_store_citation_paths(
+            loaded, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+        supplied = {"slug", "plan_id"} | {
+            f"{item.stage.artifact_key}_artifact" for item in loaded
+        } | set(paths)
+
+        assert used <= supplied
+        assert {"domain_path", "constraints_path", "components_path", "plans_path"} <= used
+
+    def test_seed_prompt_no_longer_asks_for_literal_filenames(self) -> None:
+        text = _flattened(_seed_prompt_text())
+
+        assert "literal filenames" not in text
+        assert "source_artifacts" not in text
+
+    def test_plans_dir_outside_repo_root_stops_with_roadmap_error_before_any_backend_call(
+        self, env: _Env, tmp_path_factory: pytest.TempPathFactory
+    ) -> None:
+        _prepare_seed_materialization(env)
+        invoker = _StubInvoker(_seed_text())
+
+        with pytest.raises(roadmap.RoadmapError, match="outside repo root"):
+            roadmap.materialize_plan_seed(
+                SLUG,
+                _PLAN_ORDER.id,
+                repo_root=tmp_path_factory.mktemp("elsewhere"),
+                plans_dir=env.plans_dir,
+                invoker=invoker,
+            )
+
+        assert invoker.prompts == []
+
+    def test_conforming_response_citing_version_store_paths_is_written(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        _use_shipped_seed_template(env)
+        paths = _version_store_paths(env)
+        cited = _seed_text()
+        for filename, path in paths.items():
+            cited = cited.replace(f"`{_cite(filename)}`", f"`{path}`")
+
+        result = _materialize(env, _StubInvoker(cited))
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_APPLIED
+        draft = _written_draft(env)
+        for path in paths.values():
+            assert f"`{path}`" in draft
+
+
 class TestSeedPromptTemplate:
     def test_seed_prompt_preserves_selected_row_responsibilities_and_source_references(self) -> None:
         text = _flattened(_seed_prompt_text())
@@ -6448,6 +6593,10 @@ class TestSeedPromptTemplate:
             "constraints_artifact",
             "components_artifact",
             "plans_artifact",
+            "domain_path",
+            "constraints_path",
+            "components_path",
+            "plans_path",
         }
 
     def test_seed_prompt_names_draft_seed_provenance_keys(self) -> None:
@@ -6771,7 +6920,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         _prepare_seed_materialization(env)
         invalid = _seed_text(components=("component-missing",))
-        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER, citation_roots=None)[
             0
         ].message
         invoker = _StubInvoker(invalid, _seed_text())
@@ -6784,8 +6933,8 @@ class TestMaterializePlanSeed:
         self, env: _Env
     ) -> None:
         _prepare_seed_materialization(env)
-        invalid = _seed_text().replace(f"- `{DOMAIN_FILENAME}`\n", "")
-        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[0].message
+        invalid = _seed_text().replace(f"- `{_cite(DOMAIN_FILENAME)}`\n", "")
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER, citation_roots=None)[0].message
         target = resolve_draft_seed_path(
             env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path
         )
@@ -6815,7 +6964,7 @@ class TestMaterializePlanSeed:
     ) -> None:
         _prepare_seed_materialization(env)
         invalid = self._without_guardrail("Audit guardrails")
-        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER)[
+        message = roadmap_gates.validate_draft_seed_content(invalid, plan=_PLAN_ORDER, citation_roots=None)[
             0
         ].message
         invoker = _StubInvoker(invalid, _seed_text())
@@ -6952,8 +7101,8 @@ class TestMaterializePlanSeed:
         # The seed fixture already owns Risks and References.
         candidate = candidate.replace("## Risks\n\nRisks body.\n", "")
         candidate = candidate.replace(
-            f"- `{DOMAIN_FILENAME}`",
-            f"- `src/checkout.py#proof` — CHECKOUT-CONTRACT\n- `{DOMAIN_FILENAME}`",
+            f"- `{_cite(DOMAIN_FILENAME)}`",
+            f"- `src/checkout.py#proof` — CHECKOUT-CONTRACT\n- `{_cite(DOMAIN_FILENAME)}`",
         )
         _materialize(env, _StubInvoker(candidate))
         roadmap.materialize_plan_seed(
@@ -8113,7 +8262,7 @@ class TestMaterializeAndDiffOnePlan:
             env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path
         )
         target.parent.mkdir(parents=True)
-        target.write_text(_seed_text(marker="OLD"), encoding="utf-8")
+        target.write_text(_env_retarget(env, _seed_text(marker="OLD")), encoding="utf-8")
         refreshed = _seed_text(marker="REFRESHED")
 
         updated, failure = roadmap.materialize_and_diff_one_plan(
@@ -8142,7 +8291,7 @@ class TestMaterializeAndDiffOnePlan:
         )
         archive = target.parent / "archive" / "order-core.replaced.md"
         archive.parent.mkdir(parents=True)
-        archive.write_text(_seed_text(marker="ARCHIVED"), encoding="utf-8")
+        archive.write_text(_env_retarget(env, _seed_text(marker="ARCHIVED")), encoding="utf-8")
 
         changes, failure = roadmap.materialize_and_diff_one_plan(
             SLUG,
@@ -8332,18 +8481,16 @@ class _ApplyEnv:
         return self.repo_root / "docs" / "implementation-plans" / "plan-seeds"
 
     def write_plans(self, artifact: PlansArtifact) -> None:
-        """Publish ``artifact`` as the accepted head's plans member."""
-        publish_accepted_root(
-            self.plans_dir,
-            self.slug,
-            (
-                _domain_text(),
-                _constraints_text(),
-                _components_text(),
-                render_plans_artifact(artifact),
-            ),
-            writer_token=self.writer_token,
-        )
+        """Publish ``artifact`` as the accepted head's plans member.
+
+        A later call advances the head, keeping earlier versions stored as the real
+        store does, so a draft citing an earlier version still resolves.
+        """
+        texts = (_domain_text(), _constraints_text(), _components_text(), render_plans_artifact(artifact))
+        if load_accepted_version(plans_dir=self.plans_dir, slug=self.slug) is None:
+            publish_accepted_root(self.plans_dir, self.slug, texts, writer_token=self.writer_token)
+        else:
+            advance_accepted_head(self.plans_dir, self.slug, texts)
 
     def write_draft(
         self,
@@ -8356,6 +8503,7 @@ class _ApplyEnv:
     ) -> Path:
         path = resolve_draft_seed_path(self.plans_dir, self.slug, rel_path)
         path.parent.mkdir(parents=True, exist_ok=True)
+        text = _env_retarget(self, text)
         path.write_text(text, encoding="utf-8")
         if plan_id is not None:
             state_path = seed_state_path(self.roadmap_root)
@@ -8395,7 +8543,7 @@ class TestAcceptRoadmapSeed:
         source = resolve_draft_seed_path(
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
-        text = _seed_text(components=(), cross_cutting=True, marker="HAND-EDITED-AUTH")
+        text = _env_retarget(env, _seed_text(components=(), cross_cutting=True, marker="HAND-EDITED-AUTH"))
         source.write_text(text, encoding="utf-8")
         return source, text
 
@@ -8710,6 +8858,7 @@ class TestAcceptRoadmapSeed:
         for title in REQUIRED_GUARDRAIL_HEADINGS:
             old_auth = old_auth.replace(f"## {title}\n\nNone\n\n", "")
         assert "guardrails" not in old_auth
+        old_auth = _env_retarget(env, old_auth)
         source = env.write_draft(
             _PLAN_AUTH.draft_seed_path, old_auth, plan_id=_PLAN_AUTH.id
         )
@@ -8719,7 +8868,7 @@ class TestAcceptRoadmapSeed:
                 plans_dir=env.plans_dir, slug=env.slug
             )
             return roadmap.classify_draft_seeds(
-                artifact, plans_dir=env.plans_dir, slug=env.slug
+                artifact, plans_dir=env.plans_dir, slug=env.slug, repo_root=None
             )[_PLAN_AUTH.id]
 
         classification = classify()
@@ -8761,6 +8910,7 @@ class TestAcceptRoadmapSeed:
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
         invalid = _seed_text(components=("component-missing",))
+        invalid = _env_retarget(env, invalid)
         source.write_text(invalid, encoding="utf-8")
         sidecar = seed_state_path(env.roadmap_root)
         before = sidecar.read_bytes()
@@ -8788,8 +8938,9 @@ class TestAcceptRoadmapSeed:
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
         invalid = _seed_text(components=(), cross_cutting=True).replace(
-            f"- `{PLANS_FILENAME}`\n", ""
+            f"- `{_cite(PLANS_FILENAME)}`\n", ""
         )
+        invalid = _env_retarget(env, invalid)
         source.write_text(invalid, encoding="utf-8")
         sidecar = seed_state_path(env.roadmap_root)
         before = sidecar.read_bytes()
@@ -9516,7 +9667,7 @@ class TestApplyRoadmapSeeds:
             env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path
         )
         invalid = _seed_text(components=(), cross_cutting=True).replace(
-            f"- `{DOMAIN_FILENAME}`\n", ""
+            f"- `{_cite(DOMAIN_FILENAME)}`\n", ""
         )
         original_classify = roadmap.classify_draft_seeds
         classify_calls = 0
@@ -10559,6 +10710,7 @@ class TestAcceptedVersionSeedRoutes:
         )
         edited = _seed_text(components=(), cross_cutting=True, marker="HEAD-EDITED-AUTH")
         source = env.write_draft("plan-seed-drafts/auth-v2.md", edited)
+        edited = source.read_text(encoding="utf-8")
         state_path = seed_state_path(env.roadmap_root)
         state = load_seed_state(state_path)
         state["seeds"][_PLAN_AUTH.id]["published"] = True
@@ -11102,3 +11254,173 @@ def test_accept_legacy_publication_keeps_root_and_nested_file_untouched(tmp_path
     assert "HAND-EDITED-AUTH" in old.read_text()
     assert nested.read_text() == "retained bytes"
     assert "publication_layout" not in load_seed_state(path)["seeds"][_PLAN_AUTH.id]
+
+
+_MEMBER_FILENAMES = (DOMAIN_FILENAME, CONSTRAINTS_FILENAME, COMPONENTS_FILENAME, PLANS_FILENAME)
+
+
+def _bare(text: str) -> str:
+    """``text`` with each version-store citation turned back into a legacy bare filename."""
+    return _CITATION_DIR_RE.sub("", text)
+
+
+class TestLegacyBareNameSeedRoutes:
+    """A seed written before version-store citations is refused until a route clears it."""
+
+    @staticmethod
+    def _make_auth_draft_legacy(env: _ApplyEnv) -> tuple[Path, str]:
+        source = resolve_draft_seed_path(env.plans_dir, env.slug, _PLAN_AUTH.draft_seed_path)
+        legacy = _bare(source.read_text(encoding="utf-8"))
+        assert DOMAIN_FILENAME in legacy and _cite(DOMAIN_FILENAME) not in legacy
+        source.write_text(legacy, encoding="utf-8")
+        return source, legacy
+
+    def test_apply_refuses_a_legacy_bare_name_seed(self, tmp_path: Path) -> None:
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        _source, legacy = self._make_auth_draft_legacy(env)
+        _set_seed_state_value(env, _PLAN_AUTH.id, "digest", digest_text(legacy))
+
+        result = apply_roadmap_seeds(
+            env.slug, repo_root=env.repo_root, plans_dir=env.plans_dir, allow_apply=True, yes=True
+        )
+
+        assert result.outcome == APPLY_OUTCOME_REFUSED
+        assert result.refused_drafts[0].state == DRAFT_SEED_STATE_MALFORMED
+        assert not env.plan_seeds_dir.exists()
+
+    def test_accept_seed_refuses_a_hand_edited_seed_with_a_bare_name(self, tmp_path: Path) -> None:
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        source, legacy = self._make_auth_draft_legacy(env)
+
+        result = accept_roadmap_seed(
+            env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+
+        assert result.outcome == ACCEPT_OUTCOME_REFUSED
+        assert any(v.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION for v in result.violations)
+        assert source.read_text(encoding="utf-8") == legacy
+
+    def test_accept_seed_accepts_a_seed_whose_names_were_replaced(self, tmp_path: Path) -> None:
+        env = _apply_env(tmp_path)
+        _standard_apply_setup(env)
+        source, legacy = self._make_auth_draft_legacy(env)
+        repaired = legacy
+        for filename in _MEMBER_FILENAMES:
+            repaired = re.sub(
+                rf"(?<![A-Za-z0-9_./-]){re.escape(filename)}", _cite(filename), repaired
+            )
+        repaired += "\nHAND-EDIT-KEPT\n"
+        source.write_text(_env_retarget(env, repaired), encoding="utf-8")
+
+        result = accept_roadmap_seed(
+            env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir
+        )
+
+        assert result.outcome == ACCEPT_OUTCOME_ACCEPTED
+        assert "HAND-EDIT-KEPT" in source.read_text(encoding="utf-8")
+
+    def test_roadmap_without_an_accepted_head_keeps_todays_behavior(self, tmp_path: Path) -> None:
+        """No head refuses before any gate runs, bare-name seed or not."""
+        env = _apply_env(tmp_path)
+        env.write_draft("plan-seed-drafts/auth.md", _bare(_seed_text()), plan_id=_PLAN_AUTH.id)
+        env.roadmap_root.joinpath(PLANS_FILENAME).write_text(_plans_artifact_text(), encoding="utf-8")
+
+        with pytest.raises(NoPublishedRoadmapVersionError):
+            apply_roadmap_seeds(
+                env.slug, repo_root=env.repo_root, plans_dir=env.plans_dir, allow_apply=True, yes=True
+            )
+        assert not env.plan_seeds_dir.exists()
+
+
+class TestLegacyBareNameSeedRegeneration:
+    def test_refresh_seeds_regenerates_a_legacy_seed_under_the_new_contract(self, env: _Env) -> None:
+        _prepare_seed_materialization(env)
+        refresh_roadmap_seeds(
+            SLUG,
+            repo_root=env.repo_root,
+            plans_dir=env.plans_dir,
+            invoker=_StubInvoker(_seed_text(), _seed_text(components=(), cross_cutting=True)),
+        )
+        order_path = resolve_draft_seed_path(env.plans_dir, SLUG, _PLAN_ORDER.draft_seed_path)
+        order_path.write_text(_bare(order_path.read_text(encoding="utf-8")), encoding="utf-8")
+
+        result = refresh_roadmap_seeds(
+            SLUG,
+            repo_root=env.repo_root,
+            plans_dir=env.plans_dir,
+            invoker=_StubInvoker(
+                _seed_text(marker="REGENERATED"), _seed_text(components=(), cross_cutting=True)
+            ),
+        )
+
+        assert result.outcome == SEED_REFRESH_OUTCOME_APPLIED
+        regenerated = order_path.read_text(encoding="utf-8")
+        assert "REGENERATED" in regenerated
+        assert find_bare_roadmap_file_citations(regenerated) == []
+        assert (env.plans_file.parent / "seed-refresh-report.md").is_file()
+
+
+class TestStackSectionBareName:
+    def test_stack_row_value_naming_a_member_file_fails_closed(
+        self, env: _Env, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Tool-written text the retry cannot change: the bare name fails materialize, naming the route."""
+        _prepare_seed_materialization(env)
+        real_render = roadmap._render_stack_section
+
+        def render_with_row_value(**kwargs: Any) -> str:
+            return real_render(**kwargs) + "\n- `hosting-x` — facet: compute; value: per 02-constraints.md\n"
+
+        monkeypatch.setattr(roadmap, "_render_stack_section", render_with_row_value)
+
+        invoker = _StubInvoker(_seed_text(), _seed_text())
+        result = _materialize(env, invoker)
+
+        assert invoker.prompts == [], "no model call can fix tool-written Stack text"
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
+        messages = [v.message for v in result.violations if v.kind == VIOLATION_BARE_ROADMAP_FILE_CITATION]
+        assert messages and all("## Stack" in m and "reviewer feedback" in m for m in messages)
+        assert all(v.row_id == _PLAN_ORDER.id for v in result.violations)
+        assert all(m.startswith(f"plan '{_PLAN_ORDER.id}' draft seed") for m in messages)
+
+    def test_default_stack_template_never_trips_the_bare_name_check(self) -> None:
+        for stack in (None, (), (StackRow(id="stack-p", concern="platform", open=True),)):
+            assert find_bare_roadmap_file_citations(f"# Seed\n\n{_render_stack_only(stack)}") == []
+
+
+class TestCitationRetryCorrection:
+    def test_a_citation_violation_retry_names_the_exact_paths(self, env: _Env) -> None:
+        """The retry gives the concrete accepted paths, not a template the model can miss again."""
+        _prepare_seed_materialization(env)
+        invoker = _StubInvoker(_bare(_seed_text()), _seed_text())
+
+        result = _materialize(env, invoker)
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_APPLIED
+        retry = invoker.prompts[1]
+        for path in _version_store_paths(env).values():
+            assert f"`{path}`" in retry.split("cite the accepted roadmap files by exactly these paths:")[1]
+
+
+class TestStackSectionUnresolvedCitation:
+    def test_an_unresolvable_stack_citation_fails_before_any_model_call(
+        self, env: _Env, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A version-store-shaped row value that names no stored file would fail every retry."""
+        _prepare_seed_materialization(env)
+        real_render = roadmap._render_stack_section
+
+        def render_with_row_value(**kwargs: Any) -> str:
+            return real_render(**kwargs) + f"\n- `h-x` — facet: compute; value: .roadmap-versions/{'f' * 64}/01-domain.md\n"
+
+        monkeypatch.setattr(roadmap, "_render_stack_section", render_with_row_value)
+        invoker = _StubInvoker(_seed_text())
+
+        result = _materialize(env, invoker)
+
+        assert invoker.prompts == []
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
+        assert any(v.kind == VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION for v in result.violations)
+
