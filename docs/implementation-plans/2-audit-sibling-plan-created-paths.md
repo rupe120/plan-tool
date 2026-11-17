@@ -121,6 +121,7 @@ steps:
   - 2
   depends_on_notes:
     2: the shipped prompt block that makes the sibling-path T case obsolete
+  detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md
   description: 'Rewrite `integrations/shared/DIRECTIVES.md` § "T — tool artifacts"
     so the sibling-path case is described as handled by the audit, which now receives
     same-roadmap sibling `creates:` paths, while the stale roadmap or seed path case
