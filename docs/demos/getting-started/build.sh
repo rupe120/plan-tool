@@ -19,11 +19,12 @@ for arg in "$@"; do
   esac
 done
 
-case "$target" in
-  "$KIT"*|"$KIT"/..*) echo "refusing: build the demo outside the plan-tool checkout" >&2; exit 2 ;;
-esac
-if git -C "$(dirname "$target")" rev-parse --show-toplevel >/dev/null 2>&1 \
-   && [ "$(git -C "$(dirname "$target")" rev-parse --show-toplevel)" = "$(git -C "$KIT" rev-parse --show-toplevel)" ]; then
+case "$target" in /*) abs_target="$target" ;; *) abs_target="$PWD/$target" ;; esac
+probe="$abs_target"
+while [ ! -d "$probe" ]; do probe="$(dirname "$probe")"; done
+here_top="$(git -C "$probe" rev-parse --show-toplevel 2>/dev/null || true)"
+kit_top="$(git -C "$KIT" rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -n "$here_top" ] && [ "$here_top" = "$kit_top" ]; then
   echo "refusing: $target would sit inside the plan-tool checkout" >&2; exit 2
 fi
 

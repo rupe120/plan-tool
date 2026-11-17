@@ -34,6 +34,6 @@ case "${1:-show}" in
     git checkout -q -b "live/$name"
     echo "On live/$name, starting from the state step $idx left. Run this step's command from the card:"
     echo; git show "demo/$name:DEMO.md" | sed -n '/^## Live command/,/^## /p' | sed '$d'
-    echo "Compare afterwards:  git diff --stat demo/$name live/$name" ;;
+    echo "Compare afterwards:  git diff --stat demo/$name live/$name -- . ':!DEMO.md' ':!DEMO.transcript.txt'" ;;
   *) sed -n '2,8p' "$0"; exit 1 ;;
 esac

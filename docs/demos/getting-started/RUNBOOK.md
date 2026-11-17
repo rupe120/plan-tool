@@ -15,6 +15,7 @@ when a live step misbehaves.
 | Building, `step.sh next/prev/goto/live/transcript`, the dirty-tree refusal, `git checkout -f` recovery and `live/*` cleanup | Run against a built demo repo. |
 | `plan-tool validate` and `status` on every plan branch; tests at steps 6–8 | Run; they pass. |
 | Any live model command, its duration, its cost, and how its output differs from the baked copy | **Not run.** Measure on your first rehearsal and write the numbers into § "Rehearsal notes". |
+| Whether `create` prompts for confirmation when its output is piped through `tee` (it accepts `-y`/`--yes` to auto-accept confirmation prompts) | **Not run.** If step 2 appears stuck, check `.tmp/due-dates.create.log`, then decide whether to re-run with `-y`. |
 | Backend authentication check | Use whatever you normally use; this runbook does not prescribe one. |
 
 ## Before the session
@@ -49,7 +50,7 @@ Run `./step.sh goto N` (or `next`) first. Each row names the one point to land.
 | 3. Bare audit | `./step.sh transcript`, then the acceptance criteria | "Audit the design before details multiply it." | Missing details are not a defect at this stage. The finding was applied by a judged hand-edit, not by the tool. |
 | 4. Detail | one detail file | "Each step gets an implementation route and checkable criteria." | Read the **Acceptance criteria** bullets; later steps are judged against them. |
 | 5. Detail audit | `./step.sh transcript` | "Now the audit reads the details and the code." | Read the coverage and convergence lines. A clean exit code alone is not a clean audit. |
-| 6. Run | `git diff demo/5-detail-audit demo/6-run` | "Each step runs in a fresh subprocess." | Two gates: a test file changed, and `test_command` passes. Run `uv run pytest -q` (10 pass). |
+| 6. Run | `git diff demo/5-detail-audit demo/6-run -- todo tests` | "Each step runs in a fresh subprocess." | Two gates: a test file changed, and `test_command` passes. Run `uv run pytest -q` (10 pass). |
 | 7. Reconcile code | `git diff demo/6-run demo/7-reconcile-code -- todo tests` | "The plan is canonical; the code moves." | The run omitted showing the due date. Never use `reconcile-plan` after a run: it edits the plan toward the code. |
 | 8. Code review | `git diff demo/7-reconcile-code demo/8-code-review -- todo tests` | "A review finds what the plan could not see." | Verify a finding against the code and tests before applying it. Run `uv run pytest -q` (12 pass). |
 
@@ -57,8 +58,8 @@ Run `./step.sh goto N` (or `next`) first. Each row names the one point to land.
 
 1. `./step.sh goto N`, then `./step.sh live`. You land on `live/N-name`, branched from the state step N-1 left, and the command prints.
 2. Run the printed command. It tees to `.tmp/due-dates.<verb>.log`, and `set -o pipefail` stops a failure from reporting as success.
-3. Let it finish. Do not interrupt a plan-tool command because it is quiet; read the log instead.
-4. Compare: `git diff --stat demo/N-name live/N-name`. A difference from the baked result is expected.
+3. `run` refuses to execute on the repository's default branch; `./step.sh live` puts you on a `live/` branch, so keep that branch. Let the command finish. Do not interrupt a plan-tool command because it is quiet; read the log instead.
+4. Compare: `git diff --stat demo/N-name live/N-name -- . ':!DEMO.md' ':!DEMO.transcript.txt'`. A difference from the baked result is expected; the pathspec hides the card and transcript, which always differ.
 5. Leave the live result: § "Return to the baked path".
 
 ## When something goes wrong

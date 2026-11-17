@@ -35,9 +35,9 @@ The build makes no network calls, calls no model, and pushes nothing.
 | 3. Bare plan audit | `demo/3-bare-audit` | the plan's acceptance criteria and risks | The audit judges the plan body before details exist; findings are applied by judged hand-edit. |
 | 4. Detail creation | `demo/4-detail` | `docs/implementation-plans/plan-details/due-dates/` | Each step gets an implementation route, tests and checkable criteria. |
 | 5. Detail audit | `demo/5-detail-audit` | the three detail files | The grounded audit reads details and code; read coverage and convergence, not the exit code. |
-| 6. Run | `demo/6-run` | `git diff demo/5-detail-audit demo/6-run` | Steps run in fresh subprocesses, gated on a changed test and `test_command`. |
-| 7. Reconcile code | `demo/7-reconcile-code` | `git diff demo/6-run demo/7-reconcile-code` | The plan is canonical; code is edited to match it. |
-| 8. Code review | `demo/8-code-review` | `git diff demo/7-reconcile-code demo/8-code-review` | `/code-review` finds what the plan could not; verify each finding before applying. |
+| 6. Run | `demo/6-run` | `git diff demo/5-detail-audit demo/6-run -- todo tests` | Steps run in fresh subprocesses, gated on a changed test and `test_command`. |
+| 7. Reconcile code | `demo/7-reconcile-code` | `git diff demo/6-run demo/7-reconcile-code -- todo tests` | The plan is canonical; code is edited to match it. |
+| 8. Code review | `demo/8-code-review` | `git diff demo/7-reconcile-code demo/8-code-review -- todo tests` | `/code-review` finds what the plan could not; verify each finding before applying. |
 
 Each branch is cumulative and carries a `DEMO.md` card (artifact to open,
 decision to explain, live command) and `DEMO.transcript.txt` (the console output
@@ -62,7 +62,7 @@ for that step).
    branches are never overwritten.
 2. Run the command the card prints. It tees to `.tmp/due-dates.<verb>.log` and
    sets `set -o pipefail`, so a failing command is not reported as success.
-3. Compare with the baked result: `git diff --stat demo/N-name live/N-name`.
+3. Compare with the baked result: `git diff --stat demo/N-name live/N-name -- . ':!DEMO.md' ':!DEMO.transcript.txt'` (the pathspec hides the card and transcript, which always differ).
 4. Return to the walkthrough with `./step.sh goto N`.
 
 Live steps need an authenticated backend, take real time and cost tokens, and

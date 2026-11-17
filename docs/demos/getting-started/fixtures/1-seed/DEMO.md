@@ -14,4 +14,4 @@ plan-tool verb. Ask your coding assistant:
 > shows open tasks past due. Include a scope fence. Link it and wait for my review.
 
 **Baked state:** this branch already contains the reviewed seed.
-**Next:** `git checkout demo/2-plan`
+**Next:** `./step.sh next`

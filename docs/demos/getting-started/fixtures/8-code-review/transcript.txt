@@ -4,7 +4,7 @@ Run the live command on the `live/` branch to see the real thing.
 ------------------------------------------------------------------------
 > /code-review
 
-Reviewing 3 commits (demo/5-detail-audit..HEAD), 5 files
+Reviewing 2 commits (demo/5-detail-audit..HEAD), 6 files
 
 1 finding
   [medium] todo/store.py:_from_row  A due value that is not an ISO date (for example a

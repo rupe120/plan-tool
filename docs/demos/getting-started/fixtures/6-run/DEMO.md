@@ -1,6 +1,6 @@
 # Step 6 — run (`demo/6-run`)
 
-**Open:** `git diff demo/5-detail-audit demo/6-run` (code, tests, and the plan's step statuses)
+**Open:** `git diff demo/5-detail-audit demo/6-run -- . ':!DEMO.md' ':!DEMO.transcript.txt'` (code, tests, and the plan's step statuses)
 
 **Decision to explain:** `run` executes each step in a fresh model subprocess, gates it on a changed test file plus `test_command`, and commits each green step. Review the diff against the detail files' acceptance criteria.
 
