@@ -11388,3 +11388,17 @@ class TestStackSectionBareName:
         for stack in (None, (), (StackRow(id="stack-p", concern="platform", open=True),)):
             assert find_bare_roadmap_file_citations(f"# Seed\n\n{_render_stack_only(stack)}") == []
 
+
+class TestCitationRetryCorrection:
+    def test_a_citation_violation_retry_names_the_exact_paths(self, env: _Env) -> None:
+        """The retry gives the concrete accepted paths, not a template the model can miss again."""
+        _prepare_seed_materialization(env)
+        invoker = _StubInvoker(_bare(_seed_text()), _seed_text())
+
+        result = _materialize(env, invoker)
+
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_APPLIED
+        retry = invoker.prompts[1]
+        for path in _version_store_paths(env).values():
+            assert f"`{path}`" in retry.split("cite the accepted roadmap files by exactly these paths:")[1]
+

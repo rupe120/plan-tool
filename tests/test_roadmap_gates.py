@@ -5361,3 +5361,29 @@ def test_validate_checks_resolution_only_when_roots_are_given(tmp_path: Path) ->
     kinds = {v.kind for v in validate_draft_seed_content(text, plan=PLAN_ONE, citation_roots=roots)}
     assert roadmap_gates.VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION in kinds
     assert validate_draft_seed_content(text, plan=PLAN_ONE, citation_roots=None) == []
+
+
+@pytest.mark.parametrize(
+    "wrap",
+    ("**{p}**", "Domain:{p}", "a,{p}", "| {p} |", "|{p}|", "({p})", "`{p}`.", "see {p};"),
+    ids=("bold", "colon", "comma", "table", "table-tight", "parens", "backtick-period", "semicolon"),
+)
+def test_a_correct_citation_resolves_whatever_punctuation_surrounds_it(tmp_path: Path, wrap: str) -> None:
+    """The prefix is compared, not guessed from neighbouring punctuation."""
+    roots = _version_store(tmp_path, "demo", "a" * 64)
+    text = _only_body(wrap.format(p=_store_path("demo", "a" * 64, PLANS_FILENAME)))
+    assert roadmap_gates.unresolved_roadmap_file_citations(text, roots) == []
+
+
+@pytest.mark.parametrize("lead", ("/abs/", "x/../", "./", "~/"), ids=("absolute", "dotdot", "dot", "home"))
+def test_a_citation_that_is_not_repo_relative_does_not_resolve(tmp_path: Path, lead: str) -> None:
+    roots = _version_store(tmp_path, "demo", "a" * 64)
+    text = _only_body(f"`{lead}{_store_path('demo', 'a' * 64, PLANS_FILENAME)}`")
+    assert len(roadmap_gates.unresolved_roadmap_file_citations(text, roots)) == 1
+
+
+def test_an_unresolved_message_names_the_exact_path_to_write(tmp_path: Path) -> None:
+    roots = _version_store(tmp_path, "demo", "a" * 64)
+    text = _only_body(f"`.roadmap-versions/{'a' * 64}/{PLANS_FILENAME}`")
+    (violation,) = roadmap_gates.unresolved_roadmap_file_citations(text, roots)
+    assert _store_path("demo", "a" * 64, PLANS_FILENAME) in violation.message
