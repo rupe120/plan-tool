@@ -408,17 +408,29 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
   **#540** (`decision-needed` — the completeness audit honoring the plan's
   `risk_profile`; resolve its conflict with the `risk-profile-3` seed's
   audit fence first). **#488** is P1 and `ready` but routed by
-  `backlog-arc-roadmap.md`. **#71** is parked.
+  `backlog-arc-roadmap.md`. **#71** is parked. Also `plan`, `ready`:
+  **#156** (the audit sampler keys on `[out-of-scope-deferred]` so a
+  scope-bound audit reaches its dry tail) · **#180** (`split` / `merge` /
+  `scope-out` repair detail H1s and report surviving step references).
 - **T3 — deterministic verifiability & grounding (P2), larger:** **#66**
   (contract-trace audit mode) · **#539** (`decision-needed` — exit checks
-  reported as unverified; setting `test_command` is the interim workaround).
-- **T4 — grounding/workflow refinements (P3) + blocked:** *(empty)* — its
-  former members #69, #38 and #30 are promoted (IPPT-13, IPPT-14, IPPT-15),
-  and no triaged P3 entry is `ready`.
-- **T5 — export leg / UX / hygiene / cosmetic:** the P5 `direct` + `ready`
-  entries **#520**, **#542**, **#497**, **#486**; **#56**; **#89**
+  reported as unverified; setting `test_command` is the interim workaround) ·
+  **#202** (each acceptance criterion names its test, checked to exist) ·
+  **#312** (`detail` grounds on the reference text `create` already fetched)
+  · **#332** (a run-log sink for `create`'s developer-doc research call).
+  **#385** is P2 and `ready` but routed by `backlog-arc-roadmap.md`.
+- **T4 — grounding/workflow refinements (P3) + blocked:** **#142** (link
+  local plan-story ids to Jira keys by bracket token) · **#198** (plan
+  provenance trailers on green and archive commits). Its former members #69,
+  #38 and #30 are promoted (IPPT-13, IPPT-14, IPPT-15).
+- **T5 — export leg / UX / hygiene / cosmetic, and P4:** the P4 `plan`
+  entries **#230** (`--time-budget` at durable batch boundaries) and **#89**
   (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
-  see its entry's "Evidence it recurs"); and the Bucket D consolidation pair
+  see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entries
+  **#520**, **#542**, **#497**, **#486**; the P5 `plan` entries **#377**
+  (installed skills author and validate seeds) and **#149** (compact detail
+  schema; its plan is on the board's Blocked lane despite the `ready` label);
+  **#56**; and the Bucket D consolidation pair
   **#79**–**#80** — where **#79 carries a warning**: four of its five original
   "duplicated helper" claims were wrong in the direction that breaks things,
   so treat every line of it as a claim to re-verify. **#107** and **#81** are
@@ -902,7 +914,7 @@ working straight down the tiers.
 
 **#385 — `roadmap --view status --json`: one machine-readable state projection**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `deterministic-non-determinism` (a machine-readable state projection, as #538 is for `create` refusals)
 - **What:** no roadmap view emits JSON
   (`--view {summary,walk,ledger,index,seeds,html}` are all human renders). A caller that wants to know where a roadmap *is* — whether it has an
   accepted head and which version, which feedback rows are open or awaiting
@@ -1284,7 +1296,7 @@ working straight down the tiers.
 
 **#332 — Install the run-log sink for developer-doc research in `create`**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `deterministic-non-determinism`
 - **What:** the developer-doc research call (`propose_references`) runs with no
   run-log sink, so its usage, cost and failure evidence are lost and the call
   warns that nothing saved them. Install the run-log sink for it, so the
@@ -1683,7 +1695,7 @@ working straight down the tiers.
 
 **#312 — Ground `detail` authoring in the plan's fetched reference-doc content instead of a bare link list**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `deterministic-non-determinism`
 - **What:** `detail.py` hands each step's authoring prompt only the plan's
   `## References` bullets — title/url/one-line description, lifted verbatim
   by `extract_plan_references` — and instructs the subprocess to
@@ -1738,7 +1750,7 @@ working straight down the tiers.
 
 **#156 — Make the conceptual-audit sampler key on the `[out-of-scope-deferred]` tag (currently prompt/operator convention only)**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `converge-on-correct-plan`
 - **What:** The scope-contract reconciliation (see [Scope contract and
   anti-creep](docs/TRACKING.md#scope-contract-and-anti-creep) and `prompts/plan-audit.md`) has
   the audit emit valid-but-adjacent findings tagged `[out-of-scope-deferred]`
@@ -1927,7 +1939,7 @@ working straight down the tiers.
 
 **#230 — Extend the shipped `--time-budget` stop to durable batch boundaries**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `survive-interruption`
 - **What:** `--time-budget` already stops the convergence loops cleanly. Extend
   the same cooperative deadline posture to the two long-lived surfaces that do
   not route through `convergence.should_continue`: the non-reconcile `run`
@@ -1991,7 +2003,7 @@ working straight down the tiers.
 
 **#142 — Jira ID-linking sweep: map local plan-story IDs to real Jira keys via summary bracket-token**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `keep-the-plan-true-to-code` (re-grounds plans' story status markers against live Jira state)
 - **What:** A read-only sweep that scans a Jira project and links each local
   plan-story ID (the epic-scoped label the plans use, e.g. `AIHARD-S38b`,
   `VNDSFTP-S29`, `NOTIF-S01`) to its real Jira issue key (e.g. `PS-197`) and
@@ -2448,7 +2460,7 @@ working straight down the tiers.
 
 **#198 — Plan provenance in git: structured trailers on green and archive commits, and `list --archived` read from the git log**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `keep-the-plan-true-to-code` (records which plans landed in the tree; also serves `write-for-the-human`)
 - **What:** make "which plans were actually implemented, and where did that land
   in git?" answerable by machine, using git as the only store. Two parts:
   **(a)** structured `Plan-Slug: <slug>` and `Plan-Step: <n>` trailers on
@@ -2515,7 +2527,7 @@ working straight down the tiers.
 
 **#202 — Acceptance-criterion test references: each criterion names its test, and the check verifies the test exists**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `deterministic-non-determinism`
 - **What:** the run-grade detail format requires each `## Acceptance criteria`
   bullet to name the test function(s) that assert it, and a deterministic check
   verifies that every named test function exists in the repo. A criterion with
@@ -3159,7 +3171,7 @@ working straight down the tiers.
 - **Labels:** Route `plan`
   · Readiness `ready`
   · Tier `architect` — it changes the guidance available to every driving assistant before plan creation
-  · Principle `untriaged`
+  · Principle `write-for-the-human`
 - **What:** give an assistant driving `plan-tool` from chat an explicit route
   from a requested outcome or selected backlog item to a reviewable seed file,
   before it invokes `create --from-existing`. The installed guidance must make
@@ -3634,7 +3646,7 @@ working straight down the tiers.
 
 **#149 — Compact `detail` output: a compact required-H2 authoring schema (phase B is the only phase) — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `write-for-the-human`
 - **What:** make `plan-tool detail` output less verbose with a **compact
   required detail schema** that changes what `detail` authors by default: merge
   Summary+Why into a single `Intent` and drop the Table of Contents. This is
@@ -5184,7 +5196,7 @@ working straight down the tiers.
 - **Labels:** Route `plan`
   · Readiness `ready` (sequence after the BUG_BACKLOG.md entry on `--commit` staging the whole tree; see Dependencies)
   · Tier `experienced`
-  · Principle `untriaged` — commit hygiene; it may bear on `survive-interruption`, which the entry does not say
+  · Principle `survive-interruption` (a mutating verb leaves its saved report uncommitted)
 - **What:** `--commit` is accepted by four surfaces — `run` (per-step green
   commits), `detail`, `completeness-audit`, and `manifest sweep`/archive.
   `reconcile-plan` and `reconcile-code` mutate the repo (plan-side or
@@ -5628,7 +5640,7 @@ working straight down the tiers.
 
 **#180 — Structural renumbering: fix detail-file H1s and report surviving step references after split/merge/scope-out**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced` · Principle `converge-on-correct-plan`
 - **What:** `plan-tool split` (and the same renumber path used by `merge` and
   `scope-out`) renames detail files and repairs `depends_on`, but leaves every
   human-readable step reference stale. After a split it does not update: the
