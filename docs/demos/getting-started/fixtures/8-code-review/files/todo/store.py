@@ -13,7 +13,7 @@ def _from_row(row: dict) -> Task:
     due = row.get("due")
     try:
         parsed = date.fromisoformat(due) if due else None
-    except ValueError:
+    except (ValueError, TypeError):
         raise StoreError(f"task {row.get('id')}: invalid due date {due!r} in task file")
     return Task(
         id=row["id"],

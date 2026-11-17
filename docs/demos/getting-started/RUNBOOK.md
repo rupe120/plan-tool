@@ -50,7 +50,7 @@ Run `./step.sh goto N` (or `next`) first. Each row names the one point to land.
 | 3. Bare audit | `./step.sh transcript`, then the acceptance criteria | "Audit the design before details multiply it." | Missing details are not a defect at this stage. The finding was applied by a judged hand-edit, not by the tool. |
 | 4. Detail | one detail file | "Each step gets an implementation route and checkable criteria." | Read the **Acceptance criteria** bullets; later steps are judged against them. |
 | 5. Detail audit | `./step.sh transcript` | "Now the audit reads the details and the code." | Read the coverage and convergence lines. A clean exit code alone is not a clean audit. |
-| 6. Run | `git diff demo/5-detail-audit demo/6-run -- todo tests` | "Each step runs in a fresh subprocess." | Two gates: a test file changed, and `test_command` passes. Run `uv run pytest -q` (10 pass). |
+| 6. Run | `git diff demo/5-detail-audit demo/6-run -- todo tests` | "Each step runs in a fresh subprocess." | Two gates: a test file changed, and `test_command` passes. Run `uv run pytest -q` (10 pass); the first run needs network to install pytest, so run it once before the session. |
 | 7. Reconcile code | `git diff demo/6-run demo/7-reconcile-code -- todo tests` | "The plan is canonical; the code moves." | The run omitted showing the due date. Never use `reconcile-plan` after a run: it edits the plan toward the code. |
 | 8. Code review | `git diff demo/7-reconcile-code demo/8-code-review -- todo tests` | "A review finds what the plan could not see." | Verify a finding against the code and tests before applying it. Run `uv run pytest -q` (12 pass). |
 

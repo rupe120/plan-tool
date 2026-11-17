@@ -86,5 +86,5 @@ run, a different result from the baked one is expected, not a defect.
 ## Deliberately not included
 
 - **Jira export and `verify`.** The pipeline's other branch; outside the eight requested steps.
-- **Pushing the branches.** Publishing `demo/*` refs is a separate decision; the older `demo/1-seed`–`demo/4-jira` refs are untouched.
+- **Pushing the branches.** Publishing `demo/*` refs is a separate decision; the older `demo/1-seed`–`demo/4-jira` refs already exist on the remotes, and `demo/1-seed` and `demo/2-plan` share names with the generated branches. Do not push under these names; choose a distinct prefix first.
 - **Captured live transcripts.** Replacing the authored transcripts with real captures is future work, once a live run is trusted.

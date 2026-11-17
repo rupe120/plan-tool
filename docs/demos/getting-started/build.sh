@@ -42,6 +42,8 @@ cd "$target"
 git init -q -b main
 git config user.name "Plan Tool Demo"
 git config user.email "demo@example.invalid"
+git config commit.gpgsign false
+git config core.hooksPath /dev/null
 touch "$MARKER"
 cp -R "$KIT/fixtures/base/." .
 cp "$KIT/step.sh" step.sh && chmod +x step.sh

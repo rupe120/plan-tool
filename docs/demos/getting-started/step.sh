@@ -26,6 +26,7 @@ case "${1:-show}" in
   goto) n="${2:?usage: goto N}"; [ "$n" -ge 1 ] && [ "$n" -le "${#branches[@]}" ] || { echo "N is 1-${#branches[@]}"; exit 1; }; go $((n - 1)) ;;
   transcript) cat DEMO.transcript.txt ;;
   live)
+    case "$cur" in live/*) echo "already on $cur; ./step.sh goto N returns to a demo branch" >&2; exit 1;; esac
     [ "$idx" -ge 0 ] || { echo "not on a demo branch ($cur)"; exit 1; }
     [ "$idx" -gt 0 ] || { echo "step 1 has no live command; it is authored with an assistant"; exit 1; }
     [ -z "$(git status --porcelain)" ] || { echo "working tree not clean" >&2; exit 1; }
