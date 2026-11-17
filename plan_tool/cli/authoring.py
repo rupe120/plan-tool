@@ -154,6 +154,7 @@ from plan_tool.roadmap_artifacts import (
     RoadmapArtifactError,
     parse_plans_artifact,
 )
+from plan_tool.roadmap_gates import find_bare_roadmap_file_citations
 from plan_tool.roadmap_seed_manifest import (
     DRAFT_SEED_STATE_CURRENT,
     DRAFT_SEED_STATE_STALE,
@@ -320,6 +321,7 @@ PRE_SLUG_REFUSAL_REASONS = (
     "seed-source-unmatched",
     "roadmap-seed-unresolved",
     "roadmap-seed-not-confirmed",
+    "roadmap-seed-bare-citation",
 )
 
 
@@ -330,10 +332,42 @@ def _pre_slug_refusal(reason: str) -> None:
     print(f"create-refused: reason={reason}", file=sys.stderr)
 
 
+def _bare_citation_repair_routes(location: TrackedSeedLocation) -> str:
+    """Repair routes for a bare-named seed, keyed on where ``create`` reads it."""
+    refresh = f"`plan-tool roadmap {location.roadmap_slug} --refresh-seeds`"
+    if not location.via_marker:
+        return (
+            f"regenerate it with {refresh}, or hand-replace each bare name with "
+            f"the source version's path and run `--accept-seed {location.plan_id}`"
+        )
+    entry = load_seed_state(location.state_path)["seeds"].get(location.plan_id)
+    published = entry is not None and entry.get("published") is True
+    refresh_route = (
+        f"{refresh} rewrites this promoted copy (the seed state records `published: true`)"
+        if published
+        else f"{refresh} does not rewrite this promoted copy (the seed state does not "
+        "record `published: true`)"
+    )
+    return (
+        f"{refresh_route}; otherwise, or to keep hand edits, hand-replace each bare "
+        "name with the source version's path in the promoted copy itself, which "
+        "`create` reads directly"
+    )
+
+
 def _confirm_invalidated_roadmap_seed(
-    location: TrackedSeedLocation | None, *, yes: bool, input_fn=input
+    location: TrackedSeedLocation | None,
+    *,
+    seed_text: str = "",
+    yes: bool,
+    input_fn=input,
 ) -> bool:
-    """Require an explicit assent before ``create`` consumes an unsafe seed.
+    """Refuse a bare-named tracked seed, then require assent before an unsafe one.
+
+    ``seed_text`` is the exact text ``create`` will read (the draft, or the
+    promoted copy; ``cmd_create`` always passes it, the empty default checks
+    nothing). A bare roadmap file name refuses under ``-y`` too: see
+    DATA_CONTRACT.md "Pre-slug create refusals".
 
     A promoted ``plan-seeds/`` copy (``location.via_marker``) is validated
     against the sidecar's persisted lifecycle status rather than
@@ -397,6 +431,21 @@ def _confirm_invalidated_roadmap_seed(
     ) as exc:
         error(str(exc))
         _pre_slug_refusal("roadmap-seed-unresolved")
+        return False
+    bare = find_bare_roadmap_file_citations(seed_text)
+    if bare:
+        try:
+            routes = _bare_citation_repair_routes(location)
+        except RoadmapSeedStateError as exc:
+            error(str(exc))
+            _pre_slug_refusal("roadmap-seed-unresolved")
+            return False
+        names = ", ".join(sorted({v.message.split("'")[1] for v in bare}))
+        error(
+            f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
+            f"roadmap files without their version-store path ({names}); {routes}"
+        )
+        _pre_slug_refusal("roadmap-seed-bare-citation")
         return False
     if non_current_state is None:
         return True
@@ -779,7 +828,9 @@ def cmd_create(args: argparse.Namespace) -> int:
             _pre_slug_refusal("roadmap-seed-unresolved")
             return 2
         if not _confirm_invalidated_roadmap_seed(
-            tracked_seed_location, yes=args.yes
+            tracked_seed_location,
+            seed_text=seed_body if seed_body is not None else description,
+            yes=args.yes,
         ):
             return 2
 

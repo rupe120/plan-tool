@@ -132,7 +132,7 @@ steps:
   depends_on_notes:
     2: Provides the text-only bare-name function that create's refusal calls.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md
-  status: current
+  status: done
   description: 'Make `create --from-existing` refuse a tracked seed that fails the
     bare-name check, with or without `-y`, and name its repair routes (owner decision,
     2026-11-17: automated sessions always pass `-y`, so a confirmation `-y` answers
@@ -183,6 +183,7 @@ steps:
     3: The create refusal is what the manifest-states section and the backlog removal
       depend on.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md
+  status: current
   description: 'Bring the docs and the backlog in line with the new citation contract.
     `ROADMAP_FORMAT.md` § ''Draft seeds under the roadmap slug'' states the repo-relative
     version-store citation form, that a cited path is relative to the roadmap''s repository
