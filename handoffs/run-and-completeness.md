@@ -552,7 +552,7 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | Branch | `feat/roadmap-seed-accepted-version-citations` (plan merged as PR #253) |
 | Checks | full suite green per step; `reconcile-code --all` (0/1 nit/0); real-model `--materialize` on a fixture roadmap |
 | Reviewer | `/code-review high`, forked session, report-only |
-| Disposition | rounds 1 and 2 dispositioned; round 3 pending |
+| Disposition | rounds 1–3 dispositioned; round 4 pending |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -602,4 +602,18 @@ None of the four belongs on the Now board, which lists `direct` + `ready` trust-
 | 8 | `create` tested `published` with `is True`, unlike `roadmap._seed_recorded_published` | **Fixed.** Same truthiness, with a pointer to the owning test |
 | 9 | `seed_texts` defaulted to `()`, so a caller that omitted it checked nothing | **Fixed.** Required keyword; existing callers pass it |
 | 10 | Two near-identical occurrence dataclasses, and violations built in two places | **Declined.** The private occurrence carries offset and cited flag; the public type carries what `create` needs. Consolidating is cosmetic and outside this change |
+
+### Findings (round 3)
+
+The repair-routes message drew a different confirmed finding in each of rounds 1–3 (round 1 #4, round 2 #5, round 3 #1–#3), which is the wrong-shape signal in CLAUDE.md. Round 3 replaced the per-case patching with one message derived from the full case matrix (draft / published promoted / unpublished or relocated promoted, by body / Stack / both), pinned by one parametrized test over all nine cells.
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | For a published promoted copy found through the marker at an archived path, the message said `--refresh-seeds` rewrites "this promoted copy" | **Fixed (matrix).** The message says regeneration rewrites a promoted copy only when published and at its recorded destination, and always offers a hand edit of the file passed to `create` |
+| 2 | The Stack route ignored location: for an unpublished promoted copy, regeneration never rewrites the file `create` reads | **Fixed (matrix).** The Stack case adds the row revision in front of the location's own routes |
+| 3 | The route sent one refused row to roadmap-wide `--refresh-seeds` (N calls, overwrites siblings) | **Fixed (matrix).** The message names per-row `--materialize PLAN_ID`; the matrix test asserts `--refresh-seeds` never appears |
+| 4 | The Stack pre-check reports "exhausted its retry budget" with zero attempts | **Declined.** A distinct value would widen `failure_kind`, a closed four-value set in `DATA_CONTRACT.md`; the violation line printed beneath names the cause and the row-revision route |
+| 5 | The Stack pre-check returned violations with `row_id=None` and no plan prefix | **Fixed.** Attributed to the plan row with the same prefix as the validator; asserted in the Stack test |
+| 6 | No left boundary before `.roadmap-versions`, so `old.roadmap-versions/<id>/04-roadmap.md` counted as cited | **Fixed.** The segment must be a whole path segment; test `test_a_directory_merely_ending_in_roadmap_versions_is_not_the_version_store`, red on the old code |
+| 7 | The prompt suggested `[<path>](<path>)`, a link that does not resolve from the seed's or plan's folder | **Fixed.** The prompt asks for each path alone in backticks |
 
