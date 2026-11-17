@@ -121,6 +121,7 @@ steps:
   depends_on_notes:
     2: Provides the bare-name check and the draft's `malformed` classification that
       create's confirmation relies on.
+  detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md
   description: 'Make `create --from-existing` ask for confirmation on a tracked seed
     that fails the bare-name check, and name both repair routes. In `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed`,
     a draft-path seed already reaches confirmation through `classify_draft_seeds`
