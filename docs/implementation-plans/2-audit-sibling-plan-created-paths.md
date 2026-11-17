@@ -34,8 +34,12 @@ steps:
     same-roadmap sibling `creates:` paths for a plan. It returns `_eligible_planned_paths(plan,
     plan_path, repo_root)` minus `_planned_paths(plan)` only when `_sibling_roadmap_identity`
     returns an identity. It returns an empty set when the identity is `None` (so the
-    all-registered-plans set is not delivered) and when the identity raises `ValueError`
-    (uncertain evidence, so no partial set). No second selection rule is written.
+    all-registered-plans set is not delivered) and when selecting raises any of the
+    failure classes `_eligible_planned_paths` already treats as uncertain evidence
+    (`OSError`, `UnicodeError`, `ValueError`, `ManifestError`; one shared tuple, so
+    the two cannot drift), so no partial set and `AuditInputSnapshot.capture` never
+    raises because of sibling selection. A test covers an unreadable source seed
+    beside the uncertain-identity case. No second selection rule is written.
     Capture that set once in `plan_tool/review_persistence.py:AuditInputSnapshot.capture`
     as a new sorted-tuple field with an empty default. Use a lazy import of the review
     helper, matching the module''s existing lazy-import style, so no import-time cycle
@@ -150,7 +154,7 @@ Source: `BUG_BACKLOG.md` → BUG → "The audit reports a path a sibling plan in
 
 **Settled: one selection rule.** The same-roadmap set is the existing `_eligible_planned_paths` result minus the audited plan's own `creates:`. It is used only when `_sibling_roadmap_identity` returns an identity. In two cases the block states that no sibling paths apply:
 - identity is absent;
-- identity evidence is uncertain: the function raises `ValueError`, which `_eligible_planned_paths` already treats as "own paths only".
+- identity evidence is uncertain or unreadable: selection raises one of the failure classes (`OSError`, `UnicodeError`, `ValueError`, `ManifestError`) that `_eligible_planned_paths` already treats as "own paths only", caught through one shared tuple.
 
 This way the prompt never carries a set the deterministic check would not use. No second selection rule is written. The all-registered-plans set that `_eligible_planned_paths` uses for a plan with no roadmap identity is deliberately not delivered to the prompt.
 
