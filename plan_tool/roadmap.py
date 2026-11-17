@@ -108,6 +108,11 @@ from plan_tool.roadmap_gates import (
     run_constraints_gates,
     run_domain_gates,
     run_plans_gates,
+    VIOLATION_BARE_ROADMAP_FILE_CITATION,
+    VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
+    CitationRoots,
+    unresolved_roadmap_file_citations,
+    find_bare_roadmap_file_citations,
     validate_draft_seed_content,
 )
 from plan_tool.roadmap_seed_state import (
@@ -2919,7 +2924,7 @@ def _accept_roadmap_seed(
         )
 
     try:
-        classification = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug).get(plan_id)
+        classification = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root).get(plan_id)
     except RoadmapSeedStateError as exc:
         raise RoadmapError(str(exc)) from exc
     if classification is None or classification.state != DRAFT_SEED_STATE_DIGEST_MISMATCHED:
@@ -2938,7 +2943,13 @@ def _accept_roadmap_seed(
             f"roadmap seed '{plan_id}' draft at {source} became unreadable "
             f"between classification and read: {exc}"
         ) from exc
-    violations = tuple(validate_draft_seed_content(text, plan=plan))
+    violations = tuple(
+        validate_draft_seed_content(
+            text,
+            plan=plan,
+            citation_roots=CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+        )
+    )
     if violations:
         return RoadmapSeedAcceptResult(
             outcome=ACCEPT_OUTCOME_REFUSED,
@@ -3037,7 +3048,7 @@ def _reject_unmatched_operator_draft_fences(slug: str, *, plans_dir: Path) -> No
         violation = next(
             (
                 item
-                for item in validate_draft_seed_content(text, plan=plan)
+                for item in validate_draft_seed_content(text, plan=plan, citation_roots=None)
                 if item.kind == VIOLATION_DRAFT_SEED_UNMATCHED_FENCE
             ),
             None,
@@ -3145,7 +3156,7 @@ def _apply_roadmap_seeds(
 
     collisions: list[Path] = []
     try:
-        classifications = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug)
+        classifications = classify_draft_seeds(artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root)
     except RoadmapSeedStateError as exc:
         raise RoadmapError(str(exc)) from exc
     refused_drafts = _refused_apply_drafts(targets, classifications)
@@ -3190,7 +3201,7 @@ def _apply_roadmap_seeds(
     except (RoadmapArtifactError, RoadmapSeedStateError) as exc:
         raise RoadmapError(str(exc)) from exc
     try:
-        classifications = classify_draft_seeds(fresh_artifact, plans_dir=plans_dir, slug=slug)
+        classifications = classify_draft_seeds(fresh_artifact, plans_dir=plans_dir, slug=slug, repo_root=repo_root)
     except RoadmapSeedStateError as exc:
         raise RoadmapError(str(exc)) from exc
     refused_drafts = _refused_apply_drafts(targets, classifications)
@@ -3229,7 +3240,9 @@ def _apply_roadmap_seeds(
     for plan_id, source, _dest in targets:
         source_text = source.read_text(encoding="utf-8")
         violations = validate_draft_seed_content(
-            source_text, plan=fresh_plan_by_id[plan_id]
+            source_text,
+            plan=fresh_plan_by_id[plan_id],
+            citation_roots=CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
         )
         if violations:
             post_classification_refusals.append(
@@ -3383,8 +3396,35 @@ class RoadmapSeedMaterializeResult:
     violations: tuple[Violation, ...] = ()
 
 
+def _version_store_citation_paths(
+    loaded: Sequence[_LoadedArtifact], *, repo_root: Path, plans_dir: Path
+) -> dict[str, str]:
+    """Repo-relative POSIX version-store path per stage, keyed ``<artifact_key>_path``.
+
+    Fails closed outside ``repo_root``: no repo-relative citation exists, and a
+    bare member name would be the silent fallback this exists to prevent.
+    """
+    root = Path(repo_root).resolve()
+    paths: dict[str, str] = {}
+    for item in loaded:
+        try:
+            paths[f"{item.stage.artifact_key}_path"] = (
+                Path(item.path).resolve().relative_to(root).as_posix()
+            )
+        except ValueError:
+            raise RoadmapError(
+                f"plans directory {plans_dir} is outside repo root {root}, so the "
+                "accepted roadmap version has no repo-relative path to cite in a seed"
+            ) from None
+    return paths
+
+
 def _render_seed_materialize_prompt(
-    *, slug: str, plan_id: str, loaded: Sequence[_LoadedArtifact]
+    *,
+    slug: str,
+    plan_id: str,
+    loaded: Sequence[_LoadedArtifact],
+    citation_paths: Mapping[str, str],
 ) -> str:
     """Render the standalone prompt for one accepted roadmap plan row."""
     template_path = prompts_dir() / "roadmap-seed.md"
@@ -3400,6 +3440,7 @@ def _render_seed_materialize_prompt(
 
     variables = {"slug": slug, "plan_id": plan_id}
     variables.update({f"{item.stage.artifact_key}_artifact": item.text for item in loaded})
+    variables.update(citation_paths)
     template_text = read_roadmap_text(
         template_path, error_for_read_failure=unreadable_prompt_input
     )
@@ -3581,6 +3622,10 @@ def _materialize_plan_seed(
     if plan is None:
         raise RoadmapError(f"roadmap '{slug}' has no plan id '{plan_id}' in {PLANS_FILENAME}")
 
+    citation_paths = _version_store_citation_paths(
+        loaded, repo_root=repo_root, plans_dir=plans_dir
+    )
+
     # The version id comes from the same read as the artifacts (the member
     # directory is named for it), so the stack can never cite another version.
     stack_section = _render_stack_section(
@@ -3592,7 +3637,35 @@ def _materialize_plan_seed(
         plan=plan,
     )
 
-    base_prompt = _render_seed_materialize_prompt(slug=slug, plan_id=plan_id, loaded=loaded)
+    # A bare name in tool-written Stack text comes from an accepted row value no
+    # retry can change, so fail closed before spending a model call.
+    basename = Path(plan.draft_seed_path).name
+    stack_violations = tuple(
+        Violation(
+            kind=violation.kind,
+            artifact=violation.artifact,
+            row_id=plan.id,
+            message=f"plan '{plan.id}' draft seed '{basename}': {violation.message}",
+        )
+        for violation in (
+            *find_bare_roadmap_file_citations(stack_section),
+            *unresolved_roadmap_file_citations(
+                stack_section,
+                CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+            ),
+        )
+    )
+    if stack_violations:
+        return RoadmapSeedMaterializeResult(
+            outcome=SEED_MATERIALIZE_OUTCOME_EXHAUSTED,
+            plan_id=plan.id,
+            failure_kind=FAILURE_GATES,
+            violations=stack_violations,
+        )
+
+    base_prompt = _render_seed_materialize_prompt(
+        slug=slug, plan_id=plan_id, loaded=loaded, citation_paths=citation_paths
+    )
     corrections: tuple[str, ...] = ()
     failure_kind: str | None = None
     failure_rc: int | None = None
@@ -3655,7 +3728,13 @@ def _materialize_plan_seed(
             continue
 
         lifted = _replace_stack_section(lifted, stack_section)
-        candidate_violations = tuple(validate_draft_seed_content(lifted, plan=plan))
+        candidate_violations = tuple(
+            validate_draft_seed_content(
+                lifted,
+                plan=plan,
+                citation_roots=CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+            )
+        )
         if candidate_violations:
             failure_kind = FAILURE_GATES
             failure_rc = None
@@ -3670,6 +3749,14 @@ def _materialize_plan_seed(
                     failure_detail_present=False,
                 )
             corrections = tuple(item.message for item in candidate_violations)
+            if any(
+                item.kind in (VIOLATION_BARE_ROADMAP_FILE_CITATION, VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION)
+                for item in candidate_violations
+            ):
+                corrections += (
+                    "cite the accepted roadmap files by exactly these paths: "
+                    + ", ".join(f"`{path}`" for path in citation_paths.values()),
+                )
             continue
 
         target = resolve_draft_seed_path(plans_dir, slug, plan.draft_seed_path)

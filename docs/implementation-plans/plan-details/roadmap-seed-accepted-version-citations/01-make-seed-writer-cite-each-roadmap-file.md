@@ -69,7 +69,7 @@ This step makes `_materialize_plan_seed` in `plan_tool/roadmap.py` turn the four
 
 All new cases go in `tests/test_roadmap.py`, using the existing roadmap fixture helpers and an invoker stub (never the real backend).
 
-- `test_seed_prompt_contains_each_version_store_path` — the rendered prompt has all four repo-relative `.roadmap-versions/<version-id>/…` paths.
+- `test_seed_prompt_contains_each_version_store_path` — the rendered prompt has all four repo-relative `<roadmap folder>/.roadmap-versions/<version-id>/…` paths.
 - `test_seed_prompt_leaves_no_unresolved_placeholder` — the rendered prompt has no `${`.
 - `test_seed_prompt_placeholders_are_a_subset_of_the_variable_map` — every `${name}` the template uses is a key the caller supplies. This is the only mechanical check, because the variable map lives in the caller.
 - `test_seed_prompt_no_longer_asks_for_literal_filenames` — the template no longer says "literal filenames", and it still never asks for `source_artifacts`.

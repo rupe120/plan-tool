@@ -3639,7 +3639,7 @@ def test_summary_folds_a_real_classifier_result(tmp_path: Path) -> None:
         source.read_text(encoding="utf-8") + "hand edit\n", encoding="utf-8"
     )
 
-    classifications = classify_draft_seeds(loaded.plans, plans_dir=tmp_path, slug=SLUG)
+    classifications = classify_draft_seeds(loaded.plans, plans_dir=tmp_path, slug=SLUG, repo_root=None)
     lifecycle = summarize_seed_lifecycle(loaded, classifications)
 
     assert classifications[plan.id].state == DRAFT_SEED_STATE_DIGEST_MISMATCHED

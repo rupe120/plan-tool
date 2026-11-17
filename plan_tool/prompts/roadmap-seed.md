@@ -46,9 +46,25 @@ must resolve against this plan row's `component_ids`. A `cross-cutting` plan
 may list additional component ids only when its frontmatter also sets
 `cross_cutting: true`.
 
+Cite each accepted roadmap artifact by its exact repo-relative path, never by
+a bare filename:
+
+- domain: `${domain_path}`
+- constraints: `${constraints_path}`
+- components: `${components_path}`
+- roadmap: `${plans_path}`
+
+Write that exact path every time the seed body names one of these files:
+`## References`, Architecture, Risks, and fenced text included. When accepted
+artifact text you carry over names one of these files by its member filename
+(`01-domain.md`, `02-constraints.md`, `03-components.md`, `04-roadmap.md`),
+replace that name with its path above; never copy a bare name into the seed. Write
+each path alone in backticks, not as a markdown link: link text that is a bare
+member filename fails the gate, and a repo-relative link target does not resolve
+from the seed's or the plan's own folder.
+
 Keep the accepted scope contract in the prose body. Include a body-level
-`## References` section that cites `01-domain.md`, `02-constraints.md`,
-`03-components.md`, and `04-roadmap.md` by their literal filenames; bind the
+`## References` section that cites the four accepted roadmap artifacts; bind the
 seed to its domain entities, rules, workflows, constraints,
 and relevant inter-plan assumptions; carry chosen options from upstream
 artifacts as settled fences, without pasting long rejected-alternative

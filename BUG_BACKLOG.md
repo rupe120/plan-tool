@@ -212,83 +212,29 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-09-28, `/code-review high` on the
   `roadmap-candidate-row-prose-amendments` run branch (commit `1af9d8c5`).
 
-### Roadmap-derived plans cite bare `0N-*.md` names, which resolve to stale top-level copies beside an accepted head, so audits ground on a superseded roadmap and report false contradictions
+### Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head
 
-- **Files:** `plan_tool/prompts/roadmap-seed.md` (the `## References` rule:
-  "cites `01-domain.md`, `02-constraints.md`, `03-components.md`, and
-  `04-roadmap.md` by their literal filenames"), the draft-seed
-  `source_artifacts` frontmatter it produces,
-  `plan_tool/roadmap_version_promotion.py` (module docstring: "Promote one
-  exact sealed roadmap candidate by changing only its selector"), and the
-  completeness audit prompts, which carry no roadmap resolution.
-- **Symptom:** promotion writes only `.roadmap-versions/accepted-head.json`
-  and does not refresh the top-level `0N-*.md` files. That is by design
-  (`docs/implementation-plans/archive/2-roadmap-versioned-from-birth.md`,
-  Architecture: top-level files beside an accepted head "are inert leftovers
-  that no command reads or flags"). No command reads them, but seed authors
-  and audit models do. The seed prompt makes every draft seed cite bare
-  filenames, `create --from-existing` carries those into the plan, and the
-  audit model opens the only file on disk with that name, the inert
-  top-level copy. On Integration's `integration-aidlc-mvp` (2026-10-10) the top-level
-  `04-roadmap.md` still holds the old `decision-minimal-workflow-shape`
-  ("Seed exactly one workflow with two steps spanning two different runtime
-  connectors…"), five plans, and no `workflow-run` owner. The accepted head
-  `.roadmap-versions/c7743c56…a4987/04-roadmap.md` chooses "one fixed
-  three-step workflow" and nine delivery plans, and contains no "two steps
-  spanning". Bare audits then reported false HIGH correctness findings
-  grounded on the stale copy (reports under Integration
-  `docs/implementation-plans/plan-details/<plan>/reports/`):
-  - `workflow-catalog-core` `20261010-003835-completeness.md`:
-    `[workflow-shape-provenance]` ("The cited `04-roadmap.md` decision
-    requires two steps") and `[run-owner-association]` ("its current field
-    set has no owner").
-  - `isolated-engine-worker` `20261010-005401`:
-    `[configured-three-connector-sequence]`. Its citation names the
-    accepted-version path but quotes the stale top-level text, so a
-    misattributed quote passes the audit unchecked.
-  - `chat-output-streaming` `20261010-010407`: `[workflow-shape]`.
-  - `cdk-infrastructure-and-environments` `20261010-012103`:
-    `[accepted-roadmap-source]`.
-
-  The same citation also breaks a roadmap with no leftovers. A stage run
-  publishes no top-level `0N-*.md` files (`ROADMAP_FORMAT.md` § "What writes
-  them"), so in a roadmap created that way a bare `04-roadmap.md` names no
-  file at all. That case follows from the design and
-  has not been observed in a run; the stale-copy case above is the observed
-  one.
-- **Cause (verified in code):** promotion is meant to change only the
-  selector, so the defect is not a missed refresh. It is the citation
-  contract. The seed prompt binds plans to bare names that resolve on disk
-  to the files the versioned-from-birth plan declared inert. No path (seed
-  writer, `create`, or the audit inputs) translates a roadmap citation to
-  the accepted version.
-- **Fix:** roadmap seed citations name the accepted version by repo-relative
-  version-store path throughout the seed body, the draft-seed gates require
-  it, and `create` carries it. This changes the draft-seed contract, so it
-  goes through the plan pipeline. Plan:
-  `docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md`
-  (plan-authored 2026-11-17, execution pending; its seed, archived under
-  `docs/implementation-plans/plan-seeds/archive/`, settles the form, the
-  legacy-seed rule and the `source_artifacts` departure). Shipped 2026-10-10 as a separate direct change: a stderr warning naming
-  leftover top-level `0N-*.md` files beside an accepted head, on
-  `roadmap --view`, `--materialize`, `--refresh-seeds`, `--accept-seed`, and
-  `--apply`. Deliberately not warned: `create --from-existing <seed>`, the
-  route that opens the cited name; the citation fix removes the bare name
-  there.
-- **Deliberately not:** making promotion rewrite the top-level files, which
-  restores the two-copy design the versioned-from-birth plan removed.
-- **Deferred follow-up:** bare roadmap file names in new prose that
-  `create`'s model writes during synthesis, rather than copies from the
-  seed. The seed leaves them out (decided 2026-10-29); closing them needs a
-  `create` prompt rule or a post-synthesis check.
+- **Files:** the `create` plan-generation prompts under `plan_tool/prompts/`,
+  which carry no rule about how a plan names a roadmap artifact in prose the
+  model writes rather than copies from the seed.
+- **Symptom:** a roadmap draft seed cites each roadmap file by its
+  `<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md` path, and `create --from-existing`
+  copies that text into the plan. Prose the model writes while synthesizing
+  the plan (step text, acceptance criteria, risks it restates) can still name
+  `04-roadmap.md` bare. A reader or audit that opens that name reaches the
+  inert top-level copy, not the accepted version. Nothing deterministic
+  writes that prose, so no seed gate sees it.
+- **Fix options:** a `create` prompt rule that roadmap files are named by the
+  seed's version-store path, or a post-synthesis check that flags a bare member
+  filename in the written plan. Either is new `create` behavior.
+- **Deliberately not:** making promotion rewrite the top-level `0N-*.md`
+  files, which restores the two-copy design the versioned-from-birth plan
+  removed.
 - **Workaround:** hand-edit the plan's roadmap citations to the accepted
-  version's repo-relative paths, e.g.
-  `docs/implementation-plans/roadmaps/<slug>/.roadmap-versions/<id>/04-roadmap.md`,
-  then re-audit. Deleting
-  the top-level files alone (the documented hand conversion, which the
-  2026-10-10 warning prompts) is not enough: the bare names then name no file.
+  version's repo-relative paths, then re-audit.
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
+- **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10;
+  split out of the seed-citation entry, deferred 2026-10-29.
 
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-seed-accepted-version-citations",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-accepted-version-citations.md",
+  "created_at": "2026-11-17T16:07:52Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "837c3cde3ba9275df6d656a0b0d46012c42b4cfc558087c3d795382be0f5114e",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "eff309a09e710eaf4f1ebe9d4a49aaf1a528a4c86680b9fb9ee0678e61104453",
+    "DATA_CONTRACT.md": "3d1be781436d97fd76361ec7b7be5afc9f879238b826e05369a0d4cb1c7a333b",
+    "ROADMAP_FORMAT.md": "472f53a2faa556c06bc9926f13a7a2d504a203547c57ac08872beff841c330dd",
+    "docs/explanations/roadmap-plan-handoff.md": "7c406ce83d4fd2e501afa3182d15a7514255b49335adea6f1fd241ea3caa4f04",
+    "docs/how-to/roadmap.md": "202614d956e61efcf2fce073cb8b727473569b1fa8140ad64854827c1d18d446",
+    "plan_tool/cli/authoring.py": "dc059e8e2c3a7d4a4f59147750a011ac7d8a698088aebca7ae008c86aacf275a",
+    "plan_tool/prompts/roadmap-seed.md": "858c6303bd61ad62c4f7b8e6a4361a02634219d3867a54d375db9d949aff8e0f",
+    "plan_tool/roadmap.py": "a5e283984fd71c613e56d971888343f434dcc80af3f8be80108c37290cb5e7fd",
+    "plan_tool/roadmap_gates.py": "c52cdfb048332db8b1af3709e968f33857344f2837bd34b81e5bed48d43024a6",
+    "plan_tool/roadmap_seed_manifest.py": "074e0a67e7e74b8b16f1ccafbb802c1e6b1967b18992a5f6d090cde80dc8bdf2",
+    "tests/cli/test_authoring_cmds.py": "0e9e14aada4005bc540487a36ae98908be3d004eaa2410e6c95dbd258d077885",
+    "tests/test_roadmap.py": "5504987072ae74ce5bd73535a59d53603b0f9724da40cd2435d2a97ec2693730",
+    "tests/test_roadmap_gates.py": "820a5db38cfb80a4a056dfcbdd469858e42060de06f98099b308b8172ca8a88c",
+    "tests/test_roadmap_seed_manifest.py": "9ac04c0be328d9f00c0d462f52151243b29bdb7c51f6c676e8b5bacff2234adb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 1 nits\n\nCompleted-sibling context informed this classification: 3 of 3 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step2-run-reconcile-8a47e092",
+      "source": "run-reconcile",
+      "severity": "nit",
+      "step_id": 2,
+      "title": "the comment above `_VERSION_STORE_DIRNAME` in `plan_tool/roadmap_gates.py` (step 2 \"Tighten the draft-seed gates\") names",
+      "body": "the comment above `_VERSION_STORE_DIRNAME` in `plan_tool/roadmap_gates.py` (step 2 \"Tighten the draft-seed gates\") names `roadmap_versions`, so the acceptance check `rg -n \"roadmap_versions\" plan_tool/roadmap_gates.py` returns a hit instead of nothing. The module imports nothing from it, but the literal criterion is unmet",
+      "suggested_action": "reword that comment in `plan_tool/roadmap_gates.py` to refer to \"the version-store module's directory-name constant and digest regex\" without the module identifier",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

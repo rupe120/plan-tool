@@ -50,14 +50,14 @@ After steps 1–3, a new draft seed cites each roadmap file as `.roadmap-version
   - **Form:** a seed names each member file by `.roadmap-versions/<version-id>/0N-*.md`, written relative to the roadmap's repository.
   - **Re-rooting:** the path stays relative to the roadmap's repository even when `create` later re-roots the plan.
   - **Body-wide rule:** a bare member filename (the four constants in `plan_tool/roadmap_artifacts.py`) is a violation anywhere in the body, fenced code included. A path to a top-level copy is also a violation.
-  - **Version id:** any stored version id passes, because the gate judges form only.
+  - **Version id:** any stored version id passes; a citation must resolve to a stored member file from the repository root.
   - **Older version after promotion:** a seed that cites an older version after a later promotion is intended, not a defect. Cite the gate function and its violation code by their landed names.
   - Do not state that the gate checks a quoted passage against its file. Say it is deliberately not checked, per the plan's "## Out of scope".
 - **`ROADMAP_FORMAT.md` § "Draft-seed manifest states".**
   - Replace "by filename" with the version-store form.
   - Add a paragraph: a legacy seed that names a bare member file classifies `malformed`.
   - Name the two repair routes: `--refresh-seeds` regenerates it under the new prompt, or a hand edit plus `--accept-seed PLAN_ID` records it. A hand edit first classifies `digest-mismatched`, as the existing Risks paragraph says.
-  - State that a seed's frontmatter never reaches the plan. `source_artifacts` is read only in `plan_tool/roadmap_candidate_run.py`, and `plan_tool/create.py` never reads it. Cite the step 3 "frontmatter" test by its landed name.
+  - State that a seed's frontmatter never reaches the plan. No module reads a seed's `source_artifacts` key (the name in `plan_tool/roadmap_candidate_run.py` is an unrelated local variable), and `plan_tool/create.py` never reads it. Cite the step 3 "frontmatter" test by its landed name.
   - Name the promoted-copy route in one line: `create --from-existing` refuses a seed with a bare name, with or without `-y` (step 3, reason `roadmap-seed-bare-citation`); repair the promoted copy by hand, or `--refresh-seeds` when the seed is published.
 - **`docs/how-to/roadmap.md` § 1.** Keep the facts (leftover files are inert, the stderr warning shipped 2026-10-10). Replace the sentence that frames reading a bare `04-roadmap.md` as the expected path. Say instead that new seeds cite the accepted version's path, so no reader needs the top-level copy, and that the warning still names leftovers. Do not state that deleting leftovers is required.
 - **`docs/how-to/roadmap.md` § 7 and "Direct fallback".** Keep "resolved through the accepted head". Add that a hand-written seed uses the same version-store path form, so it passes the gate. Do not tell a writer to use a literal filename.

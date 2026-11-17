@@ -61,10 +61,9 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - **Match exactly the four member filenames.**
   - A name like `01-setup.md` or `05-notes.md` is not an occurrence and must not be flagged.
   - Use the four existing constants, not a `0N-*.md` pattern.
-- **Well-formed means form only.**
-  - Any lowercase 64-hex id passes. It does not have to be the accepted one, because a hand-edited seed cites the version its text came from.
-  - Uppercase hex, 63 or 65 characters, or a missing id segment all fail.
-  - The repo-relative prefix before `.roadmap-versions` is step 1's writer's job. The gates must not judge it. Do not read the filesystem or an accepted head.
+- **Well-formed, then resolving.**
+  - The form check: a lowercase 64-hex id as a whole `.roadmap-versions/<id>/` segment. Uppercase hex, 63 or 65 characters, or a missing id segment fail it.
+  - The resolution check (`unresolved_roadmap_file_citations`, given `CitationRoots`): the citation must name, from the repository root, a stored member file of this roadmap. Any stored version passes, because a hand-edited seed cites the version its text came from. Added 2026-11-17 by owner decision, after review showed no other check catches a non-resolving path.
 - **(a) References gate.**
   - Keep `VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE` and its per-filename loop.
   - A filename now counts as present only when the References section has at least one well-formed occurrence of it.
@@ -81,10 +80,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
   - Keep the signature. Add no import to `roadmap_gates.py`.
   - The two early returns stay first, so an unmatched fence still returns alone.
 - **Interaction to expect.** A seed with a bare name in its References section trips both the References gate (path form absent) and the body check (bare occurrence). Both messages are useful: one says what to add, the other says what to replace. Do not add logic to suppress either.
-- **Rejected alternative: resolve each cited path against the accepted version.**
-  - It needs a repo root and the loaded head, and it fails for a no-head roadmap.
-  - It also rejects a hand-edited seed that cites the version its text came from, which the plan allows.
-  - The fixed form check delivers the property: only version-store citations reach a plan.
+- **Rejected alternative: resolve each cited path against the accepted version only.** It would reject a hand-edited seed that cites the version its text came from. Resolving against any stored version keeps that route.
 - **The tool-owned `## Stack` section is not exempt.** `_materialize_plan_seed` inserts `_render_stack_section` output before `validate_draft_seed_content` runs, and that renderer copies accepted row values verbatim; its fixed template text names no member file. A bare member filename there comes from a roadmap row value and fails materialize closed, with a message naming `## Stack` and the route: revise that row through reviewer feedback (`docs/how-to/roadmap.md` § 6), which publishes a new accepted version, then regenerate; accepted versions are immutable, so `--refresh-seeds` alone fails the same way every time. The retry cannot change tool-written text. Rejected: rewriting row text in the renderer, and exempting the section.
 - **Rejected alternative: a regex that matches any `0N-*.md`.** It would flag unrelated files. The plan names the four members.
 - **Destructive operations and caller effects.**
@@ -143,7 +139,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - `01-setup.md` and other non-member names produce no violation.
 - The References message names the required path form.
 - The new public function takes only text and works on text without provenance.
-- `validate_draft_seed_content` keeps its signature, and `roadmap_gates.py` gains no import.
+- `validate_draft_seed_content` takes a required `citation_roots`, and `roadmap_gates.py` gains no import.
 - `rg -n "roadmap_versions" plan_tool/roadmap_gates.py` returns nothing.
 - `classify_draft_seeds` returns `malformed` for a legacy bare-name seed, and `current` for a conforming one.
 - `--apply`, `--accept-seed` and `--refresh-seeds` behave as listed under Implementation.

@@ -19,6 +19,7 @@ from plan_tool.roadmap_artifacts import (
     roadmap_dir,
 )
 from plan_tool.roadmap_gates import (
+    CitationRoots,
     find_duplicate_draft_seed_basenames,
     validate_draft_seed_content,
 )
@@ -112,9 +113,13 @@ def _classification(
 
 
 def classify_draft_seeds(
-    artifact: PlansArtifact, *, plans_dir: Path, slug: str
+    artifact: PlansArtifact, *, plans_dir: Path, slug: str, repo_root: Path | None
 ) -> dict[str, DraftSeedClassification]:
-    """Compute each plan row's draft-seed state without changing disk state."""
+    """Compute each plan row's draft-seed state without changing disk state.
+
+    ``repo_root`` makes version-store citations resolve-checked; ``None`` checks
+    their form only, and is required to be explicit.
+    """
     root = roadmap_dir(plans_dir, slug)
     state = load_seed_state(seed_state_path(root))
     duplicate_details = {
@@ -182,7 +187,13 @@ def classify_draft_seeds(
             classifications[plan.id] = _classification(plan.id, DRAFT_SEED_STATE_STALE)
             continue
 
-        violations = validate_draft_seed_content(text, plan=plan)
+        violations = validate_draft_seed_content(
+            text,
+            plan=plan,
+            citation_roots=None
+            if repo_root is None
+            else CitationRoots(repo_root=repo_root, plans_dir=plans_dir, slug=slug),
+        )
         if violations:
             classifications[plan.id] = _classification(
                 plan.id,
