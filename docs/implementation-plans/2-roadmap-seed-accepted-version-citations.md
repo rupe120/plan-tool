@@ -79,7 +79,13 @@ steps:
     violation kind: any member-filename occurrence anywhere in the seed body, fenced
     code included, without that segment directly before it is a violation. That covers
     a path to a top-level copy. It is a plain presence check that never judges citation
-    versus mention. Each message names the offending occurrence and the path form
+    versus mention. It lives in one public function in `roadmap_gates.py` that takes
+    only text: it scans the frontmatter-stripped text (`_strip_frontmatter`) with fenced
+    code kept, unlike `_draft_seed_sections`, which excises fences, and finds member
+    filenames with the References gate''s existing filename-boundary rule, so a name
+    embedded in a longer filename is not an occurrence. `validate_draft_seed_content`
+    calls it, and step 3 calls it directly on a promoted copy, which has no provenance
+    block for the full validator to read. Each message names the offending occurrence and the path form
     to use. `validate_draft_seed_content` keeps its signature, so every existing caller
     (the four `roadmap.py` sites: `--accept-seed`, the `--apply` post-classification
     recheck, `_reject_unmatched_operator_draft_fences`, materialize candidate validation;
@@ -117,14 +123,20 @@ steps:
     that fails the bare-name check, and name both repair routes. In `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed`,
     a draft-path seed already reaches confirmation through `classify_draft_seeds`
     once step 2 makes it `malformed`. A promoted `plan-seeds/` copy (`location.via_marker`)
-    is checked only by sidecar status today, so run step 2''s bare-name check on the
-    promoted copy''s own bytes as well. When it fails, the message names both routes:
-    regenerate with `plan-tool roadmap <slug> --refresh-seeds`, or hand-replace each
-    bare name with the source version''s path and run `--accept-seed PLAN_ID`. `-y`
+    is checked only by sidecar status today, so run step 2''s body-only bare-name function
+    on the promoted copy''s own bytes as well; the full validator is not run on a promoted
+    copy. When the check fails, the message names the routes for that seed''s location.
+    For a draft: regenerate with `plan-tool roadmap <slug> --refresh-seeds`, or hand-replace
+    each bare name with the source version''s path and run `--accept-seed PLAN_ID`. For
+    a promoted copy: `--refresh-seeds` rewrites it only when the seed''s state records
+    `published: true`; otherwise, or to keep hand edits, hand-replace the bare names
+    in the promoted copy itself, which `create` reads directly, so no `--accept-seed`
+    is involved. `-y`
     continues, and a non-TTY run without `-y` refuses as it already does. An untracked
     seed, and a roadmap with no accepted head, keep today''s behavior. Destructive
     operations: none; `create` reads the seed and never rewrites it. Tests in `tests/cli/test_authoring_cmds.py`:
-    the draft legacy seed and the promoted legacy copy each prompt and name both routes;
+    the draft legacy seed and the promoted legacy copy each prompt and name their location''s
+    routes; a promoted copy with no bare name and no provenance block does not prompt;
     `-y` continues; untracked and no-head cases are unchanged; a tracked seed whose
     frontmatter carries `source_artifacts: [04-roadmap.md]` yields a plan with no
     `source_artifacts` key and no bare member filename copied from it. One integration case
@@ -200,7 +212,7 @@ The problem affects every roadmap, not only older folders with leftovers. A stag
 - Both gates match exactly the four member filenames, `01-domain.md` through `04-roadmap.md`. Another file whose name starts `0N-` is deliberately not flagged.
 - Both gates judge the citation's form, not its root: a member filename passes exactly when `.roadmap-versions/<version-id>/` directly precedes it. They take no repo root and keep their current signature at every caller. The repo-relative prefix is the seed writer's responsibility: the writer has `repo_root` and refuses a plans directory outside it. A cited path is relative to the roadmap's repository, and `create` carries seed text verbatim, so the path keeps that meaning even when `create` re-roots the plan under an umbrella root. Deliberately not checked by the gates: whether a hand-edited prefix resolves. A non-resolving path names no top-level copy, so the Guarantee holds, and the plan's existing cited-path check reports it as missing.
 - The References gate (`VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE`) requires the version-store form, and its message names that form.
-- A new body check makes a bare member filename anywhere in the seed body a violation, fenced code included. `create` copies fenced text into the plan verbatim, so a fence is no safer than prose. Bare means any occurrence whose path does not contain `.roadmap-versions/<version-id>/`. A path to a top-level copy therefore counts as bare, and the required paths never trip the check. This is a plain presence check: it rejects every bare occurrence and never judges whether an occurrence is a citation or a mention.
+- A new body check makes a bare member filename anywhere in the seed body a violation, fenced code included. It is one text-only function that scans the frontmatter-stripped text with fences kept and uses the References gate's filename-boundary rule; the full validator and `create`'s check on a promoted copy both call it. `create` copies fenced text into the plan verbatim, so a fence is no safer than prose. Bare means any occurrence whose path does not contain `.roadmap-versions/<version-id>/`. A path to a top-level copy therefore counts as bare, and the required paths never trip the check. This is a plain presence check: it rejects every bare occurrence and never judges whether an occurrence is a citation or a mention.
 - Both gates accept a version-store path naming any stored version, not only the accepted one. The hand-edit route cites the version a seed's text was written from, which can be older than the accepted head.
 
 **`source_artifacts`.** This deliberately departs from the source entry's Fix, which renders that key in the new form too. The prompt never asks for the key, and `parse_draft_seed_provenance` ignores it (`roadmap_components` and `cross_cutting` are its only keys), so the seed body stays the one citation surface. A stray `source_artifacts` key, bare name included, cannot reach a plan, and the guarantee depends on that: plan frontmatter is serialized only by `write_plan` from the `Plan` schema, which forbids extra fields, and the sections `create` copies come from frontmatter-stripped seed text (`_strip_frontmatter`). Step 3 pins it with a test. Bare names the model might write from frontmatter into new prose are the deferred synthesis case, not this one.
