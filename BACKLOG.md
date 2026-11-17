@@ -3435,9 +3435,9 @@ working straight down the tiers.
 - **Outcome:** the completeness audit reads the plan's `risk_profile` and reports robustness findings that exceed that tier as advisory, naming the tier.
 - **In scope:** the conceptual audit prompt and severity classification, completeness report rendering, `PLAN_FORMAT.md` and `docs/how-to/pipeline/audit.md` wording for the tier's audit effect.
 - **Out of scope / Non-goals:** a second plan-wide rigor field; automatic limits on test counts; deterministic checks; per-finding dispositions (#490); changing how `create` proposes the tier.
-- **Allowed behavior changes:** severity demotion of robustness findings for a declared `low` tier only; a legacy omitted pair and `standard` keep today's audit behavior.
+- **Allowed behavior changes:** severity demotion of robustness findings for the tiers the readiness decision names; which tiers demote, and how a legacy omitted pair is treated, are left to that decision.
 - **Allowed reorganization:** none.
-- **Verification:** one fixture plan audited at `low` and at `standard` yields identical correctness findings and differs only in the severity of robustness findings.
+- **Verification:** one fixture plan audited at two tiers the decision treats differently yields identical correctness findings and differs only in the severity of robustness findings.
 - **Stop / defer:** tier-aware detail generation beyond #182's advisory context is a separate entry.
 - **Quality:** convergence — rounds stop when the remaining findings exceed the declared tier.
 - **Status:** not started.
