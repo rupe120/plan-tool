@@ -34,7 +34,7 @@ import re
 import sys
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Iterable, Mapping, Optional
 
 
 _TRACKED_SEED_MARKER_RE = re.compile(
@@ -154,7 +154,12 @@ from plan_tool.roadmap_artifacts import (
     RoadmapArtifactError,
     parse_plans_artifact,
 )
-from plan_tool.roadmap_gates import bare_roadmap_file_citations
+from plan_tool.roadmap_gates import (
+    STACK_BARE_NAME_ROUTE,
+    CitationRoots,
+    bare_roadmap_file_citations,
+    unresolved_roadmap_file_citations,
+)
 from plan_tool.roadmap_seed_manifest import (
     DRAFT_SEED_STATE_CURRENT,
     DRAFT_SEED_STATE_STALE,
@@ -322,6 +327,7 @@ PRE_SLUG_REFUSAL_REASONS = (
     "roadmap-seed-unresolved",
     "roadmap-seed-not-confirmed",
     "roadmap-seed-bare-citation",
+    "roadmap-seed-unresolved-citation",
 )
 
 
@@ -332,55 +338,19 @@ def _pre_slug_refusal(reason: str) -> None:
     print(f"create-refused: reason={reason}", file=sys.stderr)
 
 
-def _bare_citation_repair_routes(
-    location: TrackedSeedLocation, *, published: bool, in_stack: bool
-) -> str:
-    """One repair message valid for every seed location and occurrence origin.
-
-    Regeneration is per row (``--materialize PLAN_ID``) and rewrites a promoted
-    copy only at its recorded destination when published; a hand edit of the
-    file ``create`` read always works. A Stack-origin name needs the roadmap
-    row revised first, because the tool rewrites that section from the row.
-    """
-    materialize = f"`plan-tool roadmap {location.roadmap_slug} --materialize {location.plan_id}`"
-    if location.via_marker:
-        regenerate = (
-            f"{materialize} rewrites this promoted copy only when the seed state records "
-            "`published: true` and this file is its recorded destination"
-            + ("" if published else " (it does not record `published: true`)")
-        )
-        hand_edit = (
-            "hand-replace each bare name with the source version's path in the file "
-            "passed to `create`, which `create` reads directly"
-        )
-    else:
-        regenerate = f"{materialize} regenerates this draft"
-        hand_edit = (
-            "hand-replace each bare name with the source version's path in the file "
-            f"passed to `create`, then run `--accept-seed {location.plan_id}`"
-        )
-    routes = f"{regenerate}; or {hand_edit}"
-    if in_stack:
-        routes = (
-            "a name in the tool-written '## Stack' section comes from an accepted roadmap "
-            "row value, so first revise that row through reviewer feedback so a new "
-            f"accepted version is published; then {routes}"
-        )
-    return routes
-
-
 def _confirm_invalidated_roadmap_seed(
     location: TrackedSeedLocation | None,
     *,
-    seed_texts: tuple[str, ...],
+    seed_files: Mapping[str, str],
+    repo_root: Path | None,
     yes: bool,
     input_fn=input,
 ) -> bool:
     """Refuse a bare-named tracked seed, then require assent before an unsafe one.
 
-    ``seed_texts`` are the texts ``create`` will read (the tracked draft or
-    promoted copy, plus any separate provenance source; ``cmd_create`` always
-    passes them; required, so a new caller cannot skip the check by omission). A bare roadmap file name refuses under ``-y`` too: see
+    ``seed_files`` maps each file ``create`` will read (the tracked draft or
+    promoted copy, plus any separate provenance source) to its text; required,
+    so a new caller cannot skip the check by omission. A bare roadmap file name refuses under ``-y`` too: see
     DATA_CONTRACT.md "Pre-slug create refusals".
 
     A promoted ``plan-seeds/`` copy (``location.via_marker``) is validated
@@ -413,19 +383,16 @@ def _confirm_invalidated_roadmap_seed(
             )
             _pre_slug_refusal("roadmap-seed-unresolved")
             return False
-        published = False
         if location.via_marker:
             entry = load_seed_state(location.state_path)["seeds"].get(
                 location.plan_id
             )
             is_stale = entry is not None and entry.get("status") == "invalidated"
-            # Same truthiness as roadmap._seed_recorded_published, the one publication test.
-            published = bool((entry or {}).get("published", False))
             classification_detail = ""
             non_current_state = DRAFT_SEED_STATE_STALE if is_stale else None
         else:
             classification = classify_draft_seeds(
-                artifact, plans_dir=plans_dir, slug=location.roadmap_slug
+                artifact, plans_dir=plans_dir, slug=location.roadmap_slug, repo_root=repo_root
             ).get(location.plan_id)
             if classification is None:
                 error(
@@ -449,20 +416,52 @@ def _confirm_invalidated_roadmap_seed(
         error(str(exc))
         _pre_slug_refusal("roadmap-seed-unresolved")
         return False
-    bare = [citation for text in seed_texts for citation in bare_roadmap_file_citations(text)]
-    if bare:
-        names = ", ".join(sorted({citation.filename for citation in bare}))
-        routes = _bare_citation_repair_routes(
-            location,
-            published=published,
-            in_stack=any(citation.in_stack_section for citation in bare),
+    bare_by_file = {
+        label: citations
+        for label, text in seed_files.items()
+        if (citations := bare_roadmap_file_citations(text))
+    }
+    if bare_by_file:
+        # Only always-true facts: which file holds which names. The routes depend
+        # on seed state, so they live in one maintained doc section.
+        where = "; ".join(
+            f"{label}: {', '.join(sorted({c.filename for c in citations}))}"
+            for label, citations in bare_by_file.items()
+        )
+        stack_note = (
+            " A name in the tool-written '## Stack' section comes from an accepted "
+            f"roadmap row value: {STACK_BARE_NAME_ROUTE}."
+            if any(c.in_stack_section for cs in bare_by_file.values() for c in cs)
+            else ""
         )
         error(
             f"roadmap seed '{location.plan_id}' from '{location.roadmap_slug}' names "
-            f"roadmap files without their version-store path ({names}); {routes}"
+            f"roadmap files without their version-store path ({where}). Replace each "
+            "with its repo-relative `.roadmap-versions/<version-id>/` path, or "
+            "regenerate the seed; ROADMAP_FORMAT.md § \"Draft-seed manifest states\" "
+            f"names the routes for drafts and promoted copies.{stack_note}"
         )
         _pre_slug_refusal("roadmap-seed-bare-citation")
         return False
+    if repo_root is not None:
+        roots = CitationRoots(
+            repo_root=repo_root, plans_dir=plans_dir, slug=location.roadmap_slug
+        )
+        unresolved = {
+            label: violations
+            for label, text in seed_files.items()
+            if (violations := unresolved_roadmap_file_citations(text, roots))
+        }
+        if unresolved:
+            for label, violations in unresolved.items():
+                for violation in violations:
+                    error(f"roadmap seed '{location.plan_id}' ({label}): {violation.message}")
+            error(
+                "Correct each citation, or regenerate the seed; ROADMAP_FORMAT.md "
+                '§ "Draft-seed manifest states" names the routes for drafts and promoted copies.'
+            )
+            _pre_slug_refusal("roadmap-seed-unresolved-citation")
+            return False
     if non_current_state is None:
         return True
     if non_current_state == DRAFT_SEED_STATE_STALE:
@@ -845,7 +844,8 @@ def cmd_create(args: argparse.Namespace) -> int:
             return 2
         if not _confirm_invalidated_roadmap_seed(
             tracked_seed_location,
-            seed_texts=tuple(text for text in (seed_body, description) if text),
+            seed_files=_seed_files_create_reads(source_path, description, seed_body),
+            repo_root=repo_root,
             yes=args.yes,
         ):
             return 2
@@ -1426,6 +1426,19 @@ def _stamp_grounding(
             f"{_short_path(plan_path, repo_root)}: {exc}"
         )
         return None
+
+
+def _seed_files_create_reads(
+    source_path: Path, description: Optional[str], seed_body: Optional[str]
+) -> dict[str, str]:
+    """Each file ``create`` reads for a seed, by path, to its text."""
+    files: dict[str, str] = {}
+    if description:
+        files[str(source_path)] = description
+    provenance = read_canonical_provenance(description or "")
+    if seed_body and provenance is not None:
+        files[str((source_path.parent / provenance.source).resolve())] = seed_body
+    return files
 
 
 def _read_seed_body(canonical_path: Path, canonical_text: str) -> Optional[str]:
