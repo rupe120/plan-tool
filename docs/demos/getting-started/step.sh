@@ -26,11 +26,12 @@ case "${1:-show}" in
   goto) n="${2:?usage: goto N}"; [ "$n" -ge 1 ] && [ "$n" -le "${#branches[@]}" ] || { echo "N is 1-${#branches[@]}"; exit 1; }; go $((n - 1)) ;;
   transcript) cat DEMO.transcript.txt ;;
   live)
-    case "$cur" in live/*) echo "already on $cur; ./step.sh goto N returns to a demo branch" >&2; exit 1;; esac
+    case "$cur" in live/*) echo "already on $cur; discard its changes (git checkout -f demo/N-name), then ./step.sh goto N" >&2; exit 1;; esac
     [ "$idx" -ge 0 ] || { echo "not on a demo branch ($cur)"; exit 1; }
     [ "$idx" -gt 0 ] || { echo "step 1 has no live command; it is authored with an assistant"; exit 1; }
     [ -z "$(git status --porcelain)" ] || { echo "working tree not clean" >&2; exit 1; }
     name="${branches[$idx]#demo/}"
+    git show-ref --verify --quiet "refs/heads/live/$name" && { echo "live/$name already exists; delete it first: git branch -D live/$name" >&2; exit 1; }
     git checkout -q "${branches[$((idx - 1))]}"
     git checkout -q -b "live/$name"
     echo "On live/$name, starting from the state step $idx left. Run this step's command from the card:"

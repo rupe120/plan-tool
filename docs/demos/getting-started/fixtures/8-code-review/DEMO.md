@@ -19,6 +19,8 @@ mkdir -p .tmp
 
 One finding applied: a hand-edited `due` string in the task file raised a raw `ValueError` traceback; it is now a `StoreError` that the CLI reports with exit 2, with a test. `uv run pytest -q` passes (12 tests).
 
+Deliberately not covered: other corrupt-file shapes (a non-string `due`, a missing `id`, invalid JSON) still raise raw tracebacks. The review found one finding and the fix closes that one; widening it is a later review round.
+
 Console output for this step without running it: `./step.sh transcript`.
 
 **Next:** this is the last step; `./step.sh goto 1` restarts the walk.
