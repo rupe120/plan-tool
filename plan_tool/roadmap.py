@@ -108,6 +108,8 @@ from plan_tool.roadmap_gates import (
     run_constraints_gates,
     run_domain_gates,
     run_plans_gates,
+    VIOLATION_BARE_ROADMAP_FILE_CITATION,
+    VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
     CitationRoots,
     find_bare_roadmap_file_citations,
     validate_draft_seed_content,
@@ -3740,6 +3742,14 @@ def _materialize_plan_seed(
                     failure_detail_present=False,
                 )
             corrections = tuple(item.message for item in candidate_violations)
+            if any(
+                item.kind in (VIOLATION_BARE_ROADMAP_FILE_CITATION, VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION)
+                for item in candidate_violations
+            ):
+                corrections += (
+                    "cite the accepted roadmap files by exactly these paths: "
+                    + ", ".join(f"`{path}`" for path in citation_paths.values()),
+                )
             continue
 
         target = resolve_draft_seed_path(plans_dir, slug, plan.draft_seed_path)

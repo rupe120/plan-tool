@@ -2740,38 +2740,54 @@ class CitationRoots:
     slug: str
 
 
-_CITATION_TOKEN_STOP = frozenset(" \t\r\n`'\"()[]<>")
+_PATH_CHAR = re.compile(r"[A-Za-z0-9_.~/\\-]")
 
 
 def unresolved_roadmap_file_citations(text: str, roots: CitationRoots) -> list[Violation]:
-    """Each version-store citation that names no stored member file from the repository root.
+    """Each version-store citation that is not this roadmap's repo-relative path to a stored member.
 
-    Any stored version passes (a hand-edited seed cites the version its text
-    came from); a mistyped id or a missing roadmap-folder prefix does not.
+    Compared against the one valid prefix, not a token guessed from surrounding
+    punctuation: the roadmap folder's repo-relative path must directly precede
+    ``.roadmap-versions/<id>/<name>``, start a path (no path character before it),
+    and name a stored file. Any stored version passes; an absolute, ``..``,
+    prefixless, mistyped-id, or other-roadmap citation does not.
     """
     body = _strip_frontmatter(text)
-    versions = roadmap_dir(roots.plans_dir, roots.slug) / _VERSION_STORE_DIRNAME
+    folder = roadmap_dir(roots.plans_dir, roots.slug)
+    try:
+        folder_rel = folder.resolve().relative_to(Path(roots.repo_root).resolve()).as_posix()
+    except ValueError:
+        folder_rel = None
     violations: list[Violation] = []
     for occurrence in _member_filename_occurrences(body):
         if not occurrence.in_version_store:
             continue
-        start = occurrence.start
-        while start > 0 and body[start - 1] not in _CITATION_TOKEN_STOP:
-            start -= 1
-        cited = body[start : occurrence.start + len(occurrence.filename)]
         version_id = body[occurrence.start - _VERSION_ID_LEN - 1 : occurrence.start - 1]
-        expected = versions / version_id / occurrence.filename
-        if expected.is_file() and (roots.repo_root / cited).resolve() == expected.resolve():
-            continue
+        expected = folder / _VERSION_STORE_DIRNAME / version_id / occurrence.filename
+        if folder_rel is not None:
+            prefix = f"{folder_rel}/{_VERSION_STORE_DIRNAME}/{version_id}/"
+            start = occurrence.start - len(prefix)
+            if (
+                start >= 0
+                and body[start : occurrence.start] == prefix
+                and (start == 0 or not _PATH_CHAR.match(body[start - 1]))
+                and expected.is_file()
+            ):
+                continue
+        exact = (
+            f"{folder_rel}/{_VERSION_STORE_DIRNAME}/{version_id}/{occurrence.filename}"
+            if folder_rel is not None
+            else f"{_VERSION_STORE_PATH_FORM}{occurrence.filename}"
+        )
+        stored = "" if expected.is_file() else " (no stored version has that id)"
         violations.append(
             Violation(
                 kind=VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
                 artifact=PLANS_FILENAME,
                 row_id=None,
                 message=(
-                    f"the seed cites '{cited}', which names no stored roadmap version file "
-                    "from the repository root — write "
-                    f"'{_VERSION_STORE_PATH_FORM}{occurrence.filename}' with an id that exists"
+                    f"the seed's citation of '{occurrence.filename}' is not this roadmap's "
+                    f"repo-relative version-store path{stored} — write '{exact}'"
                 ),
             )
         )
