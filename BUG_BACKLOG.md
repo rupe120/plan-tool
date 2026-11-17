@@ -293,7 +293,8 @@ Durable re-open conditions for retired items are recorded in
   time, record that and stop. Related: the unbuilt-sibling entry above, which
   concerns how a plan may depend on a sibling at all.
 - **Approach:** plan-tool; the audit needs the roadmap membership and the
-  siblings' footprints at audit time.
+  siblings' footprints at audit time. Plan: `docs/implementation-plans/2-audit-sibling-plan-created-paths.md`
+  (plan-authored 2026-11-17, execution pending).
 - **Route:** plan · **Readiness:** ready · **Tier:** architect.
 - **Origin:** Integration `construction-batch-driver` open item "T findings at
   Gate 2", 2026-10-19. Filed first as BACKLOG #503 in the same pull request,
