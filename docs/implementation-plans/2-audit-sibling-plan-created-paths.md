@@ -17,11 +17,13 @@ source_seed: docs/implementation-plans/plan-seeds/audit-sibling-plan-created-pat
 steps:
 - id: 1
   intent: Give the audit one sibling-path set, picked by the deterministic check's
-    own rule and pinned by the fingerprint, so a sibling `creates:` change makes a
-    prior conceptual result stale.
+    own rule and pinned by the fingerprint and the public revision, so a sibling
+    `creates:` change makes a prior conceptual result stale for reuse and for a
+    saved report's freshness.
   files:
   - plan_tool/review.py
   - plan_tool/review_persistence.py
+  - plan_tool/fingerprint.py
   - DATA_CONTRACT.md
   - tests/test_review.py
   - tests/test_review_persistence.py
@@ -43,17 +45,26 @@ steps:
     then governs reuse and freshness through `audit_input_fingerprint_matches_disk`
     (used by `plan_tool/completeness_report.py` and `plan_tool/cli/completeness_phases.py`)
     with no edit to those callers. The public `qualified_result.audit_revision` dict
-    in `plan_tool/fingerprint.py:audit_input_revision` (version 3) is deliberately
-    unchanged: adding a digest there is a persisted-schema version bump this plan
-    does not need. Update the one-line `AuditInputSnapshot` paragraph in `DATA_CONTRACT.md`
-    to name the new captured input. No destructive operations are touched. Unit tests
+    in `plan_tool/fingerprint.py:audit_input_revision` moves to version 4 with a
+    `sibling_paths_digest` (`null` when no sibling paths apply), following the
+    v2 `source_seed_digest` and v3 `project_context_digest` precedent, so a saved
+    report''s `view_revision_status` turns `stale` after a sibling edit; historical
+    decoding fills an absent v1–v3 `sibling_paths_digest` with `None`, and reads
+    never rewrite archived sidecars. Update `DATA_CONTRACT.md`: the `AuditInputSnapshot`
+    paragraph names the new captured input, the `qualified_result.audit_revision`
+    paragraph names the v4 digest, and the run-grade evidence paragraph lists
+    versions 1–4 as supported. Saved fingerprints and revisions of roadmap plans
+    that have siblings change once on upgrade, deliberately; plans with no siblings
+    keep both byte-identical. No destructive operations are touched. Unit tests
     in `tests/test_review.py` cover the helper with a two-plan roadmap fixture (the
     sibling path is present, own `creates:` are excluded), a no-identity plan with
     other registered plans that declare `creates:` (empty), a plan from a different
     roadmap (excluded), and uncertain identity (empty). Unit tests in `tests/test_review_persistence.py`
     show that changing a sibling''s `creates:` changes the snapshot fingerprint, that
     an unchanged sibling set leaves it unchanged, and that a plan with no siblings
-    keeps its existing fingerprint.'
+    keeps its existing fingerprint. Tests in `tests/test_fingerprint.py` show the v4
+    revision carries `sibling_paths_digest` (null with no siblings), that a sibling
+    edit changes it, and that a v3 record decodes with `sibling_paths_digest` `None`.'
 - id: 2
   intent: Put the sibling paths in front of the conceptual auditor as planned work,
     so it stops reporting them as missing files.
@@ -137,7 +148,7 @@ This way the prompt never carries a set the deterministic check would not use. N
 
 **New prompt input block.** `plan_tool/prompts/plan-audit.md` gains one input block. It lists the sibling `creates:` paths, one per line, with an instruction that a listed path is a sibling plan's planned work and is not reported as missing. `render_plan_audit_prompt` in `plan_tool/review.py` supplies the block. The block is explicit when empty: to a model, an absent block and an empty one look the same, so the rendered text says plainly that no sibling plan paths apply.
 
-**Settled: the sibling set is an audit input.** It is captured once in `plan_tool/review_persistence.py:AuditInputSnapshot`, alongside the other inputs, and folded into the snapshot fingerprint. The snapshot is the exact input the model was shown, and its fingerprint controls whether a conceptual call is reused and whether the report is fresh. A change to a sibling's `creates:` therefore makes a prior conceptual result stale instead of letting it be reused. The prompt is rendered from the captured set, not re-read.
+**Settled: the sibling set is an audit input.** It is captured once in `plan_tool/review_persistence.py:AuditInputSnapshot`, alongside the other inputs, and folded into the snapshot fingerprint and the public revision (`audit_revision` v4, `sibling_paths_digest`), as the source seed (v2) and project context (v3) were. The snapshot is the exact input the model was shown; its fingerprint controls whether a conceptual call is reused, and the public revision controls whether a saved report reads as current. A change to a sibling's `creates:` therefore makes a prior conceptual result stale instead of letting it be reused. The prompt is rendered from the captured set, not re-read.
 
 **Guarantee:** "a path a same-roadmap sibling plan declares in `creates:` is given to the auditor as planned work." Mechanism: the rendered prompt block. Owner: the prompt renderer in `plan_tool/review.py`.
 
@@ -212,8 +223,13 @@ See the `steps:` block in the frontmatter.
 ## Risks
 
 - A long sibling list adds prompt size on large roadmaps. The block lists
-  paths only, one per line, and the plan states the expected size on the
-  largest real roadmap (Loom's `loom-aidlc-mvp`, nine plan rows).
+  paths only, one per line. Measured 2026-11-17 on the largest real roadmap,
+  Loom's `loom-aidlc-mvp` (nine plans, 276 distinct `creates:` paths): at most
+  about 270 sibling paths, roughly 10 KB, per audited plan.
+- Fingerprints and revisions of existing roadmap plans with siblings change
+  once on upgrade, so their saved sampler checkpoints, shape-advisory
+  fingerprints and report revisions read as stale once. That is intended;
+  plans without siblings are unaffected.
 - The model may still raise the finding despite the block. That is not
   tested by the suite; the plan records it as a limit rather than adding a
   finding filter.
@@ -233,6 +249,10 @@ See the `steps:` block in the frontmatter.
 - Changing a sibling plan's `creates:` changes the audit input fingerprint, so
   a prior conceptual result is not reused; an unchanged sibling set leaves the
   fingerprint unchanged.
+- The public `audit_revision` is version 4 with `sibling_paths_digest`: null
+  with no siblings, changed by a sibling `creates:` edit (so a saved report's
+  `view_revision_status` turns `stale`), and `None` when a v1–v3 record is
+  decoded.
 - Every `${...}` placeholder in `plan-audit.md` is supplied by the renderer.
 - `uv run pytest tests/ -q -n auto` is green.
 
@@ -243,7 +263,9 @@ See the `steps:` block in the frontmatter.
   those as missing; for any other plan it states that none apply.
 - The block's set equals the deterministic check's eligible set minus the
   plan's own paths for a plan with a roadmap identity, and is empty otherwise.
-- The sibling set is part of the audit input fingerprint.
+- The sibling set is part of the audit input fingerprint and of the public
+  `audit_revision` (version 4, `sibling_paths_digest`), so a sibling edit makes a
+  prior result stale for reuse and for a saved report's freshness.
 - `DIRECTIVES.md` § "T — tool artifacts" no longer lists the sibling-path case
   as a false positive to ignore.
 - Backlog reconciliation: the final step removes the originating
@@ -252,11 +274,6 @@ See the `steps:` block in the frontmatter.
 
 ## Deferred
 
-- Adding a sibling-set digest to the public `qualified_result.audit_revision`
-  dict (`plan_tool/fingerprint.py:audit_input_revision`, version 3). Postponed
-  because it is a persisted-schema version bump; the snapshot fingerprint
-  already governs reuse and freshness. It can come back if a consumer of the
-  public revision needs to see sibling changes.
 - Measuring whether a real model stops raising the sibling-path finding once
   the block is delivered. Postponed because the suite checks only delivery
   (see Risks); a measured follow-up on a real multi-plan roadmap batch can
