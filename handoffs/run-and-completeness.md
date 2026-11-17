@@ -535,7 +535,7 @@ Checked, no finding: id uniqueness, `sweep` taking no plan name (#542), `decide`
 
 None of the four belongs on the Now board, which lists `direct` + `ready` trust-core (P1/P2) entries.
 
-1. **#540 — highest value, decision first.** P1 with a measured cost (thirteen rounds, 91 → 43 planned tests). Next action is an owner call: reopen the risk-profile-3 seed's audit fence with #540's evidence, or fold #540 into that seed's decision. Suggested band: T2, beside #71. `pending`.
+1. **#540 — highest value, decision first.** P1 with a measured cost (thirteen rounds, 91 → 43 planned tests). Next action is an owner call: reopen the risk-profile-3 seed's audit fence with #540's evidence, or fold #540 into that seed's decision. Placed in T2 with #490 (`BACKLOG.md` § "Priority bands", refreshed 2026-11-17); the decision itself stays `pending`.
 2. **#539 — not urgent.** The consumer can set `test_command` to its unit baseline today. The `DIRECTIVES.md` hand-fix wording (step 3 names this repo's own full pytest run) could be split out as a small `direct` entry if it misleads before #539 is decided. `pending`.
 3. **#541 — not pickable** until item 8 above lands; then a small advisory.
 4. **#542 — an ordinary drain pick.** `direct`, `ready`, P5, small; taken by `backlog-drain.md` in TRACKING order, no special priority.
