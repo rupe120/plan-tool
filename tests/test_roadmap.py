@@ -187,6 +187,7 @@ from plan_tool.roadmap_source_identity import (
 )
 from plan_tool.roadmap_gates import (
     VIOLATION_BARE_ROADMAP_FILE_CITATION,
+    VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION,
     find_bare_roadmap_file_citations,
     COMPONENTS_GATES,
     CONSTRAINTS_GATES,
@@ -11401,4 +11402,25 @@ class TestCitationRetryCorrection:
         retry = invoker.prompts[1]
         for path in _version_store_paths(env).values():
             assert f"`{path}`" in retry.split("cite the accepted roadmap files by exactly these paths:")[1]
+
+
+class TestStackSectionUnresolvedCitation:
+    def test_an_unresolvable_stack_citation_fails_before_any_model_call(
+        self, env: _Env, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A version-store-shaped row value that names no stored file would fail every retry."""
+        _prepare_seed_materialization(env)
+        real_render = roadmap._render_stack_section
+
+        def render_with_row_value(**kwargs: Any) -> str:
+            return real_render(**kwargs) + f"\n- `h-x` — facet: compute; value: .roadmap-versions/{'f' * 64}/01-domain.md\n"
+
+        monkeypatch.setattr(roadmap, "_render_stack_section", render_with_row_value)
+        invoker = _StubInvoker(_seed_text())
+
+        result = _materialize(env, invoker)
+
+        assert invoker.prompts == []
+        assert result.outcome == roadmap.SEED_MATERIALIZE_OUTCOME_EXHAUSTED
+        assert any(v.kind == VIOLATION_UNRESOLVED_ROADMAP_FILE_CITATION for v in result.violations)
 

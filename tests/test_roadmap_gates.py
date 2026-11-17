@@ -5387,3 +5387,11 @@ def test_an_unresolved_message_names_the_exact_path_to_write(tmp_path: Path) -> 
     text = _only_body(f"`.roadmap-versions/{'a' * 64}/{PLANS_FILENAME}`")
     (violation,) = roadmap_gates.unresolved_roadmap_file_citations(text, roots)
     assert _store_path("demo", "a" * 64, PLANS_FILENAME) in violation.message
+
+
+@pytest.mark.parametrize("variant", ("04-Roadmap.md", "01-DOMAIN.md", "03-Components.md"))
+def test_a_case_variant_of_a_member_name_is_bare(variant: str) -> None:
+    """On a case-insensitive filesystem the variant opens the stale top-level copy."""
+    assert len(find_bare_roadmap_file_citations(_only_body(f"See `{variant}`."))) == 1
+    in_store = _only_body(f"`x/.roadmap-versions/{'a' * 64}/{variant}`")
+    assert len(find_bare_roadmap_file_citations(in_store)) == 1
