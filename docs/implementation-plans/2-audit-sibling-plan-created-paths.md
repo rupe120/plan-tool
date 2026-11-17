@@ -17,9 +17,9 @@ source_seed: docs/implementation-plans/plan-seeds/audit-sibling-plan-created-pat
 steps:
 - id: 1
   intent: Give the audit one sibling-path set, picked by the deterministic check's
-    own rule and pinned by the fingerprint and the public revision, so a sibling
-    `creates:` change makes a prior conceptual result stale for reuse and for a
-    saved report's freshness.
+    own rule and pinned by the fingerprint and the public revision, so a sibling `creates:`
+    change makes a prior conceptual result stale for reuse and for a saved report's
+    freshness.
   files:
   - plan_tool/review.py
   - plan_tool/review_persistence.py
@@ -29,6 +29,7 @@ steps:
   - tests/test_review_persistence.py
   complexity: medium
   change_type: feature
+  detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md
   status: current
   description: 'Add one selection helper in `plan_tool/review.py` that returns the
     same-roadmap sibling `creates:` paths for a plan. It returns `_eligible_planned_paths(plan,
@@ -38,10 +39,10 @@ steps:
     failure classes `_eligible_planned_paths` already treats as uncertain evidence
     (`OSError`, `UnicodeError`, `ValueError`, `ManifestError`; one shared tuple, so
     the two cannot drift), so no partial set and `AuditInputSnapshot.capture` never
-    raises because of sibling selection. A test covers an unreadable source seed
-    beside the uncertain-identity case. No second selection rule is written.
-    Capture that set once in `plan_tool/review_persistence.py:AuditInputSnapshot.capture`
-    as a new sorted-tuple field with an empty default. Use a lazy import of the review
+    raises because of sibling selection. A test covers an unreadable source seed beside
+    the uncertain-identity case. No second selection rule is written. Capture that
+    set once in `plan_tool/review_persistence.py:AuditInputSnapshot.capture` as a
+    new sorted-tuple field with an empty default. Use a lazy import of the review
     helper, matching the module''s existing lazy-import style, so no import-time cycle
     is added. Fold the set into `_audit_input_fingerprint` as its own framed label,
     added only when the set is non-empty (the same pattern as `project_context`),
@@ -50,33 +51,33 @@ steps:
     (used by `plan_tool/completeness_report.py` and `plan_tool/cli/completeness_phases.py`)
     with no edit to those callers. The public `qualified_result.audit_revision` dict
     moves to audit-revision version 4 at both of its producers, `plan_tool/fingerprint.py:audit_input_revision`
-    and the `"version": 3` literal in `plan_tool/review_persistence.py`, and the
-    validator `plan_tool/review_persistence.py:normalize_audit_revision` accepts it, with a
-    `sibling_paths_digest` (`null` when no sibling paths apply; owner-confirmed
-    2026-11-17, including the one-time stale reading on upgrade; ship between Loom batches), following the
-    v2 `source_seed_digest` and v3 `project_context_digest` precedent, so a saved
+    and the `"version": 3` literal in `plan_tool/review_persistence.py`, and the validator
+    `plan_tool/review_persistence.py:normalize_audit_revision` accepts it, with a
+    `sibling_paths_digest` (`null` when no sibling paths apply; owner-confirmed 2026-11-17,
+    including the one-time stale reading on upgrade; ship between Loom batches), following
+    the v2 `source_seed_digest` and v3 `project_context_digest` precedent, so a saved
     report''s `view_revision_status` turns `stale` after a sibling edit; historical
-    decoding fills an absent v1–v3 `sibling_paths_digest` with `None`, and reads
-    never rewrite archived sidecars. Update `DATA_CONTRACT.md`: the `AuditInputSnapshot`
+    decoding fills an absent v1–v3 `sibling_paths_digest` with `None`, and reads never
+    rewrite archived sidecars. Update `DATA_CONTRACT.md`: the `AuditInputSnapshot`
     paragraph names the new captured input, the `qualified_result.audit_revision`
-    paragraph names the v4 digest, and the run-grade evidence paragraph lists
-    audit-revision versions 1–4 as supported, worded as "audit-revision version"
-    so it is not read as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions of roadmap plans
-    that have siblings change once on upgrade, deliberately; plans with no siblings
-    keep both byte-identical. No destructive operations are touched. Unit tests
-    in `tests/test_review.py` cover the helper with a two-plan roadmap fixture (the
-    sibling path is present, own `creates:` are excluded), a no-identity plan with
-    other registered plans that declare `creates:` (empty), a plan from a different
-    roadmap (excluded), and uncertain identity (empty). Unit tests in `tests/test_review_persistence.py`
-    show that changing a sibling''s `creates:` changes the snapshot fingerprint, that
-    an unchanged sibling set leaves it unchanged, and that a plan with no siblings
-    keeps its existing fingerprint. Tests in `tests/test_fingerprint.py` show the v4
-    revision carries `sibling_paths_digest` (null with no siblings), that a sibling
-    edit changes it, that a v3 record decodes with `sibling_paths_digest` `None`,
-    and that a saved v4 record round-trips through `normalize_audit_revision`.
-    Own-path subtraction compares normalized paths (`normalize_declared_path`,
-    as the deterministic check does), so a sibling path that normalizes to one of
-    the plan''s own `creates:` is excluded; a test covers a `./` variant.'
+    paragraph names the v4 digest, and the run-grade evidence paragraph lists audit-revision
+    versions 1–4 as supported, worded as "audit-revision version" so it is not read
+    as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions
+    of roadmap plans that have siblings change once on upgrade, deliberately; plans
+    with no siblings keep both byte-identical. No destructive operations are touched.
+    Unit tests in `tests/test_review.py` cover the helper with a two-plan roadmap
+    fixture (the sibling path is present, own `creates:` are excluded), a no-identity
+    plan with other registered plans that declare `creates:` (empty), a plan from
+    a different roadmap (excluded), and uncertain identity (empty). Unit tests in
+    `tests/test_review_persistence.py` show that changing a sibling''s `creates:`
+    changes the snapshot fingerprint, that an unchanged sibling set leaves it unchanged,
+    and that a plan with no siblings keeps its existing fingerprint. Tests in `tests/test_fingerprint.py`
+    show the v4 revision carries `sibling_paths_digest` (null with no siblings), that
+    a sibling edit changes it, that a v3 record decodes with `sibling_paths_digest`
+    `None`, and that a saved v4 record round-trips through `normalize_audit_revision`.
+    Own-path subtraction compares normalized paths (`normalize_declared_path`, as
+    the deterministic check does), so a sibling path that normalizes to one of the
+    plan''s own `creates:` is excluded; a test covers a `./` variant.'
 - id: 2
   intent: Put the sibling paths in front of the conceptual auditor as planned work,
     so it stops reporting them as missing files.
