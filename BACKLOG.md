@@ -347,13 +347,18 @@ backlog entries below **and the authored plans** in
 mission-aligned one is the cheapest path to shipped value, but *authored ≠
 priority*; the mission decides.
 
-**Current queue facts (checked 2026-11-16):**
+**Current queue facts (checked 2026-11-17):**
 
 1. **`BUG_BACKLOG.md` has no entry that is both Route `direct` and Readiness
-   `ready`.** Its live entries are `plan`-route, `evidence-gated` or
-   `decision-needed`, plus a few unlabelled `direct` entries that each wait on
-   a prerequisite or a decision. Each entry owns its own readiness and
-   approach.
+   `ready`**, in `BUG` or `MINOR`. Three `BUG` entries are Route `plan` and
+   Readiness `ready`, and they lead the execution order: roadmap-derived plans
+   citing bare `0N-*.md` names, `create`'s single "record unbuilt upstreams
+   and stop" step, and the audit reporting a sibling plan's created path as
+   missing. None is routed by `backlog-arc-roadmap.md`; each goes through
+   `plan-tool create`, so a drain surfaces it rather than taking it. The
+   other live entries are promotion stubs, `evidence-gated`,
+   `decision-needed`, or unlabelled entries whose Approach waits on a
+   prerequisite or a decision.
 2. **#102 is promoted (IPPT-11, 2026-09-27) and remains independent of the
    delivered seed-ingestion route.** Its future alias-matching decision does
    not reopen the source-selection or preparation contract.
@@ -369,7 +374,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | *(none)* | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2), excluding entries an arc document routes (#66; #488 in `backlog-arc-roadmap.md`) and experiments (#534). None remains as of 2026-11-16. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1) either, so the drain has no candidate until an entry is triaged to `direct` + `ready`. |
+| **Now — drain candidates (unpicked)** | *(none)* | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2), excluding entries an arc document routes (#66; #488 in `backlog-arc-roadmap.md`) and experiments (#534). None remains as of 2026-11-17. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1) either, so the drain has no candidate until an entry is triaged to `direct` + `ready`. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -392,19 +397,32 @@ competes for the next session?"
 
 **Priority bands:**
 
-- **T2 — convergence & structural-remedy machinery (P1/P3):** **#71**
-  (theoretical — decision-first).
+Refreshed 2026-11-17. Promotion stubs (the Jira ticket owns the brief) and
+entries labelled Readiness `parked` (listed on the board's Parked lane) are
+not ranked here. Entries with Principle `untriaged` are placed once touched and
+triaged (`docs/TRACKING.md` § "Labels every entry carries").
+
+- **T2 — convergence & structural-remedy machinery (P1/P3):** **#490**
+  (`plan`, `ready` — record an operator decision on an audit finding so the
+  next audit does not re-raise it; consumer evidence added 2026-11-17) ·
+  **#540** (`decision-needed` — the completeness audit honoring the plan's
+  `risk_profile`; resolve its conflict with the `risk-profile-3` seed's
+  audit fence first). **#488** is P1 and `ready` but routed by
+  `backlog-arc-roadmap.md`. **#71** is parked.
 - **T3 — deterministic verifiability & grounding (P2), larger:** **#66**
-  (contract-trace audit mode).
-- **T4 — grounding/workflow refinements (P3) + blocked:** **#69**, **#38**,
-  **#30**.
-- **T5 — export leg / UX / hygiene / cosmetic:** **#107** (deferred pending a demonstrated export blocker), **#102**,
-  **#56**, **#89** (`--commit` for
-  `reconcile-code`/`reconcile-plan` — observed orphaning gap, see its entry's
-  "Evidence it recurs"), and the Bucket D
-  consolidation cluster **#79**–**#81** — where **#79 carries a warning**: four
-  of its five original "duplicated helper" claims were wrong in the direction
-  that breaks things, so treat every line of it as a claim to re-verify.
+  (contract-trace audit mode) · **#539** (`decision-needed` — exit checks
+  reported as unverified; setting `test_command` is the interim workaround).
+- **T4 — grounding/workflow refinements (P3) + blocked:** *(empty)* — its
+  former members #69, #38 and #30 are promoted (IPPT-13, IPPT-14, IPPT-15),
+  and no triaged P3 entry is `ready`.
+- **T5 — export leg / UX / hygiene / cosmetic:** the P5 `direct` + `ready`
+  entries **#520**, **#542**, **#497**, **#486**; **#56**; **#89**
+  (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
+  see its entry's "Evidence it recurs"); and the Bucket D consolidation pair
+  **#79**–**#80** — where **#79 carries a warning**: four of its five original
+  "duplicated helper" claims were wrong in the direction that breaks things,
+  so treat every line of it as a claim to re-verify. **#107** and **#81** are
+  parked; **#102** is promoted (IPPT-11).
 
 ### Readiness lens (concrete vs. theoretical)
 
