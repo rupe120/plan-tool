@@ -1,17 +1,17 @@
-# Step 3 — Ask for confirmation on a tracked seed that fails the bare-name check, and name both repair routes
+# Step 3 — Refuse a tracked seed that fails the bare-name check, even under `-y`, and name its repair routes
 
 <!-- plan-tool:detail-format-version: 1 -->
 
 ## Summary
 
-This step makes `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed` stop and ask when a tracked seed still names a roadmap member file without its version-store path. A draft seed reaches the prompt through `classify_draft_seeds` once step 2 makes it `malformed`. A promoted `plan-seeds/` copy has no such route, so the step runs step 2's text-only bare-name function on the copy's own bytes. The key decision is that the prompt text and the non-TTY refusal both name the repair routes for that seed's location (draft or promoted). On green, a legacy seed is never carried into a plan silently: the operator regenerates it, repairs it, or confirms with `-y`.
+This step makes `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed` refuse a tracked seed that still names a roadmap member file without its version-store path, with or without `-y`. It runs step 2's text-only bare-name function on the exact bytes `create` is about to read, draft or promoted copy, before the existing state-based confirmation. The key decisions: the refusal does not yield to `-y` (owner decision, 2026-11-17: automated sessions always pass `-y`, so a continuing confirmation would let the bug through in hands-off runs), and the refusal names the repair routes for that seed's location. On green, a legacy seed never becomes a plan until it is regenerated or repaired.
 
 ## Table of Contents
 
 - [Why](#why) — what the promoted copy skips today
 - [Input](#input) — step 2's function and the existing confirmation flow
 - [Files (creates vs edits)](#files-creates-vs-edits) — the two files and their edits
-- [Implementation](#implementation) — the promoted-copy check, per-location messages, constraints
+- [Implementation](#implementation) — the bare-name check first, the refusal, per-location messages, constraints
 - [Tests](#tests) — unit, route and integration cases, plus the green-before-done gate
 - [Acceptance criteria](#acceptance-criteria) — observable checks
 - [References](#references) — docs for the tools this step uses
@@ -20,13 +20,13 @@ This step makes `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed` s
 
 ## Why
 
-Step 2 makes a draft seed with a bare name `malformed`, so the draft path already prompts. A promoted copy is judged only by the sidecar's `invalidated` status, so a legacy promoted copy with bare names passes silently into `create`. `create` then copies seed sections into the plan, and a reader or audit that opens a bare name can read a stale top-level `0N-*.md` beside the accepted head. This step closes that route with a confirmation.
+Step 2 makes a draft seed with a bare name `malformed`, so the draft path reaches today's confirmation, which `-y` answers. A promoted copy is judged only by the sidecar's `invalidated` status, so a legacy promoted copy with bare names passes silently into `create`. `create` then copies seed sections into the plan, and a reader or audit that opens a bare name can read a stale top-level `0N-*.md` beside the accepted head. A confirmation would not close it either: the directives tell every automated session to pass `-y`, so a prompt that `-y` answers lets a legacy seed through in exactly the hands-off runs this bug hurts most. This step closes the route with a refusal that `-y` does not override.
 
 ## Input
 
 - **Step 2** adds a public text-only function in `plan_tool/roadmap_gates.py` (the plan suggests `find_bare_roadmap_file_citations(text)`, returning `list[Violation]`). Read the landed name from the module; the landed name wins. It needs no repo root or accepted head.
 - **`_confirm_invalidated_roadmap_seed(location, *, yes, input_fn=input)`** already loads the accepted version, finds the plan row, and splits on `location.via_marker`. The draft arm calls `classify_draft_seeds`. The promoted arm reads only `load_seed_state(location.state_path)["seeds"]` for `status == "invalidated"`.
-- **`cmd_create`** calls `locate_tracked_seed(source_path, repo_root=repo_root)`, then this function, and returns 2 on refusal. `PRE_SLUG_REFUSAL_REASONS` already holds `roadmap-seed-not-confirmed`; this step adds no reason.
+- **`cmd_create`** calls `locate_tracked_seed(source_path, repo_root=repo_root)`, then this function, and returns 2 on refusal. `PRE_SLUG_REFUSAL_REASONS` holds the closed set of `create-refused: reason=` tokens, documented in `DATA_CONTRACT.md` and drift-guarded by `tests/test_data_contract.py`; this step adds one, `roadmap-seed-bare-citation`, because `roadmap-seed-not-confirmed` would misdescribe a refusal `-y` cannot clear.
 - **`TrackedSeedLocation`** (`plan_tool/roadmap_seed_state.py`) carries `plan_id`, `roadmap_slug`, `state_path`, `via_marker`. The seed state entry carries a `published` bool.
 - **`source_artifacts`** appears in `plan_tool/roadmap_candidate_run.py` only; `plan_tool/create.py` never reads it. The frontmatter case below pins that `create` does not copy it, with no new code.
 - **Verification limit:** these checks prove citation form, not that a quoted passage matches the cited file.
@@ -35,40 +35,41 @@ Step 2 makes a draft seed with a bare name `malformed`, so the draft path alread
 
 - **New files:** none.
 - **Existing files (edits only):**
-  - `plan_tool/cli/authoring.py`: in `_confirm_invalidated_roadmap_seed`, run the bare-name function on the promoted copy's bytes, add the bare-name message arm with per-location routes, and update the function docstring.
+  - `plan_tool/cli/authoring.py`: in `_confirm_invalidated_roadmap_seed`, run the bare-name function on the bytes `create` will read, before the state checks; refuse with `roadmap-seed-bare-citation` and per-location routes; add the token to `PRE_SLUG_REFUSAL_REASONS`; update the function docstring.
+  - `DATA_CONTRACT.md`: add `roadmap-seed-bare-citation` to the documented `create-refused` reason tokens.
   - `tests/cli/test_authoring_cmds.py`: add cases to `TestRoadmapSeedConfirmation` (reuse its `_write_tracked_draft` helper) and one integration case.
 
 ## Implementation
 
-- **Promoted copy: check its own bytes.**
-  - In the `location.via_marker` arm, read the promoted copy's text and call step 2's function. The location has no promoted path, so find the path through the same lookup `locate_tracked_seed` used (likely via `_TRACKED_SEED_MARKER_RE` and the source path passed in). Simplest: pass the source path from `cmd_create` as a new keyword argument (for example `seed_text`), since `cmd_create` already holds the seed's text. Prefer that over a second file read.
-  - Judge the whole text, not `_read_seed_body` output, so a bare name in the provenance block counts. Do not run `validate_draft_seed_content`; a promoted copy is not a draft.
-- **One bare-name state.**
-  - Treat "bare names found" as its own non-current reason beside the draft state and the stale state. For a draft, step 2's `malformed` classification carries the cause in `classification.detail`.
-  - A seed that is both `invalidated` and bare keeps the stale wording; the bare-name routes apply only when the seed is otherwise current or `malformed` for this cause.
+- **Check the bytes `create` will read, first.**
+  - For every tracked seed (`location is not None`), after the accepted version and plan row are resolved and before the state checks, call step 2's function on the seed text `create` is about to consume: the draft's bytes on the draft arm, the promoted copy's bytes on the `location.via_marker` arm. Pass the text from `cmd_create`, which already holds it, as a new keyword argument (for example `seed_text`) rather than reading the file again.
+  - The function strips frontmatter itself, as step 2 defines; pass the text as read. Do not run `validate_draft_seed_content` on a promoted copy; a promoted copy is not a draft.
+- **A bare name refuses, whatever else is true.**
+  - When the function returns violations, print the message with the location's routes and refuse with `_pre_slug_refusal("roadmap-seed-bare-citation")`, returning `False`. `yes` is not consulted, and no prompt is shown, on a TTY or not.
+  - This precedes the stale and `malformed` arms, so a seed that is both invalidated and bare-named refuses here. Its `--refresh-seeds` route regenerates under the new contract and clears both conditions. A draft that is `malformed` only because of bare names also refuses here; a draft `malformed` for another reason keeps today's confirmation.
 - **Name routes by location.** Build the message in one place, keyed on `location.via_marker`.
   - **Draft:** regenerate with `plan-tool roadmap <slug> --refresh-seeds`, or hand-replace each bare name with the source version's path and run `--accept-seed PLAN_ID`.
   - **Promoted copy:** `--refresh-seeds` rewrites it only when the seed state records `published: true`. Otherwise, or to keep hand edits, hand-replace the bare names in the promoted copy itself. `create` reads that file directly, so no `--accept-seed` is involved.
-  - Read `published` from the same `load_seed_state` entry already loaded in that arm. A missing entry counts as not published.
-- **Prompt and refusal.**
-  - `-y` prints the message and continues. A non-TTY run without `-y` prints the message with the routes and refuses with `roadmap-seed-not-confirmed`, as the existing refusal does. The existing non-TTY text points only at `--refresh-seeds`; make it use the per-location routes for this reason.
+  - Read `published` from the `load_seed_state` entry. A missing entry counts as not published.
+- **Unchanged:** a seed with no bare name goes through today's stale and `malformed` confirmation exactly as before, `-y` included.
 - **Not free to vary:**
   - An untracked seed (`location is None`) returns `True` first, unchanged.
   - A roadmap with no accepted head keeps raising `NoPublishedRoadmapVersionError` into the existing refusal, before the bare-name check.
   - `create` never rewrites the seed. No destructive operation.
-- **Rejected alternative:** running the full validator on the promoted copy. It judges draft structure that a promoted copy need not keep, and would refuse intact promotions.
+- **Rejected alternatives:** a confirmation that `-y` answers (lets the bug through in automated runs; rejected by the owner 2026-11-17), and running the full validator on the promoted copy (it judges draft structure a promoted copy need not keep, and would refuse intact promotions).
 
 ## Tests
 
 All in `tests/cli/test_authoring_cmds.py`, unless noted.
 
-- `test_draft_legacy_seed_prompts_and_names_draft_routes` — a tracked draft with a bare name prompts; the text names `--refresh-seeds` and `--accept-seed`.
-- `test_promoted_legacy_copy_prompts_and_names_promoted_routes` — a promoted copy with a bare name prompts; the text names `--refresh-seeds` with the `published: true` condition and hand editing the copy, and does not name `--accept-seed`.
+- `test_draft_legacy_seed_refuses_and_names_draft_routes` — a tracked draft with a bare name refuses with `roadmap-seed-bare-citation`; the text names `--refresh-seeds` and `--accept-seed`.
+- `test_promoted_legacy_copy_refuses_and_names_promoted_routes` — a promoted copy with a bare name refuses; the text names `--refresh-seeds` with the `published: true` condition and hand editing the copy, and does not name `--accept-seed`.
 - `test_promoted_copy_with_no_bare_name_and_no_provenance_block_does_not_prompt` — a clean promoted copy returns `True` with no prompt.
-- `test_dash_y_continues_on_a_bare_name_seed` — `yes=True` returns `True` and prints the message.
-- `test_non_tty_without_dash_y_refuses_a_bare_name_seed` — returns `False` with `roadmap-seed-not-confirmed`, and the message names the location's routes.
+- `test_dash_y_does_not_override_a_bare_name_refusal` — `yes=True` still returns `False` with `roadmap-seed-bare-citation`, and no prompt is shown.
+- `test_bare_name_refusal_needs_no_tty` — a non-TTY run without `-y` refuses with `roadmap-seed-bare-citation`, not `roadmap-seed-not-confirmed`.
 - `test_untracked_seed_is_unchanged` — `location=None` returns `True`.
-- `test_invalidated_and_bare_named_promoted_copy_shows_only_the_stale_message` — the stale message wins, matching the draft classifier's first-match order; the bare-name routes are not added.
+- `test_invalidated_and_bare_named_seed_refuses_on_the_bare_name` — draft and promoted cases: the bare-name refusal wins over the stale confirmation, and `-y` does not continue.
+- `test_clean_invalidated_seed_keeps_todays_confirmation` — a stale seed with no bare name still prompts, and `-y` still continues, as at HEAD.
 - `test_no_accepted_head_keeps_todays_refusal` — no head refuses as before, and the bare-name check never runs.
 - `test_published_flag_selects_the_refresh_wording` — the promoted message differs between `published: true` and not published.
 - `test_create_does_not_copy_source_artifacts_frontmatter_into_the_plan` — a tracked seed with `source_artifacts: [04-roadmap.md]` yields a plan with no `source_artifacts` key and no bare member filename taken from it. This pins existing behavior.
@@ -76,13 +77,14 @@ All in `tests/cli/test_authoring_cmds.py`, unless noted.
 
 ### Tests for this step
 
-Every case above must be green before this step is finished. The invariant cases (`..._does_not_prompt`, `..._is_unchanged`, `..._keeps_todays_refusal`) are green at HEAD and guard the existing behavior while the edit is made; write them first. The rest need the new branch. Verify the carve-outs by breaking the code each names and watching the test go red.
+Every case above must be green before this step is finished. The invariant cases (`..._does_not_prompt`, `..._is_unchanged`, `..._keeps_todays_refusal`, `..._keeps_todays_confirmation`) are green at HEAD and guard the existing behavior while the edit is made; write them first. The rest need the new branch. Verify the carve-outs by breaking the code each names and watching the test go red.
 
 ## Acceptance criteria
 
-- A tracked draft or promoted copy with a bare roadmap file name prompts; the message names that location's repair routes.
+- A tracked draft or promoted copy with a bare roadmap file name is refused with `roadmap-seed-bare-citation`, with or without `-y`; the message names that location's repair routes.
 - A promoted copy with no bare name and no provenance block does not prompt.
-- `-y` continues; a non-TTY run without `-y` refuses with `roadmap-seed-not-confirmed`.
+- A seed with no bare name keeps today's confirmation, `-y` included.
+- `DATA_CONTRACT.md` lists `roadmap-seed-bare-citation`, and `tests/test_data_contract.py` passes.
 - An untracked seed and a no-head roadmap behave as before.
 - `create` never writes to the seed file.
 - `plan_tool/cli/authoring.py` does not import `plan_tool.cli.app` at module top.
@@ -96,7 +98,7 @@ Every case above must be green before this step is finished. The invariant cases
 
 ## Applicable guardrails
 
-- **The plan's "## Scope guardrails":** legacy seed text is not rewritten in place. This step only reads the seed and asks; the repair routes are operator actions.
+- **The plan's "## Scope guardrails":** legacy seed text is not rewritten in place. This step only reads the seed and refuses; the repair routes are operator actions.
 - **The plan's "## Out of scope" (new `create` behavior for synthesis prose):** this step checks the seed's citations only. It adds nothing to prose the model writes during `create`.
 - **The plan's "## Audit guardrails":** a need for a new link record or a plans directory outside the repository stops the step and goes to the user.
 

@@ -116,46 +116,48 @@ steps:
     with no accepted head still refusing before any gate runs, as today. Update the existing canned seed
     fixtures that use bare names; those reds are expected sibling updates.'
 - id: 3
-  intent: 'A seed written before the change is never carried into a plan silently:
-    the operator regenerates it, repairs and accepts it, or explicitly confirms.'
+  intent: 'A seed written before the change never becomes a plan, even in an unattended
+    `-y` run, until the operator regenerates or repairs it.'
   files:
   - plan_tool/cli/authoring.py
   - tests/cli/test_authoring_cmds.py
+  - DATA_CONTRACT.md
   complexity: medium
   change_type: feature
   depends_on:
   - 2
   depends_on_notes:
-    2: Provides the bare-name check and the draft's `malformed` classification that
-      create's confirmation relies on.
+    2: Provides the text-only bare-name function that create's refusal calls.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/03-make-create-existing-ask-confirmation.md
-  description: 'Make `create --from-existing` ask for confirmation on a tracked seed
-    that fails the bare-name check, and name both repair routes. In `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed`,
-    a draft-path seed already reaches confirmation through `classify_draft_seeds`
-    once step 2 makes it `malformed`. A promoted `plan-seeds/` copy (`location.via_marker`)
-    is checked only by sidecar status today, so run step 2''s body-only bare-name
-    function on the promoted copy''s own bytes as well; the full validator is not
-    run on a promoted copy. When the check fails, the message names the routes for
-    that seed''s location. For a draft: regenerate with `plan-tool roadmap <slug>
-    --refresh-seeds`, or hand-replace each bare name with the source version''s path
-    and run `--accept-seed PLAN_ID`. For a promoted copy: `--refresh-seeds` rewrites
+  description: 'Make `create --from-existing` refuse a tracked seed that fails the
+    bare-name check, with or without `-y`, and name its repair routes (owner decision,
+    2026-11-17: automated sessions always pass `-y`, so a confirmation `-y` answers
+    would let the bug through in hands-off runs). In `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed`,
+    for every tracked seed, run step 2''s text-only bare-name function on the exact
+    bytes `create` will read (the draft, or the promoted `plan-seeds/` copy for `location.via_marker`)
+    before the existing stale and `malformed` confirmation; the full validator is not
+    run on a promoted copy. On a bare name, refuse with a new pre-slug reason token,
+    `roadmap-seed-bare-citation`, added to `PRE_SLUG_REFUSAL_REASONS` and to `DATA_CONTRACT.md`;
+    `yes` is not consulted. A seed that is both invalidated and bare-named refuses
+    on the bare name; its `--refresh-seeds` route clears both. The message names the
+    routes for the seed''s location. For a draft: regenerate with `plan-tool roadmap
+    <slug> --refresh-seeds`, or hand-replace each bare name with the source version''s
+    path and run `--accept-seed PLAN_ID`. For a promoted copy: `--refresh-seeds` rewrites
     it only when the seed''s state records `published: true`; otherwise, or to keep
     hand edits, hand-replace the bare names in the promoted copy itself, which `create`
-    reads directly, so no `--accept-seed` is involved. `-y` continues, and a non-TTY
-    run without `-y` refuses as it already does. A seed that is both stale (invalidated)
-    and bare-named shows the stale message only, the same first-match order the draft
-    classifier uses (`stale` before `malformed`); its route, `--refresh-seeds`, regenerates
-    the seed under the new contract and clears the bare names too. An untracked seed,
-    and a roadmap with no accepted head, keep today''s behavior. Destructive operations: none; `create`
-    reads the seed and never rewrites it. Tests in `tests/cli/test_authoring_cmds.py`:
-    the draft legacy seed and the promoted legacy copy each prompt and name their
-    location''s routes; a promoted copy with no bare name and no provenance block
-    does not prompt; a promoted copy that is both invalidated and bare-named shows
-    only the stale message; `-y` continues; untracked and no-head cases are unchanged; a
-    tracked seed whose frontmatter carries `source_artifacts: [04-roadmap.md]` yields
-    a plan with no `source_artifacts` key and no bare member filename copied from
-    it. One integration case covers a stage-run roadmap with no top-level files plus
-    a stale top-level `04-roadmap.md` beside an accepted head: a seed regenerated
+    reads directly, so no `--accept-seed` is involved. A seed with no bare name keeps
+    today''s confirmation, `-y` included. An untracked seed, and a roadmap with no
+    accepted head, keep today''s behavior. Destructive operations: none; `create` reads
+    the seed and never rewrites it. Tests in `tests/cli/test_authoring_cmds.py`: the
+    draft legacy seed and the promoted legacy copy each refuse with the new token and
+    name their location''s routes; `-y` does not override the refusal; a non-TTY run
+    refuses with the new token; an invalidated, bare-named seed refuses on the bare
+    name; a clean invalidated seed keeps today''s confirmation; a promoted copy with
+    no bare name and no provenance block does not prompt; untracked and no-head cases
+    are unchanged; a tracked seed whose frontmatter carries `source_artifacts: [04-roadmap.md]`
+    yields a plan with no `source_artifacts` key and no bare member filename copied
+    from it. One integration case covers a stage-run roadmap with no top-level files
+    plus a stale top-level `04-roadmap.md` beside an accepted head: a seed regenerated
     with a canned response carries into the plan body only version-store paths that
     name existing files holding the accepted bytes.'
 - id: 4
@@ -174,8 +176,8 @@ steps:
   - 3
   depends_on_notes:
     2: The shipped gate names and messages are what the format doc describes.
-    3: The create confirmation behavior is what the manifest-states section and the
-      backlog removal depend on.
+    3: The create refusal is what the manifest-states section and the backlog removal
+      depend on.
   detail: docs/implementation-plans/plan-details/roadmap-seed-accepted-version-citations/04-bring-docs-backlog-line-new-citation.md
   description: 'Bring the docs and the backlog in line with the new citation contract.
     `ROADMAP_FORMAT.md` § ''Draft seeds under the roadmap slug'' states the repo-relative
@@ -233,15 +235,15 @@ The problem affects every roadmap, not only older folders with leftovers. A stag
 
 **`source_artifacts`.** This deliberately departs from the source entry's Fix, which renders that key in the new form too. The prompt never asks for the key, and `parse_draft_seed_provenance` ignores it (`roadmap_components` and `cross_cutting` are its only keys), so the seed body stays the one citation surface. A stray `source_artifacts` key, bare name included, cannot reach a plan, and the guarantee depends on that: plan frontmatter is serialized only by `write_plan` from the `Plan` schema, which forbids extra fields, and the sections `create` copies come from frontmatter-stripped seed text (`_strip_frontmatter`). Step 3 pins it with a test. Bare names the model might write from frontmatter into new prose are the deferred synthesis case, not this one.
 
-**Guarantee: "the audit never grounds on a top-level copy of a cited roadmap artifact."** Mechanism: every roadmap file name in a seed that passes the draft-seed gates is a version-store path, and `create` copies seed text into the plan. Owners: the seed writer and the draft-seed gates. Order: the draft-seed contract and gates change first, then `create`'s confirmation for a tracked seed that fails the check.
+**Guarantee: "the audit never grounds on a top-level copy of a cited roadmap artifact."** Mechanism: every roadmap file name in a seed that passes the draft-seed gates is a version-store path, and `create` copies seed text into the plan. Owners: the seed writer and the draft-seed gates. Order: the draft-seed contract and gates change first, then `create`'s refusal of a tracked seed that fails the check.
 
 **Legacy seeds.** A seed written before the change fails the bare-name check. The tool never rewrites it in place. Two existing routes clear it:
 - **Regenerate** with `--refresh-seeds` or `--materialize`. This writes the seed under the new contract against the accepted version and replaces any hand edit in it; `seed-refresh-report.md` keeps a diff from the last generation.
 - **Hand-edit and accept**, for a seed whose hand edits should survive. The operator replaces each bare name with the path of the version the seed's text was written from (older versions stay in the version store), then runs `--accept-seed PLAN_ID`. `--accept-seed` already runs `validate_draft_seed_content` before recording the edit, so a seed that still has a bare name is refused. When the source version is unknown, regenerate instead.
 
-Until one of these routes runs, `--view` shows the seed as `malformed` (or `digest-mismatched` once hand-edited), and `--apply` refuses it. `create --from-existing` on a tracked seed that fails the bare-name check asks for explicit confirmation before continuing (`-y` for unattended runs), as it already does for an invalidated seed (`invalidated_seed_continuation` in `plan_tool/roadmap_seed_state.py`), and names both routes. This follows the precedent `ROADMAP_FORMAT.md` § "Draft-seed manifest states" set for the `Risks` requirement; no new route is added. An untracked seed, or a roadmap with no accepted head, keeps today's behavior.
+Until one of these routes runs, `--view` shows the seed as `malformed` (or `digest-mismatched` once hand-edited), and `--apply` refuses it. `create --from-existing` refuses a tracked seed that fails the bare-name check, with or without `-y`, and names the routes for its location; it refuses with the new pre-slug reason `roadmap-seed-bare-citation`. This departs from the invalidated-seed precedent (`invalidated_seed_continuation` in `plan_tool/roadmap_seed_state.py`), where `-y` continues: decided 2026-11-17 by the owner, because automated sessions always pass `-y`, so a confirmation would let a legacy seed through in exactly the hands-off runs the bug affects. The `malformed` classification follows the precedent `ROADMAP_FORMAT.md` § "Draft-seed manifest states" set for the `Risks` requirement; no new repair route is added. An untracked seed, or a roadmap with no accepted head, keeps today's behavior.
 
-**Allowed behavior changes are only these:** newly written draft seeds use version-store paths throughout; the References gate requires those paths and names them in its message; a bare member filename (`01-domain.md` … `04-roadmap.md`) anywhere in the body is a gate violation; legacy seeds classify `malformed` and are refused by `--apply` until a route clears them; `create` asks for confirmation on a tracked seed that fails the check. No other `roadmap`, `create`, or audit behavior changes. No reorganization is allowed.
+**Allowed behavior changes are only these:** newly written draft seeds use version-store paths throughout; the References gate requires those paths and names them in its message; a bare member filename (`01-domain.md` … `04-roadmap.md`) anywhere in the body is a gate violation; legacy seeds classify `malformed` and are refused by `--apply` until a route clears them; `create` refuses a tracked seed that fails the check, even under `-y`, with the new reason token `roadmap-seed-bare-citation`. No other `roadmap`, `create`, or audit behavior changes. No reorganization is allowed.
 
 **Stop / defer.** Stop and surface to the user if resolving a citation needs a new link record or a change to the immutable version layout, or if the plans directory sits outside the repository, where no repo-relative path exists. File any adjacent finding in `BUG_BACKLOG.md` or `BACKLOG.md`; do not absorb it here.
 
@@ -350,8 +352,9 @@ See the `steps:` block in the frontmatter.
 - A hand-edited legacy seed whose bare names are replaced with
   version-store paths is accepted by `--accept-seed` and keeps its other
   edits; one that still has a bare name is refused.
-- `create --from-existing` on a tracked legacy seed asks for confirmation
-  and names both routes; with `-y` it continues.
+- `create --from-existing` on a tracked legacy seed refuses with
+  `roadmap-seed-bare-citation` and names its location's routes, with and
+  without `-y`; a tracked seed with no bare name keeps today's confirmation.
 - A roadmap created by a stage run, with no top-level files: a regenerated
   seed yields a plan whose carried roadmap file names point at existing
   version-store files.
@@ -376,8 +379,8 @@ See the `steps:` block in the frontmatter.
   from a draft seed passing the gates names a top-level `01-domain.md` …
   `04-roadmap.md`, in any section, fenced code included.
 - A seed written before the change is never carried into a plan silently:
-  it is regenerated, hand-edited and accepted, or `create` continues only on
-  explicit confirmation.
+  it is regenerated or repaired (hand-edited, and accepted for a draft), and
+  `create` refuses it until then, with or without `-y`.
 - `ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" states the new
   citation form, and the roadmap-seed prompt and both draft-seed gates agree
   with it.
