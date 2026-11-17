@@ -55,7 +55,7 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 ## Implementation
 
 - **One occurrence rule, two consumers.**
-  - Write one private helper that finds each member-filename occurrence in a text. It uses the References gate's existing boundary rule, so a name embedded in a longer filename (for example `x01-domain.md` or `01-domain.md.bak`) is not an occurrence.
+  - Write one private helper that finds each member-filename occurrence in a text. Its occurrence rule: no `[A-Za-z0-9_.-]` directly before the name, and after it neither `[A-Za-z0-9_-]` nor a `.` followed by a letter or digit, i.e. lookahead `(?![A-Za-z0-9_-]|\.[A-Za-z0-9])`. A name embedded in a longer filename (for example `x01-domain.md` or `01-domain.md.bak`) is not an occurrence, and a sentence-final period (`… from 04-roadmap.md.`) does not hide one. The References gate's current lookahead `(?![A-Za-z0-9_.-])` misses that sentence-final case, so the References loop switches to this helper too.
   - For each occurrence, it reports the filename, its start offset, and whether the text directly before it ends with `.roadmap-versions/<64 lowercase hex>/`.
   - Both checks use this helper. One way: a single compiled alternation over the four filenames.
 - **Match exactly the four member filenames.**
@@ -112,7 +112,8 @@ Step 1 makes the seed writer ask for version-store paths. A model can still igno
 - `test_references_message_names_the_required_path_form` — the missing-reference message contains `.roadmap-versions/<version-id>/` and the filename, and no longer says "literal filename".
 - `test_required_paths_never_trip_the_body_check` — a seed that cites all four members by version-store path yields no body-check violations, including inside a fence.
 - `test_non_member_numbered_filename_is_not_flagged` — `01-setup.md` produces no violation. The carve-out is deliberate, so it is asserted.
-- `test_name_embedded_in_a_longer_filename_is_not_an_occurrence` — `x01-domain.md` and `01-domain.md.bak` are not flagged, matching the References boundary rule.
+- `test_name_embedded_in_a_longer_filename_is_not_an_occurrence` — `x01-domain.md` and `01-domain.md.bak` are not flagged.
+- `test_sentence_final_bare_name_is_an_occurrence` — `Derived from 04-roadmap.md.` in prose, and the same line as the last line of a fence, are each rejected; a version-store path followed by `.` is accepted, in the body check and the References gate alike.
 - `test_body_check_takes_only_text_and_needs_no_provenance` — call the public function on text with no provenance block; it returns violations without raising. This pins step 3's reuse.
 - `test_one_violation_per_offending_occurrence` — three bare occurrences yield three violations.
 - `test_gate_constants_equal_roadmap_versions_originals` — the local directory name and digest pattern equal `ROADMAP_VERSION_NAMESPACE_DIRNAME` and `SHA256_DIGEST_RE.pattern`.
