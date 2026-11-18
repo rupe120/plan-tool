@@ -84,6 +84,10 @@ exit before returning to the prepared branches.
    confirmed, current `advisory-only` evidence with no blockers and no
    budget limit. Detail authoring owns the remaining preparation example
    check for source-backed evidence sections, including Risks.
+   Automatic approval review treats `detail --commit` as a separate
+   authorization because it sends repository context to Codex to generate
+   and commit per-step details. The command does not start. Resume with
+   explicit authorization for detail authoring, then run the grounded audit.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact
