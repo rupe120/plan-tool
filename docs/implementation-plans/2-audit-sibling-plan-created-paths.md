@@ -32,22 +32,21 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/01-one-selection-helper-plan-tool-review.md
-  status: current
+  status: done
   description: 'Add one selection helper in `plan_tool/review.py` that returns the
     same-roadmap sibling `creates:` paths for a plan. It returns `_eligible_planned_paths(plan,
     plan_path, repo_root)` minus `_planned_paths(plan)` only when `_sibling_roadmap_identity`
     returns an identity. It returns an empty set when the identity is `None` (so the
     all-registered-plans set is not delivered) and when selecting raises any of the
     failure classes `_eligible_planned_paths` already treats as uncertain evidence
-    (`OSError`, `UnicodeError`, `ValueError`, `ManifestError`), named in the new
-    helper so `_eligible_planned_paths` stays untouched, with a behavioral parity
-    test that makes `_sibling_roadmap_identity` raise each class and checks the two
-    agree (own paths only for the deterministic check, an empty set for the
-    helper), so no partial set and `AuditInputSnapshot.capture` never
-    raises because of sibling selection. A test covers an unreadable source seed beside
-    the uncertain-identity case. No second selection rule is written. Capture that
-    set once in `plan_tool/review_persistence.py:AuditInputSnapshot.capture` as a
-    new sorted-tuple field with an empty default. Use a lazy import of the review
+    (`OSError`, `UnicodeError`, `ValueError`, `ManifestError`), named in the new helper
+    so `_eligible_planned_paths` stays untouched, with a behavioral parity test that
+    makes `_sibling_roadmap_identity` raise each class and checks the two agree (own
+    paths only for the deterministic check, an empty set for the helper), so no partial
+    set and `AuditInputSnapshot.capture` never raises because of sibling selection.
+    A test covers an unreadable source seed beside the uncertain-identity case. No
+    second selection rule is written. Capture that set once in `plan_tool/review_persistence.py:AuditInputSnapshot.capture`
+    as a new sorted-tuple field with an empty default. Use a lazy import of the review
     helper, matching the module''s existing lazy-import style, so no import-time cycle
     is added. Fold the set into `_audit_input_fingerprint` as its own framed label,
     added only when the set is non-empty (the same pattern as `project_context`),
@@ -56,9 +55,9 @@ steps:
     (used by `plan_tool/completeness_report.py` and `plan_tool/cli/completeness_phases.py`)
     with no edit to those callers. The sibling set holds normalized, deduplicated
     paths (`normalize_declared_path`, dropping a `(…)` annotation or leading `./`),
-    sorted; that one form is the snapshot field, the digest input and the prompt
-    block, and a test covers an annotated and a `./` sibling path. The public `qualified_result.audit_revision` dict
-    moves to audit-revision version 4 at both of its producers, `plan_tool/fingerprint.py:audit_input_revision`
+    sorted; that one form is the snapshot field, the digest input and the prompt block,
+    and a test covers an annotated and a `./` sibling path. The public `qualified_result.audit_revision`
+    dict moves to audit-revision version 4 at both of its producers, `plan_tool/fingerprint.py:audit_input_revision`
     and the `"version": 3` literal in `plan_tool/review_persistence.py`, and the validator
     `plan_tool/review_persistence.py:normalize_audit_revision` accepts it, with a
     `sibling_paths_digest` (`null` when no sibling paths apply; owner-confirmed 2026-11-17,
@@ -72,34 +71,32 @@ steps:
     versions 1–4 as supported, worded as "audit-revision version" so it is not read
     as the checkpoint schema''s existing "version-4". Saved fingerprints and revisions
     of roadmap plans that have siblings change once on upgrade, deliberately. Plans
-    with no siblings keep their fingerprint byte-identical. Version tolerance lives in
-    one place, the normalizer: all three saved-versus-current revision comparisons
+    with no siblings keep their fingerprint byte-identical. Version tolerance lives
+    in one place, the normalizer: all three saved-versus-current revision comparisons
     already receive a revision normalized by `normalize_audit_revision`, which this
-    step makes emit audit-revision version 4 with `sibling_paths_digest` `None` for a
-    v1–v3 record, so no comparison code changes. The three sites:
-    `plan_tool/review_persistence.py:project_saved_completeness_result` and
-    `plan_tool/completeness_report.py`''s `audit_revision_match` read
-    `SavedReview.qualified_result`, which `load_review` stores normalized;
-    `plan_tool/cli/authoring.py`''s freshness tail calls `normalize_qualified_result`
-    itself. A saved v3 report of a plan with no siblings therefore reads `current` at
-    every site after upgrade, and one with siblings reads `stale` (owner decision
-    2026-11-17). `plan_tool/gate_status.py` takes its status from
-    `project_saved_completeness_result`. The helper calls `_sibling_roadmap_identity`
+    step makes emit audit-revision version 4 with `sibling_paths_digest` `None` for
+    a v1–v3 record, so no comparison code changes. The three sites: `plan_tool/review_persistence.py:project_saved_completeness_result`
+    and `plan_tool/completeness_report.py`''s `audit_revision_match` read `SavedReview.qualified_result`,
+    which `load_review` stores normalized; `plan_tool/cli/authoring.py`''s freshness
+    tail calls `normalize_qualified_result` itself. A saved v3 report of a plan with
+    no siblings therefore reads `current` at every site after upgrade, and one with
+    siblings reads `stale` (owner decision 2026-11-17). `plan_tool/gate_status.py`
+    takes its status from `project_saved_completeness_result`. The helper calls `_sibling_roadmap_identity`
     and then `_eligible_planned_paths`, which reads the identity again; the repeated
-    read is accepted, since it is bounded and keeps one selection rule. No destructive operations are touched.
-    Unit tests in `tests/test_review.py` cover the helper with a two-plan roadmap
-    fixture (the sibling path is present, own `creates:` are excluded), a no-identity
-    plan with other registered plans that declare `creates:` (empty), a plan from
-    a different roadmap (excluded), and uncertain identity (empty). Unit tests in
-    `tests/test_review_persistence.py` show that changing a sibling''s `creates:`
-    changes the snapshot fingerprint, that an unchanged sibling set leaves it unchanged,
-    and that a plan with no siblings keeps its existing fingerprint. Tests in `tests/test_fingerprint.py`
-    show the v4 revision carries `sibling_paths_digest` (null with no siblings), that
-    a sibling edit changes it, that a v3 record decodes with `sibling_paths_digest`
-    `None`, and that a saved v4 record round-trips through `normalize_audit_revision`.
-    Own-path subtraction compares normalized paths (`normalize_declared_path`, as
-    the deterministic check does), so a sibling path that normalizes to one of the
-    plan''s own `creates:` is excluded; a test covers a `./` variant.'
+    read is accepted, since it is bounded and keeps one selection rule. No destructive
+    operations are touched. Unit tests in `tests/test_review.py` cover the helper
+    with a two-plan roadmap fixture (the sibling path is present, own `creates:` are
+    excluded), a no-identity plan with other registered plans that declare `creates:`
+    (empty), a plan from a different roadmap (excluded), and uncertain identity (empty).
+    Unit tests in `tests/test_review_persistence.py` show that changing a sibling''s
+    `creates:` changes the snapshot fingerprint, that an unchanged sibling set leaves
+    it unchanged, and that a plan with no siblings keeps its existing fingerprint.
+    Tests in `tests/test_fingerprint.py` show the v4 revision carries `sibling_paths_digest`
+    (null with no siblings), that a sibling edit changes it, that a v3 record decodes
+    with `sibling_paths_digest` `None`, and that a saved v4 record round-trips through
+    `normalize_audit_revision`. Own-path subtraction compares normalized paths (`normalize_declared_path`,
+    as the deterministic check does), so a sibling path that normalizes to one of
+    the plan''s own `creates:` is excluded; a test covers a `./` variant.'
 - id: 2
   intent: Put the sibling paths in front of the conceptual auditor as planned work,
     so it stops reporting them as missing files.
@@ -114,23 +111,25 @@ steps:
   depends_on_notes:
     1: the selection helper and the captured snapshot field the renderer reads
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md
+  status: current
   description: 'Add a sibling-planned-paths input block to `plan_tool/prompts/plan-audit.md`
     as a new `${sibling_planned_paths_block}` placeholder beside the existing input
-    blocks. It lists each sibling path from step 1''s normalized set, one per line, and tells the auditor
-    that a listed path is a sibling plan''s planned work and is not reported as missing.
-    When the set is empty, the block renders an explicit statement that no sibling
-    plan paths apply, never an empty slot. Supply the block from `render_plan_audit_prompt`
-    in `plan_tool/review.py`. Read the captured set from `audit_input_snapshot` when
-    one is passed; when it is not, compute it through step 1''s helper. Add the block''s
-    size to the `collect_blocks` budget list. Update the renderer docstring to describe
-    the block. Sweep `plan-audit.md`''s own prose for any text that implies the auditor
-    has no sibling footprints. Unit tests in `tests/test_review.py`: the rendered
-    prompt for plan 2 of a two-plan roadmap fixture lists plan 1''s `creates:` path
-    and not plan 2''s own; a no-identity plan and an uncertain-identity plan render
-    the empty statement; a different roadmap''s path is absent; a snapshot-backed
-    render uses the captured set; and every `${...}` placeholder in `plan-audit.md`
-    is supplied by the renderer, so no `${` is left in the rendered prompt. No test
-    asserts how a real model responds (deliver, don''t verify).'
+    blocks. It lists each sibling path from step 1''s normalized set, one per line,
+    and tells the auditor that a listed path is a sibling plan''s planned work and
+    is not reported as missing. When the set is empty, the block renders an explicit
+    statement that no sibling plan paths apply, never an empty slot. Supply the block
+    from `render_plan_audit_prompt` in `plan_tool/review.py`. Read the captured set
+    from `audit_input_snapshot` when one is passed; when it is not, compute it through
+    step 1''s helper. Add the block''s size to the `collect_blocks` budget list. Update
+    the renderer docstring to describe the block. Sweep `plan-audit.md`''s own prose
+    for any text that implies the auditor has no sibling footprints. Unit tests in
+    `tests/test_review.py`: the rendered prompt for plan 2 of a two-plan roadmap fixture
+    lists plan 1''s `creates:` path and not plan 2''s own; a no-identity plan and
+    an uncertain-identity plan render the empty statement; a different roadmap''s
+    path is absent; a snapshot-backed render uses the captured set; and every `${...}`
+    placeholder in `plan-audit.md` is supplied by the renderer, so no `${` is left
+    in the rendered prompt. No test asserts how a real model responds (deliver, don''t
+    verify).'
 - id: 3
   intent: Stop telling triagers to ignore a false positive the audit no longer produces,
     and close the backlog entry once the fix ships.
