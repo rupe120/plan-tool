@@ -183,7 +183,8 @@ Review the intake claims against SEED_FORMAT.md and file-backed intake.
 - The guidance explains the evidence a preparation seed must provide and
   limits strict source step import to direct-ready seeds. It identifies
   which assessment outcome publishes a plan and when a preparation
-  refusal warrants an unchanged retry or a seed correction.
+  refusal warrants an unchanged retry or a seed correction. It shows how
+  to continue an already registered plan when iteration is incomplete.
 - Both examples ground the seed in local evidence and carry each binding
   limit in the appropriate guardrail. The examples show where `None` is
   appropriate.
