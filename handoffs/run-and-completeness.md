@@ -10,6 +10,7 @@
 | [Completeness apply retirement implementation](#completeness-apply-retirement-implementation) | 2026-11-04 |
 | [Local-iteration backlog findings #539–#542 — review ledger and priority handoff](#local-iteration-backlog-findings-539542--review-ledger-and-priority-handoff) | 2026-11-17 |
 | [Roadmap seed version-store citations — review ledger](#roadmap-seed-version-store-citations--review-ledger) | 2026-11-17 |
+| [Audit sibling-plan created paths — review ledger](#audit-sibling-plan-created-paths--review-ledger) | 2026-11-17 |
 
 ## Completeness next-step verdict finish — review ledger and session handoff
 
@@ -621,3 +622,49 @@ Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the 
 
 - `tracked` BUG_BACKLOG: bare roadmap file names in prose `create`'s model writes during synthesis (the plan's deferred follow-up).
 - Consumer action, outside this repository: Integration's roadmap-derived plans predate the fix and are not migrated; run `plan-tool roadmap <slug> --refresh-seeds`, then hand-fix or re-create affected plans.
+
+## Audit sibling-plan created paths — review ledger
+
+*Opened 2026-11-17.*
+
+| Field | Value |
+| --- | --- |
+| Opened | 2026-11-17 |
+| Change | Plan `audit-sibling-plan-created-paths`: the conceptual audit is given same-roadmap sibling `creates:` paths, captured in the audit snapshot and pinned by audit revision v4 |
+| Branch | `feat/audit-sibling-plan-created-paths` (plan merged as PR #256) |
+| Checks | full suite green per step; `reconcile-code --all` no drift |
+| Reviewer | `/code-review high`, forked report-only |
+| Disposition | round 1 dispositioned; round 2 pending |
+
+### Settled decisions (give to the next reviewer)
+
+- Deliver, don't filter: the audit is given the sibling paths; nothing post-processes model findings.
+- Audit revision v4 with `sibling_paths_digest` (owner, 2026-11-17); ship between Loom batches.
+- Version tolerance lives in `normalize_audit_revision`; all three saved-versus-current comparisons receive a normalized revision, so no comparison code changes.
+- `_eligible_planned_paths` is untouched; the helper repeats its uncertain-evidence classes, pinned by a parity test.
+- "Could not be determined" is a distinct prompt statement but leaves the fingerprint and digest equal to "none" (owner, 2026-11-17), so an unresolvable identity makes nothing stale.
+
+### Execution notes
+
+- Step 1: a contract drift test pinned the v3 sentence (updated); two planned comparison-site tests were missing and were written by hand, each red when the normalizer keeps v3.
+- Step 2: two prompt-shape tests pinned the old block list and tail (updated).
+- Step 3 ran clean.
+
+### Findings (round 1)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | Uncertain identity rendered "no sibling plan paths apply", the same as none | **Fixed.** The helper returns `None` for unknown; the prompt states the set could not be determined. The record treats unknown like none by owner decision |
+| 2 | A sibling that fails to parse is skipped, so a partial list reads as complete | **Fixed.** The block says the list can be incomplete |
+| 3 | The `DIRECTIVES.md` rewrite called a sibling-path finding a real signal, though the fix only instructs the model | **Fixed.** Such a finding stays T after checking the cited path against the sibling list or the siblings' `creates:` |
+| 4 | One plan's `creates:` edit makes every same-roadmap sibling's saved audit stale | **Declined (owner-confirmed v4).** That is the intended freshness; the batch cost is stated in the PR |
+| 5 | Every snapshot capture selects siblings, O(N²) on status paths | **Tracked** BUG_BACKLOG "Roadmap plans whose `source_seed` is relative to the plans directory…": unmeasurable until identities resolve (Loom resolves none) |
+| 6 | No deterministic filter of findings | **Declined (settled).** Deliver, don't filter |
+| 7 | Staleness docs omitted a sibling `creates:` edit | **Fixed.** `audit.md` and `DATA_CONTRACT.md` |
+| 8 | Defensive `getattr` on the snapshot field | **Fixed.** Plain attribute access |
+| 9 | Paths rendered as raw lines | **Fixed.** Backticked bullets |
+
+### Open items
+
+- `tracked` BUG_BACKLOG: `source_seed` relative to the plans directory never resolves, so in Loom every sibling-aware check is inert (found while measuring #5). This PR helps Loom only after that bug is fixed.
+
