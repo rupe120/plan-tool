@@ -747,7 +747,7 @@ Three findings repeat round 1 and keep its dispositions (#1 fence refusal, #3 pr
 | Branch | `tests/versioned-format-examples` (direct route; tests and docs only, no `plan_tool/` change, so no changelog fragment) |
 | Checks | full suite green; mutation checks on each guard |
 | Reviewer | `/code-review high`, forked report-only |
-| Disposition | round 1 dispositioned; round 2 pending |
+| Disposition | rounds 1–2 dispositioned; owner call on PR vs round 3 |
 
 ### Settled decisions
 
@@ -766,5 +766,17 @@ Three findings repeat round 1 and keep its dispositions (#1 fence refusal, #3 pr
 | 5 | Reconcile examples checked only kind and count | **Fixed in part.** Recommendation ids and severities, `plan_fingerprint`, the checkpoint role and the advisory shape id are asserted for every example; annotations, `step_ids` and `code_fingerprint` are deliberately not asserted (the captures carry none) |
 | 6 | The README check was a substring match | **Fixed in part.** Each example needs its own table row, anchored on the file name; the table's version columns are not parsed (the test parses the file name, and the table is descriptive) |
 | 7 | The README cited an unreproducible survey of a private project | **Fixed.** The citation is gone; the one remaining claim (every tag back to v0.2.0 writes revision 3) is checkable from git |
-| 8 | Fixtures embed capture-time paths and `created_at` | **Declined.** The paths are neutral (`/tmp/plan-tool-example/...`) and a real old report carries another machine's paths, so a reader that resolves them must cope; stated in the README. Mutation of the checkpoint role (mutant C) is red |
+| 8 | Fixtures embed capture-time paths and `created_at` | **Declined.** The paths are neutral (`/private/tmp/plan-tool-example/...`, where macOS resolves `/tmp`) and a real old report carries another machine's paths, so a reader that resolves them must cope; stated in the README. Mutation of the checkpoint role (mutant C) is red |
+
+### Findings (round 2)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | The README called `4226931b3` the first commit writing revision v4; that is `6e873dd59`, and `4226931b3` is a later merge of `main` | **Fixed (wording).** The README states the capture source and names the introducing commit; the file names stay, since they record the true capture source |
+| 2 | The README documented `/tmp/plan-tool-example/`; the files hold `/private/tmp/plan-tool-example/` | **Fixed.** README and this ledger name the path macOS resolves to |
+| 3 | Two assertions exceed the 100-column limit | **Fixed.** Wrapped. `ruff format` is not enforced anywhere (no pipeline, hook or doc runs it, and the neighbouring test files would also be reformatted), so no repo-wide reformat |
+| 4 | An unused `tmp_path` fixture; `_parts` re-run in several guards | **Fixed.** Parsed once into `PARTS` at import |
+| 5 | The README guard ignored rows for deleted files and the version columns | **Fixed in part.** The table must list exactly the example files (mutant adding a ghost row is red); the version columns are still not parsed |
+| 6 | No guard for an older audit-revision version | **Fixed.** A guard requires an example older than the current version; removing the two v3 examples turns two tests red |
+| 7 | `impact`, `step_id` and other recommendation fields unpinned | **Fixed for `impact` and `step_id`.** A first attempt compared `None` to `None` (every capture lacked both), so the four lower-version captures were redone from v1.6.0 with `impact` and `step_id` set; a mutant that drops `impact` on load is red. Recommendation `kind`, text and `sampler_state` remain unasserted |
 
