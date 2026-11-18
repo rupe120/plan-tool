@@ -12,7 +12,7 @@
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
 | Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) merged at `d2112d875`. It covers the README slice of #510, the install and format references, and a changelog fragment. |
-| Local follow-up | `d0a2aaa15` on `docs/remove-redundant-readme-heading` removes the visible **Start here** wrapper and keeps `#start-here` working. The owner confirmed the revised format reads better. The commit is separate from #271. |
+| Local follow-up | `c5b202ed6` applies the owner-approved README heading cleanup and keeps `#start-here` working. `01390e991` brings the prepared demo seed and plan checkpoints into line with file-backed create preflight. |
 | Next | Complete the remaining #510 verification, then use #515's fresh-reader observations to select the next documentation slice. |
 
 ### What to carry forward
@@ -34,12 +34,41 @@
   openings. [Pilot proposal](../docs/design-plans/example-first-documentation.md) ·
   [Documentation style](../docs/reference/documentation-style.md)
 
+### Local verification
+
+On 2026-11-18, a local source clone on macOS arm64 (macOS 27.2.1, uv
+0.9.9, Python 3.13.9) supplied an isolated editable install and a wheel,
+both reporting plan-tool 1.6.0. For each install, project-local
+`plan-tool install-skill --integration <assistant>` and the same command
+with `--copy` passed for Claude Code, Codex, and Cursor in fresh Git
+repositories. All 12 installations placed a readable router and sibling
+reference in the expected directory. Assistant discovery remains part of
+the live walkthrough.
+
+The prepared seed now passes file-backed preflight and selects preparation.
+The three guardrail bodies agree across the seed and every prepared plan
+checkpoint. The wheel's `plan-tool validate due-dates` passes on each
+prepared plan branch. The reading walk stops on `demo/5-detail-audit`;
+the audit transcripts are authored and no live backend result is recorded.
+A local link check preserves 79 README anchors from the merged pilot and
+resolves 80 local links across the README, install guide, and reference
+index. The focused create, installer, router, and start-screen suite passes
+1,200 tests after the fixture fix.
+
 ### Verification and next pickup
 
 1. **Finish #510.** Keep the first-task walkthrough scoped through detail
    review. Complete #377 seed-authoring support and verify the path in a
    consuming repository before closing the entry. #508 can proceed
    independently and remains part of #515's public sign-off. [Backlog](../BACKLOG.md)
+   The [#377 seed](../docs/implementation-plans/plan-seeds/installed-seed-authoring.md)
+   passes local intake validation. Its proposed scope reuses the existing
+   shared reference and installer. The initial create exits at the
+   read-only Git lock. Automatic approval review rejects the retry because
+   an authenticated Codex backend could receive the seed and repository
+   content without explicit authorization. No plan or audit report exists.
+   Resume with explicit authorization for Codex `gpt-6.1-sol` to process
+   the seed and the repository context required to author and audit #377.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact
