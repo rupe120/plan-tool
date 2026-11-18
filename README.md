@@ -14,390 +14,158 @@ handed off. For a small edit, skip it and just make the change.
 
 ## Start here
 
-Start with the assistant skill for guided planning and execution. Use the CLI
-guides when you want to operate individual stages yourself.
+<a id="use-with-your-assistant"></a>
 
-| I want to… | Start here | Next |
-| --- | --- | --- |
-| Use plan-tool with my coding assistant | [Use with your assistant](#use-with-your-assistant) | [Install the CLI and skill](#install), then ask for [your first plan](#your-first-plan). |
-| Explore or present a demo | [Demonstrations](docs/demos/README.md) | Choose an example and check its preparation status. |
-| Choose a planning starting point | [Use cases](docs/how-to/use-cases.md) | Describe your idea, existing draft or project concept to the assistant. |
-| Understand the design principles | [Mission](MISSION.md) | The rules the codebase is built to obey. |
-| Run, recover, or operate a plan | [How-to guides](docs/how-to/README.md) | Use the [Runbook](RUNBOOK.md) for a failed or surprising result. |
-| Look up a command, format, or exact rule | [Reference](docs/reference/README.md) | Use the generated [CLI reference](docs/cli/README.md) for every option. |
-| Develop plan-tool itself | [New contributor path](CONTRIBUTING.md#new-contributor-path) | Read the [architecture reference](docs/ARCHITECTURE.md) when the change needs it. |
+### Install
 
-## Use with your assistant
+<a id="requirements"></a>
+<a id="install-the-cli"></a>
 
-The skill gives Claude Code, Codex or Cursor a shared procedure for driving
-plan-tool. Tell your assistant the outcome you want and the boundaries of the
-work; it selects the stages, reads their results and brings decisions back to
-you. The CLI provides the persisted plans, audit reports and execution state.
-
-[Install the CLI and skill](#install), reload your assistant, and open the
-repository you want to work on. Planning runs in that consuming repository;
-keep the installation clone for the tool itself.
-
-Add optional [companion skills](docs/how-to/companion-skills.md) for the
-project's stack, testing, debugging, review, or release work. The guide covers
-selection and compatibility across Claude Code, Codex, and Cursor.
-
-## Install
-
-### Requirements
-
-| Requirement | Needed for | Notes |
-| --- | --- | --- |
-| [uv](https://docs.astral.sh/uv/getting-started/installation/) | Installing the CLI | Fetches and manages Python for you. |
-| Python 3.13 or newer | Running `plan-tool` | `uv` provides it; install it yourself only if you skip `uv`. |
-| Git | Installing from GitHub; every plan-tool workflow | Plans are grounded in and committed to a git repository. |
-| A backend CLI (Claude, Codex, or Cursor), installed and authenticated | Model-backed commands such as `create`, `detail`, `completeness-audit` and `run` | See [Backends](docs/BACKENDS.md). Installing the assistant skill does not install it. |
-
-### Install the CLI
-
-Install the CLI straight from GitHub:
+You’ll need uv, Git, and an installed and authenticated backend CLI. uv
+provides Python 3.13 or newer. Install plan-tool, then choose the skill for your
+assistant. [Backend setup](docs/BACKENDS.md)
 
 ```bash
-uv tool install git+https://github.com/rupe120/plan-tool   # puts `plan-tool` on PATH
-uv tool upgrade plan-tool                                  # later, to update
+uv tool install git+https://github.com/rupe120/plan-tool
+plan-tool --version
 ```
 
-Run `plan-tool` with no arguments to see the core path, and
-`plan-tool --help` for every subcommand.
-
-To develop plan-tool, install from a clone instead
-(`uv tool install --editable .`); see [Contributing](CONTRIBUTING.md). See
-[Install and update](docs/how-to/install-and-update.md) for pinning a release
-tag, the clone install and the complete update procedure.
-
 <a id="optional-the-agent-skill"></a>
+<a id="install-the-assistant-skill"></a>
+<a id="installation-options"></a>
 
-### Install the assistant skill
-
-Install the bundled skill once for your assistant. A user-level installation
-makes it available across your projects. The skill includes the workflow rules
-for seed authoring, both audit gates, execution and reconciliation.
-
-| Assistant | User-level installation |
+| Assistant | Install its skill |
 | --- | --- |
 | Claude Code | `plan-tool install-skill --integration claude --user` |
 | Codex | `plan-tool install-skill --integration codex --user` |
 | Cursor | `plan-tool install-skill --integration cursor --user` |
 
-The Claude and Cursor installers default to `~/.claude/skills/plan-tool/`;
-Cursor [supports Claude skill directories](https://cursor.com/docs/skills).
-Codex uses `~/.agents/skills/plan-tool/` and installs copies.
+Reload your assistant and open the Git repository you want to work on.
+[Installation options and updates](docs/how-to/install-and-update.md#install-the-assistant-skill) ·
+[Companion skills](docs/how-to/companion-skills.md)
 
-Reload your assistant session and confirm it discovers the installed skill.
-Choose a supported destination with `--root` when your assistant uses a
-different skill root. Install and authenticate the backend CLI used for model
-calls as described in [Backends](docs/BACKENDS.md); installing a skill does not
-install or authenticate that backend.
+### Your first plan
 
-## Your first plan
+In your coding assistant, start with one sentence.
 
-For a first exercise, choose a small, independently testable feature to learn
-the planning workflow. For a single obvious edit, skip plan-tool: edit, test
-and review directly. Open the repository in your assistant and ask:
+> use the plan tool skill to create a website scraper cli
 
-> Inspect this repository and draft a grounded seed for [describe a small feature],
-> with an explicit scope fence and verified references. Use the plan-tool skill
-> to prepare a reviewed plan through the bare-plan audit, then details and the
-> detail-grounded audit. At each seed, plan/audit and detail/audit boundary, link
-> the artifacts, summarize changes and ask me for corrections or continuation.
-> Wait for my response unless I explicitly delegate that transition. Bring material
-> scope or design questions back to me and stop before implementation or export.
+The assistant may ask what the scraper should extract. For example, reply
+“Take a URL and print the page title.” Review the plan it prepares before
+asking it to implement anything.
 
-The assistant grounds a seed in the code, creates the plan, reviews the bare
-plan, authors details, then reviews the complete bundle. It reads the findings
-and applies judged corrections between audits. You decide material scope and
-design questions and when implementation begins.
+#### Follow a worked plan
 
-After reviewing the plan, details and audits, choose a separate follow-up request.
-Before execution in a repository with `origin`, publish the plan and all step
-details through your normal review process, merge them into the remote default
-branch, and fetch it. Create an implementation branch from that default branch;
-`run` normally refuses execution on the default branch or when planning artifacts
-are missing from its remote copy. Repositories without `origin` skip this check.
-See the [execution prerequisites](docs/how-to/pipeline/run.md#before-execution).
+In the worked example, a task-list CLI needs optional due dates and a way to
+list overdue tasks. This request asks the assistant to pause at each review
+checkpoint.
 
-| Goal | Ask your assistant |
+> Use the plan-tool skill to plan optional due dates and `todo list --overdue`.
+> Leave reminders and changes to ordering outside the scope. Inspect the repo
+> and show me a seed with verified references, then the plan and bare audit,
+> then the details and grounded audit. Link the artifacts, summarize changes,
+> and wait for my approval at each checkpoint. Bring scope or design questions
+> back to me and stop after detail review, before implementation or export.
+
+If you choose to set up a [project profile](integrations/shared/DIRECTIVES.md#setting-up-a-repository-the-project-profile),
+give the assistant your project intent and confirm the exact text before it saves it.
+
+| Review | What the example shows |
 | --- | --- |
-| Implement the reviewed work | “Use plan-tool to execute this plan, then reconcile the code against the plan and review changes to convergence.” |
-| Inspect status | “Inspect `my-plan`, saved reports and any active invocation; report the current state and next decision without implementing.” |
-| Resume within the agreed scope | “Inspect the plan, reports and original invocation first. Only after its confirmed exit, use its recorded outcome to resume the next incomplete stage within my requested scope.” |
-| Prepare work for a team | “Use plan-tool to export this reviewed plan as local Jira stories.” |
-| Start with a larger concept | “Use the plan-tool skill to turn this concept into a roadmap before creating individual plans.” |
+| [Seed](docs/demos/getting-started/fixtures/1-seed/files/docs/implementation-plans/plan-seeds/due-dates.md) | Store dates, accept them on `todo add`, and filter and display them in `todo list`. Existing task files still load. |
+| [Plan](docs/demos/getting-started/fixtures/3-bare-audit/files/docs/implementation-plans/due-dates.md) and [bare audit](docs/demos/getting-started/fixtures/3-bare-audit/transcript.txt) | Three ordered steps. The audit flags an ambiguity about whether a task due today counts as overdue. |
+| [Step detail](docs/demos/getting-started/fixtures/4-detail/files/docs/implementation-plans/plan-details/due-dates/03-list-overdue-show-due-dates.md) and [grounded audit](docs/demos/getting-started/fixtures/5-detail-audit/transcript.txt) | The filter test includes an open task due yesterday and excludes one due today. Check the saved report’s qualification and findings before choosing what to do next. |
 
-Ask for execution or export separately after detail review. Local export includes
-stories and their paired developer handoff; ask for links, a change summary and
-validation results. Tracker publication requires a separate request.
+The bare audit review adds an explicit acceptance criterion.
 
-During long commands, ask the assistant to report progress and monitor the original
-invocation to confirmed exit. Quiet output, checkpoints and backend completion do
-not establish command completion or authorize an overlapping invocation. Follow
-[monitoring and safe recovery](integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely).
-See the [planning walkthrough](docs/demos/planning-demo.md) and
-[authored reading samples](docs/demos/dark-mode-example.md) for review checkpoints;
-these samples do not demonstrate live audit convergence.
-For project-scoped skills, committed copies, refresh behavior and optional
-extras, see [Installation options](#installation-options).
+> A task due today is not overdue; only a due date strictly before today is.
 
-For direct command operation, use the [decision flow](#decision-flow),
-[common workflows](docs/how-to/common-workflows.md), and [command reference](docs/reference/commands.md).
+You can step through the artifacts in a disposable Git repo with the
+[prepared demo](docs/demos/getting-started/README.md). Its audit transcripts
+are authored examples. A live audit saves its report under
+`docs/implementation-plans/plan-details/due-dates/reports/` in this example.
 
-## Core subcommand workflow
-
-```
-(roadmap) → create → bare audit → detail → detail audit ──┬── run → reconcile-code → review
-                                                        └── jira → verify
-```
-
-| Step | What it does |
-| --- | --- |
-| **`roadmap`** | *(optional, project-sized)* Stage a concept brief into four gated architecture artifacts; materialize and review selected draft seeds separately before `create`. |
-| **`create`** | Author a plan from prose (`--from`) or an existing draft (`--from-existing`). |
-| **`detail`** | Draft per-step detail files and wire each step's `detail:` pointer. |
-| **audit** | `completeness-audit` checks coverage + concepts; `reconcile-plan` re-fits a stale plan to current code. |
-| **`run`** | Execute one step at a time with the configured backend; plan state advances on success. |
-| **`jira`** | Export steps as Jira-sized stories (markdown/JSON) with estimates + dependencies. |
-| **`verify-all`** | *(optional CI gate)* read-only `[OK]/[WARN]/[FAIL]` rollup over done steps. |
-
-The skill reviews a bare plan before detail authoring, then reviews the complete
-bundle before execution or export. It uses session-directed edits to address
-conceptual findings and re-audits changed, committed text. `detail` is a
-one-shot write by default; audit convergence has its own rules and stopping
-conditions. See [the audit guide](docs/how-to/pipeline/audit.md).
-
-A few verbs sit off the main spine:
-
-- **`annotate`** — judge old plans against current code and emit seeds for the *next* `create --from-existing`. A forward-seed bridge; never mutates its source except the opt-in `--archive` move (contrast `reconcile-plan`, which edits a live plan in place).
-- **Branch-awareness** — optionally bind a plan to its own git branch. Ships **OFF**; see [Branch-awareness](docs/how-to/branch-awareness.md).
-- **Worktrees** — provision an isolated working copy per plan so several plans' long `create`/`detail`/`run` processes run in parallel without sharing one index, branch, or checkout. See [Worktrees (parallel plans)](#worktrees-parallel-plans).
-
-Plan discovery is manifest-driven via `.plan-tool/plans.json` (repo-relative `.md` paths); override with `--plans-dir` or `PLAN_TOOL_PLANS_DIR`.
-
-## Decision flow
-
-Pick your `create` entry point by what you're starting from. File-backed
-`--from-existing` selects one supplied source, refuses unmatched fences and
-unusable References before any model call, then selects `direct`, `normalized`,
-`split`, or `refused`. Direct-ready source content stays authoritative; split
-is a successful no-plan result with a carving worksheet. See
-the [create-from-existing flow](docs/how-to/pipeline/create-from-existing.md) for
-the flow and the [seed-ingestion contract](docs/reference/contracts/seed-ingestion.md)
-for the full lifecycle contract.
-
-| Starting point | First command | What happens |
-| --- | --- | --- |
-| [Nothing](docs/how-to/choose-a-starting-point.md#start-from-nothing) | `create <slug>` | The interactive wizard writes a plan. |
-| [A 1–2 sentence idea](docs/how-to/choose-a-starting-point.md#start-from-a-short-idea) | `create <slug> --from "<description>"` | `create` drafts a plan from the description. |
-| [A rich existing draft](docs/how-to/choose-a-starting-point.md#start-from-an-existing-draft) | `create <slug> --from-existing <path>` | The intake route publishes, splits, or refuses the source. |
-| [A canonical plan-shaped draft](docs/how-to/choose-a-starting-point.md#start-from-a-canonical-plan-shaped-draft) | `create <slug> --from-existing <path>` | Step decomposition skips its model call. |
-| [An old plan plus current code](docs/how-to/choose-a-starting-point.md#start-the-next-iteration-from-an-old-plan) | `annotate <old-plan-path>` | `annotate` emits a seed for the next `create`. |
-| [Several old plans or notes](docs/how-to/choose-a-starting-point.md#assess-several-old-plans-or-notes) | `annotate <path-or-glob>...` | Reports show carryover coverage and grounding. |
-| [A project-sized concept](docs/how-to/choose-a-starting-point.md#stage-a-project-sized-concept) | `roadmap <slug> --from-existing <brief.md>` | `roadmap` publishes staged artifacts; review the mapping, then materialize and review selected seeds. |
-
+<a id="decision-flow"></a>
+<a id="common-workflows"></a>
+<a id="plan-workflow"></a>
 <a id="table-of-contents"></a>
 
-## Plan format
+## Choose your next task
 
-Each plan is markdown with YAML frontmatter. Frontmatter is the machine-readable source of truth; prose below it is for humans.
+| I want to… | Open |
+| --- | --- |
+| Start from an idea, an existing draft, or an old plan | [Choose a starting point](docs/how-to/choose-a-starting-point.md) |
+| Plan a project-sized concept | [Roadmap walkthrough](docs/how-to/roadmap.md) |
+| Read a saved audit | [Interpret the final result](docs/how-to/pipeline/audit.md#reading-the-final-qualified-result) |
+| Implement the reviewed plan | [Check execution prerequisites](docs/how-to/pipeline/run.md#before-execution) |
+| Export local Jira stories and their developer handoff | [Export and review the handoff](RUNBOOK.md#workflow-export-to-jira-for-sprint-planning) |
+| Check or resume a command | [Monitor the original invocation through confirmed exit](integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely) |
+| Explore other worked examples | [Demonstrations](docs/demos/README.md) |
+| Develop plan-tool | [New contributor path](CONTRIBUTING.md#new-contributor-path) |
 
-```markdown
----
-format_version: 1
-title: Example Plan
-intent: Parse and validate plan frontmatter before execution.
-status: in-progress
-priority: medium
-steps:
-  - id: 1
-    title: Add YAML schema validator
-    intent: Reject invalid frontmatter with actionable errors.
-    files: [plan_tool/schema.py]
-    complexity: low
-    status: done
-  - id: 2
-    title: Build the parser
-    intent: Load valid frontmatter into typed plan models.
-    files: [plan_tool/parser.py]
-    allowed_mentions: [plan_tool/schema.py]
-    complexity: medium
-    depends_on: [1]
-    status: current
----
+Request implementation or local export separately after detail review. Tracker
+publication needs its own request.
 
-# Example Plan
-...
-```
-
-The example shows the frontmatter structure; `create` authors the full plan
-body. See [Plan format](PLAN_FORMAT.md) for the complete contract,
-[Seed format](SEED_FORMAT.md) for input briefs, [Detail format](DETAIL_FORMAT.md)
-for per-step instructions, [Roadmap format](ROADMAP_FORMAT.md) for staged
-architecture, and [Jira format](JIRA_FORMAT.md) for exported stories.
-
-## Installation options
-
-For project-scoped installation or a committed copy:
-
-```bash
-plan-tool install-skill            # symlink → <repo>/.claude/skills/plan-tool/
-plan-tool install-skill --user     # → ~/.claude/skills/ (every project, once — recommended)
-plan-tool install-skill --copy     # copy in (committable, but goes stale on upgrade)
-```
-
-Each run installs two files as one set: the bundled `SKILL.md` router and a
-`DIRECTIVES.md` sibling carrying the shared driving rules it cites. A
-per-project symlink is machine-local — it won't survive a fresh clone or CI
-(use `--copy` to commit it). `--root .agents` selects that destination root;
-`--integration` selects the bundled assistant variant. Codex also changes the default root, as below.
-
-**Codex** reads `.agents/skills`, not `.claude`, and skips a symlinked
-`SKILL.md` without logging. `--integration codex` therefore defaults to
-`--root .agents` and always copies; `plan-tool install-skill --integration codex
---user` installs it once for every project. Re-run it with `--force` after a
-plan-tool upgrade to refresh the copy.
-
-To install by hand instead, put both files in one folder:
-`integrations/<integration>/SKILL.md` and `integrations/shared/DIRECTIVES.md`.
-Symlinking the `integrations/<integration>/` folder alone leaves
-`DIRECTIVES.md` out, and the router's links to it break.
-
-**Optional spell check.** Install the `spell` extra to enable an advisory
-spell check on the plan slug/title at `create` time (a token-free, local
-`pyspellchecker` dictionary — no Claude call). It flags likely typos like
-`standardize-app-paramerters` → `parameters` before they get baked into the
-filename/manifest, and is a silent no-op when the extra isn't installed:
-
-```bash
-uv tool install --editable ".[spell]"
-```
-
-Each project you drive with `plan-tool` declares its plans in a per-project
-manifest at `<repo-root>/.plan-tool/plans.json` (a `{"plans": [...]}` array of
-repo-relative `.md` paths), or point the CLI at a directory with `--plans-dir`.
-
-<a id="plan-workflow"></a>
-
-## Common workflows
-
-For ordinary plan work, use the task guides as the source of operational
-detail. They preserve the command options, state-specific behavior, and
-recovery paths that would otherwise duplicate this README.
-
-| When you need to… | Use | Then read |
-| --- | --- | --- |
-| Create a plan from an idea, draft, or archived predecessor | `create` | [Create from an existing draft](docs/how-to/pipeline/create-from-existing.md) and [Common workflows](docs/how-to/common-workflows.md) |
-| Draft or refresh per-step implementation detail | `detail` | [Detail](docs/how-to/pipeline/detail.md) |
-| Check the plan's design and detail coverage | `completeness-audit` | [Audit](docs/how-to/pipeline/audit.md) |
-| Re-ground an unexecuted plan against changed code | `reconcile-plan` | [Common workflows](docs/how-to/common-workflows.md) |
-| Execute a step and protect completed work | `run`, `suggest-gates` | [Run](docs/how-to/pipeline/run.md) |
-| Export stories or verify merged work | `jira`, `verify-all` | [Command guide](docs/reference/commands.md) |
-| Register, remove, archive, or withdraw a plan | `register`, `deregister`, `sweep`, `withdraw` | [Command guide](docs/reference/commands.md) |
-
-`reconcile-plan` is for a plan that has not run yet: code is canonical and the
-command edits the plan. After execution, `reconcile-code` treats the plan as
-canonical and edits code. [Gates and reconcile](docs/GATES.md) owns that
-directional boundary.
-
-For every option, placeholder, and mode, use the [command guide](docs/reference/commands.md)
-or generated [CLI reference](docs/cli/README.md).
-
-## Current code layout
-
-<a id="the-plan-tool-directory"></a>
-
-See [Architecture](docs/ARCHITECTURE.md) for module ownership and import boundaries.
-The [data contract](DATA_CONTRACT.md) describes persisted state; commit durable
-project records and retain runtime evidence needed for review or recovery.
-
-## Develop and test
-
-<a id="git-hooks"></a>
-
-Follow [Contributing](CONTRIBUTING.md#develop-and-test) for checkout setup, tests,
-and git hooks. Use `uv run plan-tool` from your development checkout to test
-that build; the global editable install can point at a different clone.
+<a id="core-subcommand-workflow"></a>
+<a id="placeholders"></a>
+<a id="plan-tool-detail"></a>
+<a id="modes"></a>
 
 ## CLI usage
 
-<a id="placeholders"></a>
-<a id="plan-tool-detail"></a>
+```text
+create → bare audit → detail → grounded audit → run → reconcile-code → review
+                                              ↳ jira → verify
+```
 
-Use the [command guide](docs/reference/commands.md) for command summaries and
-argument conventions, or the generated [CLI reference](docs/cli/README.md) for
-every option. [Detail authoring](docs/how-to/pipeline/detail.md) explains the
-per-step draft and review workflow.
+Run `plan-tool` for the core commands or `plan-tool --help` for the full
+catalog. [Common workflows](docs/how-to/common-workflows.md) covers direct
+operation. [Command guide](docs/reference/commands.md) · [CLI options](docs/cli/README.md)
 
-## Running headlessly
+## Reference and operations
 
+<a id="plan-format"></a>
+<a id="current-code-layout"></a>
+<a id="the-plan-tool-directory"></a>
+<a id="develop-and-test"></a>
+<a id="git-hooks"></a>
+
+### Plans and development
+
+[Format specifications](docs/reference/README.md#format-specifications) ·
+[Persisted state](DATA_CONTRACT.md) ·
+[Architecture](docs/ARCHITECTURE.md) ·
+[Development and tests](CONTRIBUTING.md#develop-and-test)
+
+<a id="running-headlessly"></a>
 <a id="plan-tool-create-headlessly"></a>
 <a id="plan-tool-detail-headlessly"></a>
 <a id="plan-tool-reconcile-plan--reconcile-plan-walk-headlessly"></a>
 <a id="streaming-output-back-to-a-chat-agent"></a>
 <a id="iterating-headlessly"></a>
-
-See [headless operation](docs/OPERATIONS.md#running-headlessly) for closed stdin,
-confirmation flags and output capture. Read saved reports and monitor the
-original invocation to confirmed exit before starting another invocation.
-
-## Resuming after a failure
-
-<a id="managing-checkpoints"></a>
-
-Use [recovery guides](docs/how-to/recovery/README.md) and
-[checkpoint operations](docs/OPERATIONS.md#resuming-after-a-failure). Inspect the
-original process and its recorded outcome before resuming; a quiet process is
-not evidence that it has exited.
-
-## Iterating to convergence (`--iterate`)
-
-<a id="carve-an-over-packed-step-out-plan-tool-scope-out"></a>
-<a id="see-a-plans-split-criteria-plan-tool-split-criteria"></a>
-<a id="defaults"></a>
-<a id="when-to-use---iterate"></a>
-<a id="how-the-loop-terminates"></a>
-<a id="checkpoint-interaction"></a>
 <a id="headless"></a>
-<a id="operational-recipes"></a>
-
-`create` iterates by default. Pass `--iterate` explicitly to
-`completeness-audit`; keep `detail` one-shot unless iterative detail authoring
-is explicitly requested. Read conceptual findings, make judged edits, commit,
-and re-audit. See the [audit guide](docs/how-to/pipeline/audit.md) for coverage,
-qualification and stopping rules, and [iteration reference](docs/ITERATION.md)
-for supported routes and flags.
-
-## Run logs
-
+<a id="resuming-after-a-failure"></a>
+<a id="managing-checkpoints"></a>
+<a id="run-logs"></a>
 <a id="roadmap-seed-actions"></a>
 <a id="inspecting-recent-runs"></a>
 <a id="reading-one-run"></a>
 <a id="comparing-two-runs"></a>
 <a id="the-in-flight-snapshot"></a>
 <a id="cleanup"></a>
-
-Use [Operations](docs/OPERATIONS.md#run-logs) to inspect runs, lifecycle evidence
-and in-flight snapshots. Logs and checkpoints support diagnosis and recovery;
-retain evidence until the active work and review no longer need it.
-
-## Worktrees (parallel plans)
-
+<a id="console-progress-reporting"></a>
+<a id="worktrees-parallel-plans"></a>
 <a id="caveats-sharp-edges"></a>
 
-See [worktree operations](docs/OPERATIONS.md#worktrees-parallel-plans) for
-isolation choices and their limits. Keep invocation state and branches separate
-when running multiple plans.
+### Operating a run
 
-## Modes
+[Headless commands](docs/OPERATIONS.md#running-headlessly) ·
+[Recovery and checkpoints](docs/OPERATIONS.md#resuming-after-a-failure) ·
+[Logs](docs/OPERATIONS.md#run-logs) ·
+[Console progress](docs/OPERATIONS.md#console-progress-reporting) ·
+[Worktrees](docs/OPERATIONS.md#worktrees-parallel-plans)
 
-See [run modes](docs/cli/run.md) for execution and report modes. A rendered
-`--dry-run` prompt does not execute or verify the work.
-
-## Backends
-
+<a id="backends"></a>
 <a id="selecting-a-backend"></a>
 <a id="rate-limit-recovery"></a>
 <a id="codex-prerequisites"></a>
@@ -405,61 +173,46 @@ See [run modes](docs/cli/run.md) for execution and report modes. A rendered
 <a id="sandbox-mode-mapping"></a>
 <a id="stats-unavailable-under-codex"></a>
 
-Install and authenticate the backend CLI separately from the assistant skill.
-[Backends](docs/BACKENDS.md) covers selection, prerequisites, sandbox mapping and
-rate-limit recovery, including project defaults in `.plan-tool/backends.json`.
-Explicit `--backend` selects a backend and retains its configured model defaults;
-`--model` overrides model defaults. Unconfigured projects default to Claude.
+### Backend configuration
 
-## Lessons log behavior
+[Choose and configure a backend](docs/BACKENDS.md)
 
-See [project lessons](docs/explanations/lessons-learned.md) for the working model
-and [lesson commands](docs/cli/lessons.md) for inspection.
-
-## Lessons consolidation
-
-Use the [consolidation command reference](docs/cli/lessons.md#plan-tool-lessons-consolidate) for
-reviewing and condensing accumulated lessons.
-
-## Console progress reporting
-
-See [console progress](docs/OPERATIONS.md#console-progress-reporting) for
-progress lines and verbosity. Monitor long commands through their confirmed
-exit; backend completion alone does not establish command completion.
-
-## Correctness gates
-
-See [Gates](docs/GATES.md) and the [run flow](docs/how-to/pipeline/run.md) for
-blocking checks, advisory findings and execution advancement.
-
-## Per-subcommand reconcile
-
+<a id="iterating-to-convergence---iterate"></a>
+<a id="carve-an-over-packed-step-out-plan-tool-scope-out"></a>
+<a id="see-a-plans-split-criteria-plan-tool-split-criteria"></a>
+<a id="defaults"></a>
+<a id="when-to-use---iterate"></a>
+<a id="how-the-loop-terminates"></a>
+<a id="checkpoint-interaction"></a>
+<a id="operational-recipes"></a>
+<a id="correctness-gates"></a>
+<a id="per-subcommand-reconcile"></a>
 <a id="plan-tool-detail-name---reconcile--code-is-truth"></a>
 <a id="plan-tool-reconcile-code-name--plan-is-truth"></a>
 <a id="the--redirect-sub-block"></a>
+<a id="completeness-gates"></a>
 
-`reconcile-plan` uses current code to update an unexecuted plan. After
-execution, use `reconcile-code` to bring code into line with the plan. See
-[reconciliation gates](docs/GATES.md#per-subcommand-reconcile) for the contract.
-A completed execution continues through a full `reconcile-code --all` sweep
-and code review to convergence.
+### Audit and reconcile
 
-## Completeness gates
-
-Audit the bare plan before details, then audit the complete detail bundle
-before execution or export. The [audit guide](docs/how-to/pipeline/audit.md)
-explains saved reports, qualified results and judged session-directed fixes.
-
-Read the saved report, verify and judge the findings, edit the appropriate plan or detail text, commit bounded corrections, and re-run `completeness-audit --iterate --commit` against the changed snapshot.
+[Audit gates and result qualification](docs/how-to/pipeline/audit.md) ·
+[Iteration and stopping rules](docs/ITERATION.md) ·
+[Correctness and reconcile gates](docs/GATES.md)
 
 <a id="0-roadmap--stage-a-project-sized-concept-optional"></a>
+<a id="roadmap-review"></a>
+<a id="lessons-log-behavior"></a>
+<a id="lessons-consolidation"></a>
 
-## Roadmap review
+### Roadmaps and lessons
 
-Use the [roadmap walkthrough](docs/how-to/roadmap.md) for the complete lifecycle.
-`roadmap --compare` provides read-only two-snapshot review of Git revisions or
-accepted versions. Ordinary feedback uses `--propose-candidate` to snapshot
-eligible ledger items into an inert candidate; review and promotion are separate.
+Use `roadmap --compare` for a read-only comparison of Git revisions or stored
+versions. Use `--propose-candidate` to turn eligible ledger feedback into a
+candidate for separate review. [Complete roadmap walkthrough](docs/how-to/roadmap.md)
+
+[Lessons log](docs/OPERATIONS.md#lessons-log-behavior) ·
+[Lessons consolidation](docs/OPERATIONS.md#lessons-consolidation)
+
+[Full documentation map](docs/README.md) · [Project mission](MISSION.md)
 
 ## Related work and alternatives
 

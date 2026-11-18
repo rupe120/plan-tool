@@ -66,6 +66,33 @@ source reference; reinstall from its new location to repair that reference.
 Preserve optional extras when reinstalling, for example
 `uv tool install --editable '.[spell]' --reinstall`.
 
+The optional `spell` extra adds a local, advisory spell check for the plan slug
+and title during `create`. To add it to an editable install, run
+`uv tool install --editable '.[spell]'`.
+
+## Install the assistant skill
+
+For a user-level install across projects, choose an assistant in the
+[README install table](../../README.md#install-the-assistant-skill). The backend
+CLI needs its own installation and authentication. [Backend setup](../BACKENDS.md)
+
+From the consuming repository, choose `plan-tool install-skill` for a
+project-local Claude Code symlink or `plan-tool install-skill --copy` for a
+committable copy. Add `--integration cursor` or `--integration codex` to
+select that assistant.
+
+| Choice | Destination and behavior |
+| --- | --- |
+| Claude Code or Cursor | Defaults to `.claude/skills/plan-tool/` under the project root or under `~` with `--user`. [Cursor skill discovery](https://cursor.com/docs/skills) |
+| Codex | Defaults to `.agents/skills/plan-tool/` under the project root or under `~` with `--user`. The installer copies the files because Codex skips symlinked skill files. |
+| Skill root | Use `--root .claude` or `--root .agents` to select a supported root. |
+
+A project symlink works on the machine that installed it. Choose `--copy` for
+files you want to commit and refresh after upgrades. For manual installation,
+put `integrations/<integration>/SKILL.md` and
+`integrations/shared/DIRECTIVES.md` in the same skill directory. Reload the
+assistant and confirm it discovers the skill. [Installer options](../cli/install-skill.md)
+
 ## Update the CLI and skill
 
 For a GitHub installation, steps 1 and 2 are one command,
@@ -105,7 +132,7 @@ switching versions; a failed fast-forward requires inspection.
    repeat the original integration/root/copy options with `--force`. Review local
    skill edits before replacing them. Keep `SKILL.md` and `DIRECTIVES.md` together.
    Symlink installations follow their source clone; repair the links if it moves.
-   See [skill installation](../../README.md#install-the-assistant-skill).
+   See [skill installation](#install-the-assistant-skill).
 4. Restart or reload the assistant session so it reads the refreshed guidance.
 
 To return to a prior release, select its tag, reinstall the tool environment and

@@ -8709,7 +8709,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 **#510 — Make onboarding skill-first with one bounded first-task walkthrough**
 
 - **Labels:** Route `direct`
-  · Readiness `blocked-on #508`
+  · Readiness `ready`
   · Tier `experienced`
   · Principle `write-for-the-human`
 - **Arc assignment:** `backlog-arc-operator-workflow`.
@@ -8728,6 +8728,9 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Verification:** Walk the instructions in a consuming repository; check links and
   command examples. Complete #377 seed-authoring support before calling the walkthrough complete.
   The recipe-consistency prerequisite is satisfied (skill-router repair).
+- **Public sign-off:** #515 owns disposition of #508. The first-task walkthrough
+  ends at detail review and can proceed with the installed skill. If repository-specific
+  guidance obstructs that path, record the concrete issue in the walkthrough.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
