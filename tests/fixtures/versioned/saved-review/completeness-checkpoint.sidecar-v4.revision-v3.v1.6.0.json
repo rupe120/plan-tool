@@ -1,0 +1,64 @@
+{
+  "version": 4,
+  "plan_slug": "demo",
+  "plan_path": "plans/1-demo.md",
+  "created_at": "2026-06-01T12:00:00Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fabfd04423dc708376d6e9e3c636d1e91a62a73877a8607305dce71e7d8a5921",
+  "code_fingerprint": {
+    "src/bar.py": "22991e19d8465ea6ab7562c4b92b02717a8394c7b2f54ad5b2c8d04b89b45e5f",
+    "src/foo.py": "febdef644f16ce9d2385c8e1d15319d48d5f44c7a1bf83af20e48a37e02be3ac"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "/private/tmp/plan-tool-example/v1.6.0/test_capture_other_kinds_compl0/plans/plan-details/demo/01-stub.md": "db26270a37a034f1ebb3bbeb9a5438258974ecebf354da2be06844da7f002b84"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# r\n",
+  "recommendations": [
+    {
+      "id": "a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "title a",
+      "body": "body a",
+      "suggested_action": null,
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "fabfd04423dc708376d6e9e3c636d1e91a62a73877a8607305dce71e7d8a5921",
+    "detail_bundle_digest": "d49521be817e9f4490c5edfd9c00aa8f3a50ee519e6004365662e4207548949e",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/private/tmp/plan-tool-example/v1.6.0/test_capture_other_kinds_compl0/plans/plan-details/demo/01-stub.md",
+        "state": "present",
+        "digest": "db26270a37a034f1ebb3bbeb9a5438258974ecebf354da2be06844da7f002b84"
+      }
+    ],
+    "source_seed_digest": null,
+    "project_context_digest": null
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true
+}
