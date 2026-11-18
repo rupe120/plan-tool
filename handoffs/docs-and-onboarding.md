@@ -73,6 +73,17 @@ exit before returning to the prepared branches.
    takes the direct route from its [archived seed](../docs/implementation-plans/plan-seeds/archive/installed-seed-authoring.replaced.md).
    The owner authorizes Codex `gpt-6.2-sol` to author and audit the plan.
    The plan reuses the existing shared reference and installer.
+   Both bare audits use
+   `completeness-audit installed-seed-authoring --iterate --commit --audit-passes 1`
+   with that backend and model. The [first report](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-184624-completeness.md)
+   covers 0 of 3 details, confirms current evidence, and reports four
+   findings, two of them blocking. Commit `1011f63fa` clarifies canonical-shape
+   routing, carried guardrails, the isolated wheel check, and approval before
+   commit and create. The [re-audit](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-184910-completeness.md)
+   has the same detail coverage and a fresh conceptual call. It reports
+   confirmed, current `advisory-only` evidence with no blockers and no
+   budget limit. Detail authoring owns the remaining preparation example
+   check for source-backed evidence sections, including Risks.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact
