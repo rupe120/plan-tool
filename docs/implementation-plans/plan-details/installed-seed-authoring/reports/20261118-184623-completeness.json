@@ -1,0 +1,155 @@
+{
+  "version": 4,
+  "plan_slug": "installed-seed-authoring",
+  "plan_path": "docs/implementation-plans/2-installed-seed-authoring.md",
+  "created_at": "2026-11-18T18:46:23Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4b449254430bf4cdd3c1cba6113b4dca678babde2397ceae14efbb149482a73b",
+  "code_fingerprint": {
+    "BACKLOG.md": "feb1d7392806647b9342886e1c5289037c720d17a2f9908cf4587239a5b1668f",
+    "integrations/claude/SKILL.md": "79330405fc84b38abb0bfb15ec1542a08fb4ea06b98b47ebd5a50c804a72b1be",
+    "integrations/codex/SKILL.md": "d25d0b9fc9bad11d7ac3960cfe9212a591ba8dbd517b9caa8407e3f30a75b71f",
+    "integrations/cursor/SKILL.md": "a2328deab7135001397b3fc7297e5cf7b94c156ac587d7e97680e43b915a8c93",
+    "integrations/shared/DIRECTIVES.md": "b9ddbbb955a9b1d3693cbeaeb0000da1ca0fbbb1c3ce659fca507c192c33d081",
+    "tests/cli/test_skill_cmd.py": "fe0c967bb3f56b9e453ad07514e1cd7afed09de69f680ad4573dcc8d16465d51",
+    "tests/test_skill_router_phase_rules.py": "011715e0838d3981526522ba56dc6ae7acde153b4598ae98edad05303c2e9084"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md": "67c19141621897f410c5be08e9084cc69795179b82f3a577aa51386f05a4453d",
+    "docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md": "ed579880891fc3cecd8147fe7519655505f9aa294a7530c8faa0deef321e63d9",
+    "docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md": "04d7feadb6166a4f1c3d085d59424ef98ae0aecef5f9d34d1a20be27e8a47591"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Installed Seed Authoring\n\n`installed-seed-authoring` \u00b7 generated 2026-11-18T18:46:23Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring.\n\n    plan-tool reconcile-plan-walk installed-seed-authoring  # optional interactive review of the saved findings\n\n- MEDIUM `[file-backed-route-selection]` [confidence: limited]: The installed routers can still tell assistants that a large document always enters preparation. Step 1 (give each installed assistant a local seed-authoring path) updates `DIRECTIVES.md` and the three Authoring phase links, but the \u201cI have a big doc \u2014 make a plan from it\u201d row in `integrations/claude/SKILL.md`, `integrations/codex/SKILL.md`, and `integrations/cursor/SKILL.md` says \u201ca distill first-pass reorganizes the seed.\u201d `plan_tool/create.py:classify_file_backed_source` selects readiness by canonical body shape regardless of size, so step 2\u2019s installed-link check and the Acceptance criterion can pass while the command shortcut still teaches a conflicting rule.\n  - Fix: Have all three big-document shortcuts point to the shared intake rules, where canonical shape determines whether `create` starts with direct assessment or preparation.\n- MEDIUM `[seed-scope-enforcement]` [confidence: limited]: The installed guidance can teach assistants to pass intake while leaving a binding scope limit out of the downstream guardrails. Step 1 (give each installed assistant a local seed-authoring path) says to keep the full scope fence and explain the three required headings and their `None` option. `plan_tool/create.py:_extract_supplied_guardrails` carries the named raw-source guardrails forward, and `plan_tool/scope_fence.py:missing_required_guardrail_headings` accepts `None` without checking whether the seed states a binding limit elsewhere. The Architecture, Testing, Acceptance criteria, and step 2 (prove the installed guidance agrees with intake) allow a shape check to pass without showing where that limit goes. Step 1\u2019s stated property is\n  ```\n  Show how to check claims against the request or backlog entry and live code, write the Outcome that becomes plan intent, keep the full scope fence, and include usable References, Testing, and acceptance evidence.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): A seed can pass the installed checks while a scope boundary the user expects downstream is left in prose that downstream steps may never receive.\n  - Fix: Teach the distinction between the full scope contract and the named guardrail sections that carry binding limits downstream, and have the worked examples and acceptance check show when a real limit belongs in a guardrail and when `None` is appropriate.\n- MEDIUM `[wheel-verification-boundary]` [confidence: limited]: The wheel proof leaves open whether every full pytest run must build and install a wheel. Step 2 (prove the installed guidance agrees with intake) places \u201cRepeat the installed-link check using the actual CLI from a wheel built and installed with the existing build tools\u201d after the integration-test requirement. Testing, Acceptance criteria, and step 3 (keep #377 visible until shipment and verification) require a passing wheel check before closure. `bitbucket-pipelines.yml` runs the entire suite after `uv sync`, and `pyproject.toml` lists Hatchling as a build requirement outside the runtime and dev dependencies. Putting wheel setup inside ordinary pytest gives the suite a new dependency on build inputs that CI does not explicitly provide.\n  - Fix: Keep the source-install assertions in the existing integration suite and require a separate isolated wheel run of the same link and mode checks as evidence for closing #377.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring. Correct plan contracts through a session-directed edit before authoring details.\n\n- MEDIUM `[reviewed-seed-handoff]` [confidence: limited]: The acceptance check can pass without showing that the author waits for review and commits the reviewed seed before calling `create`. The Overview, Architecture, and step 1 (give each installed assistant a local seed-authoring path) describe a reviewed, committed input. Testing and step 2 (prove the installed guidance agrees with intake) check example content, links, and route classification, while Acceptance criteria only asks the assistant to \u201cchoose the correct create handoff.\u201d `plan_tool/create.py:validate_from_existing_seed` classifies supplied text and cannot establish either approval or commit order.\n  - Fix: Add an acceptance criterion that checks the installed walkthrough puts completed user review and the reviewed seed\u2019s commit before the file-backed `create` invocation.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit installed-seed-authoring --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Installed Seed Authoring\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[reviewed-seed-handoff]` [confidence: limited]: The acceptance check can pass without showing that the author waits for review and commits the reviewed seed before calling `create`. The Overview, Architecture, and step 1 (give each installed assistant a local seed-authoring path) describe a reviewed, committed input. Testing and step 2 (prove the installed guidance agrees with intake) check example content, links, and route classification, while Acceptance criteria only asks the assistant to \u201cchoose the correct create handoff.\u201d `plan_tool/create.py:validate_from_existing_seed` classifies supplied text and cannot establish either approval or commit order.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit installed-seed-authoring --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-18d067ee",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The installed routers can still tell assistants that a large document always enters preparation. Step 1 (give each insta",
+      "body": "The installed routers can still tell assistants that a large document always enters preparation. Step 1 (give each installed assistant a local seed-authoring path) updates `DIRECTIVES.md` and the three Authoring phase links, but the \u201cI have a big doc \u2014 make a plan from it\u201d row in `integrations/claude/SKILL.md`, `integrations/codex/SKILL.md`, and `integrations/cursor/SKILL.md` says \u201ca distill first-pass reorganizes the seed.\u201d `plan_tool/create.py:classify_file_backed_source` selects readiness by canonical body shape regardless of size, so step 2\u2019s installed-link check and the Acceptance criterion can pass while the command shortcut still teaches a conflicting rule.",
+      "suggested_action": "Have all three big-document shortcuts point to the shared intake rules, where canonical shape determines whether `create` starts with direct assessment or preparation.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "file-backed-route-selection",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-eb27687e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The installed guidance can teach assistants to pass intake while leaving a binding scope limit out of the downstream gua",
+      "body": "The installed guidance can teach assistants to pass intake while leaving a binding scope limit out of the downstream guardrails. Step 1 (give each installed assistant a local seed-authoring path) says to keep the full scope fence and explain the three required headings and their `None` option. `plan_tool/create.py:_extract_supplied_guardrails` carries the named raw-source guardrails forward, and `plan_tool/scope_fence.py:missing_required_guardrail_headings` accepts `None` without checking whether the seed states a binding limit elsewhere. The Architecture, Testing, Acceptance criteria, and step 2 (prove the installed guidance agrees with intake) allow a shape check to pass without showing where that limit goes. Step 1\u2019s stated property is\n  ```\n  Show how to check claims against the request or backlog entry and live code, write the Outcome that becomes plan intent, keep the full scope fence, and include usable References, Testing, and acceptance evidence.\n  ```",
+      "suggested_action": "Teach the distinction between the full scope contract and the named guardrail sections that carry binding limits downstream, and have the worked examples and acceptance check show when a real limit belongs in a guardrail and when `None` is appropriate.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-scope-enforcement",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "A seed can pass the installed checks while a scope boundary the user expects downstream is left in prose that downstream steps may never receive."
+    },
+    {
+      "id": "plan-plan-correctness-26c7298d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The wheel proof leaves open whether every full pytest run must build and install a wheel. Step 2 (prove the installed gu",
+      "body": "The wheel proof leaves open whether every full pytest run must build and install a wheel. Step 2 (prove the installed guidance agrees with intake) places \u201cRepeat the installed-link check using the actual CLI from a wheel built and installed with the existing build tools\u201d after the integration-test requirement. Testing, Acceptance criteria, and step 3 (keep #377 visible until shipment and verification) require a passing wheel check before closure. `bitbucket-pipelines.yml` runs the entire suite after `uv sync`, and `pyproject.toml` lists Hatchling as a build requirement outside the runtime and dev dependencies. Putting wheel setup inside ordinary pytest gives the suite a new dependency on build inputs that CI does not explicitly provide.",
+      "suggested_action": "Keep the source-install assertions in the existing integration suite and require a separate isolated wheel run of the same link and mode checks as evidence for closing #377.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "wheel-verification-boundary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-4e47e7d5",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The acceptance check can pass without showing that the author waits for review and commits the reviewed seed before call",
+      "body": "The acceptance check can pass without showing that the author waits for review and commits the reviewed seed before calling `create`. The Overview, Architecture, and step 1 (give each installed assistant a local seed-authoring path) describe a reviewed, committed input. Testing and step 2 (prove the installed guidance agrees with intake) check example content, links, and route classification, while Acceptance criteria only asks the assistant to \u201cchoose the correct create handoff.\u201d `plan_tool/create.py:validate_from_existing_seed` classifies supplied text and cannot establish either approval or commit order.",
+      "suggested_action": "Add an acceptance criterion that checks the installed walkthrough puts completed user review and the reviewed seed\u2019s commit before the file-backed `create` invocation.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reviewed-seed-handoff",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 4,
+    "detail_grade": "run",
+    "plan_digest": "4b449254430bf4cdd3c1cba6113b4dca678babde2397ceae14efbb149482a73b",
+    "detail_bundle_digest": "177af02bbd0424fe71f8fbcf9a5990d0fa15f0fbae738bebb8a037aa6355567d",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "b838b8efb96da015a5d79280d47a7409a4b7f65f3319c526118db6ffc842694f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e",
+    "sibling_paths_digest": null
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}
