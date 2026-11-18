@@ -36,7 +36,8 @@ steps:
     References, Testing, and acceptance evidence. For backlog work, carry the source
     contract, entry ID, any promoted ticket key, and the eventual backlog update into
     the seed. Replace the stale size and heading advice with the actual intake rules.
-    Send each router's big-document shortcut to those same rules. Explain the unmatched-fence
+    Send each router's authoring recipes to the same approved-input handoff.
+    Explain the unmatched-fence
     refusal, the single usable References section, and the three required guardrail
     sections. Distinguish the full scope contract from binding limits carried in the
     named guardrails. Use None only where no boundary of that kind applies. Explain
@@ -189,8 +190,9 @@ Review the intake claims against SEED_FORMAT.md and file-backed intake.
   limit in the appropriate guardrail. The examples show where `None` is
   appropriate.
 - The installed walkthrough puts user approval of the seed and a commit of
-  that approved input before `create --from-existing`. Each authoring route,
-  including the big-document shortcut, passes the exact approved seed path.
+  that approved input before `create --from-existing`. All authoring entry
+  points follow the same handoff. CLI source selection reads the approved
+  standalone seed itself.
 - Source-install checks and the separate wheel verification pass, including
   copy mode, before the source entry closes.
 - Upon closure, the working board and its active arcs reflect #377 delivery.
