@@ -808,7 +808,11 @@ unavailable): the prompt states that case separately, but the revision and
 fingerprint treat it like "none apply", so an unresolvable identity does not make
 saved evidence stale (owner decision 2026-11-17). A saved v1–v3
 revision reads the missing digest as `null`, so a report of a plan without
-siblings stays current after upgrade while one with siblings reads stale once. A later sidecar reader may calculate an unpersisted
+siblings stays current after upgrade while one with siblings reads stale once.
+A plan whose `source_seed` was recorded plans-directory-relative (see
+`PLAN_FORMAT.md`) now resolves that seed, so its `source_seed_digest` and sibling
+set become non-null on the first capture after upgrade and its saved reports read
+stale once; a plan whose seed file is gone stays unresolved and unchanged. A later sidecar reader may calculate an unpersisted
 `view_revision_status` of `current`, `stale`, `unknown`, or `not-sampled` from
 those artifacts; a seed or project-context edit, or an edit to a same-roadmap
 sibling plan's `creates:`, after the report was saved counts as staleness the
