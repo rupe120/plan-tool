@@ -1812,18 +1812,17 @@ class TestAppendWarning:
     def test_failed_append_does_not_raise(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
-        ro = tmp_path / "ro"
-        ro.mkdir()
-        ro.chmod(0o500)
-        try:
-            append_warning(
-                ro,
-                _warning(candidate_rule="r", matched_rules=("p",)),
-                stderr=sys.stderr,
-            )
-            assert "append_warning failed" in capsys.readouterr().err
-        finally:
-            ro.chmod(0o700)  # restore so tmp_path cleanup succeeds
+        # A file where the repo root should be: creating the log's parent
+        # directory under it fails for any user. chmod would not, because a
+        # root-owned CI container ignores permission bits.
+        not_a_dir = tmp_path / "ro"
+        not_a_dir.write_text("", encoding="utf-8")
+        append_warning(
+            not_a_dir,
+            _warning(candidate_rule="r", matched_rules=("p",)),
+            stderr=sys.stderr,
+        )
+        assert "append_warning failed" in capsys.readouterr().err
 
 
 # ---------- load_warnings ----------

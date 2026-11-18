@@ -261,10 +261,10 @@ def test_save_sidecar_allocates_numbered_slot_on_second_drift(
 
 
 def test_save_sidecar_continues_on_write_failure(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str],
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
 ) -> None:
-    """If writing the sidecar fails (simulated via permission
-    revocation on the parent), the helper logs the failure and
+    """If writing the sidecar fails (simulated by a write that raises, not by
+    chmod: a root-owned CI container ignores permission bits), the helper logs the failure and
     LEAVES claude's edits in place on the original. Token
     preservation (Lesson 2) > tree cleanliness on the failure path:
     losing both the sidecar AND the work would be worse than the
@@ -273,13 +273,15 @@ def test_save_sidecar_continues_on_write_failure(
     plan.write_text("claude-edit\n", encoding="utf-8")
     pre_snapshot = {plan: "original\n"}
 
-    # Make the parent unwritable so sidecar.write_text fails.
-    import os
-    os.chmod(tmp_path, 0o555)
-    try:
-        sidecars = save_collision_sidecars(pre_snapshot)
-    finally:
-        os.chmod(tmp_path, 0o755)
+    real_write_text = Path.write_text
+
+    def fail_sidecar_write(self: Path, *args, **kwargs):
+        if self == plan:
+            return real_write_text(self, *args, **kwargs)
+        raise PermissionError(13, "simulated write failure", str(self))
+
+    monkeypatch.setattr(Path, "write_text", fail_sidecar_write)
+    sidecars = save_collision_sidecars(pre_snapshot)
 
     # No sidecar in the list (write failed → skipped).
     assert sidecars == []
