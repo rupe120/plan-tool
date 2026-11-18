@@ -634,7 +634,7 @@ Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the 
 | Branch | `feat/audit-sibling-plan-created-paths` (plan merged as PR #256) |
 | Checks | full suite green per step; `reconcile-code --all` no drift |
 | Reviewer | `/code-review high`, forked report-only |
-| Disposition | round 1 dispositioned; round 2 pending |
+| Disposition | rounds 1–2 dispositioned; round 3 pending |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -667,4 +667,20 @@ Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the 
 ### Open items
 
 - `tracked` BUG_BACKLOG: `source_seed` relative to the plans directory never resolves, so in Loom every sibling-aware check is inert (found while measuring #5). This PR helps Loom only after that bug is fixed.
+
+### Findings (round 2)
+
+The sibling block's claims drew new findings in two rounds running, so the cases were enumerated rather than patched: not roadmap-derived, identity uncertain (every Loom plan today), manifest unreadable, every sibling skipped, some skipped, normal. Only neutral wording that never claims completeness and never hedges is true in every case, so the empty and unknown statements were made neutral ("none are listed", "unavailable … so none are listed") and the listed case keeps "can be incomplete".
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | An unreadable manifest renders a definite "no sibling plan paths apply" | **Fixed (wording).** The empty statement no longer claims none exist; test `test_audit_prompt_with_an_unreadable_manifest_lists_none_without_claiming_none_exist` |
+| 2 | Every sibling skipped renders the empty set as definite | **Fixed (wording).** Same neutral statement; test `test_audit_prompt_with_every_sibling_unreadable_lists_none_without_claiming_none_exist` |
+| 3 | The plan's identity is resolved twice per capture | **Declined (settled in the plan).** The repeated read is accepted to keep one selection rule; cost tracked with the BUG_BACKLOG `source_seed` entry |
+| 4 | A shared core returning completeness status would remove the identity pre-check | **Declined.** It changes `_eligible_planned_paths`, which the scope fence keeps untouched; with neutral wording the prompt needs no completeness status |
+| 5 | The unknown statement told the model to hedge every missing-path finding, and every Loom plan takes it | **Fixed.** The unknown statement carries no instruction; a test asserts no hedging phrase in the empty or unknown block |
+| 6 | Unknown and empty share a fingerprint though their prompts differ | **Declined (owner decision).** Both statements are now neutral and instruct nothing, so the difference is immaterial |
+| 7 | The parity test injected every class only through identity resolution | **Fixed.** Renamed to the identity case it pins; the manifest and sibling paths have their own tests (1, 2) |
+| 8 | `audit_input_revision`'s docstring covered two of three digests | **Fixed** |
+| 9 | Blank lines and an over-long docstring line | **Fixed** |
 
