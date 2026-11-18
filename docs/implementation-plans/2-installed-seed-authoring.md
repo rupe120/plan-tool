@@ -181,7 +181,9 @@ Review the intake claims against SEED_FORMAT.md and file-backed intake.
 - Each installed router leads to the same guidance. The big-document
   shortcuts use the same canonical-shape routing rule.
 - The guidance explains the evidence a preparation seed must provide and
-  limits strict source step import to direct-ready seeds.
+  limits strict source step import to direct-ready seeds. It identifies
+  which assessment outcome publishes a plan and when a preparation
+  refusal warrants an unchanged retry or a seed correction.
 - Both examples ground the seed in local evidence and carry each binding
   limit in the appropriate guardrail. The examples show where `None` is
   appropriate.

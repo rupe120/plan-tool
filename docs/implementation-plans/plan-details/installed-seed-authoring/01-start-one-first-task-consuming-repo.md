@@ -37,7 +37,7 @@ The three routers already ship with a shared reference and an Authoring row, but
   - `integrations/claude/SKILL.md` — Link the Authoring row and big-document shortcut to the shared section.
   - `integrations/codex/SKILL.md` — Link the same two entry points to the shared section.
   - `integrations/cursor/SKILL.md` — Link the same two entry points to the shared section.
-  - `tests/test_skill_router_phase_rules.py` — Require the Authoring link and verify the big-document shortcut for each backend.
+  - `tests/test_skill_router_phase_rules.py` — Require the Authoring phase-table link for each backend. Step 2 owns the installed shortcut test.
 
 ## Implementation
 
@@ -59,9 +59,10 @@ Use a concrete sample request with an observable change and a limit the reader c
 **Give the walkthrough and the big-document shortcut one intake rule.**
 
 - **Fix preflight refusals before calling `create`.** An unmatched Markdown code fence can hide later headings. Close it with a matching fence. Supply exactly one real `## References` with non-empty, non-placeholder evidence outside fenced code. A heading shown inside an example, or a References body made entirely of code fences, cannot satisfy that check. Supply each of the three guardrail H2s exactly once outside fenced code with a non-empty, non-placeholder body. `_(TODO)_` fails. An explicit `None` passes the guardrail presence check. The guardrail checker can also count fenced body content beneath a real heading. These preflight refusals happen before routing, model calls, or a run record.
-- **Explain direct assessment using the actual heading set.** Once preflight passes, the seed is direct-ready when it has exactly one non-empty, non-placeholder `## Overview`, `## Problem statement`, `## Architecture`, `## Out of scope`, `## Risks`, `## Testing`, `## Acceptance criteria`, and `## Deferred` after fenced code is stripped. A Testing section containing only a fenced command selects preparation. Case and an optional closing ATX sequence normalize. `Outcome` and `In scope` still belong in the scope contract. A direct-ready seed receives a split assessment before publication, and a valid strict `## Steps` in that seed can supply its graph. A prepared seed gets an ordinary step proposal.
+- **Explain direct assessment using the actual heading set.** Once preflight passes, the seed is direct-ready when it has exactly one non-empty, non-placeholder `## Overview`, `## Problem statement`, `## Architecture`, `## Out of scope`, `## Risks`, `## Testing`, `## Acceptance criteria`, and `## Deferred` after fenced code is stripped. A Testing section containing only a fenced command selects preparation. Case and an optional closing ATX sequence normalize. `Outcome` and `In scope` still belong in the scope contract. Direct readiness selects a raw-source assessment. Only its single-plan outcome can publish directly, using strict `## Steps` when valid. A split produces a proposal and an invalid assessment produces a refusal. Neither publishes a plan. A prepared seed gets an ordinary step proposal.
 - **Explain preparation using the same rule.** When preflight passes but a canonical body section is missing, duplicated, empty after fence stripping, or a placeholder, `create` takes the visible preparation route. Its decision can normalize the source for one plan, propose a split, or refuse. For all preparation seeds, state source evidence for scope exclusions, risks, testing, and acceptance criteria. State any actual deferrals and say when there are no known risks. Preparation may derive Overview, Problem statement, and Architecture from intent. Remove the 16 KB advice, `Scope of work` heading advice, and the `--no-distill` bypass suggestion for file-backed intake.
-- **Route both entries to `DIRECTIVES.md#authoring-hygiene`.** Add the sibling link in the identical Authoring rows while preserving their existing phase links and checklist. Point each big-document shortcut to the same section to check the source's shape and select one effort before invoking `create`. Keep any nearby route summary aligned with the distinction between a preflight refusal and a refusal after assessment.
+- **Explain how to recover after exit.** Update the shared `Classify preflight refusals accurately` paragraph alongside the intake guide. Correct a preflight defect before retrying. For unsupported preparation evidence, check the named section against the approved seed. Add and review missing evidence before committing a correction. When the evidence already exists and preparation misses it, follow the emitted instruction to retry unchanged after confirmed exit. Keep the multi-plan pointer to the shared classification rule working.
+- **Route both entries to `DIRECTIVES.md#authoring-hygiene`.** Add the sibling link in the identical Authoring rows while preserving their existing phase links and checklist. Point each big-document shortcut to the same section to check the source's shape and select one effort before invoking `create`.
 
 ## Tests
 
@@ -72,9 +73,9 @@ This step changes guidance and its tests. The `enforce_step_tests` run gate appl
 - `tests/test_skill_router_phase_rules.py:test_phase_table_is_identical_across_the_three_routers` — The three Authoring rows carry the same links and checklist.
 - `tests/test_skill_router_phase_rules.py:test_every_section_a_router_names_exists_in_directives` — `#authoring-hygiene` and the other phase anchors exist in the shared reference.
 - `tests/test_skill_router_phase_rules.py:test_each_phase_row_links_every_section_and_carries_its_checklist` — The Authoring row requires the new sibling link alongside its existing links and checklist.
-- `tests/test_skill_router_phase_rules.py:test_big_document_shortcut_links_to_authoring_hygiene` — Add a check that each big-document row points to the same sibling anchor as its Authoring row.
 - `tests/test_create.py:TestFileBackedSourceIntake` and `tests/test_scope_fence.py:TestMissingRequiredGuardrailHeadings` — Run the existing intake checks and compare the guidance with the pinned refusal, direct-readiness, preparation, and `None` cases. Replace the direct example's Testing body with a fenced-only command and check that intake selects preparation. Check the existing strict-step preparation exemption.
 - Example walkthrough — Read the sample request and backlog variation as a consuming-repo session. Trace each existing-code claim to its evidence, each binding limit to its guardrail, and each acceptance result to `## Testing`. Feed the example seed text to `plan_tool/create.py:validate_from_existing_seed()` to confirm the documented readiness without a model call. Step 2 owns the permanent installed-path proof.
+- Route and recovery review — Compare the shared guide with the existing direct-split and unsupported-evidence tests. Check that the guide distinguishes split from publication and gives the correct action for preflight, missing preparation evidence, and preparation that misses evidence in the approved seed.
 - Link regression check — Temporarily remove a required new link and confirm the targeted test fails. Restore it and rerun the focused suite.
 
 ## Acceptance criteria
@@ -85,6 +86,7 @@ This step changes guidance and its tests. The `enforce_step_tests` run gate appl
 - The backlog variation identifies the source entry and any promoted ticket, preserves the source contract, and makes the originating backlog update part of shipment verification.
 - The guidance matches the intake checks for unmatched fences, References, guardrails, and canonical body readiness. The request example classifies as direct-ready and the backlog example as eligible for preparation. The shared instructions work from the existing installed pair.
 - The route guide explains fenced-only canonical bodies, limits strict source step import to direct-ready seeds, and states the evidence requirements for any preparation seed.
+- The guide identifies direct-assessment outcomes and keeps both refusal recovery entry points consistent with the emitted instructions.
 
 ## References
 
