@@ -15,6 +15,7 @@ A task can carry an optional due date, and `todo list --overdue` shows only the 
 - Recurring tasks, reminders or notifications.
 - Time-of-day, time zones or relative dates such as "tomorrow".
 - Editing the due date of an existing task.
+- Changes to task ordering.
 - Any change to the storage location or file format beyond one optional `due` key.
 
 ## Allowed behavior changes
@@ -37,3 +38,16 @@ File anything outside this fence (for example editing a due date) in `BACKLOG.md
 ## References
 
 - `todo/model.py:Task`, `todo/store.py`, `todo/cli.py:main`
+
+## Scope guardrails
+
+Keep existing task files readable and preserve task ordering. Limit the
+stored format change to the optional `due` key.
+
+## Audit guardrails
+
+None
+
+## Expected placement
+
+Use the existing task model, JSON store, CLI, and their tests.

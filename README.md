@@ -12,11 +12,10 @@ be reviewed, resumed and handed off.
 Use it when the work has dependent changes, spans several sessions, or will be
 handed off. For a small edit, skip it and just make the change.
 
-## Start here
-
+<a id="start-here"></a>
 <a id="use-with-your-assistant"></a>
 
-### Install
+## Install
 
 <a id="requirements"></a>
 <a id="install-the-cli"></a>
@@ -44,7 +43,7 @@ Reload your assistant and open the Git repository you want to work on.
 [Installation options and updates](docs/how-to/install-and-update.md#install-the-assistant-skill) ·
 [Companion skills](docs/how-to/companion-skills.md)
 
-### Your first plan
+## Your first plan
 
 In your coding assistant, start with one sentence.
 
@@ -54,7 +53,7 @@ The assistant may ask what the scraper should extract. For example, reply
 “Take a URL and print the page title.” Review the plan it prepares before
 asking it to implement anything.
 
-#### Follow a worked plan
+### Follow a worked plan
 
 In the worked example, a task-list CLI needs optional due dates and a way to
 list overdue tasks. This request asks the assistant to pause at each review
@@ -80,9 +79,11 @@ The bare audit review adds an explicit acceptance criterion.
 
 > A task due today is not overdue; only a due date strictly before today is.
 
-You can step through the artifacts in a disposable Git repo with the
-[prepared demo](docs/demos/getting-started/README.md). Its audit transcripts
-are authored examples. A live audit saves its report under
+You can step through the artifacts in a disposable Git repo and finish at
+detail review. The audit transcripts are authored examples.
+[Prepared demo](docs/demos/getting-started/README.md#start)
+
+A live audit saves its report under
 `docs/implementation-plans/plan-details/due-dates/reports/` in this example.
 
 <a id="decision-flow"></a>
