@@ -692,7 +692,7 @@ Each lives in its canonical home (`DATA_CONTRACT.md` qualified-result revision, 
 | Branch | `fix/source-seed-plans-relative-resolution` (direct route; BUG_BACKLOG entry "Roadmap plans whose `source_seed` is relative to the plans directory…") |
 | Checks | full suite green; measured on a read-only copy of Loom's 24 plans |
 | Reviewer | `/code-review high`, forked report-only |
-| Disposition | round 1 dispositioned; round 2 pending |
+| Disposition | rounds 1–2 dispositioned; owner call on PR vs round 3 |
 
 ### Evidence
 
@@ -720,4 +720,18 @@ After upgrade, Loom's nine roadmap plans resolve their seed for the first time, 
 | 5 | `plans_dir` is required, forcing `None` at every old test call | **Declined.** A default would silently disable the legacy lookup for a forgetful caller |
 | 6 | `plan_path.parent` is recomputed at four sites | **Fixed (test).** A legacy plan renders the same scope contract with and without a snapshot; red if capture skips the lookup |
 | 7 | An absolute value probes the same path twice | **Fixed.** Equal candidates are probed once; test red without the dedupe |
+
+### Findings (round 2)
+
+Three findings repeat round 1 and keep its dispositions (#1 fence refusal, #3 precedence, #5 required argument).
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | The unmatched-fence refusal reaches newly resolved legacy seeds; the operator can only edit an archived seed | **Declined (repeat).** The rule and its error text are unchanged and apply to every plan; Loom's 24 captures all succeeded with the fallback |
+| 2 | `capture` resolved the seed twice, so the fence check and fingerprinted bytes could come from different files | **Fixed.** One resolution feeds both; test `test_capture_fingerprints_the_seed_file_it_resolved_and_checked`, red when it resolves twice |
+| 3 | A repo-relative archive outranks a live plans-relative seed | **Declined (repeat).** The invariant that keeps previously resolving plans identical |
+| 4 | The legacy base is `plan_path.parent`, which differs from the plans root for a nested plan | **Declined.** `create` writes plans into its output directory and the old writer recorded relative to it, which is `plan_path.parent`; existing code already assumes plans sit directly in it (`plan_path.parent / "roadmaps" / slug`) |
+| 5 | `plans_dir` is required, so `None` silently turns the lookup off | **Declined (repeat).** A default would hide the omission |
+| 6 | Two Loom-layout tests duplicated their fixture | **Fixed.** Both use `legacy_layout` |
+| 7 | The `DATA_CONTRACT.md` note used undated upgrade language | **Fixed.** Present-tense contract plus a dated cut note |
 
