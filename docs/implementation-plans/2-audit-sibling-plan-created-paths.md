@@ -111,7 +111,7 @@ steps:
   depends_on_notes:
     1: the selection helper and the captured snapshot field the renderer reads
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/02-sibling-planned-paths-input-block-plan.md
-  status: current
+  status: done
   description: 'Add a sibling-planned-paths input block to `plan_tool/prompts/plan-audit.md`
     as a new `${sibling_planned_paths_block}` placeholder beside the existing input
     blocks. It lists each sibling path from step 1''s normalized set, one per line,
@@ -143,6 +143,7 @@ steps:
   depends_on_notes:
     2: the shipped prompt block that makes the sibling-path T case obsolete
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md
+  status: current
   description: 'Rewrite `integrations/shared/DIRECTIVES.md` § "T — tool artifacts"
     so the sibling-path case is described as handled by the audit, which now receives
     same-roadmap sibling `creates:` paths, while the stale roadmap or seed path case
