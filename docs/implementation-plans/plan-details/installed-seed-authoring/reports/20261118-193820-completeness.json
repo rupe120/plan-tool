@@ -1,0 +1,136 @@
+{
+  "version": 4,
+  "plan_slug": "installed-seed-authoring",
+  "plan_path": "docs/implementation-plans/2-installed-seed-authoring.md",
+  "created_at": "2026-11-18T19:38:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "993c6c693acd89d86cd9e71792775a83c8de45a59b006d5ff75f1ec91bcf7ebd",
+  "code_fingerprint": {
+    "BACKLOG.md": "feb1d7392806647b9342886e1c5289037c720d17a2f9908cf4587239a5b1668f",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "c88d3354c36350c8a5e2f74ba9a06727dc3c5586a19f0725b0c8e6045c4d7f9b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md": "c3816bea02c9b691773ff6b69fd8da7a1d08ac56c598d9b667a46a460fd8d3ce",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md": "21264f15e844d5c40309d0881d4f4ac099c7af6bf7efeaea60fbc06a924ea616",
+    "integrations/claude/SKILL.md": "79330405fc84b38abb0bfb15ec1542a08fb4ea06b98b47ebd5a50c804a72b1be",
+    "integrations/codex/SKILL.md": "d25d0b9fc9bad11d7ac3960cfe9212a591ba8dbd517b9caa8407e3f30a75b71f",
+    "integrations/cursor/SKILL.md": "a2328deab7135001397b3fc7297e5cf7b94c156ac587d7e97680e43b915a8c93",
+    "integrations/shared/DIRECTIVES.md": "b9ddbbb955a9b1d3693cbeaeb0000da1ca0fbbb1c3ce659fca507c192c33d081",
+    "tests/cli/test_skill_cmd.py": "fe0c967bb3f56b9e453ad07514e1cd7afed09de69f680ad4573dcc8d16465d51",
+    "tests/test_skill_router_phase_rules.py": "011715e0838d3981526522ba56dc6ae7acde153b4598ae98edad05303c2e9084"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md": "dea75c95127b3443d4842d1a0f8319fd2a000f4010a50295ba63b7e5f8eb36f3",
+    "docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md": "589ce399ccad3ea6608b961b9f851279a6a91b76132d840e82ef3d7267bd79bd",
+    "docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md": "98ad6cee3691806025a90a42f1fc045e548aa5f0997b640c7c13b67031231f52"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Installed Seed Authoring\n\n`installed-seed-authoring` \u00b7 generated 2026-11-18T19:38:19Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `0799e1c11da37e4e75d46a4a132ded2f52559cd6a9c49d425296e54c97c8efa4`\n- **Detail bundle digest:** `de4fd13cdb52321d1881cb2112c393f7f121408975771a47d25bebcba56cc1b4`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 34974 bytes (+34974 vs. first audit)\n- **Keystone fan-out:** n/a (not computable for this plan)\n- **Satellite ratio:** n/a (not computable for this plan)\n- **Inert-step ratio:** n/a (not computable for this plan)\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[seed-source-approval]` [confidence: limited]: Passing the approved path does not by itself ensure `create` reads the approved text. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation and Acceptance criteria, specifies a standalone seed for the big-document shortcut but leaves frontmatter copied from the original document unaddressed. `plan_tool/cli/authoring.py:_read_seed_body` follows a top-level YAML `source` field to a separate file, and `plan_tool/create.py:select_file_backed_source` gives that file priority for intake, Outcome, and guardrails. Step 2 (`Verify installed seed guidance against file-backed intake`), Implementation, Tests, and Acceptance criteria, checks the path and passes the examples directly to the text validator, which bypasses CLI source selection. The three routers\u2019 adjacent \u201cmake the plan as complete as possible\u201d row also says \u201cCommit a clean baseline before each stage. Ground and review a seed, then\u201d run `create`, leaving room to commit the baseline before writing the seed. The plan\u2019s Acceptance criteria govern both cases.\n\n  ```\n  The installed walkthrough puts user approval of the seed and a commit of\n  that approved input before `create --from-existing`. Each authoring route,\n  including the big-document shortcut, passes the exact approved seed path.\n  ```\n  - Fix: Make every seed-authoring entry point use the same approved-input handoff, keep big-document provenance in References, and verify that the CLI selects the approved, committed seed itself.\n- MEDIUM `[example-intake-proof]` [confidence: limited]: The example intake proof is assigned twice. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Tests, runs both examples through `validate_from_existing_seed` and checks a fenced-only Testing variant. Step 2 (`Verify installed seed guidance against file-backed intake`), Implementation, Tests, and Acceptance criteria, runs those same inputs through the same classifier using the installed guidance. That check already covers the content the plan\u2019s Testing section requires and also proves it is reachable through the installed link.\n  - Fix: Keep the authoring review and existing intake contract checks in step 1, and use step 2\u2019s installed-example test as the single required classifier proof for the examples and fenced-only variant.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit installed-seed-authoring --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Installed Seed Authoring\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `0799e1c11da37e4e75d46a4a132ded2f52559cd6a9c49d425296e54c97c8efa4`\n- **Detail bundle digest:** `de4fd13cdb52321d1881cb2112c393f7f121408975771a47d25bebcba56cc1b4`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit installed-seed-authoring --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-aedb0349",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Passing the approved path does not by itself ensure `create` reads the approved text. Step 1 (`Guide installed assistant",
+      "body": "Passing the approved path does not by itself ensure `create` reads the approved text. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation and Acceptance criteria, specifies a standalone seed for the big-document shortcut but leaves frontmatter copied from the original document unaddressed. `plan_tool/cli/authoring.py:_read_seed_body` follows a top-level YAML `source` field to a separate file, and `plan_tool/create.py:select_file_backed_source` gives that file priority for intake, Outcome, and guardrails. Step 2 (`Verify installed seed guidance against file-backed intake`), Implementation, Tests, and Acceptance criteria, checks the path and passes the examples directly to the text validator, which bypasses CLI source selection. The three routers\u2019 adjacent \u201cmake the plan as complete as possible\u201d row also says \u201cCommit a clean baseline before each stage. Ground and review a seed, then\u201d run `create`, leaving room to commit the baseline before writing the seed. The plan\u2019s Acceptance criteria govern both cases.\n\n  ```\n  The installed walkthrough puts user approval of the seed and a commit of\n  that approved input before `create --from-existing`. Each authoring route,\n  including the big-document shortcut, passes the exact approved seed path.\n  ```",
+      "suggested_action": "Make every seed-authoring entry point use the same approved-input handoff, keep big-document provenance in References, and verify that the CLI selects the approved, committed seed itself.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-source-approval",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-1b1f726d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The example intake proof is assigned twice. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Tes",
+      "body": "The example intake proof is assigned twice. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Tests, runs both examples through `validate_from_existing_seed` and checks a fenced-only Testing variant. Step 2 (`Verify installed seed guidance against file-backed intake`), Implementation, Tests, and Acceptance criteria, runs those same inputs through the same classifier using the installed guidance. That check already covers the content the plan\u2019s Testing section requires and also proves it is reachable through the installed link.",
+      "suggested_action": "Keep the authoring review and existing intake contract checks in step 1, and use step 2\u2019s installed-example test as the single required classifier proof for the examples and fenced-only variant.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "example-intake-proof",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 4,
+      "detail_grade": "run",
+      "plan_digest": "0799e1c11da37e4e75d46a4a132ded2f52559cd6a9c49d425296e54c97c8efa4",
+      "detail_bundle_digest": "de4fd13cdb52321d1881cb2112c393f7f121408975771a47d25bebcba56cc1b4",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md",
+          "state": "present",
+          "digest": "dea75c95127b3443d4842d1a0f8319fd2a000f4010a50295ba63b7e5f8eb36f3"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md",
+          "state": "present",
+          "digest": "589ce399ccad3ea6608b961b9f851279a6a91b76132d840e82ef3d7267bd79bd"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md",
+          "state": "present",
+          "digest": "98ad6cee3691806025a90a42f1fc045e548aa5f0997b640c7c13b67031231f52"
+        }
+      ],
+      "source_seed_digest": "b838b8efb96da015a5d79280d47a7409a4b7f65f3319c526118db6ffc842694f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e",
+      "sibling_paths_digest": null
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 34974,
+    "keystone_fan_out": null,
+    "satellite_ratio": null,
+    "inert_step_ratio": null,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

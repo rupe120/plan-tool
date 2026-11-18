@@ -1,0 +1,122 @@
+{
+  "version": 4,
+  "plan_slug": "installed-seed-authoring",
+  "plan_path": "docs/implementation-plans/2-installed-seed-authoring.md",
+  "created_at": "2026-11-18T19:32:24Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a86a7ca388dfcef7d338303424a697f466714e8a09b3201bd32aa9551c9aa3c1",
+  "code_fingerprint": {
+    "BACKLOG.md": "feb1d7392806647b9342886e1c5289037c720d17a2f9908cf4587239a5b1668f",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "c88d3354c36350c8a5e2f74ba9a06727dc3c5586a19f0725b0c8e6045c4d7f9b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md": "c3816bea02c9b691773ff6b69fd8da7a1d08ac56c598d9b667a46a460fd8d3ce",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md": "21264f15e844d5c40309d0881d4f4ac099c7af6bf7efeaea60fbc06a924ea616",
+    "integrations/claude/SKILL.md": "79330405fc84b38abb0bfb15ec1542a08fb4ea06b98b47ebd5a50c804a72b1be",
+    "integrations/codex/SKILL.md": "d25d0b9fc9bad11d7ac3960cfe9212a591ba8dbd517b9caa8407e3f30a75b71f",
+    "integrations/cursor/SKILL.md": "a2328deab7135001397b3fc7297e5cf7b94c156ac587d7e97680e43b915a8c93",
+    "integrations/shared/DIRECTIVES.md": "b9ddbbb955a9b1d3693cbeaeb0000da1ca0fbbb1c3ce659fca507c192c33d081",
+    "tests/cli/test_skill_cmd.py": "fe0c967bb3f56b9e453ad07514e1cd7afed09de69f680ad4573dcc8d16465d51",
+    "tests/test_skill_router_phase_rules.py": "011715e0838d3981526522ba56dc6ae7acde153b4598ae98edad05303c2e9084"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md": "58b13b2367d5f99bd0df0fff0541bbf85cd55cbccaa9a2eb3424c2799f4b68c2",
+    "docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md": "1d94489c4de2e12d1f8db8bf76bf2c18e235a2bea7310820ca262a2d659e60dc",
+    "docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md": "98ad6cee3691806025a90a42f1fc045e548aa5f0997b640c7c13b67031231f52"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Installed Seed Authoring\n\n`installed-seed-authoring` \u00b7 generated 2026-11-18T19:32:24Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[backlog-plan-authored-status]` [confidence: limited]: The backlog walkthrough makes the pending status update optional. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation, says \u201cWhile execution is pending, an unpromoted entry can record that the plan is authored.\u201d The controlling rule in `docs/TRACKING.md`, Promotion stubs, says \u201cmark it plan-authored while a plan's execution is pending,\u201d and step 3 (`Keep #377 open until installed seed guidance ships`) applies that rule to #377. Step 1\u2019s acceptance criteria and step 2\u2019s backlog example review check shipment bookkeeping, so both can pass while the installed guidance lets an assistant skip the required status update.\n  - Fix: Require the backlog walkthrough to mark and link an unpromoted entry as plan-authored while execution is pending, and include that transition in the walkthrough review alongside closure after verified shipment.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[normalized-publication-outcomes]` [confidence: limited]: The preparation guide leaves the assistant without a clear way to recognize a published plan whose iteration is incomplete. The plan\u2019s Acceptance criteria require the guide to identify which assessment outcome publishes a plan, but step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation, lists preparation decisions, and its route review and acceptance checks cover direct publication and refusals. `plan_tool/cli/authoring.py:cmd_create` returns exit `0` for a normalized plan that is already registered but has incomplete iteration, and directs the assistant to continue that plan with `completeness-audit`; the installed guide can leave readers unsure whether to continue the registered plan or invoke `create` again.\n  - Fix: Have step 1\u2019s preparation guide and route review identify normalized publication and explain how to recognize and continue an iteration-incomplete registered plan after `create` exits.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit installed-seed-authoring --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Installed Seed Authoring\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[normalized-publication-outcomes]` [confidence: limited]: The preparation guide leaves the assistant without a clear way to recognize a published plan whose iteration is incomplete. The plan\u2019s Acceptance criteria require the guide to identify which assessment outcome publishes a plan, but step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation, lists preparation decisions, and its route review and acceptance checks cover direct publication and refusals. `plan_tool/cli/authoring.py:cmd_create` returns exit `0` for a normalized plan that is already registered but has incomplete iteration, and directs the assistant to continue that plan with `completeness-audit`; the installed guide can leave readers unsure whether to continue the registered plan or invoke `create` again.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit installed-seed-authoring --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-df54c5cd",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The backlog walkthrough makes the pending status update optional. Step 1 (`Guide installed assistants from a request to ",
+      "body": "The backlog walkthrough makes the pending status update optional. Step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation, says \u201cWhile execution is pending, an unpromoted entry can record that the plan is authored.\u201d The controlling rule in `docs/TRACKING.md`, Promotion stubs, says \u201cmark it plan-authored while a plan's execution is pending,\u201d and step 3 (`Keep #377 open until installed seed guidance ships`) applies that rule to #377. Step 1\u2019s acceptance criteria and step 2\u2019s backlog example review check shipment bookkeeping, so both can pass while the installed guidance lets an assistant skip the required status update.",
+      "suggested_action": "Require the backlog walkthrough to mark and link an unpromoted entry as plan-authored while execution is pending, and include that transition in the walkthrough review alongside closure after verified shipment.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "backlog-plan-authored-status",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-ddcecdc6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The preparation guide leaves the assistant without a clear way to recognize a published plan whose iteration is incomple",
+      "body": "The preparation guide leaves the assistant without a clear way to recognize a published plan whose iteration is incomplete. The plan\u2019s Acceptance criteria require the guide to identify which assessment outcome publishes a plan, but step 1 (`Guide installed assistants from a request to a reviewed seed`), Implementation, lists preparation decisions, and its route review and acceptance checks cover direct publication and refusals. `plan_tool/cli/authoring.py:cmd_create` returns exit `0` for a normalized plan that is already registered but has incomplete iteration, and directs the assistant to continue that plan with `completeness-audit`; the installed guide can leave readers unsure whether to continue the registered plan or invoke `create` again.",
+      "suggested_action": "Have step 1\u2019s preparation guide and route review identify normalized publication and explain how to recognize and continue an iteration-incomplete registered plan after `create` exits.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "normalized-publication-outcomes",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 4,
+    "detail_grade": "run",
+    "plan_digest": "40e66c8814ea80b61f1d2c39c03a188cf613c4c28a8b715ff5f682e6a8a27511",
+    "detail_bundle_digest": "3d6989789f961c41e7b67063f7d5ea6ab4393aca5850d424dd5aab5b0f381fef",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md",
+        "state": "present",
+        "digest": "58b13b2367d5f99bd0df0fff0541bbf85cd55cbccaa9a2eb3424c2799f4b68c2"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md",
+        "state": "present",
+        "digest": "1d94489c4de2e12d1f8db8bf76bf2c18e235a2bea7310820ca262a2d659e60dc"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md",
+        "state": "present",
+        "digest": "98ad6cee3691806025a90a42f1fc045e548aa5f0997b640c7c13b67031231f52"
+      }
+    ],
+    "source_seed_digest": "b838b8efb96da015a5d79280d47a7409a4b7f65f3319c526118db6ffc842694f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e",
+    "sibling_paths_digest": null
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

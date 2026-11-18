@@ -909,7 +909,7 @@ CODEX_BACKEND = CliBackend(
     transient_pattern=_CLAUDE_TRANSIENT_PATTERN,
     auth_pattern=_CODEX_AUTH_PATTERN,
     model_flag="-m",
-    default_model=None,
+    default_model="gpt-6.2-sol",
     batch_output="json",
 )
 
@@ -942,6 +942,7 @@ def structural_codex_backend(isolated_root: Path) -> CliBackend:
     return replace(
         CODEX_BACKEND,
         name="codex-structural-read-only",
+        default_model=None,
         batch_argv=structural_argv,
         streaming_argv=structural_argv,
         batch_prompt_transport=None,

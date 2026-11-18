@@ -67,6 +67,19 @@ so files written before this change keep loading. `todo add` parses `--due` with
 prints the due date when set and filters with `--overdue`, comparing against an
 injectable `today` so tests do not depend on the clock.
 
+## Scope guardrails
+
+Keep existing task files readable and preserve task ordering. Limit the
+stored format change to the optional `due` key.
+
+## Audit guardrails
+
+None
+
+## Expected placement
+
+Use the existing task model, JSON store, CLI, and their tests.
+
 ## References
 
 - `todo/model.py:Task`, `todo/store.py:load`, `todo/store.py:save`
@@ -84,6 +97,7 @@ injectable `today` so tests do not depend on the clock.
 - Recurring tasks, reminders or notifications.
 - Time-of-day, time zones or relative dates.
 - Editing the due date of an existing task.
+- Changes to task ordering.
 - Any storage change beyond one optional `due` key.
 
 ## Risks

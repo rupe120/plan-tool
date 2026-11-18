@@ -15,7 +15,7 @@ when a live step misbehaves.
 | Building, `step.sh next/prev/goto/live/transcript`, the dirty-tree refusal, `git checkout -f` recovery and `live/*` cleanup | Run against a built demo repo. |
 | `plan-tool validate` and `status` on every plan branch; tests at steps 6–8 | Run; they pass. |
 | Any live model command, its duration, its cost, and how its output differs from the baked copy | **Not run.** Measure on your first rehearsal and write the numbers into § "Rehearsal notes". |
-| Whether `create` prompts for confirmation when its output is piped through `tee` (it accepts `-y`/`--yes` to auto-accept confirmation prompts) | **Not run.** If step 2 appears stuck, check `.tmp/due-dates.create.log`, then decide whether to re-run with `-y`. |
+| Whether `create` prompts for confirmation when its output is piped through `tee` | **Not run.** Check `.tmp/due-dates.create.log` and monitor the original invocation. Consider a retry with `-y`/`--yes` only after it exits and you have reviewed its outcome. |
 | Backend authentication check | Use whatever you normally use; this runbook does not prescribe one. |
 
 ## Before the session
@@ -34,7 +34,7 @@ when a live step misbehaves.
 | --- | --- | --- |
 | All baked | none | Short slot, flaky network, or no backend access. Nothing can stall. |
 | One live step | one of 3, 4 or 5 | You want the audience to see real streaming output once, with the rest baked. |
-| Fully live | 2 through 8 | Rehearsed in advance, with time to wait on each command. |
+| Continuous live plan | One branch through detail review | You want each stage to consume the output of the previous live stage. [Planning workflow](../planning-demo.md) |
 
 Step 1 has no command (a seed is written with an assistant). Step 8 is a
 `/code-review` session activity, not a shell command.
@@ -59,20 +59,27 @@ Run `./step.sh goto N` (or `next`) first. Each row names the one point to land.
 1. `./step.sh goto N`, then `./step.sh live`. You land on `live/N-name`, branched from the state step N-1 left, and the command prints.
 2. Run the printed command. It tees to `.tmp/due-dates.<verb>.log`, and `set -o pipefail` stops a failure from reporting as success.
 3. `run` refuses to execute on the repository's default branch; `./step.sh live` puts you on a `live/` branch, so keep that branch. Let the command finish. Do not interrupt a plan-tool command because it is quiet; read the log instead.
-4. Compare: `git diff --stat demo/N-name live/N-name -- . ':!DEMO.md' ':!DEMO.transcript.txt'`. A difference from the baked result is expected; the pathspec hides the card and transcript, which always differ.
+4. After confirmed exit, review the output and commit any result you want to
+   compare. Run `git diff --stat demo/N-name live/N-name -- . ':!DEMO.md' ':!DEMO.transcript.txt'`.
 5. Leave the live result: § "Return to the baked path".
 
 ## When something goes wrong
 
 | Symptom | Action |
 | --- | --- |
-| `./step.sh` says `working tree not clean` | `git status`, then either commit or discard: `git checkout -f demo/N-name` drops tracked changes. |
-| A live command is slow or silent | Read `.tmp/due-dates.<verb>.log`. If the audience is waiting, switch to the baked state: `git checkout -f demo/N-name` and `./step.sh transcript`. |
-| A live command fails or the result looks wrong | Switch to the baked state and say so. Baked output is authored, so call it "the shape of the result", not a captured run. |
+| `./step.sh` says `working tree not clean` | Run `git status` to inspect the changes, then follow [Return to the baked path](#return-to-the-baked-path). |
+| A live command is slow or silent | Read `.tmp/due-dates.<verb>.log` and monitor the original invocation through confirmed exit. To show the authored output while you wait, read it without switching branches with `git show demo/N-name:DEMO.transcript.txt`. [Monitoring procedure](../../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely) |
+| A live command exits with an error or produces an unexpected result | Inspect the log and saved artifacts. Keep the live result if you need it, then return to the baked path and describe the output as an authored example. |
 | You are lost | `git branch --show-current`, then `./step.sh goto N`. |
-| Branches look damaged | Rebuild: `docs/demos/getting-started/build.sh --force` (restarts at step 1). |
+| Branches look damaged | Build into a new directory to restart at step 1. To rebuild in place, confirm any live command has exited and preserve results you want to keep before using `docs/demos/getting-started/build.sh --force`. |
 
 ### Return to the baked path
+
+Confirm that the original invocation has exited. From a clean working tree,
+`./step.sh goto N` switches to the prepared checkpoint. If there are local
+changes, inspect `git status` and commit any results you want to keep.
+Use the commands below only when you intend to discard the live changes and
+delete the throwaway branch.
 
 ```bash
 git checkout -f demo/N-name          # discards tracked changes from the live run
