@@ -128,8 +128,9 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
     """Return a validated immutable plan/detail audit revision, if present.
 
     Accepts v1 through v4: v2 adds ``source_seed_digest``, v3 adds
-    ``project_context_digest`` and v4 adds ``sibling_paths_digest``. See ``DATA_CONTRACT.md``'s qualified-result
-    section for why older revisions stay valid instead of being rejected.
+    ``project_context_digest`` and v4 adds ``sibling_paths_digest``. See
+    ``DATA_CONTRACT.md``'s qualified-result section for why older revisions
+    stay valid instead of being rejected.
     """
     if not isinstance(value, dict):
         return None

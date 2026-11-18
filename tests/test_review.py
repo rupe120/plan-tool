@@ -13182,7 +13182,7 @@ class TestAuditPromptScopeContractBlock:
         # The sibling-paths block is never empty (it states the no-siblings
         # case explicitly), so it is now the last line before the same gap.
         assert before_no_seed.endswith(
-            "no sibling plan paths apply to this plan.\n\n\n"
+            "none are listed for this plan.\n\n\n"
         )
         assert not before_no_seed.endswith("\n\n\n\n")
 
@@ -19963,7 +19963,7 @@ class TestEligibleSiblingCreates:
         assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"src/x.py"})
 
     @pytest.mark.parametrize("failure", [OSError, UnicodeError, ValueError, "ManifestError"])
-    def test_sibling_selection_treats_each_uncertain_class_like_the_deterministic_check(
+    def test_identity_uncertainty_of_each_class_is_unknown_here_and_own_only_in_the_deterministic_check(
         self, tmp_path, monkeypatch, failure
     ):
         """Both selectors stay uncertain-safe: own paths only vs. an empty sibling set."""
@@ -20268,7 +20268,9 @@ def test_plan_audit_prompt_uses_run_grade_bundle_framing(run_grade_audit_bundle)
 class TestPlanAuditSiblingPlannedPathsBlock:
     """The audit prompt delivers same-roadmap sibling ``creates:`` paths as planned work."""
 
-    EMPTY_STATEMENT = "no sibling plan paths apply to this plan"
+    EMPTY_STATEMENT = "none are listed for this plan"
+    # Words that would claim completeness or soften a finding; never in the empty or unknown case.
+    HEDGES = ("no sibling plan paths apply", "may still be", "rather than asserting")
 
     def pair(self, root, **kwargs):
         helper = TestEligibleSiblingCreates()
@@ -20309,12 +20311,37 @@ class TestPlanAuditSiblingPlannedPathsBlock:
         assert self.EMPTY_STATEMENT in block
         assert "sibling.py" not in block
 
+    def test_audit_prompt_with_an_unreadable_manifest_lists_none_without_claiming_none_exist(
+        self, tmp_path
+    ):
+        """A manifest failure empties the selection; the block must not state that no siblings exist."""
+        _helper, path, plan = self.pair(tmp_path, sibling_creates="plan_one_made.py")
+        (tmp_path / ".plan-tool/plans.json").write_text("{not json", encoding="utf-8")
+        block = self.block(self.render(plan, path, tmp_path))
+        assert self.EMPTY_STATEMENT in block
+        assert "plan_one_made.py" not in block
+        assert not any(hedge in block for hedge in self.HEDGES)
+
+    def test_audit_prompt_with_every_sibling_unreadable_lists_none_without_claiming_none_exist(
+        self, tmp_path
+    ):
+        """Every sibling skipped as unparseable empties the selection; the wording stays neutral."""
+        helper, path, plan = self.pair(tmp_path, sibling_creates="plan_one_made.py")
+        for sibling in tmp_path.glob("*.md"):
+            if sibling != path and sibling.name in json.loads(
+                (tmp_path / ".plan-tool/plans.json").read_text(encoding="utf-8")
+            )["plans"]:
+                sibling.write_text("---\n: not yaml\n---\n", encoding="utf-8")
+        block = self.block(self.render(plan, path, tmp_path))
+        assert "plan_one_made.py" not in block
+        assert not any(hedge in block for hedge in self.HEDGES)
+
     def test_audit_prompt_with_uncertain_identity_says_the_set_is_unknown(self, tmp_path):
         _helper, path, plan = self.pair(tmp_path)
         (tmp_path / "own-seed.md").write_bytes(b"\xff\xfe\x00 not utf-8 \xc3\x28")
         block = self.block(self.render(plan, path, tmp_path))
-        assert "could not be determined" in block
-        assert self.EMPTY_STATEMENT not in block
+        assert "unavailable for this plan" in block
+        assert not any(hedge in block for hedge in self.HEDGES)
         assert "sibling.py" not in block
 
     def test_audit_prompt_omits_a_different_roadmaps_path(self, tmp_path):

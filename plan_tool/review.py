@@ -7617,19 +7617,20 @@ def _captured_sibling_paths(
 
 
 def _format_sibling_planned_paths_block(paths: Optional[Sequence[str]]) -> str:
-    """Render the sibling-planned-paths input, stating the unknown and empty cases."""
+    """Render the sibling-planned-paths input without claiming completeness.
+
+    Neither the empty nor the unknown case says "none exist" or tells the model
+    to soften findings: selection can be empty because a manifest or sibling was
+    unreadable, and an unknown set (every plan whose identity does not resolve)
+    must not weaken a genuine missing-path finding.
+    """
     if paths is None:
         return (
-            "**Sibling plans' planned paths:** could not be determined for this "
-            "plan (its roadmap identity is unavailable). A path reported missing "
-            "may still be another plan's planned work; say so rather than "
-            "asserting it is missing.\n"
+            "**Sibling plans' planned paths:** unavailable for this plan (its "
+            "roadmap identity could not be resolved), so none are listed.\n"
         )
     if not paths:
-        return (
-            "**Sibling plans' planned paths:** no sibling plan paths apply "
-            "to this plan.\n"
-        )
+        return "**Sibling plans' planned paths:** none are listed for this plan.\n"
     return (
         "**Sibling plans' planned paths:** each path below is planned work of "
         "another plan in the same roadmap, not a missing file — do not report it "
@@ -7638,6 +7639,7 @@ def _format_sibling_planned_paths_block(paths: Optional[Sequence[str]]) -> str:
         + "\n".join(f"- `{path}`" for path in paths)
         + "\n"
     )
+
 
 def render_plan_audit_prompt(
     plan: Plan,
@@ -7679,7 +7681,7 @@ def render_plan_audit_prompt(
     The sibling-planned-paths block lists same-roadmap sibling ``creates:``
     paths as planned work, read from ``audit_input_snapshot`` when passed and
     from :func:`sibling_creates_paths` otherwise; an empty set renders an
-    explicit "no sibling plan paths apply" statement, never an empty slot.
+    explicit neutral statement (none listed, or unavailable), never an empty slot.
     """
     if audit_input_snapshot is not None:
         plan = audit_input_snapshot.plan
