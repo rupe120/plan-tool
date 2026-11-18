@@ -574,11 +574,13 @@ class AuditInputSnapshot:
                         step.id, branch, selected_path, "present", content
                     )
                 )
+        # Resolve once and read that path, so the fence check and the
+        # fingerprinted bytes cannot come from different files.
         source_seed_path = _resolve_source_seed_path(
             plan, repo_root, plans_dir=plan_path.parent
         )
-        source_seed_bytes = _read_source_seed_bytes(
-            plan, repo_root, plans_dir=plan_path.parent
+        source_seed_bytes = (
+            _read_seed_file(source_seed_path) if source_seed_path is not None else None
         )
         if source_seed_bytes is not None and source_seed_path is not None:
             try:
@@ -677,8 +679,11 @@ def _read_source_seed_bytes(
     path must not read as "never had one" before checking there).
     """
     seed_path = _resolve_source_seed_path(plan, repo_root, plans_dir=plans_dir)
-    if seed_path is None:
-        return None
+    return None if seed_path is None else _read_seed_file(seed_path)
+
+
+def _read_seed_file(seed_path: Path) -> Optional[bytes]:
+    """The seed file's bytes, or ``None`` when it cannot be read."""
     try:
         return seed_path.read_bytes()
     except OSError:

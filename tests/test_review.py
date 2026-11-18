@@ -19917,25 +19917,6 @@ class TestEligibleSiblingCreates:
         path, plan = self.roadmap_pair(tmp_path)
         assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"sibling.py"})
 
-    def test_a_loom_shaped_plan_with_a_plans_relative_source_seed_resolves_its_siblings(self, tmp_path):
-        """Plans live under docs/implementation-plans/ with source_seed recorded relative to it,
-        as Loom's 2026-10 plans do: the sibling set resolves instead of being unknown."""
-        from plan_tool.review import sibling_creates_paths
-        from plan_tool.review_persistence import AuditInputSnapshot
-
-        plans = tmp_path / "docs" / "implementation-plans"
-        plans.mkdir(parents=True)
-        path, plan = self.roadmap_pair(plans)
-        (tmp_path / ".plan-tool").mkdir(exist_ok=True)
-        (tmp_path / ".plan-tool/plans.json").write_text(
-            json.dumps({"plans": ["docs/implementation-plans/own.md", "docs/implementation-plans/sibling.md"]})
-        )
-        assert plan.source_seed == "own-seed.md"  # recorded relative to the plans directory
-        assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"sibling.py"})
-        snapshot = AuditInputSnapshot.capture(path, tmp_path)
-        assert snapshot.sibling_creates_paths == ("sibling.py",)
-        assert snapshot.source_seed_bytes is not None
-
     def legacy_layout(self, tmp_path, seed_body):
         """A Loom-shaped repo: plans under docs/implementation-plans/, source_seed relative to it."""
         plans = tmp_path / "docs" / "implementation-plans"
@@ -19950,6 +19931,38 @@ class TestEligibleSiblingCreates:
         with path.open("a", encoding="utf-8") as handle:
             handle.write("\n# Plan\n\nBody.\n")
         return plans, path, parse_plan(path)
+
+    def test_a_loom_shaped_plan_with_a_plans_relative_source_seed_resolves_its_siblings(self, tmp_path):
+        """source_seed recorded relative to the plans directory, as Loom's 2026-10 plans do: the
+        sibling set and the seed bytes resolve instead of being unknown."""
+        from plan_tool.review import sibling_creates_paths
+        from plan_tool.review_persistence import AuditInputSnapshot
+
+        _plans, path, plan = self.legacy_layout(tmp_path, "")
+        assert plan.source_seed == "own-seed.md"  # recorded relative to the plans directory
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"sibling.py"})
+        snapshot = AuditInputSnapshot.capture(path, tmp_path)
+        assert snapshot.sibling_creates_paths == ("sibling.py",)
+        assert snapshot.source_seed_bytes is not None
+
+    def test_capture_fingerprints_the_seed_file_it_resolved_and_checked(self, tmp_path, monkeypatch):
+        """One resolution feeds both the fence check and the fingerprinted bytes; a second resolution
+        that returned another file (an archive appearing in between) must not split them."""
+        import plan_tool.review_persistence as rp
+
+        path, _plan = self.plan(tmp_path, "own", source="a.md")
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n# Plan\n\nBody.\n")
+        (tmp_path / "a.md").write_text("A\n")
+        (tmp_path / "b.md").write_text("B\n")
+        calls = []
+
+        def flaky(plan, repo_root, *, plans_dir):
+            calls.append(1)
+            return tmp_path / ("a.md" if len(calls) == 1 else "b.md")
+
+        monkeypatch.setattr(rp, "_resolve_source_seed_path", flaky)
+        assert rp.AuditInputSnapshot.capture(path, tmp_path).source_seed_bytes == b"A\n"
 
     def test_a_legacy_plans_relative_seed_renders_the_same_scope_contract_with_or_without_a_snapshot(self, tmp_path):
         """The snapshot's seed and the prompt's seed must be the same file for a legacy plan."""
