@@ -13,6 +13,10 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 - A pre-baked getting-started demo (`docs/demos/getting-started/`) builds a disposable repository with one branch per pipeline step, from seed through code review, so each step can be shown instantly and the same step run live on a separate branch.
 
+### Changed
+
+- A roadmap draft seed cites each member file of its roadmap by repo-relative version-store path (`<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md`), and the seed writer is told to write that path wherever the seed names one. The draft-seed gates refuse a bare member filename such as `04-roadmap.md` anywhere in a seed body, fenced text included, and require the References section to use those paths. `create --from-existing` refuses a version-store citation that names no stored file, even under `-y`, with refusal token `roadmap-seed-unresolved-citation`. A seed that cites bare filenames, which earlier versions accepted, must be rewritten to the version-store form (BACKLOG, roadmap-seed-accepted-version-citations).
+
 <a id='changelog-1.5.0'></a>
 ## 1.5.0 — 2026-11-16
 
