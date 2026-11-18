@@ -11,6 +11,7 @@
 | [Local-iteration backlog findings #539–#542 — review ledger and priority handoff](#local-iteration-backlog-findings-539542--review-ledger-and-priority-handoff) | 2026-11-17 |
 | [Roadmap seed version-store citations — review ledger](#roadmap-seed-version-store-citations--review-ledger) | 2026-11-17 |
 | [Audit sibling-plan created paths — review ledger](#audit-sibling-plan-created-paths--review-ledger) | 2026-11-17 |
+| [Plans-relative source_seed resolution — review ledger](#plans-relative-source_seed-resolution--review-ledger) | 2026-11-18 |
 
 ## Completeness next-step verdict finish — review ledger and session handoff
 
@@ -679,3 +680,58 @@ Each lives in its canonical home (`DATA_CONTRACT.md` qualified-result revision, 
 
 - `tracked` BUG_BACKLOG: "Roadmap plans whose `source_seed` is relative to the plans directory never resolve their roadmap identity…". Until it lands, this fix has no effect in Loom, and the capture-cost measurement waits on it.
 - `tracked` BACKLOG #543: captured examples of every persisted format version; its first entries are a v3 sidecar from release 1.6.0 and a v4 one from after #260.
+
+## Plans-relative source_seed resolution — review ledger
+
+*Opened 2026-11-18.*
+
+| Field | Value |
+| --- | --- |
+| Opened | 2026-11-18 |
+| Change | `_resolve_source_seed_path` falls back to the plan file's own directory for plans written by an older `create`, which recorded `source_seed` relative to the plans directory (Loom, 2026-10) |
+| Branch | `fix/source-seed-plans-relative-resolution` (direct route; BUG_BACKLOG entry "Roadmap plans whose `source_seed` is relative to the plans directory…") |
+| Checks | full suite green; measured on a read-only copy of Loom's 24 plans |
+| Reviewer | `/code-review high`, forked report-only |
+| Disposition | rounds 1–2 dispositioned; owner call on PR vs round 3 |
+
+### Evidence
+
+- Today's `create` records repo-relative from every working directory (probed from three). Loom's earliest recorded value, 2026-10-09, was plans-directory-relative; the writer predates this repository's recorded history (a 2026-10-21 snapshot), so the old writer is not recoverable.
+- On Loom's 24 plans before the fix, 21 had no resolvable identity. After it: 9 roadmap plans resolve (sibling sets up to 268 paths), 3 non-roadmap plans were already correct, and 12 stay unknown because their archived seed file no longer exists. Capture cost rose from 0.006 s to 0.087 s per call (filed as BACKLOG #544).
+
+### Settled decisions
+
+- Repo-relative lookup (live, then archive) stays first, so anything that resolved before resolves identically; only previously unresolved plans change.
+- `plans_dir` is a required argument at every layer, so no caller skips the legacy lookup by omission.
+- A repo-relative archive outranks a plans-relative live file, by that invariant.
+
+### Rollout note for Loom (2026-11-18)
+
+After upgrade, Loom's nine roadmap plans resolve their seed for the first time, so their audits start seeing the seed's scope contract (and the sibling `creates:` paths from #260), and their saved audits read stale once. Earlier audit results for those plans were made without that input, so a re-audit can differ from an earlier one with no plan change. Re-audit the nine once and treat that run as the new baseline. The other fifteen plans are unchanged: three were already correct and twelve still have no seed file to resolve.
+
+### Findings (round 1)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | A legacy seed that now resolves is subject to the unmatched-fence check, which raises `AuditInputError` | **Fixed (test and docs).** The same rule as every repo-relative plan; Loom's 24 captures all succeeded with the fallback; test and a `PLAN_FORMAT.md` sentence pin it |
+| 2 | A same-named file under the plans directory is read when the repo-relative seed and archive are both gone | **Fixed (docs).** `create` archives every seed it consumes, so this needs both removed by hand; stated in `PLAN_FORMAT.md` |
+| 3 | A stale repo-relative archive outranks a live plans-relative seed | **Declined.** The precedence is the invariant that makes the change stale only previously unresolved plans; a test pins it deliberately |
+| 4 | Capture cost grows with plan count | **Declined.** Tracked as BACKLOG #544 with the measurement |
+| 5 | `plans_dir` is required, forcing `None` at every old test call | **Declined.** A default would silently disable the legacy lookup for a forgetful caller |
+| 6 | `plan_path.parent` is recomputed at four sites | **Fixed (test).** A legacy plan renders the same scope contract with and without a snapshot; red if capture skips the lookup |
+| 7 | An absolute value probes the same path twice | **Fixed.** Equal candidates are probed once; test red without the dedupe |
+
+### Findings (round 2)
+
+Three findings repeat round 1 and keep its dispositions (#1 fence refusal, #3 precedence, #5 required argument).
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | The unmatched-fence refusal reaches newly resolved legacy seeds; the operator can only edit an archived seed | **Declined (repeat).** The rule and its error text are unchanged and apply to every plan; Loom's 24 captures all succeeded with the fallback |
+| 2 | `capture` resolved the seed twice, so the fence check and fingerprinted bytes could come from different files | **Fixed.** One resolution feeds both; test `test_capture_fingerprints_the_seed_file_it_resolved_and_checked`, red when it resolves twice |
+| 3 | A repo-relative archive outranks a live plans-relative seed | **Declined (repeat).** The invariant that keeps previously resolving plans identical |
+| 4 | The legacy base is `plan_path.parent`, which differs from the plans root for a nested plan | **Declined.** `create` writes plans into its output directory and the old writer recorded relative to it, which is `plan_path.parent`; existing code already assumes plans sit directly in it (`plan_path.parent / "roadmaps" / slug`) |
+| 5 | `plans_dir` is required, so `None` silently turns the lookup off | **Declined (repeat).** A default would hide the omission |
+| 6 | Two Loom-layout tests duplicated their fixture | **Fixed.** Both use `legacy_layout` |
+| 7 | The `DATA_CONTRACT.md` note used undated upgrade language | **Fixed.** Present-tense contract plus a dated cut note |
+
