@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "plan_slug": "audit-sibling-plan-created-paths",
+  "plan_path": "docs/implementation-plans/2-audit-sibling-plan-created-paths.md",
+  "created_at": "2026-11-18T02:43:46Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "f076513032384d485ddc1d25d404709d901f7aba83c0b47996075a669ebbf2c6",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "401de09a769a89c3d02f85e44d80efe4897c4c24f0532706eb63f1d040d9fb02",
+    "DATA_CONTRACT.md": "ed2830bb6eac0b33d9335e4547a261e83498058e4d20ff7a8da25b8a881434d1",
+    "integrations/shared/DIRECTIVES.md": "f1e2f8f32ed1ed71af3ed8c4e621f5eaed83a5a5edf461b0b2d63441454c261d",
+    "plan_tool/fingerprint.py": "6145666a4a763835b302a32a4e2d54ab1b69fd93ad64c68508c83e067b205a3f",
+    "plan_tool/prompts/plan-audit.md": "8c3f564c78451782e8bfa29d695a22aa76da3969516e6f6a951095324de40d1e",
+    "plan_tool/review.py": "12583d7b13f0e8bc3dff276108ffd3f21dce98f5e28caa41c65d1e12f8e5e313",
+    "plan_tool/review_persistence.py": "2ba510d4a1cdb670828125d300cf0580d0876e9a233d70b3bf0c76fd0e4db83c",
+    "tests/cli/test_authoring_cmds.py": "6288a1b91d51179b09a1e6d88d17b0f66101fd204d144501788c0588fd698264",
+    "tests/test_completeness_report.py": "f53b9467bb6e17bc1b6425f61060447238a5229bcb98b43a83de9073488c7d0c",
+    "tests/test_review.py": "22f2860c04d550881ec7e461b689af557b0d8fc0c0c8c900848aae34c641a3e7",
+    "tests/test_review_persistence.py": "2b06775901166a1294afcebf1579765d5e7e37555b0a4065aa5457baf1b20e94"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 2 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}
