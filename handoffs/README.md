@@ -95,6 +95,7 @@ compressing or retiring a handoff.
 | File | Scope |
 | --- | --- |
 | [run-and-completeness.md](run-and-completeness.md) | `run` gates and receipts, completeness next steps and verdicts, loop behavior, hints and maintenance fixes. |
+| [docs-and-onboarding.md](docs-and-onboarding.md) | Example-first documentation, first-task onboarding, and fresh-reader verification. |
 | [tracking-and-jira.md](tracking-and-jira.md) | Work tracking, the Jira board and tickets, backlog guards, branch hygiene and settled tracking decisions. |
 | [handoff-directory.md](handoff-directory.md) | This directory's own upkeep: scope fence, owner decisions, open items. |
 | [bug-backlog-drain.md](bug-backlog-drain.md) | Standing procedure, queue order, stop conditions and session log for draining `BUG_BACKLOG.md`. Kept as its own file because sessions append to its log; not a merge candidate. |
