@@ -12,6 +12,7 @@
 | [Roadmap seed version-store citations — review ledger](#roadmap-seed-version-store-citations--review-ledger) | 2026-11-17 |
 | [Audit sibling-plan created paths — review ledger](#audit-sibling-plan-created-paths--review-ledger) | 2026-11-17 |
 | [Plans-relative source_seed resolution — review ledger](#plans-relative-source_seed-resolution--review-ledger) | 2026-11-18 |
+| [Versioned-format examples — review ledger](#versioned-format-examples--review-ledger) | 2026-11-18 |
 
 ## Completeness next-step verdict finish — review ledger and session handoff
 
@@ -734,4 +735,36 @@ Three findings repeat round 1 and keep its dispositions (#1 fence refusal, #3 pr
 | 5 | `plans_dir` is required, so `None` silently turns the lookup off | **Declined (repeat).** A default would hide the omission |
 | 6 | Two Loom-layout tests duplicated their fixture | **Fixed.** Both use `legacy_layout` |
 | 7 | The `DATA_CONTRACT.md` note used undated upgrade language | **Fixed.** Present-tense contract plus a dated cut note |
+
+## Versioned-format examples — review ledger
+
+*Opened 2026-11-18.*
+
+| Field | Value |
+| --- | --- |
+| Opened | 2026-11-18 |
+| Change | BACKLOG #543 first slice: captured saved-review sidecars written by v1.6.0 and by `main` at `4226931b3`, loaded through today's reader by `tests/test_versioned_examples.py` |
+| Branch | `tests/versioned-format-examples` (direct route; tests and docs only, no `plan_tool/` change, so no changelog fragment) |
+| Checks | full suite green; mutation checks on each guard |
+| Reviewer | `/code-review high`, forked report-only |
+| Disposition | round 1 dispositioned; round 2 pending |
+
+### Settled decisions
+
+- An example is captured once from the release that wrote it and never regenerated or edited; a failing example means the reader regressed.
+- The coverage guard is bounded by the reader's own `_SUPPORTED_SCHEMA_VERSIONS`, so adding a sidecar version without an example fails.
+- Capture used a fixed neutral base directory so no example names a user or a home path.
+
+### Findings (round 1)
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | The guard compared against `_AUDIT_REVISION_SCHEMA_VERSION`, not the current sidecar version | **Fixed.** Bounded by `_SUPPORTED_SCHEMA_VERSIONS`; mutant adding a version 5 is red |
+| 2 | The reconcile arm checked `SCHEMA_VERSION` (1), a tautology | **Fixed.** Same guard covers every supported version across kinds |
+| 3 | Live writer versions 1, 2 and 3 had no example, and the README called them unretrievable | **Fixed.** Captured legacy, advisory, role-aware checkpoint and `review` sidecars from v1.6.0; README corrected |
+| 4 | `loaded == normalize_audit_revision(raw)` compared the reader with itself | **Fixed.** The expected record is written out in the test; a mutant dropping `details` is red |
+| 5 | Reconcile examples checked only kind and count | **Fixed in part.** Recommendation ids and severities, `plan_fingerprint`, the checkpoint role and the advisory shape id are asserted for every example; annotations, `step_ids` and `code_fingerprint` are deliberately not asserted (the captures carry none) |
+| 6 | The README check was a substring match | **Fixed in part.** Each example needs its own table row, anchored on the file name; the table's version columns are not parsed (the test parses the file name, and the table is descriptive) |
+| 7 | The README cited an unreproducible survey of a private project | **Fixed.** The citation is gone; the one remaining claim (every tag back to v0.2.0 writes revision 3) is checkable from git |
+| 8 | Fixtures embed capture-time paths and `created_at` | **Declined.** The paths are neutral (`/tmp/plan-tool-example/...`) and a real old report carries another machine's paths, so a reader that resolves them must cope; stated in the README. Mutation of the checkpoint role (mutant C) is red |
 
