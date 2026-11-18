@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-installed-seed-authoring.md`.
+> Preserved here for history; do not edit.
+
 # Installed seed-authoring guidance
 
 ## Overview

@@ -1,0 +1,16 @@
+{
+  "plan_slug": "installed-seed-authoring",
+  "grounded_at": "2026-11-18T18:44:12Z",
+  "plan_fingerprint": "4b449254430bf4cdd3c1cba6113b4dca678babde2397ceae14efbb149482a73b",
+  "code_fingerprint": {
+    "BACKLOG.md": "553dd46bd445bdb6765fae047e020dd503c9f4fc2cc699f460e627f75651fe41",
+    "integrations/claude/SKILL.md": "79330405fc84b38abb0bfb15ec1542a08fb4ea06b98b47ebd5a50c804a72b1be",
+    "integrations/codex/SKILL.md": "d25d0b9fc9bad11d7ac3960cfe9212a591ba8dbd517b9caa8407e3f30a75b71f",
+    "integrations/cursor/SKILL.md": "a2328deab7135001397b3fc7297e5cf7b94c156ac587d7e97680e43b915a8c93",
+    "integrations/shared/DIRECTIVES.md": "b9ddbbb955a9b1d3693cbeaeb0000da1ca0fbbb1c3ce659fca507c192c33d081",
+    "tests/cli/test_skill_cmd.py": "fe0c967bb3f56b9e453ad07514e1cd7afed09de69f680ad4573dcc8d16465d51",
+    "tests/test_skill_router_phase_rules.py": "011715e0838d3981526522ba56dc6ae7acde153b4598ae98edad05303c2e9084"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

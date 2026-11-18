@@ -69,15 +69,10 @@ exit before returning to the prepared branches.
    review. Complete #377 seed-authoring support and verify the path in a
    consuming repository before closing the entry. #508 can proceed
    independently and remains part of #515's public sign-off. [Backlog](../BACKLOG.md)
-   The [#377 seed](../docs/implementation-plans/plan-seeds/installed-seed-authoring.md)
-   passes local intake validation. Its proposed scope reuses the existing
-   shared reference and installer. The initial create exits at the
-   read-only Git lock. Automatic approval review rejects the retry because
-   an authenticated Codex backend could receive the seed and repository
-   content without explicit authorization. No plan or audit report exists.
-   Resume with explicit authorization for Codex `gpt-6.2-sol`, the
-   configured default, to process the seed and the repository context
-   required to author and audit #377.
+   The [#377 plan](../docs/implementation-plans/2-installed-seed-authoring.md)
+   takes the direct route from its [archived seed](../docs/implementation-plans/plan-seeds/archive/installed-seed-authoring.replaced.md).
+   The owner authorizes Codex `gpt-6.2-sol` to author and audit the plan.
+   The plan reuses the existing shared reference and installer.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact

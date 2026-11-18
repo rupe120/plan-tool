@@ -3221,7 +3221,8 @@ working straight down the tiers.
 - **Origin:** 2026-09-16, user clarification that chat orchestration often
   creates the seed and the router/reference plan (formerly #370) should stay
   focused on the router.
-- **Status:** not started.
+- **Status:** [Plan authored](docs/implementation-plans/2-installed-seed-authoring.md).
+  Installed guidance and acceptance checks remain pending.
 
 **#378 — Installed skills route discoveries outside a plan's intent, proportionality, or scope into the host repo's tracker**
 
