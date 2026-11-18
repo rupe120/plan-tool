@@ -44,8 +44,18 @@ selection and compatibility across Claude Code, Codex, and Cursor.
 
 ## Install
 
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
-then install the CLI straight from GitHub. `uv` manages the Python runtime:
+### Requirements
+
+| Requirement | Needed for | Notes |
+| --- | --- | --- |
+| [uv](https://docs.astral.sh/uv/getting-started/installation/) | Installing the CLI | Fetches and manages Python for you. |
+| Python 3.13 or newer | Running `plan-tool` | `uv` provides it; install it yourself only if you skip `uv`. |
+| Git | Installing from GitHub; every plan-tool workflow | Plans are grounded in and committed to a git repository. |
+| A backend CLI (Claude, Codex, or Cursor), installed and authenticated | Model-backed commands such as `create`, `detail`, `completeness-audit` and `run` | See [Backends](docs/BACKENDS.md). Installing the assistant skill does not install it. |
+
+### Install the CLI
+
+Install the CLI straight from GitHub:
 
 ```bash
 uv tool install git+https://github.com/rupe120/plan-tool   # puts `plan-tool` on PATH
