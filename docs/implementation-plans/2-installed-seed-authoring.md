@@ -24,6 +24,7 @@ steps:
   - tests/test_skill_router_phase_rules.py
   complexity: medium
   change_type: non-code
+  detail: docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md
   status: current
   description: Start with one first task in a consuming repo. Follow the installed
     router to Authoring hygiene in its sibling DIRECTIVES.md, turn a user request
@@ -35,11 +36,10 @@ steps:
     References, Testing, and acceptance evidence. For backlog work, carry the source
     contract, entry ID, any promoted ticket key, and the eventual backlog update into
     the seed. Replace the stale size and heading advice with the actual intake rules.
-    Send each router's big-document shortcut to those same rules.
-    Explain the unmatched-fence refusal, the single usable References section, and
-    the three required guardrail sections. Distinguish the full scope contract
-    from binding limits carried in the named guardrails. Use None only where
-    no boundary of that kind applies. Explain
+    Send each router's big-document shortcut to those same rules. Explain the unmatched-fence
+    refusal, the single usable References section, and the three required guardrail
+    sections. Distinguish the full scope contract from binding limits carried in the
+    named guardrails. Use None only where no boundary of that kind applies. Explain
     which canonical body headings make a seed eligible for direct assessment and when
     an otherwise valid seed goes through preparation. Link the same section from all
     three routers' authoring rows, update the existing phase-link unit tests, and
@@ -57,21 +57,20 @@ steps:
   - 1
   depends_on_notes:
     1: Provides the shared authoring contract, examples, and router links to verify.
-  description: Extend the existing install-skill coverage to follow the required
-    authoring link from each installed router to the
-    seed contract in its installed sibling. Use temporary consuming repos and exercise
-    the default and explicit --copy modes for Claude, Codex, and Cursor, with Codex
-    copying in both cases. Check the user-request and backlog-derived examples against
-    the authoring contract and pass their text through validate_from_existing_seed
-    to verify direct readiness and preparation without a model call. Check that
-    the References point to usable evidence and each binding limit appears in
-    the corresponding guardrail. In a separate acceptance run outside pytest,
-    repeat the installed-link check with the actual CLI from an isolated wheel
-    installation outside the source checkout. Confirm that
-    the wheel is the source of the installed guidance and that both install modes
-    expose the same contract without opening SEED_FORMAT.md from the checkout. Use
-    fresh destinations for the proof so existing installs are left alone. Keep fixture
-    writes, unlinks, and temporary cleanup confined to test-owned paths.
+  description: Extend the existing install-skill coverage to follow the required authoring
+    link from each installed router to the seed contract in its installed sibling.
+    Use temporary consuming repos and exercise the default and explicit --copy modes
+    for Claude, Codex, and Cursor, with Codex copying in both cases. Check the user-request
+    and backlog-derived examples against the authoring contract and pass their text
+    through validate_from_existing_seed to verify direct readiness and preparation
+    without a model call. Check that the References point to usable evidence and each
+    binding limit appears in the corresponding guardrail. In a separate acceptance
+    run outside pytest, repeat the installed-link check with the actual CLI from an
+    isolated wheel installation outside the source checkout. Confirm that the wheel
+    is the source of the installed guidance and that both install modes expose the
+    same contract without opening SEED_FORMAT.md from the checkout. Use fresh destinations
+    for the proof so existing installs are left alone. Keep fixture writes, unlinks,
+    and temporary cleanup confined to test-owned paths.
 - id: 3
   intent: 'Keep #377 visible until the installed guidance ships and its acceptance
     checks pass.'
