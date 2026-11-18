@@ -84,10 +84,29 @@ exit before returning to the prepared branches.
    confirmed, current `advisory-only` evidence with no blockers and no
    budget limit. Detail authoring owns the remaining preparation example
    check for source-backed evidence sections, including Risks.
-   Automatic approval review treats `detail --commit` as a separate
-   authorization because it sends repository context to Codex to generate
-   and commit per-step details. The command does not start. Resume with
-   explicit authorization for detail authoring, then run the grounded audit.
+   The owner authorizes `detail --commit` and the grounded audit.
+   `detail installed-seed-authoring --commit -y` writes and commits all
+   three details before its automatic audit. The subsequent grounded checks
+   use `completeness-audit installed-seed-authoring --iterate --commit --audit-passes 1`.
+   All five reports cover 3 of 3 run-grade details and have confirmed,
+   current evidence for their respective snapshots.
+
+   | Grounded report | Material changes |
+   | --- | --- |
+   | [Automatic audit](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-192500-completeness.md) | Four findings. Clarify fenced-only canonical bodies, strict-step authority, preparation evidence, and active backlog references. |
+   | [First re-audit](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-192922-completeness.md) | Three findings. Specify direct outcomes and refusal recovery, and consolidate the shortcut test. |
+   | [Second re-audit](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-193225-completeness.md) | Two findings. Specify continuation for registered normalized plans and the pending backlog status. |
+   | [Third re-audit](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-193515-completeness.md) | One finding. Extend the approved-seed handoff to the large-document shortcut. |
+   | [Last re-audit](../docs/implementation-plans/plan-details/installed-seed-authoring/reports/20261118-193820-completeness.md) | Two findings. Apply the handoff to all authoring entries, prove the CLI selects the approved seed body, and consolidate example intake checks in step 2. |
+
+   The last two rounds audit the prior corrections, so the loop stops under
+   the repo's own-edits exit. Commit `ea494bf6d` applies the last two remedies.
+   All details parse and a local replay verifies the standalone and legacy
+   provenance selection paths. The audit has no clean verdict for the final
+   commit. The tool's step 3 authoring fingerprint remains advisory and
+   reflects the plan footprint before the tracking paths were added. Step 3's
+   detail covers those paths. The reviewed bundle still needs approval and
+   normal merge to the remote default branch before execution.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact
