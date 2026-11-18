@@ -83,6 +83,7 @@ steps:
   - 2
   depends_on_notes:
     2: 'Provides the installation and seed-intake evidence required to remove #377.'
+  detail: docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md
   description: 'When this plan is authored, mark BACKLOG.md #377 as plan-authored
     and link the plan. Remove only the #377 entry after the guidance ships and the
     required source and wheel checks pass, including explicit --copy. Keep the entry
