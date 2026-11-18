@@ -1,0 +1,68 @@
+{
+  "version": 4,
+  "plan_slug": "demo",
+  "plan_path": "plans/1-demo.md",
+  "created_at": "2026-11-18T15:08:16Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2cd393c0e9ed913f625b4cbda4064e0689026654d389151da08d7843ec027dba",
+  "code_fingerprint": {},
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "plans/plan-details/demo/01-only-step.md": "bc507317e09dd6260f80da2d7d692128ec2b1bf92cc628a5d86c4f01f7902dcd"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Sectioned Plan\n\n`demo` \u00b7 generated 2026-11-18T15:08:16Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `2cd393c0e9ed913f625b4cbda4064e0689026654d389151da08d7843ec027dba`\n- **Detail bundle digest:** `cb8be58e067497ff46af35d98e057c68b0e6deaf23e704220f6af35ad4507090`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 1 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** n/a (not computable for this plan)\n- **Satellite ratio:** n/a (not computable for this plan)\n- **Inert-step ratio:** n/a (not computable for this plan)\n- **Audit-induced growth:** n/a (not computable for this plan)\n\n## Suggested next steps\n\n- Close the blocking `intent-presence` finding (medium) directly \u2014 Plan declares no `intent`\n- Close the blocking `intent-presence` finding (medium) directly \u2014 1 step(s) declare no `intent`\n- `plan-tool completeness-audit demo --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Sectioned Plan\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `2cd393c0e9ed913f625b4cbda4064e0689026654d389151da08d7843ec027dba`\n- **Detail bundle digest:** `cb8be58e067497ff46af35d98e057c68b0e6deaf23e704220f6af35ad4507090`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 1 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Self-consistency\n\n_Blocking-capable plan-internal consistency findings (a medium+ finding here blocks, unlike the advisory smells above): claims the plan makes that its own steps don't deliver, or deliverables no step consumes, including signed-off concepts with neither an explicit committed owner nor a valid structured deferral, plus a plan or step declaring no `intent`._\n\n- MEDIUM [confidence: limited]: The plan's `intent:` is absent, empty, or a placeholder. One line on why this plan exists travels with it into every authoring and execution prompt \u2014 it is the positive half of the plan's scope fence.\n- MEDIUM [confidence: limited]: Step(s) 1 carry no usable `intent:` (absent, empty, or a placeholder). One line on why a step exists travels with it into its detail and run prompts \u2014 it is the positive half of that step's scope fence.\n\n### Suggested next steps\n\n- Close the 2 blocking self-consistency finding(s) above (intent-presence) \u2014 add a one-line `intent:` to the plan or the named step(s). No apply verb targets them.\n- `plan-tool completeness-audit demo --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "2cd393c0e9ed913f625b4cbda4064e0689026654d389151da08d7843ec027dba",
+      "detail_bundle_digest": "cb8be58e067497ff46af35d98e057c68b0e6deaf23e704220f6af35ad4507090",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-example/v1.6.0/test_capture_final0/plans/plan-details/demo/01-only-step.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": null,
+      "project_context_digest": null
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 1,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": null,
+    "satellite_ratio": null,
+    "inert_step_ratio": null,
+    "audit_induced_growth": null,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}
