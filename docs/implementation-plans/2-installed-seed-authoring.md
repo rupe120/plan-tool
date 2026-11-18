@@ -57,6 +57,7 @@ steps:
   - 1
   depends_on_notes:
     1: Provides the shared authoring contract, examples, and router links to verify.
+  detail: docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md
   description: Extend the existing install-skill coverage to follow the required authoring
     link from each installed router to the seed contract in its installed sibling.
     Use temporary consuming repos and exercise the default and explicit --copy modes
