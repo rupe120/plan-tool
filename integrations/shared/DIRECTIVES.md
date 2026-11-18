@@ -449,9 +449,9 @@ a plan-body edit — is what pulls detail into plans.
   the plan alone. The same holds for a finding that reports as missing a path
   another plan in the same roadmap declares in `creates:`: the audit is shown
   those paths and told not to report them, but that is an instruction to the
-  model, not a filter. Check the cited path against the prompt's sibling list,
-  or against the sibling plans' `creates:` when the prompt lists none or says
-  they are unavailable; if a sibling declares it, it is T. A path no plan in
+  model, not a filter, and the rendered prompt is not saved. Check the cited path
+  against the `creates:` of the other plans in the same roadmap; if one declares
+  it, it is T. A path no plan in
   the roadmap declares is an ordinary finding.
 
 **Diff a bare-round fix before committing it.** If it adds a table, algorithm,

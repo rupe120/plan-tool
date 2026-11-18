@@ -3,9 +3,9 @@ format_version: 1
 title: Audit Sibling Plan Created Paths
 intent: A roadmap-derived plan's completeness audit is told which paths the other
   plans in the same roadmap will create, so the model-driven audit stops reporting
-  those paths as missing. A multi-plan roadmap batch no longer re-raises the same
-  false finding every round, and `integrations/shared/DIRECTIVES.md` § "T — tool artifacts"
-  no longer needs to tell triagers to ignore it.
+  those paths as missing. The audit is instructed, not filtered, so
+  `integrations/shared/DIRECTIVES.md` § "T — tool artifacts" keeps a finding of
+  that kind as T once the cited path is checked against the sibling plans.
 status: completed
 priority: medium
 risk_profile: standard
@@ -131,8 +131,8 @@ steps:
     in the rendered prompt. No test asserts how a real model responds (deliver, don''t
     verify).'
 - id: 3
-  intent: Stop telling triagers to ignore a false positive the audit no longer produces,
-    and close the backlog entry once the fix ships.
+  intent: Tell triagers how to verify a sibling-path finding now that the audit is
+    shown sibling paths, and close the backlog entry once the fix ships.
   files:
   - integrations/shared/DIRECTIVES.md
   - BUG_BACKLOG.md
@@ -145,8 +145,9 @@ steps:
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md
   status: done
   description: 'Rewrite `integrations/shared/DIRECTIVES.md` § "T — tool artifacts"
-    so the sibling-path case is described as handled by the audit, which now receives
-    same-roadmap sibling `creates:` paths, while the stale roadmap or seed path case
+    so the sibling-path case stays T after the triager checks the cited path against
+    the same-roadmap sibling plans `creates:`: the audit now receives those paths,
+    but only as an instruction, not a filter. The stale roadmap or seed path case
     stays a T false positive. Sweep by vocabulary ("another plan in the same roadmap
     creates", "sibling", "footprint") across `DIRECTIVES.md` and `BUG_BACKLOG.md`
     for prose that still calls the case unhandled. After full shipment, remove the
@@ -155,7 +156,7 @@ steps:
     stub). Leave the related unbuilt-sibling entry in place. The entry removal is
     the only destructive edit, and it happens only once steps 1 and 2 are green. Verification
     for this non-code step (the test-authoring gate does not apply to `non-code`):
-    `rg` shows § T no longer lists the sibling-path case, the BUG entry heading is
+    `rg` shows § T describes the sibling-path check, the BUG entry heading is
     gone, the unbuilt-sibling entry is still present, and `uv run pytest tests/ -q
     -n auto` is green.'
 ---
@@ -189,7 +190,7 @@ This way the prompt never carries a set the deterministic check would not use. N
 
 **Guarantee:** "a path a same-roadmap sibling plan declares in `creates:` is given to the auditor as planned work." Mechanism: the rendered prompt block. Owner: the prompt renderer in `plan_tool/review.py`.
 
-**Docs and bookkeeping.** `integrations/shared/DIRECTIVES.md` § "T — tool artifacts" describes the sibling-path case as handled by the audit, while the stale roadmap or seed path case stays a T label. The final step removes the originating `BUG_BACKLOG.md` entry, but only after full shipment.
+**Docs and bookkeeping.** `integrations/shared/DIRECTIVES.md` § "T — tool artifacts" keeps the sibling-path case as T once the cited path is checked against the sibling plans' `creates:` (the audit is instructed, not filtered), and the stale roadmap or seed path case stays a T label. The final step removes the originating `BUG_BACKLOG.md` entry, but only after full shipment.
 
 ## Input
 
@@ -316,8 +317,9 @@ See the `steps:` block in the frontmatter.
 - The sibling set is part of the audit input fingerprint and of the public
   `audit_revision` (version 4, `sibling_paths_digest`), so a sibling edit makes a
   prior result stale for reuse and for a saved report's freshness.
-- `DIRECTIVES.md` § "T — tool artifacts" no longer lists the sibling-path case
-  as a false positive to ignore.
+- `DIRECTIVES.md` § "T — tool artifacts" tells the triager to check a
+  sibling-path finding against the sibling plans' `creates:` and keeps it T when
+  a sibling declares the path.
 - Backlog reconciliation: the final step removes the originating
   `BUG_BACKLOG.md` entry only after full shipment. Authoring this plan does not
   remove it.
