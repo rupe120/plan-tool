@@ -362,6 +362,63 @@ def test_dry_run_reports_the_reason_and_changes_nothing(repo: Repo, capsys) -> N
     assert "0.1.0 (tag v0.1.0) -> 0.2.0: minor" in out and "Added      IPPT-1.md" in out
 
 
+def _merge_pr(repo: Repo, number: int, files: dict[str, str]) -> None:
+    """Merge a branch the way Bitbucket does: a no-ff merge whose subject names the pull request."""
+    base = repo.git("rev-parse", "--abbrev-ref", "HEAD").strip()
+    repo.git("checkout", "-q", "-b", f"pr-{number}")
+    for rel, content in files.items():
+        repo.write(rel, content)
+    repo.commit_all(f"Work for {number}")
+    repo.git("checkout", "-q", base)
+    repo.git("merge", "-q", "--no-ff", "-m", f"Merged in pr-{number} (pull request #{number})", f"pr-{number}")
+
+
+def test_release_refuses_a_merged_pr_that_changed_plan_tool_without_a_fragment(repo: Repo) -> None:
+    _merge_pr(repo, 7, {"plan_tool/feature.py": "x = 1\n"})
+    repo.fragment("IPPT-1", "Added")
+    repo.commit_all("Fragments")
+    before = repo.head()
+
+    for dry_run in (True, False):  # the dry run makes the same check, so a preview cannot pass what the run refuses
+        with pytest.raises(release.ReleaseError, match=r"#7 Merged in pr-7 .*\n.*--no-fragment-ok"):
+            release.cut(repo.path, force_minor=False, dry_run=dry_run, tool=fake_tools(repo.path))
+
+    assert repo.head() == before and repo.dirty() == ""
+
+
+def test_release_accepts_a_pr_that_carries_its_own_fragment(repo: Repo) -> None:
+    _merge_pr(repo, 7, {"plan_tool/feature.py": "x = 1\n", "changelog.d/IPPT-7.md": "### Added\n\n- A feature (IPPT-7).\n"})
+
+    assert release.cut(repo.path, force_minor=False, dry_run=True) == 0
+
+
+def test_release_does_not_flag_a_pr_that_left_plan_tool_alone(repo: Repo) -> None:
+    """Docs-only and test-only changes need no fragment (changelog.d/README.md), so path presence under plan_tool/ is the trigger."""
+    _merge_pr(repo, 8, {"docs/guide.md": "text\n", "tests/test_x.py": "pass\n"})
+    repo.fragment("IPPT-1", "Added")
+    repo.commit_all("Fragments")
+
+    assert release.cut(repo.path, force_minor=False, dry_run=True) == 0
+
+
+def test_release_accepts_an_acknowledged_pr_and_still_refuses_the_others(repo: Repo) -> None:
+    _merge_pr(repo, 7, {"plan_tool/a.py": "x = 1\n"})
+    _merge_pr(repo, 9, {"plan_tool/b.py": "y = 1\n"})
+    repo.fragment("IPPT-1", "Added")
+    repo.commit_all("Fragments")
+
+    with pytest.raises(release.ReleaseError, match="#9") as excinfo:
+        release.cut(repo.path, force_minor=False, dry_run=True, acknowledged=[7])
+    assert "#7" not in str(excinfo.value)
+    assert release.cut(repo.path, force_minor=False, dry_run=True, acknowledged=[7, 9]) == 0
+
+
+def test_no_fragment_ok_is_a_preparation_flag_and_refused_with_publish(capsys) -> None:
+    with pytest.raises(SystemExit):
+        release.main(["--publish", "--no-fragment-ok", "7"])
+    assert "--no-fragment-ok applies to release preparation" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize("failing_tool", ["uv", "uvx"])
 def test_a_tool_failure_restores_the_tree_and_makes_no_commit(repo: Repo, failing_tool: str) -> None:
     repo.fragment("IPPT-1", "Added")
