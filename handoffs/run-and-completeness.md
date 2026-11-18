@@ -625,76 +625,57 @@ Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the 
 
 ## Audit sibling-plan created paths — review ledger
 
-*Opened 2026-11-17.*
+*Opened 2026-11-17. Closed 2026-11-17 by owner decision after round 3; shipped as PR #260 (plan PR #256).*
 
 | Field | Value |
 | --- | --- |
 | Opened | 2026-11-17 |
 | Change | Plan `audit-sibling-plan-created-paths`: the conceptual audit is given same-roadmap sibling `creates:` paths, captured in the audit snapshot and pinned by audit revision v4 |
-| Branch | `feat/audit-sibling-plan-created-paths` (plan merged as PR #256) |
-| Checks | full suite green per step; `reconcile-code --all` no drift |
-| Reviewer | `/code-review high`, forked report-only |
-| Disposition | rounds 1–3 dispositioned; owner call on PR vs round 4 |
+| Range | `origin/main` at #256 through the #260 merge (`1fe4288e6`) |
+| Checks | full suite green (15,333 passed); `reconcile-code --all` no drift |
+| Reviewer | `/code-review high`, three forked report-only rounds |
+| Disposition | **Closed by owner decision** after round 3: findings 9 → 9 → 7, the last with no high findings; round 2's wording findings were resolved by enumerating every case rather than patching one |
 
-### Settled decisions (give to the next reviewer)
+### Settled decisions
 
-- Deliver, don't filter: the audit is given the sibling paths; nothing post-processes model findings.
-- Audit revision v4 with `sibling_paths_digest` (owner, 2026-11-17); ship between Loom batches.
-- Version tolerance lives in `normalize_audit_revision`; all three saved-versus-current comparisons receive a normalized revision, so no comparison code changes.
+Each lives in its canonical home (`DATA_CONTRACT.md` qualified-result revision, `integrations/shared/DIRECTIVES.md` § T, and the archived plan).
+
+- Deliver, don't filter: the audit is told the sibling paths; nothing post-processes model findings.
+- `audit_revision` v4 with `sibling_paths_digest`; ship between Loom batches.
+- Version tolerance lives in `normalize_audit_revision`; all three saved-versus-current comparisons receive a normalized revision, so no comparison code changed.
 - `_eligible_planned_paths` is untouched; the helper repeats its uncertain-evidence classes, pinned by a parity test.
-- "Could not be determined" is a distinct prompt statement but leaves the fingerprint and digest equal to "none" (owner, 2026-11-17), so an unresolvable identity makes nothing stale.
+- The sibling block never claims completeness or tells the model to soften findings: "none are listed", "could not be determined … so none are listed", or a list that "can be incomplete".
+- An undeterminable sibling set changes only the prompt, never the fingerprint or digest, so an unresolvable identity makes nothing stale.
 
-### Execution notes
+### Findings
 
-- Step 1: a contract drift test pinned the v3 sentence (updated); two planned comparison-site tests were missing and were written by hand, each red when the normalizer keeps v3.
-- Step 2: two prompt-shape tests pinned the old block list and tail (updated).
-- Step 3 ran clean.
-
-### Findings (round 1)
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | Uncertain identity rendered "no sibling plan paths apply", the same as none | **Fixed.** The helper returns `None` for unknown; the prompt states the set could not be determined. The record treats unknown like none by owner decision |
-| 2 | A sibling that fails to parse is skipped, so a partial list reads as complete | **Fixed.** The block says the list can be incomplete |
-| 3 | The `DIRECTIVES.md` rewrite called a sibling-path finding a real signal, though the fix only instructs the model | **Fixed.** Such a finding stays T after checking the cited path against the sibling list or the siblings' `creates:` |
-| 4 | One plan's `creates:` edit makes every same-roadmap sibling's saved audit stale | **Declined (owner-confirmed v4).** That is the intended freshness; the batch cost is stated in the PR |
-| 5 | Every snapshot capture selects siblings, O(N²) on status paths | **Tracked** BUG_BACKLOG "Roadmap plans whose `source_seed` is relative to the plans directory…": unmeasurable until identities resolve (Loom resolves none) |
-| 6 | No deterministic filter of findings | **Declined (settled).** Deliver, don't filter |
-| 7 | Staleness docs omitted a sibling `creates:` edit | **Fixed.** `audit.md` and `DATA_CONTRACT.md` |
-| 8 | Defensive `getattr` on the snapshot field | **Fixed.** Plain attribute access |
-| 9 | Paths rendered as raw lines | **Fixed.** Backticked bullets |
+| Round | # | Finding | Disposition |
+| --- | --- | --- | --- |
+| 1 | 1 | Uncertain identity rendered as "none apply" | fixed (distinct prompt statement; record unchanged by owner decision) |
+| 1 | 2 | A partial list read as complete | fixed ("can be incomplete") |
+| 1 | 3 | § T called a sibling-path finding a real signal | fixed (stays T after a check) |
+| 1 | 4 | A sibling edit makes every sibling's saved audit stale | declined (owner-confirmed v4) |
+| 1 | 5 | Capture selects siblings on every status check, O(N²) | tracked (BUG_BACKLOG `source_seed` entry; unmeasurable until identities resolve) |
+| 1 | 6 | No deterministic finding filter | declined (deliver, don't filter) |
+| 1 | 7 | Staleness docs omitted a sibling edit | fixed |
+| 1 | 8 | Defensive `getattr` | fixed |
+| 1 | 9 | Paths rendered as raw lines | fixed (code-span bullets) |
+| 2 | 1–2 | Unreadable manifest or every sibling skipped rendered "none apply" | fixed (neutral wording, case-enumerated; tests) |
+| 2 | 3 | Identity resolved twice per capture | declined (accepted in the plan) |
+| 2 | 4 | A shared completeness-status core | declined (changes the fenced deterministic check; unneeded with neutral wording) |
+| 2 | 5 | The unknown statement told the model to hedge, and every Loom plan takes it | fixed (no instruction) |
+| 2 | 6 | Unknown and empty share a fingerprint | declined (owner decision; both statements neutral) |
+| 2 | 7 | Parity test injected every class through identity only | fixed (renamed; manifest and sibling cases tested) |
+| 2 | 8–9 | Docstring coverage; blank lines and wrap | fixed |
+| 3 | 1 | The plan still described § T as dropping the sibling case | fixed |
+| 3 | 2 | The unknown statement claimed a roadmap identity | fixed ("could not be determined for this plan") |
+| 3 | 3 | Helper docstring overpromised `None` | fixed |
+| 3 | 4 | § T pointed at the unsaved prompt | fixed (check the siblings' `creates:`) |
+| 3 | 5 | A test did not assert the rendered statement | fixed |
+| 3 | 6 | Dead `try/except` | fixed |
+| 3 | 7 | A backtick broke a path's code span | fixed (`_code_span`) |
 
 ### Open items
 
-- `tracked` BUG_BACKLOG: `source_seed` relative to the plans directory never resolves, so in Loom every sibling-aware check is inert (found while measuring #5). This PR helps Loom only after that bug is fixed.
-
-### Findings (round 2)
-
-The sibling block's claims drew new findings in two rounds running, so the cases were enumerated rather than patched: not roadmap-derived, identity uncertain (every Loom plan today), manifest unreadable, every sibling skipped, some skipped, normal. Only neutral wording that never claims completeness and never hedges is true in every case, so the empty and unknown statements were made neutral ("none are listed", "unavailable … so none are listed") and the listed case keeps "can be incomplete".
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | An unreadable manifest renders a definite "no sibling plan paths apply" | **Fixed (wording).** The empty statement no longer claims none exist; test `test_audit_prompt_with_an_unreadable_manifest_lists_none_without_claiming_none_exist` |
-| 2 | Every sibling skipped renders the empty set as definite | **Fixed (wording).** Same neutral statement; test `test_audit_prompt_with_every_sibling_unreadable_lists_none_without_claiming_none_exist` |
-| 3 | The plan's identity is resolved twice per capture | **Declined (settled in the plan).** The repeated read is accepted to keep one selection rule; cost tracked with the BUG_BACKLOG `source_seed` entry |
-| 4 | A shared core returning completeness status would remove the identity pre-check | **Declined.** It changes `_eligible_planned_paths`, which the scope fence keeps untouched; with neutral wording the prompt needs no completeness status |
-| 5 | The unknown statement told the model to hedge every missing-path finding, and every Loom plan takes it | **Fixed.** The unknown statement carries no instruction; a test asserts no hedging phrase in the empty or unknown block |
-| 6 | Unknown and empty share a fingerprint though their prompts differ | **Declined (owner decision).** Both statements are now neutral and instruct nothing, so the difference is immaterial |
-| 7 | The parity test injected every class only through identity resolution | **Fixed.** Renamed to the identity case it pins; the manifest and sibling paths have their own tests (1, 2) |
-| 8 | `audit_input_revision`'s docstring covered two of three digests | **Fixed** |
-| 9 | Blank lines and an over-long docstring line | **Fixed** |
-
-### Findings (round 3)
-
-No high findings and none repeating rounds 1–2; each one is a statement claiming slightly more than the code does.
-
-| # | Finding | Disposition |
-| --- | --- | --- |
-| 1 | The completed plan still said § T dropped the sibling case and the audit no longer produces it | **Fixed.** Plan intent, step 3 and acceptance describe the shipped rule: the case stays T after checking the sibling plans' `creates:` |
-| 2 | The unknown statement claimed a roadmap identity that failed to resolve; a non-roadmap plan with an unresolvable seed also lands there | **Fixed.** "could not be determined for this plan, so none are listed" |
-| 3 | The helper docstring promised `None` for an uncertain selection; manifest and sibling failures give an empty set | **Fixed.** Docstring states `None` only for the plan's own identity |
-| 4 | § T pointed at the prompt's sibling list, which is not saved | **Fixed.** Check the cited path against the same-roadmap plans' `creates:` |
-| 5 | The every-sibling-unreadable test did not assert which statement renders | **Fixed.** Asserts the empty statement |
-| 6 | The `try/except` around `_eligible_planned_paths` was dead | **Fixed.** Narrowed to the identity call |
-| 7 | A backtick in a path broke its code span | **Fixed.** `_code_span` uses a double-backtick span when needed; test added |
-
+- `tracked` BUG_BACKLOG: "Roadmap plans whose `source_seed` is relative to the plans directory never resolve their roadmap identity…". Until it lands, this fix has no effect in Loom, and the capture-cost measurement waits on it.
+- `tracked` BACKLOG #543: captured examples of every persisted format version; its first entries are a v3 sidecar from release 1.6.0 and a v4 one from after #260.
