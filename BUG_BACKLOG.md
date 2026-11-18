@@ -270,36 +270,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** Integration `integration-aidlc-mvp` batch plan creation and bare audits,
   2026-10-10.
 
-### The audit reports a path a sibling plan in the same roadmap creates as missing
-
-- **Files:** `plan_tool/prompts/plan-audit.md` (the model-driven audit, which
-  receives no sibling footprints). The deterministic missing-file check already
-  merges same-roadmap sibling `creates:` (`plan_tool/review.py:
-  _eligible_planned_paths`, pinned in `tests/test_review.py`); only the
-  model-emitted finding remains.
-- **Symptom:** `integrations/shared/DIRECTIVES.md` tells the triaging session
-  that a finding citing a path another plan in the same roadmap creates is a
-  known false positive (T): verify it once and leave the plan alone. The
-  model-driven audit still raises it (the deterministic check no longer does), and in a multi-plan roadmap batch it recurs every round.
-  Integration's batch driver has no `proceed` at Gate 2, so a material T finding there
-  can only end in `continue` or `stop`.
-- **Fix:** give the model-driven audit the sibling roadmap plans' `creates:`
-  footprints (or filter its missing-file findings against them), reusing
-  `_eligible_planned_paths`.
-  A two-plan roadmap fixture where plan 2 cites a file plan 1 creates audits
-  without that finding.
-- **Deliberately not:** suppressing any other T class, or paths created by
-  plans outside the roadmap. If sibling footprints are not reliable at audit
-  time, record that and stop. Related: the unbuilt-sibling entry above, which
-  concerns how a plan may depend on a sibling at all.
-- **Approach:** plan-tool; the audit needs the roadmap membership and the
-  siblings' footprints at audit time. Plan: `docs/implementation-plans/2-audit-sibling-plan-created-paths.md`
-  (plan-authored 2026-11-17, execution pending).
-- **Route:** plan · **Readiness:** ready · **Tier:** architect.
-- **Origin:** Integration `construction-batch-driver` open item "T findings at
-  Gate 2", 2026-10-19. Filed first as BACKLOG #503 in the same pull request,
-  then moved here; #503 is not reused.
-
 ### `create --from-existing` records `source_seed` as the seed path it then archives; for a roadmap-published seed the plan points at a file that no longer exists and Gate 1 rates it HIGH
 
 - **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1680`) and the
@@ -696,6 +666,43 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-14, review of the fix for the status carry-over bug (the
   former BUG_BACKLOG entry on `create --iterate` carrying `status` onto a
   different step).
+
+### Roadmap plans whose `source_seed` is relative to the plans directory never resolve their roadmap identity, so every sibling-aware check is inert
+
+- **Files:** `plan_tool/review_persistence.py:_resolve_source_seed_path` (joins
+  `plan.source_seed` to the repository root only), and its consumers:
+  `plan_tool/review.py:_sibling_roadmap_identity`, `_eligible_planned_paths`,
+  `sibling_creates_paths`, the scope-contract block, and `source_seed_digest`.
+- **Symptom:** every roadmap-derived plan in Loom (24 plans, written
+  2026-10-11) records `source_seed` relative to the plans directory, for example
+  `roadmaps/loom-aidlc-mvp/plan-seed-drafts/connector-registry-seed.md`, while
+  this repository's `create` records it relative to the repository root
+  (`docs/implementation-plans/…`). The repo-root join finds no file, so
+  `_sibling_roadmap_identity` raises "Source identity unavailable" for every
+  Loom plan. The deterministic sibling merge (archived plan
+  `2-sibling-planned-input-paths`) falls back to the plan's own paths, and the
+  conceptual audit's sibling block states the sibling set could not be
+  determined, so neither sibling fix takes effect in the only real roadmap
+  consumer. Measured 2026-11-17 on a read-only copy of Loom's plans and
+  roadmaps.
+- **Fix:** first establish whether a current writer still produces
+  plans-relative `source_seed` (Loom's batch driver passing a path relative to
+  its working directory, or `create` recording the argument as given) or the
+  values are legacy. Then either normalize `source_seed` to repo-relative at
+  write time, or resolve a plans-relative value as a fallback, with a test on a
+  Loom-shaped fixture where a plan's sibling identity resolves.
+- **Deliberately not:** rewriting Loom's plan files from this repository.
+- **Follow-up once identities resolve:** measure `AuditInputSnapshot.capture`
+  cost on a real multi-plan roadmap. Each capture now selects siblings, which
+  parses manifest plans and resolves each one's identity, and status paths call
+  capture once per saved report (code review of the sibling-path audit fix,
+  2026-11-17). On Loom today the expensive path never runs (0.006 s per
+  capture, no identity resolved), so the cost is unmeasured.
+- **Approach:** direct once the writer question is answered; plan-tool if it
+  needs a `source_seed` format decision.
+- **Route:** direct · **Readiness:** evidence-gated (which writer produces
+  plans-relative paths) · **Tier:** experienced.
+- **Origin:** 2026-11-17, review of the sibling-path audit fix.
 
 ## MINOR
 

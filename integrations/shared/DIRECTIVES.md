@@ -444,9 +444,15 @@ a plan-body edit — is what pulls detail into plans.
   align the plan to the roadmap, or record the departure as roadmap feedback
   with the owner's decision (`roadmap <slug> --submit-feedback`) and cite that
   record in the plan, so re-audits stop re-flagging it.
-- **T — tool artifacts.** A finding that cites a path another plan in the same
-  roadmap creates as missing, or a stale roadmap or seed path, is a known false
-  positive: verify it once, file or cite the bug entry, and leave the plan alone.
+- **T — tool artifacts.** A finding that cites a stale roadmap or seed path is
+  a known false positive: verify it once, file or cite the bug entry, and leave
+  the plan alone. The same holds for a finding that reports as missing a path
+  another plan in the same roadmap declares in `creates:`: the audit is shown
+  those paths and told not to report them, but that is an instruction to the
+  model, not a filter, and the rendered prompt is not saved. Check the cited path
+  against the `creates:` of the other plans in the same roadmap; if one declares
+  it, it is T. A path no plan in
+  the roadmap declares is an ordinary finding.
 
 **Diff a bare-round fix before committing it.** If it adds a table, algorithm,
 schema constraint, state machine, file layout, or platform-specific behavior,

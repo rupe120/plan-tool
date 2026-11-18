@@ -2336,6 +2336,35 @@ def _eligible_planned_paths(
     return frozenset(selected)
 
 
+def sibling_creates_paths(
+    plan: Plan, plan_path: Path, repo_root: Path
+) -> Optional[frozenset[str]]:
+    """Normalized same-roadmap sibling ``creates:`` paths, excluding the plan's own.
+
+    Empty for a plan with no roadmap identity (never the all-registered set).
+    ``None`` only when the plan's own identity is uncertain or its seed does not
+    resolve. An unreadable manifest or sibling is absorbed by
+    ``_eligible_planned_paths``, so the set can then be empty or incomplete;
+    the prompt wording never claims completeness for that reason. Selection
+    is ``_eligible_planned_paths``'s; this adds no rule of its own.
+    """
+    from plan_tool.locator import ManifestError
+
+    try:
+        identity = _sibling_roadmap_identity(plan, plan_path, repo_root)
+    except (OSError, UnicodeError, ValueError, ManifestError):
+        return None
+    if identity is None:
+        return frozenset()
+    eligible = _eligible_planned_paths(plan, plan_path, repo_root)
+    own = {normalize_declared_path(path) for path in _planned_paths(plan)}
+    return frozenset(
+        normalized
+        for normalized in (normalize_declared_path(path) for path in eligible)
+        if normalized and normalized not in own
+    )
+
+
 def check_plan_input_contract_references(
     plan: Plan, plan_path: Path, repo_root: Path
 ) -> list[object]:
@@ -7581,6 +7610,46 @@ def _format_carried_findings_block(
     return "\n".join(lines)
 
 
+def _captured_sibling_paths(
+    plan: Plan, plan_path: Path, repo_root: Path
+) -> Optional[tuple[str, ...]]:
+    """The sibling set in its captured form: sorted paths, or ``None`` when unknown."""
+    paths = sibling_creates_paths(plan, plan_path, repo_root)
+    return None if paths is None else tuple(sorted(paths))
+
+
+def _code_span(text: str) -> str:
+    """Inline code for ``text`` that a backtick inside it cannot close early."""
+    fence = "``" if "`" in text else "`"
+    pad = " " if "`" in text else ""
+    return f"{fence}{pad}{text}{pad}{fence}"
+
+
+def _format_sibling_planned_paths_block(paths: Optional[Sequence[str]]) -> str:
+    """Render the sibling-planned-paths input without claiming completeness.
+
+    Neither the empty nor the unknown case says "none exist" or tells the model
+    to soften findings: selection can be empty because a manifest or sibling was
+    unreadable, and an unknown set (every plan whose identity does not resolve)
+    must not weaken a genuine missing-path finding.
+    """
+    if paths is None:
+        return (
+            "**Sibling plans' planned paths:** could not be determined for this "
+            "plan, so none are listed.\n"
+        )
+    if not paths:
+        return "**Sibling plans' planned paths:** none are listed for this plan.\n"
+    return (
+        "**Sibling plans' planned paths:** each path below is planned work of "
+        "another plan in the same roadmap, not a missing file — do not report it "
+        "as missing. The list can be incomplete (an unreadable sibling plan is "
+        "skipped).\n\n"
+        + "\n".join(f"- {_code_span(path)}" for path in paths)
+        + "\n"
+    )
+
+
 def render_plan_audit_prompt(
     plan: Plan,
     plan_path: Path,
@@ -7617,6 +7686,11 @@ def render_plan_audit_prompt(
     :func:`_format_scope_contract_block`; a plan with no resolvable seed
     renders this slot empty, so the prompt stays byte-identical to before
     the feature existed.
+
+    The sibling-planned-paths block lists same-roadmap sibling ``creates:``
+    paths as planned work, read from ``audit_input_snapshot`` when passed and
+    from :func:`sibling_creates_paths` otherwise; an empty set renders an
+    explicit neutral statement (none listed, or unavailable), never an empty slot.
     """
     if audit_input_snapshot is not None:
         plan = audit_input_snapshot.plan
@@ -7650,6 +7724,12 @@ def render_plan_audit_prompt(
         if audit_input_snapshot is not None
         else project_profile_context(repo_root)
     )
+    sibling_paths = (
+        audit_input_snapshot.sibling_creates_paths
+        if audit_input_snapshot is not None
+        else _captured_sibling_paths(plan, plan_path, repo_root)
+    )
+    sibling_paths_rendered = _format_sibling_planned_paths_block(sibling_paths)
     # ``${intent_block}${scope_contract_block}`` sit on one template line with
     # no separator (so either slot alone stays byte-identical to before the
     # other existed). When BOTH render, that concatenation merges the scope
@@ -7670,6 +7750,8 @@ def render_plan_audit_prompt(
             ("detail-bundle status",
              len(detail_bundle_status_rendered.encode("utf-8"))),
             ("scope contract", len(scope_contract_rendered.encode("utf-8"))),
+            ("sibling planned paths",
+             len(sibling_paths_rendered.encode("utf-8"))),
         ])
         if project_context_rendered:
             collect_blocks.append(
@@ -7684,6 +7766,7 @@ def render_plan_audit_prompt(
         carried_findings_block=_format_carried_findings_block(
             carried_findings
         ),
+        sibling_planned_paths_block=sibling_paths_rendered,
         intent_block=intent_rendered,
         scope_contract_block=scope_contract_joined,
         project_context_block=render_project_context_block(

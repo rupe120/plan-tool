@@ -11,7 +11,9 @@ This is distinct from one check that runs elsewhere:
 
 - **Deterministic well-formedness** (sections present, files resolve,
   dependencies declared coherently) has already passed before this
-  prompt ran. Do not re-flag missing sections or broken paths.
+  prompt ran. Do not re-flag missing sections or broken paths. A path the
+  **Sibling plans' planned paths** input lists is another plan's planned
+  work, not a missing file.
 
 **Read/Grep only — do not edit any file.** Report findings; a separate
 apply pass acts on them.
@@ -552,6 +554,7 @@ each one against `(a)pply / (s)kip` from the prose alone — keep them tight
   or otherwise altered because of it.
 
 ${carried_findings_block}
+${sibling_planned_paths_block}
 ${intent_block}${scope_contract_block}
 ${project_context_block}## Plan body
 

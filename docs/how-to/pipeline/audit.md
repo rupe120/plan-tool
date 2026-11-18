@@ -439,7 +439,7 @@ cause decides the action `_reaudit_command` names:
 | --- | --- | --- |
 | `transient` | The audit stopped on a cut-short stop (`max_iterations`, `deadline_exceeded`, `no_progress`, a budget stop), or halted on drift (a re-audit takes a fresh drift baseline) | The plain re-audit, which continues the run |
 | `persistent` | Coverage is unqualified, a hand-apply stop or deferrals await a person, or the loop halted on text that fails to parse, a reverted edit, or an unmatched fence (a re-audit reproduces it) | Triage the saved report, correct it in a session-directed edit, and commit before re-auditing the changed snapshot |
-| `stale-revision` | No current evidence for this text: the plan changed since the saved evidence, the revision is legacy or unsampled, or the coverage is legacy | Run a fresh audit ("no current audit evidence for this text"); the saved gaps may describe other text, so they are listed as advisory, not text to close and not counted |
+| `stale-revision` | No current evidence for this text: the plan, its detail, seed or project context changed since the saved evidence, or a same-roadmap sibling plan's `creates:` changed; the revision is legacy or unsampled; or the coverage is legacy | Run a fresh audit ("no current audit evidence for this text"); the saved gaps may describe other text, so they are listed as advisory, not text to close and not counted |
 
 When one result fits several causes, the first match wins in the order
 `stale-revision`, then `persistent` (an incomplete or unqualified current
@@ -471,7 +471,7 @@ by comparing the result's recorded audit revision with the files now on disk
 
 | Evidence | Row says |
 | --- | --- |
-| The recorded run-grade revision no longer matches the files | `stale-revision`: "no current audit evidence for this text — run a fresh audit". Whatever the original cause, and its deterministic blockers are not counted (they were computed on the old text) |
+| The recorded run-grade revision no longer matches the files (including a same-roadmap sibling plan's `creates:`) | `stale-revision`: "no current audit evidence for this text — run a fresh audit". Whatever the original cause, and its deterministic blockers are not counted (they were computed on the old text) |
 | The revision matches, or nothing can be compared (no result, a capture that failed) | The verdict's own cause and count: `transient`, `persistent`, or a `set` verdict's gaps and failing checks |
 | An empty set that could not be proven current, or an `absent` verdict | The fixed "no current qualified audit result exists; run a fresh audit" row |
 

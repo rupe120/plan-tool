@@ -81,9 +81,14 @@ def audit_input_revision(snapshot) -> dict[str, object]:
     """Return the complete public plan/detail revision from one capture.
 
     ``source_seed_digest`` (v2, BACKLOG #162) and ``project_context_digest``
-    (v3) are ``None`` when their optional prompt inputs are absent. Otherwise
+    (v3) and ``sibling_paths_digest`` (v4, same-roadmap sibling ``creates:``
+    paths) are ``None`` when their optional prompt inputs are absent. Otherwise
     they digest the exact source seed and confirmed project context shown to
-    the auditor, so either edit makes a saved report stale for reuse.
+    the auditor, and ``sibling_paths_digest`` (v4) digests the normalized
+    same-roadmap sibling ``creates:`` paths; any of these edits makes a saved
+    report stale for reuse. ``sibling_paths_digest`` is ``None`` both when no
+    sibling paths are listed and when they are unavailable (owner decision
+    2026-11-17).
     """
     detail_revision = audit_input_detail_revision(snapshot)
     detail_encoded = json.dumps(
@@ -91,8 +96,9 @@ def audit_input_revision(snapshot) -> dict[str, object]:
     ).encode("utf-8")
     source_seed_bytes = snapshot.source_seed_bytes
     project_context = snapshot.project_context
+    sibling_paths = snapshot.sibling_creates_paths
     return {
-        "version": 3,
+        "version": 4,
         "detail_grade": "run",
         "plan_digest": _audit_input_digest(snapshot.plan_bytes),
         "detail_bundle_digest": _audit_input_digest(detail_encoded),
@@ -105,6 +111,13 @@ def audit_input_revision(snapshot) -> dict[str, object]:
         "project_context_digest": (
             _audit_input_digest(project_context.encode("utf-8"))
             if project_context
+            else None
+        ),
+        # null both when no sibling paths apply and when they could not be
+        # determined (owner decision 2026-11-17); the prompt tells them apart.
+        "sibling_paths_digest": (
+            _audit_input_digest("\0".join(sibling_paths).encode("utf-8"))
+            if sibling_paths
             else None
         ),
     }

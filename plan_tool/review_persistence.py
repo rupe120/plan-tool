@@ -127,14 +127,15 @@ def normalize_audit_stage(value: object) -> Optional[str]:
 def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
     """Return a validated immutable plan/detail audit revision, if present.
 
-    Accepts v1 through v3: v2 adds ``source_seed_digest`` and v3 adds
-    ``project_context_digest``. See ``DATA_CONTRACT.md``'s qualified-result
-    section for why older revisions stay valid instead of being rejected.
+    Accepts v1 through v4: v2 adds ``source_seed_digest``, v3 adds
+    ``project_context_digest`` and v4 adds ``sibling_paths_digest``. See
+    ``DATA_CONTRACT.md``'s qualified-result section for why older revisions
+    stay valid instead of being rejected.
     """
     if not isinstance(value, dict):
         return None
     version = value.get("version")
-    if type(version) is not int or version not in (1, 2, 3):
+    if type(version) is not int or version not in (1, 2, 3, 4):
         return None
     expected_keys = {
         "version", "detail_grade", "plan_digest", "detail_bundle_digest", "details",
@@ -143,11 +144,16 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
         expected_keys = expected_keys | {"source_seed_digest"}
     if version >= 3:
         expected_keys = expected_keys | {"project_context_digest"}
+    if version >= 4:
+        expected_keys = expected_keys | {"sibling_paths_digest"}
     if set(value) != expected_keys:
         return None
     source_seed_digest = value.get("source_seed_digest") if version >= 2 else None
     project_context_digest = (
         value.get("project_context_digest") if version >= 3 else None
+    )
+    sibling_paths_digest = (
+        value.get("sibling_paths_digest") if version >= 4 else None
     )
     if (
         value["detail_grade"] != GRADE_RUN
@@ -166,6 +172,10 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
                 isinstance(project_context_digest, str)
                 and project_context_digest
             )
+        )
+        or not (
+            sibling_paths_digest is None
+            or (isinstance(sibling_paths_digest, str) and sibling_paths_digest)
         )
     ):
         return None
@@ -204,13 +214,14 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
             }
         )
     normalized = {
-        "version": 3,
+        "version": 4,
         "detail_grade": value["detail_grade"],
         "plan_digest": value["plan_digest"],
         "detail_bundle_digest": value["detail_bundle_digest"],
         "details": normalized_details,
         "source_seed_digest": source_seed_digest,
         "project_context_digest": project_context_digest,
+        "sibling_paths_digest": sibling_paths_digest,
     }
     from plan_tool.fingerprint import _audit_input_digest
 
@@ -506,6 +517,10 @@ class AuditInputSnapshot:
     # Rendered project-level scope context captured with this audit. Empty for
     # repositories without a valid profile, preserving legacy fingerprints.
     project_context: str = ""
+    # Normalized, sorted same-roadmap sibling ``creates:`` paths captured once;
+    # ``()`` when none apply, ``None`` when they could not be determined. Both
+    # leave the fingerprint unchanged; only the prompt tells them apart.
+    sibling_creates_paths: Optional[tuple[str, ...]] = ()
 
     def __post_init__(self) -> None:
         if self.detail_grade != GRADE_RUN:
@@ -522,6 +537,7 @@ class AuditInputSnapshot:
         )
         from plan_tool.parser import _split_frontmatter, parse_plan_text
         from plan_tool.project_profile import project_profile_context
+        from plan_tool.review import _captured_sibling_paths
 
         plan_bytes = plan_path.read_bytes()
         plan_text = plan_bytes.decode("utf-8")
@@ -567,6 +583,7 @@ class AuditInputSnapshot:
                 source_seed_text = ""
             _reject_unmatched_audit_fence(source_seed_text, source_seed_path)
         project_context = project_profile_context(repo_root)
+        sibling_paths = _captured_sibling_paths(plan, plan_path, repo_root)
         return cls(
             plan=plan,
             plan_bytes=plan_bytes,
@@ -576,9 +593,11 @@ class AuditInputSnapshot:
                 plan_bytes, details,
                 source_seed_bytes=source_seed_bytes,
                 project_context=project_context,
+                sibling_creates_paths=sibling_paths,
             ),
             source_seed_bytes=source_seed_bytes,
             project_context=project_context,
+            sibling_creates_paths=sibling_paths,
         )
 
     def detail_for_step(self, step_id: int) -> AuditInputDetail | None:
@@ -654,6 +673,7 @@ def _audit_input_fingerprint(
     *,
     source_seed_bytes: Optional[bytes] = None,
     project_context: str = "",
+    sibling_creates_paths: Optional[tuple[str, ...]] = (),
 ) -> str:
     """Hash framed prompt inputs without the generic saved-review glob."""
     h = hashlib.sha256()
@@ -681,6 +701,10 @@ def _audit_input_fingerprint(
         add("source-seed", source_seed_bytes)
     if project_context:
         add("project-context", project_context.encode("utf-8"))
+    # An unknown set (None) adds nothing, like an empty one: owner decision
+    # 2026-11-17, so an unresolvable identity does not make saved evidence stale.
+    if sibling_creates_paths:
+        add("sibling-paths", "\0".join(sibling_creates_paths).encode("utf-8"))
     return h.hexdigest()
 
 

@@ -1335,7 +1335,7 @@ def test_removed_run_log_events_are_absent_from_the_registry_and_the_doc() -> No
 
 def test_saved_review_qualified_result_contract_documents_run_grade_only_evidence():
     contract = (Path(__file__).resolve().parents[1] / "DATA_CONTRACT.md").read_text()
-    assert "Revision versions 1, 2, and 3 remain supported" in contract
+    assert "Audit-revision versions 1, 2, 3, and 4 remain supported" in contract
     assert "Explicit retired Jira-grade evidence and malformed revisions are unavailable" in contract
     assert "reads never rewrite archived sidecars" in contract
     gate = _section(contract, "Saved gate verdict")
