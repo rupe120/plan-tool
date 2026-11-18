@@ -802,12 +802,17 @@ bundle, and the optional inputs the audit sampled: (v2, BACKLOG #162) the
 plan's `source_seed` file as `source_seed_digest`, and (v3) the confirmed
 project context as `project_context_digest`, and (audit-revision version 4) the
 normalized same-roadmap sibling `creates:` paths as `sibling_paths_digest`. Each
-digest is `null` when its input was absent (no sibling paths apply). A saved v1–v3
+digest is `null` when its input was absent. `sibling_paths_digest` is also `null`
+when the sibling set could not be determined (the plan's roadmap identity is
+unavailable): the prompt states that case separately, but the revision and
+fingerprint treat it like "none apply", so an unresolvable identity does not make
+saved evidence stale (owner decision 2026-11-17). A saved v1–v3
 revision reads the missing digest as `null`, so a report of a plan without
 siblings stays current after upgrade while one with siblings reads stale once. A later sidecar reader may calculate an unpersisted
 `view_revision_status` of `current`, `stale`, `unknown`, or `not-sampled` from
-those artifacts; a seed or project-context edit after the report was saved
-counts as staleness the same way a plan or detail edit already does.
+those artifacts; a seed or project-context edit, or an edit to a same-roadmap
+sibling plan's `creates:`, after the report was saved counts as staleness the
+same way a plan or detail edit already does.
 The revision records only the digest of the rendered confirmed profile; it
 does not persist its contents or claim that broader live project context is
 captured or reproducible.

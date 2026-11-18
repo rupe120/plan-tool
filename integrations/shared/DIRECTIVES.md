@@ -446,10 +446,13 @@ a plan-body edit — is what pulls detail into plans.
   record in the plan, so re-audits stop re-flagging it.
 - **T — tool artifacts.** A finding that cites a stale roadmap or seed path is
   a known false positive: verify it once, file or cite the bug entry, and leave
-  the plan alone. The audit receives the `creates:` paths of the other plans in
-  the same roadmap, so a finding that reports one of those as missing is a real
-  signal to check, not a T finding. Paths created by plans outside the roadmap
-  are not covered.
+  the plan alone. The same holds for a finding that reports as missing a path
+  another plan in the same roadmap declares in `creates:`: the audit is shown
+  those paths and told not to report them, but that is an instruction to the
+  model, not a filter. Check the cited path against the prompt's sibling list,
+  or against the sibling plans' `creates:` when the prompt says the sibling set
+  could not be determined; if a sibling declares it, it is T. A path no plan in
+  the roadmap declares is an ordinary finding.
 
 **Diff a bare-round fix before committing it.** If it adds a table, algorithm,
 schema constraint, state machine, file layout, or platform-specific behavior,
