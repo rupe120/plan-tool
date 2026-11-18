@@ -297,20 +297,20 @@ aliases, and separate precedence tables.
 
 Without a `backends.json`, pass `--backend <name>` for the backend appropriate
 to the work, then its recommended `--model` where listed. For Codex use
-`gpt-6.1-sol`; for Claude use Opus for roadmap, seed and plan creation and
-Sonnet for subsequent work; for Cursor use Auto without `--model`.
+`gpt-6.2-sol`. For Claude, use Opus for roadmap, seed and plan creation and
+Sonnet for subsequent work. For Cursor, use Auto without `--model`.
 Deterministic commands (`list`, `status`, `validate`) need neither flag: an
 explicit `--backend` runs the eager executable preflight and can fail on a
 machine without that CLI.
 
 | Backend | Roadmap, seed, and plan creation | Subsequent model-backed work |
 | --- | --- | --- |
-| Codex | Sol: `gpt-6.1-sol` | Sol: `gpt-6.1-sol` |
+| Codex | Sol `gpt-6.2-sol` | Sol `gpt-6.2-sol` |
 | Claude Code | Opus: `claude-opus-5-5` | Sonnet: `claude-sonnet-5-5` |
 | Cursor | no `--model`; Cursor's Auto | no `--model`; Cursor's Auto |
 
-Codex model selection updated by owner instruction 2026-10-14; confirm against the backend's own model
-list (`codex -m`, `agent models`) before relying on a name.
+Check model availability with `codex debug models` or `agent models` for the
+installed backend.
 
 - **Creation tier — roadmap, seeds, and `create`.** These establish scope and constrain
   everything downstream: the seed scope, step list, `depends_on` graph, and file

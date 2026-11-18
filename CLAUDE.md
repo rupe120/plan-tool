@@ -110,15 +110,12 @@ uv run pytest tests/test_review.py::TestSomething -q   # single test/class
 
 **Use the strongest tier for conceptual work (Claude `claude-opus-5-5`) and the
 working tier for audit, implementation, and validation (Claude
-`claude-sonnet-5-5`). Codex uses `gpt-6.1-sol` for both (owner instruction,
-2026-10-14, recorded in `integrations/shared/DIRECTIVES.md`). Cursor passes no
+`claude-sonnet-5-5`). Codex uses `gpt-6.2-sol` for both. Cursor passes no
 `--model` and uses Auto.** The general
 rule and its rationale live in the owner's personal user-level `CLAUDE.md` (not in this repository) § "Spend the stronger model
 where a mistake compounds"; the per-subcommand mapping lives in
 [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md) §
-"Which model to run a subcommand with" (short version: strongest tier for `create` and
-`roadmap`, working tier everywhere else, passed via `--model` since the project file's
-override is per-backend, not per-subcommand). Only this repo's own measured
+"Which model to run a subcommand with". Only this repo's own measured
 verdict belongs below; the full measurement is in the evidence page.
 
 **The calibration, measured 2026-08-08 on the `audit-trajectory-instrumentation` withdrawal:** eight bare-plan audit rounds each found *real* defects and each was correctly applied, yet the sequence converged on nothing, because no round could ask whether the plan's motivating symptom was real. The completeness audit's frame — judge whether the plan's ideas are sound — structurally excludes "should this plan exist", so a stronger model there sharpens findings inside a frame that may already be the problem. Spend it at `create`, where the frame is still being chosen. This is the shape § "Audit the why, not the what" describes: validity is local, necessity is global. Record: [evidence](docs/evidence/claude-md-measured-incidents.md#1-completeness-audit-calibration-2026-08-08).
