@@ -15,16 +15,26 @@ per-step talk track and recovery.
 
 ## Start
 
-Build the disposable demo repository outside the plan-tool checkout:
+From the plan-tool checkout, build the disposable demo and open its first card.
 
 ```bash
-docs/demos/getting-started/build.sh                 # ~/plan-tool-getting-started-demo
-docs/demos/getting-started/build.sh /path/to/demo   # or choose a location
-docs/demos/getting-started/build.sh --force         # rebuild (removes only a directory this script created)
-cd ~/plan-tool-getting-started-demo && ./step.sh    # prints the step 1 card
+docs/demos/getting-started/build.sh
+cd ~/plan-tool-getting-started-demo
+./step.sh
 ```
 
-The build makes no network calls, calls no model, and pushes nothing.
+Pass a directory to `build.sh` to choose a different location. If you set
+`PLAN_TOOL_DEMO_DIR`, use the location printed by the build. For a rebuild,
+`--force` replaces only a directory the script created. The build works offline.
+
+## First-plan review
+
+Read the seed at step 1, then use `./step.sh next` to move one checkpoint at a
+time. At steps 3 and 5, use `./step.sh transcript` to see the authored audit
+output. At step 3, find the due-today decision in the plan's acceptance
+criteria. At step 5, compare the detail bundle with that decision and read
+the transcript's coverage and confirmation. Stop at step 5 to complete the
+first-plan walkthrough. [How to read a live audit result](../../how-to/pipeline/audit.md#reading-the-final-qualified-result)
 
 ## The steps
 
@@ -32,9 +42,9 @@ The build makes no network calls, calls no model, and pushes nothing.
 | --- | --- | --- | --- |
 | 1. Create seed | `demo/1-seed` | `docs/implementation-plans/plan-seeds/due-dates.md` | A seed carries decisions and an explicit scope fence. |
 | 2. Create plan | `demo/2-plan` | `docs/implementation-plans/due-dates.md` | The seed's Outcome becomes the plan intent; steps carry intent and files. |
-| 3. Bare plan audit | `demo/3-bare-audit` | the plan's acceptance criteria and risks | The audit judges the plan body before details exist; findings are applied by judged hand-edit. |
+| 3. Bare plan audit | `demo/3-bare-audit` | `./step.sh transcript`, then the plan's acceptance criteria and risks | The audit judges the plan body before details exist. The example shows a reviewed hand-edit. |
 | 4. Detail creation | `demo/4-detail` | `docs/implementation-plans/plan-details/due-dates/` | Each step gets an implementation route, tests and checkable criteria. |
-| 5. Detail audit | `demo/5-detail-audit` | the three detail files | The grounded audit reads details and code; read coverage and convergence, not the exit code. |
+| 5. Detail audit | `demo/5-detail-audit` | `./step.sh transcript` and the three detail files | The grounded audit reads details and code. Read coverage and confirmation before choosing what to do next. |
 | 6. Run | `demo/6-run` | `git diff demo/5-detail-audit demo/6-run -- todo tests` | Steps run in fresh subprocesses, gated on a changed test and `test_command`. |
 | 7. Reconcile code | `demo/7-reconcile-code` | `git diff demo/6-run demo/7-reconcile-code -- todo tests` | The plan is canonical; code is edited to match it. |
 | 8. Code review | `demo/8-code-review` | `git diff demo/7-reconcile-code demo/8-code-review -- todo tests` | `/code-review` finds what the plan could not; verify each finding before applying. |
@@ -57,13 +67,17 @@ for that step).
 
 ## Run a step live
 
-1. `./step.sh goto N`, then `./step.sh live`. This checks out the state step
-   N-1 left, on a throwaway `live/N-name` branch, so the prepared `demo/*`
-   branches are never overwritten.
+1. `./step.sh goto N`, then `./step.sh live`. This branches from the previous
+   prepared checkpoint into `live/N-name`. To carry live output from one
+   stage into the next, follow the [planning workflow](../planning-demo.md)
+   on one branch.
 2. Run the command the card prints. It tees to `.tmp/due-dates.<verb>.log` and
    sets `set -o pipefail`, so a failing command is not reported as success.
-3. Compare with the baked result: `git diff --stat demo/N-name live/N-name -- . ':!DEMO.md' ':!DEMO.transcript.txt'` (the pathspec hides the card and transcript, which always differ).
-4. Return to the walkthrough with `./step.sh goto N`.
+3. After confirmed command exit, review the live output. Commit any result
+   you want to compare, then run
+   `git diff --stat demo/N-name live/N-name -- . ':!DEMO.md' ':!DEMO.transcript.txt'`.
+4. From a clean tree, return with `./step.sh goto N`. For a quiet invocation or
+   uncommitted output, follow the [presenter runbook](RUNBOOK.md#when-something-goes-wrong).
 
 Live steps need an authenticated backend, take real time and cost tokens, and
 their output will differ from the baked copy. Step 1 has no command (a seed is
@@ -80,7 +94,7 @@ guardrail headings against the [seed format](../../../SEED_FORMAT.md#core-direct
 | Detail files | Authored; each passes the real `parse_detail_response` gate. |
 | Seed, plan body, audit findings, reconcile and review findings | Authored to the shape of real output. Not captured from a model run. |
 | `[real]` lines in transcripts | Verbatim output of the deterministic command named. |
-| Audit report JSON | Deliberately not baked; a live run writes it under `plan-details/due-dates/reports/`. |
+| Audit report JSON | A live audit writes it under `docs/implementation-plans/plan-details/due-dates/reports/`. The prepared checkpoint supplies a transcript. |
 
 Nothing here is evidence of model reliability or audit convergence. After a live
 run, a different result from the baked one is expected, not a defect.

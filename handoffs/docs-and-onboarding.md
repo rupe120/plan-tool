@@ -55,6 +55,14 @@ resolves 80 local links across the README, install guide, and reference
 index. The focused create, installer, router, and start-screen suite passes
 1,200 tests after the fixture fix.
 
+The [prepared review path](../docs/demos/getting-started/README.md#first-plan-review)
+now names both transcripts and the stop at step 5. The local reading walk
+confirms that `step.sh live` starts from the previous prepared checkpoint
+and that `git show` displays the authored transcript while preserving the
+live branch and its HEAD. The [presenter runbook](../docs/demos/getting-started/RUNBOOK.md#when-something-goes-wrong)
+uses that read-only route while a command is quiet and requires confirmed
+exit before returning to the prepared branches.
+
 ### Verification and next pickup
 
 1. **Finish #510.** Keep the first-task walkthrough scoped through detail

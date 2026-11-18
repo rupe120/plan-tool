@@ -79,9 +79,11 @@ The bare audit review adds an explicit acceptance criterion.
 
 > A task due today is not overdue; only a due date strictly before today is.
 
-You can step through the artifacts in a disposable Git repo with the
-[prepared demo](docs/demos/getting-started/README.md). Its audit transcripts
-are authored examples. A live audit saves its report under
+You can step through the artifacts in a disposable Git repo and finish at
+detail review. The audit transcripts are authored examples.
+[Prepared demo](docs/demos/getting-started/README.md#start)
+
+A live audit saves its report under
 `docs/implementation-plans/plan-details/due-dates/reports/` in this example.
 
 <a id="decision-flow"></a>
