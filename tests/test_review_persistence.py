@@ -2857,3 +2857,17 @@ class TestLegacyPlansRelativeSourceSeed:
         outside.write_text("# outside\n")
         plan = self._plan("../../../outside.md")
         assert _resolve_source_seed_path(plan, repo, plans_dir=plans) is None
+
+    def test_an_absolute_value_is_probed_once(self, tmp_path, monkeypatch):
+        """An absolute source_seed makes both joins equal; the archive scan must not repeat."""
+        import plan_tool.pathutil as pathutil
+        from plan_tool.review_persistence import _resolve_source_seed_path
+
+        repo, plans = self._layout(tmp_path)
+        calls = []
+        real = pathutil.latest_seed_archive
+        monkeypatch.setattr(pathutil, "latest_seed_archive", lambda path: calls.append(path) or real(path))
+        missing = repo / "gone.md"
+        assert _resolve_source_seed_path(self._plan(str(missing)), repo, plans_dir=plans) is None
+        assert len(calls) == 1
+

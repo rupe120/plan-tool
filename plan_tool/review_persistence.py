@@ -649,8 +649,8 @@ def _resolve_source_seed_path(
     from plan_tool.pathutil import is_within, latest_seed_archive
 
     bases = [repo_root] if plans_dir is None else [repo_root, plans_dir]
-    for base in bases:
-        seed_path = base / plan.source_seed
+    # An absolute value makes both joins equal; probe each distinct path once.
+    for seed_path in dict.fromkeys(base / plan.source_seed for base in bases):
         if not is_within(seed_path, repo_root):
             continue
         if seed_path.is_file():

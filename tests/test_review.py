@@ -19936,6 +19936,46 @@ class TestEligibleSiblingCreates:
         assert snapshot.sibling_creates_paths == ("sibling.py",)
         assert snapshot.source_seed_bytes is not None
 
+    def legacy_layout(self, tmp_path, seed_body):
+        """A Loom-shaped repo: plans under docs/implementation-plans/, source_seed relative to it."""
+        plans = tmp_path / "docs" / "implementation-plans"
+        plans.mkdir(parents=True)
+        path, plan = self.roadmap_pair(plans)
+        (tmp_path / ".plan-tool").mkdir(exist_ok=True)
+        (tmp_path / ".plan-tool/plans.json").write_text(
+            json.dumps({"plans": ["docs/implementation-plans/own.md", "docs/implementation-plans/sibling.md"]})
+        )
+        seed = plans / "own-seed.md"
+        seed.write_text("---\nroadmap: demo\nplan_id: p1\n---\n" + seed_body)
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n# Plan\n\nBody.\n")
+        return plans, path, parse_plan(path)
+
+    def test_a_legacy_plans_relative_seed_renders_the_same_scope_contract_with_or_without_a_snapshot(self, tmp_path):
+        """The snapshot's seed and the prompt's seed must be the same file for a legacy plan."""
+        from plan_tool.review import _format_scope_contract_block, render_plan_audit_prompt
+        from plan_tool.review_persistence import AuditInputSnapshot
+
+        plans, path, plan = self.legacy_layout(tmp_path, "## Outcome\n\nShip it.\n\n## In scope\n\n- the thing\n")
+        assert _format_scope_contract_block(plan, tmp_path, plans_dir=None) == ""
+        live = _format_scope_contract_block(plan, tmp_path, plans_dir=plans)
+        assert "Ship it." in live
+        snapshot = AuditInputSnapshot.capture(path, tmp_path)
+        backed = _format_scope_contract_block(
+            snapshot.plan, tmp_path, plans_dir=plans, audit_input_snapshot=snapshot
+        )
+        assert backed == live
+        prompt = render_plan_audit_prompt(plan, path, repo_root=tmp_path, audit_input_snapshot=snapshot)
+        assert "Ship it." in prompt
+
+    def test_a_legacy_seed_with_an_unmatched_fence_refuses_the_audit_like_any_plan(self, tmp_path):
+        """Resolving a legacy seed brings it under the fence check every repo-relative seed already faces."""
+        from plan_tool.review_persistence import AuditInputError, AuditInputSnapshot
+
+        _plans, path, _plan = self.legacy_layout(tmp_path, "```python\nunclosed\n")
+        with pytest.raises(AuditInputError, match="unmatched opening code fence"):
+            AuditInputSnapshot.capture(path, tmp_path)
+
     def test_sibling_helper_empty_for_no_identity_even_when_other_registered_plans_create_paths(self, tmp_path):
         from plan_tool.review import _eligible_planned_paths, sibling_creates_paths
         path, plan = self.plan(tmp_path, "own")
