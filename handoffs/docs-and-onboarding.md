@@ -67,8 +67,9 @@ index. The focused create, installer, router, and start-screen suite passes
    read-only Git lock. Automatic approval review rejects the retry because
    an authenticated Codex backend could receive the seed and repository
    content without explicit authorization. No plan or audit report exists.
-   Resume with explicit authorization for Codex `gpt-6.1-sol` to process
-   the seed and the repository context required to author and audit #377.
+   Resume with explicit authorization for Codex `gpt-6.2-sol`, the
+   configured default, to process the seed and the repository context
+   required to author and audit #377.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact
