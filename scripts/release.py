@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cut a release commit: derive the next version from the pending changelog fragments.
 
-    uv run scripts/release.py [--minor] [--dry-run]
+    uv run scripts/release.py [--minor] [--no-fragment-ok N] [--dry-run]
     uv run scripts/release.py --publish [--remote NAME] [--dry-run]
 
 Runs the release-commit step of docs/RELEASING.md; --publish tags and pushes
@@ -30,6 +30,8 @@ MAJOR_CATEGORIES = ("Breaking",)
 MINOR_CATEGORIES = ("Added", "Changed", "Deprecated", "Removed")
 PATCH_CATEGORIES = ("Fixed", "Security")
 FRAGMENT_DIR = "changelog.d"
+SHIPPED_PREFIX = "plan_tool/"
+MERGE_SUBJECT_RE = re.compile(r"^Merged in .+ \(pull request #(\d+)\)$")
 RELEASE_PATHS = ("pyproject.toml", "uv.lock", "CHANGELOG.md", FRAGMENT_DIR)
 VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 VERSION_LINE_RE = re.compile(r'^version\s*=\s*"[^"]*"\s*(?:#.*)?$')
@@ -200,6 +202,26 @@ def ensure_github_release(root: Path, repository: str, tag: str, notes: str, *, 
     print(f"Created GitHub release {tag} on {repository}")
 
 
+def unfragmented_prs(root: Path, tag: str, acknowledged: Sequence[int]) -> list[str]:
+    """Merged pull requests since `tag` that changed `plan_tool/` and added no fragment.
+
+    The binary fact checked is path presence; whether a change is user-visible is
+    left to the author, who acknowledges a deliberate omission by PR number.
+    """
+    log = _git(root, "log", "--first-parent", "--merges", "--format=%H%x09%s", f"refs/tags/{tag}..HEAD")
+    flagged = []
+    for line in log.splitlines():
+        sha, _, subject = line.partition("\t")
+        match = MERGE_SUBJECT_RE.match(subject)
+        if not match or int(match[1]) in acknowledged:
+            continue
+        files = _git(root, "diff", "--name-only", f"{sha}^1", sha).splitlines()
+        fragment = any(f.startswith(f"{FRAGMENT_DIR}/") and f != f"{FRAGMENT_DIR}/README.md" for f in files)
+        if any(f.startswith(SHIPPED_PREFIX) for f in files) and not fragment:
+            flagged.append(f"#{match[1]} {subject}")
+    return flagged
+
+
 def collected_titles(changelog: str, version: str) -> list[str]:
     """Category headings in the section scriv wrote for `version`, bounded by scriv's anchors."""
     lines = changelog.splitlines()
@@ -242,7 +264,9 @@ def _read_version(root: Path) -> tuple[str, tuple[int, int, int], tuple[str, ...
     )
 
 
-def cut(root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_tool) -> int:
+def cut(
+    root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_tool, acknowledged: Sequence[int] = ()
+) -> int:
     current, parts, configured = _read_version(root)
     if set(configured) != set(MAJOR_CATEGORIES + MINOR_CATEGORIES + PATCH_CATEGORIES):
         raise ReleaseError(
@@ -258,6 +282,14 @@ def cut(root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_
         raise ReleaseError(f"no tag v{current}: the current version is unreleased; cut it by hand")
     if not _git_ok(root, "merge-base", "--is-ancestor", f"refs/tags/v{current}", "HEAD"):
         raise ReleaseError(f"tag v{current} is not an ancestor of HEAD; branch from a commit that contains it")
+    flagged = unfragmented_prs(root, f"v{current}", acknowledged)
+    if flagged:
+        raise ReleaseError(
+            f"merged pull requests changed {SHIPPED_PREFIX} with no fragment since v{current}:\n  "
+            + "\n  ".join(flagged)
+            + f"\nadd a fragment for each on a branch and merge it first, or pass --no-fragment-ok N when the change"
+            " has no user-visible effect (docs/RELEASING.md)"
+        )
     paths = fragment_paths(root)
     if not paths:
         raise ReleaseError(f"no fragments in {FRAGMENT_DIR}/: nothing to release")
@@ -393,7 +425,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--remote", default=None, help="publication remote (default: origin)")
     parser.add_argument("--minor", action="store_true", help="raise a patch bump to a minor bump")
     parser.add_argument("--dry-run", action="store_true", help="preview preparation or publication without changing anything")
+    parser.add_argument(
+        "--no-fragment-ok",
+        type=int,
+        action="append",
+        default=[],
+        metavar="N",
+        help="acknowledge merged pull request #N as a plan_tool/ change that needs no fragment (repeatable)",
+    )
     args = parser.parse_args(argv)
+    if args.publish and args.no_fragment_ok:
+        parser.error("--no-fragment-ok applies to release preparation, not --publish")
     if args.publish and args.minor:
         parser.error("--publish cannot be combined with --minor")
     if args.remote is not None and not args.publish:
@@ -402,7 +444,7 @@ def main(argv: list[str] | None = None) -> int:
         root = Path(_git(Path.cwd(), "rev-parse", "--show-toplevel").strip())
         if args.publish:
             return publish(root, remote=args.remote or "origin", dry_run=args.dry_run)
-        return cut(root, force_minor=args.minor, dry_run=args.dry_run)
+        return cut(root, force_minor=args.minor, dry_run=args.dry_run, acknowledged=args.no_fragment_ok)
     except ReleaseError as exc:
         print(f"release: {exc}", file=sys.stderr)
         return 2

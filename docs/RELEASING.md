@@ -120,11 +120,22 @@ Release preparation refuses, with a message, in these cases:
 | That tag is not an ancestor of `HEAD` | Branch from a commit that contains the tag, such as `main` after the last release merged. |
 | The tag for the new version already exists | `v<current version>` is not the latest release; check the tags before releasing. |
 | The version is not `X.Y.Z` | [Cut it by hand](#cut-a-release-by-hand); prerelease and build suffixes are outside this script. |
+| A pull request merged since the last tag changed `plan_tool/` and added no fragment | Add its fragment on a branch and merge it first. When the change has no user-visible effect, pass `--no-fragment-ok N` for that pull request number (repeatable). |
 | `changelog.d/` holds no fragment | Nothing to release. |
 | A fragment is not Markdown, has an unknown category, no category, or text before its first category heading | Fix the fragment; the categories are the seven in the table above and `changelog.d/README.md`. |
 | `[tool.scriv].categories` in `pyproject.toml` is not the script's seven categories | Map the new category to a bump in `scripts/release.py`, or restore the seven. |
 | scriv's output disagrees with the derived categories, or leaves a fragment behind | The script restores the release paths. Read scriv's parse of the fragments before trusting any bump. |
 | `git`, `uv lock`, or `uvx scriv collect` is missing or fails; `uv lock` changes more than plan-tool's own version line in `uv.lock`; `pyproject.toml` is unreadable or has no `[project].version` line | Fix the cause and run again; the script restores the release paths first. For a drifted lock, commit the lock update on its own first. |
+
+**The fragment-coverage check.** Preparation (and `--dry-run`) lists every
+pull request merged on `main` since the last tag whose subject reads
+`Merged in … (pull request #N)`, and refuses when one changed a path under
+`plan_tool/` without adding or amending a file in `changelog.d/`. The binary
+fact is path presence in that pull request's diff. Deliberately not checked:
+whether a `plan_tool/` change is user-visible (`--no-fragment-ok N` records the
+author's decision that it is not), changes outside `plan_tool/` such as
+`integrations/` or the FORMAT documents, and the Jira check in step 1, which
+stays a manual step.
 
 If the script cannot restore the release paths after a failure, it prints the
 `git restore` command to run before retrying.
