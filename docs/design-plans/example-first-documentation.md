@@ -97,7 +97,7 @@ The recovery entry point starts with the situation the reader can observe.
 ## Pilot scope and review
 
 - **First change.** Use the README draft to implement the first-task slice of
-  #510 when its dependency #508 is resolved. Keep existing anchor destinations
+  #510. Keep existing anchor destinations
   reachable. Move the format links into the reference index and replace its
   current link back to `#plan-format`. Keep that README anchor as a route to the
   index. Send project-scope installation,
@@ -108,7 +108,8 @@ The recovery entry point starts with the situation the reader can observe.
   the seed and report, explain the due-today decision, and stop at detail
   review. For direct CLI readers, check that they can find the corresponding
   commands without going through a demo. Compare snippets with the parser and
-  fixture artifacts, and check affected inbound links. [Backlog](../../BACKLOG.md) ·
+  fixture artifacts, and check affected inbound links. #515 also owns the
+  disposition of #508 before public sign-off. [Backlog](../../BACKLOG.md) ·
   [CLI start screen test](../../tests/cli/test_start_here.py)
 - **Follow-up.** Use the draft audit and recovery openings where the walkthrough
   records a stumble within #530. Apply the pattern to roadmap and contributor
