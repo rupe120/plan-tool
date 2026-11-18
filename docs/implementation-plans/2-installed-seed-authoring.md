@@ -25,7 +25,7 @@ steps:
   complexity: medium
   change_type: non-code
   detail: docs/implementation-plans/plan-details/installed-seed-authoring/01-start-one-first-task-consuming-repo.md
-  status: current
+  status: done
   description: Start with one first task in a consuming repo. Follow the installed
     router to Authoring hygiene in its sibling DIRECTIVES.md, turn a user request
     into a single grounded seed, check it, ask the user to review it, then commit
@@ -36,17 +36,16 @@ steps:
     References, Testing, and acceptance evidence. For backlog work, carry the source
     contract, entry ID, any promoted ticket key, and the eventual backlog update into
     the seed. Replace the stale size and heading advice with the actual intake rules.
-    Send each router's authoring recipes to the same approved-input handoff.
-    Explain the unmatched-fence
-    refusal, the single usable References section, and the three required guardrail
-    sections. Distinguish the full scope contract from binding limits carried in the
-    named guardrails. Use None only where no boundary of that kind applies. Explain
-    which canonical body headings make a seed eligible for direct assessment and when
-    an otherwise valid seed goes through preparation. Link the same section from all
-    three routers' authoring rows, update the existing phase-link unit tests, and
-    keep SEED_FORMAT.md authoritative. Put the usable contract in the installed sibling
-    because the current source-repo pointer cannot serve a standalone install and
-    the existing two-file bundle already carries the shared reference.
+    Send each router's authoring recipes to the same approved-input handoff. Explain
+    the unmatched-fence refusal, the single usable References section, and the three
+    required guardrail sections. Distinguish the full scope contract from binding
+    limits carried in the named guardrails. Use None only where no boundary of that
+    kind applies. Explain which canonical body headings make a seed eligible for direct
+    assessment and when an otherwise valid seed goes through preparation. Link the
+    same section from all three routers' authoring rows, update the existing phase-link
+    unit tests, and keep SEED_FORMAT.md authoritative. Put the usable contract in
+    the installed sibling because the current source-repo pointer cannot serve a standalone
+    install and the existing two-file bundle already carries the shared reference.
 - id: 2
   intent: Prove that every supported install exposes seed guidance that agrees with
     the intake code.
@@ -59,6 +58,7 @@ steps:
   depends_on_notes:
     1: Provides the shared authoring contract, examples, and router links to verify.
   detail: docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md
+  status: current
   description: Extend the existing install-skill coverage to follow the required authoring
     link from each installed router to the seed contract in its installed sibling.
     Use temporary consuming repos and exercise the default and explicit --copy modes
@@ -91,8 +91,8 @@ steps:
   description: 'When this plan is authored, mark BACKLOG.md #377 as plan-authored
     and link the plan. After shipment and passing source and wheel checks, including
     explicit --copy, remove the #377 entry and reconcile active references that list
-    it as selectable work or a pending dependency. Keep #510 and #378 open under
-    their own scope and keep useful references to #377 as delivered provenance.'
+    it as selectable work or a pending dependency. Keep #510 and #378 open under their
+    own scope and keep useful references to #377 as delivered provenance.'
 ---
 # Installed Seed Authoring
 
