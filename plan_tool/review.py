@@ -2341,20 +2341,22 @@ def sibling_creates_paths(
 ) -> Optional[frozenset[str]]:
     """Normalized same-roadmap sibling ``creates:`` paths, excluding the plan's own.
 
-    Empty for a plan with no roadmap identity (never the all-registered set);
-    ``None`` when the plan's identity or the selection is uncertain, so "unknown"
-    is never reported as "none". A sibling plan that cannot be read is skipped by
-    ``_eligible_planned_paths``, so a non-empty set can be incomplete. Selection
+    Empty for a plan with no roadmap identity (never the all-registered set).
+    ``None`` only when the plan's own identity is uncertain or its seed does not
+    resolve. An unreadable manifest or sibling is absorbed by
+    ``_eligible_planned_paths``, so the set can then be empty or incomplete;
+    the prompt wording never claims completeness for that reason. Selection
     is ``_eligible_planned_paths``'s; this adds no rule of its own.
     """
     from plan_tool.locator import ManifestError
 
     try:
-        if _sibling_roadmap_identity(plan, plan_path, repo_root) is None:
-            return frozenset()
-        eligible = _eligible_planned_paths(plan, plan_path, repo_root)
+        identity = _sibling_roadmap_identity(plan, plan_path, repo_root)
     except (OSError, UnicodeError, ValueError, ManifestError):
         return None
+    if identity is None:
+        return frozenset()
+    eligible = _eligible_planned_paths(plan, plan_path, repo_root)
     own = {normalize_declared_path(path) for path in _planned_paths(plan)}
     return frozenset(
         normalized
@@ -7616,6 +7618,13 @@ def _captured_sibling_paths(
     return None if paths is None else tuple(sorted(paths))
 
 
+def _code_span(text: str) -> str:
+    """Inline code for ``text`` that a backtick inside it cannot close early."""
+    fence = "``" if "`" in text else "`"
+    pad = " " if "`" in text else ""
+    return f"{fence}{pad}{text}{pad}{fence}"
+
+
 def _format_sibling_planned_paths_block(paths: Optional[Sequence[str]]) -> str:
     """Render the sibling-planned-paths input without claiming completeness.
 
@@ -7626,8 +7635,8 @@ def _format_sibling_planned_paths_block(paths: Optional[Sequence[str]]) -> str:
     """
     if paths is None:
         return (
-            "**Sibling plans' planned paths:** unavailable for this plan (its "
-            "roadmap identity could not be resolved), so none are listed.\n"
+            "**Sibling plans' planned paths:** could not be determined for this "
+            "plan, so none are listed.\n"
         )
     if not paths:
         return "**Sibling plans' planned paths:** none are listed for this plan.\n"
@@ -7636,7 +7645,7 @@ def _format_sibling_planned_paths_block(paths: Optional[Sequence[str]]) -> str:
         "another plan in the same roadmap, not a missing file — do not report it "
         "as missing. The list can be incomplete (an unreadable sibling plan is "
         "skipped).\n\n"
-        + "\n".join(f"- `{path}`" for path in paths)
+        + "\n".join(f"- {_code_span(path)}" for path in paths)
         + "\n"
     )
 

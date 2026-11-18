@@ -20333,6 +20333,7 @@ class TestPlanAuditSiblingPlannedPathsBlock:
             )["plans"]:
                 sibling.write_text("---\n: not yaml\n---\n", encoding="utf-8")
         block = self.block(self.render(plan, path, tmp_path))
+        assert self.EMPTY_STATEMENT in block  # identity resolved, so not "could not be determined"
         assert "plan_one_made.py" not in block
         assert not any(hedge in block for hedge in self.HEDGES)
 
@@ -20340,7 +20341,7 @@ class TestPlanAuditSiblingPlannedPathsBlock:
         _helper, path, plan = self.pair(tmp_path)
         (tmp_path / "own-seed.md").write_bytes(b"\xff\xfe\x00 not utf-8 \xc3\x28")
         block = self.block(self.render(plan, path, tmp_path))
-        assert "unavailable for this plan" in block
+        assert "could not be determined for this plan" in block
         assert not any(hedge in block for hedge in self.HEDGES)
         assert "sibling.py" not in block
 
@@ -20399,3 +20400,13 @@ class TestPlanAuditSiblingPlannedPathsBlock:
         expected = _format_sibling_planned_paths_block(("sibling.py",))
         assert expected in prompt
         assert dict(blocks)["sibling planned paths"] == len(expected.encode("utf-8"))
+
+
+def test_a_sibling_path_containing_a_backtick_stays_one_code_span():
+    """A backtick in a declared path must not close its code span and mangle the listed path."""
+    from plan_tool.review import _format_sibling_planned_paths_block
+
+    block = _format_sibling_planned_paths_block(("docs/`weird`.md", "plain.py"))
+    assert "- `` docs/`weird`.md ``" in block
+    assert "- `plain.py`" in block
+
