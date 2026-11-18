@@ -634,7 +634,7 @@ Each lives in its canonical home (`ROADMAP_FORMAT.md` § "Draft seeds under the 
 | Branch | `feat/audit-sibling-plan-created-paths` (plan merged as PR #256) |
 | Checks | full suite green per step; `reconcile-code --all` no drift |
 | Reviewer | `/code-review high`, forked report-only |
-| Disposition | rounds 1–2 dispositioned; round 3 pending |
+| Disposition | rounds 1–3 dispositioned; owner call on PR vs round 4 |
 
 ### Settled decisions (give to the next reviewer)
 
@@ -683,4 +683,18 @@ The sibling block's claims drew new findings in two rounds running, so the cases
 | 7 | The parity test injected every class only through identity resolution | **Fixed.** Renamed to the identity case it pins; the manifest and sibling paths have their own tests (1, 2) |
 | 8 | `audit_input_revision`'s docstring covered two of three digests | **Fixed** |
 | 9 | Blank lines and an over-long docstring line | **Fixed** |
+
+### Findings (round 3)
+
+No high findings and none repeating rounds 1–2; each one is a statement claiming slightly more than the code does.
+
+| # | Finding | Disposition |
+| --- | --- | --- |
+| 1 | The completed plan still said § T dropped the sibling case and the audit no longer produces it | **Fixed.** Plan intent, step 3 and acceptance describe the shipped rule: the case stays T after checking the sibling plans' `creates:` |
+| 2 | The unknown statement claimed a roadmap identity that failed to resolve; a non-roadmap plan with an unresolvable seed also lands there | **Fixed.** "could not be determined for this plan, so none are listed" |
+| 3 | The helper docstring promised `None` for an uncertain selection; manifest and sibling failures give an empty set | **Fixed.** Docstring states `None` only for the plan's own identity |
+| 4 | § T pointed at the prompt's sibling list, which is not saved | **Fixed.** Check the cited path against the same-roadmap plans' `creates:` |
+| 5 | The every-sibling-unreadable test did not assert which statement renders | **Fixed.** Asserts the empty statement |
+| 6 | The `try/except` around `_eligible_planned_paths` was dead | **Fixed.** Narrowed to the identity call |
+| 7 | A backtick in a path broke its code span | **Fixed.** `_code_span` uses a double-backtick span when needed; test added |
 
