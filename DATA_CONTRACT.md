@@ -353,9 +353,10 @@ can never turn an untrusted sidecar into an ordinary final one.
 ### Run-grade-only saved audit evidence
 
 New audit captures and detail-bundle fingerprints select run-grade detail through
-pointer-or-canonical resolution. Revision versions 1, 2, and 3 remain supported
+pointer-or-canonical resolution. Audit-revision versions 1, 2, 3, and 4 remain supported
 only for run-grade records. Historical decoding fills absent v1
-`source_seed_digest` and v1/v2 `project_context_digest` with `None` in memory;
+`source_seed_digest`, v1/v2 `project_context_digest`, and v1–v3
+`sibling_paths_digest` with `None` in memory;
 reads never rewrite archived sidecars. The established run-grade digest framing
 and code-fingerprint behavior remain unchanged.
 
@@ -438,7 +439,9 @@ An additive, optional saved completeness-audit payload. It never enters the
 `source_plan_fingerprint`, ordered `arm_step_ids`, material/arm finding counts,
 and minimal ordered evidence (`anchor` and audit `source`, not finding prose).
 Presentation recomputes the dedicated exact audit-input fingerprint through
-`AuditInputSnapshot`, not `compute_plan_fingerprint()`. Missing, malformed, or
+`AuditInputSnapshot` (which also captures the sorted same-roadmap sibling
+`creates:` paths once, folded into the fingerprint only when non-empty), not
+`compute_plan_fingerprint()`. Missing, malformed, or
 mismatched payloads are simply unavailable for presentation while the saved
 review remains usable.
 
@@ -797,8 +800,11 @@ rendering's `confidence: <value>` label is not part of this JSON field.
 `qualified_result.audit_revision` identifies the plan, run-grade detail
 bundle, and the optional inputs the audit sampled: (v2, BACKLOG #162) the
 plan's `source_seed` file as `source_seed_digest`, and (v3) the confirmed
-project context as `project_context_digest`. Either digest is `null` when its
-input was absent. A later sidecar reader may calculate an unpersisted
+project context as `project_context_digest`, and (audit-revision version 4) the
+normalized same-roadmap sibling `creates:` paths as `sibling_paths_digest`. Each
+digest is `null` when its input was absent (no sibling paths apply). A saved v1–v3
+revision reads the missing digest as `null`, so a report of a plan without
+siblings stays current after upgrade while one with siblings reads stale once. A later sidecar reader may calculate an unpersisted
 `view_revision_status` of `current`, `stale`, `unknown`, or `not-sampled` from
 those artifacts; a seed or project-context edit after the report was saved
 counts as staleness the same way a plan or detail edit already does.

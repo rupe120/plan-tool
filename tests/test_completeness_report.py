@@ -4976,3 +4976,53 @@ def test_empty_embedded_correctness_has_no_dangling_section_reference() -> None:
     )
     assert "see the dedicated section above" not in out
     assert "none — paths resolve, deps coherent, concepts sound" in out
+
+
+def _as_v3_revision(revision: dict) -> dict:
+    """The same revision as a pre-upgrade (audit-revision v3) sidecar wrote it."""
+    legacy = {k: v for k, v in revision.items() if k != "sibling_paths_digest"}
+    legacy["version"] = 3
+    return legacy
+
+
+def test_completeness_report_counts_a_saved_v3_no_sibling_report_as_a_plan_match(
+    tmp_path: Path,
+) -> None:
+    """The second saved-versus-current comparison reads a normalized revision, so the v3 to v4 bump alone is not drift."""
+    plan_path = _write_reusable_plan(tmp_path)
+    sidecar = _save_completeness_sidecar(
+        tmp_path, plan_path, recs=[_rec("a", "plan-correctness")], now=_T0
+    )
+    payload = json.loads(sidecar.read_text(encoding="utf-8"))
+    # This fixture records the revision as a top-level (legacy) field, which
+    # load_review normalizes the same way it normalizes qualified_result.
+    holder = payload["qualified_result"] if payload.get("qualified_result") else payload
+    revision = holder["audit_revision"]
+    assert revision["version"] == 4 and revision["sibling_paths_digest"] is None
+    holder["audit_revision"] = _as_v3_revision(revision)
+    sidecar.write_text(json.dumps(payload), encoding="utf-8")
+
+    audit = resolve_reusable_audit("demo", tmp_path, plan_path=plan_path)
+
+    assert isinstance(audit, ReusableAudit)
+    assert audit.plan_match is True
+
+
+def test_authoring_tail_does_not_report_a_saved_v3_no_sibling_report_as_moved(
+    tmp_path: Path,
+) -> None:
+    """The third comparison site normalizes the saved result itself, so a v3 no-sibling report is not 'moved'."""
+    from plan_tool.cli.authoring import _FRESHNESS_MOVED, _tail_result_freshness
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    plan_path = _write_reusable_plan(tmp_path)
+    current = AuditInputSnapshot.capture(plan_path, tmp_path).revision
+    result = {
+        "headline": "clean",
+        "stage": "detail",
+        "coverage": "confirmed",
+        "revision_status": "current",
+        "audit_revision": _as_v3_revision(current),
+    }
+
+    assert _tail_result_freshness(result, path=plan_path, repo_root=tmp_path) != _FRESHNESS_MOVED

@@ -685,3 +685,55 @@ def test_audit_input_revision_rejects_retired_snapshot_instead_of_relabeling_it(
 
     with pytest.raises(ValueError, match="run-grade"):
         audit_input_revision(SimpleNamespace(detail_grade="jira"))
+
+
+def _plain_snapshot(tmp_path):
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    plan_path = tmp_path / "1-demo.md"
+    plan_path.write_text(
+        "---\ntitle: Demo\nstatus: planning\npriority: medium\nsteps:\n"
+        "  - id: 1\n    title: First\n---\n\n# Plan\n",
+        encoding="utf-8",
+    )
+    return AuditInputSnapshot.capture(plan_path, tmp_path)
+
+
+def test_v4_revision_carries_sibling_paths_digest_null_with_no_siblings(tmp_path):
+    revision = _plain_snapshot(tmp_path).revision
+    assert revision["version"] == 4
+    assert revision["sibling_paths_digest"] is None
+
+
+def test_sibling_edit_changes_sibling_paths_digest(tmp_path):
+    from dataclasses import replace
+
+    from plan_tool.fingerprint import audit_input_revision
+
+    snapshot = _plain_snapshot(tmp_path)
+    one = audit_input_revision(replace(snapshot, sibling_creates_paths=("a.py",)))
+    two = audit_input_revision(replace(snapshot, sibling_creates_paths=("a.py", "b.py")))
+    assert one["sibling_paths_digest"] and two["sibling_paths_digest"]
+    assert one["sibling_paths_digest"] != two["sibling_paths_digest"]
+
+
+def test_v3_record_decodes_with_sibling_paths_digest_none(tmp_path):
+    from plan_tool.review_persistence import normalize_audit_revision
+
+    current = _plain_snapshot(tmp_path).revision
+    legacy = {k: v for k, v in current.items() if k != "sibling_paths_digest"}
+    legacy["version"] = 3
+    assert normalize_audit_revision(legacy) == current
+
+
+def test_saved_v4_record_round_trips_through_normalize_audit_revision(tmp_path):
+    import json
+    from dataclasses import replace
+
+    from plan_tool.fingerprint import audit_input_revision
+    from plan_tool.review_persistence import normalize_audit_revision
+
+    snapshot = replace(_plain_snapshot(tmp_path), sibling_creates_paths=("a.py",))
+    revision = audit_input_revision(snapshot)
+    assert revision["sibling_paths_digest"] is not None
+    assert normalize_audit_revision(json.loads(json.dumps(revision))) == revision

@@ -2451,8 +2451,8 @@ def test_audit_revision_round_trips_and_legacy_stays_unknown(tmp_path: Path) -> 
     assert updated.qualified_result["revision_status"] == "current"
 
 
-@pytest.mark.parametrize("version", [1, 2, 3])
-def test_supported_v1_v2_and_v3_run_grade_revisions_normalize_with_historical_optional_digests(
+@pytest.mark.parametrize("version", [1, 2, 3, 4])
+def test_supported_v1_to_v4_run_grade_revisions_normalize_with_historical_optional_digests(
     tmp_path: Path, version: int,
 ) -> None:
     """Older sampled reports stay reusable until a profile supplies new input."""
@@ -2470,6 +2470,8 @@ def test_supported_v1_v2_and_v3_run_grade_revisions_normalize_with_historical_op
     snapshot = AuditInputSnapshot.capture(plan_path, tmp_path)
     legacy_v2 = dict(snapshot.revision)
     legacy_v2["version"] = version
+    if version < 4:
+        del legacy_v2["sibling_paths_digest"]
     if version < 3:
         del legacy_v2["project_context_digest"]
     if version < 2:
@@ -2672,3 +2674,118 @@ def test_saved_apply_annotations_remain_readable_without_apply_command(tmp_path,
     assert saved.annotations[rec_id].status == status
     assert saved.annotations[rec_id].note == "legacy evidence"
     assert saved.recommendations[0] == _SAMPLE_RECS[0]
+
+
+def _roadmap_snapshot_fixture(tmp_path: Path):
+    """Two-plan roadmap fixture reused from the sibling-selection tests."""
+    from tests.test_review import TestEligibleSiblingCreates
+
+    helper = TestEligibleSiblingCreates()
+    path, _plan = helper.roadmap_pair(tmp_path)
+    return helper, path
+
+
+_NO_SIBLING_PLAN = (
+    "---\ntitle: Demo\nstatus: planning\npriority: medium\nsteps:\n"
+    "  - id: 1\n    title: First\n---\n\n# Plan\n"
+)
+
+
+def test_changing_a_sibling_creates_changes_the_snapshot_fingerprint(tmp_path: Path) -> None:
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    helper, path = _roadmap_snapshot_fixture(tmp_path)
+    before = AuditInputSnapshot.capture(path, tmp_path)
+    assert before.sibling_creates_paths == ("sibling.py",)
+    helper.plan(tmp_path, "sibling", source="sibling-seed.md", creates="sibling.py, extra.py")
+    after = AuditInputSnapshot.capture(path, tmp_path)
+    assert after.sibling_creates_paths == ("extra.py", "sibling.py")
+    assert after.fingerprint != before.fingerprint
+    assert after.revision["sibling_paths_digest"] != before.revision["sibling_paths_digest"]
+
+
+def test_unchanged_sibling_set_leaves_the_fingerprint_unchanged(tmp_path: Path) -> None:
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    _helper, path = _roadmap_snapshot_fixture(tmp_path)
+    first = AuditInputSnapshot.capture(path, tmp_path)
+    assert AuditInputSnapshot.capture(path, tmp_path).fingerprint == first.fingerprint
+
+
+def test_plan_with_no_siblings_keeps_its_existing_fingerprint(tmp_path: Path) -> None:
+    """An empty sibling set adds no frame, so pre-v4 fingerprints stay byte-identical."""
+    from plan_tool.review_persistence import AuditInputSnapshot, _audit_input_fingerprint
+
+    plan_path = tmp_path / "1-demo.md"
+    plan_path.write_text(_NO_SIBLING_PLAN, encoding="utf-8")
+    snapshot = AuditInputSnapshot.capture(plan_path, tmp_path)
+    assert snapshot.sibling_creates_paths == ()
+    assert snapshot.revision["sibling_paths_digest"] is None
+    assert snapshot.fingerprint == _audit_input_fingerprint(
+        snapshot.plan_bytes, snapshot.details,
+        source_seed_bytes=snapshot.source_seed_bytes,
+        project_context=snapshot.project_context,
+    )
+
+
+def _save_as_v3_sidecar(tmp_path: Path, plan_path: Path, snapshot) -> Path:
+    from plan_tool.review_persistence import save_review
+
+    saved = save_review(
+        plan_slug="demo",
+        plan_path=str(plan_path.relative_to(tmp_path)),
+        repo_root=tmp_path,
+        report_md="report",
+        recommendations=[],
+        kind="completeness",
+        qualified_result={
+            "headline": "clean",
+            "stage": "detail",
+            "coverage": "confirmed",
+            "revision_status": "current",
+            "audit_revision": snapshot.revision,
+        },
+    )
+    raw = json.loads(saved.read_text(encoding="utf-8"))
+    revision = raw["qualified_result"]["audit_revision"]
+    revision["version"] = 3
+    del revision["sibling_paths_digest"]
+    saved.write_text(json.dumps(raw), encoding="utf-8")
+    return saved
+
+
+def test_saved_v3_report_of_a_plan_without_siblings_stays_current_after_upgrade(tmp_path: Path) -> None:
+    from plan_tool.review_persistence import (
+        AuditInputSnapshot, load_review, project_saved_completeness_result,
+    )
+
+    plan_path = tmp_path / "1-demo.md"
+    plan_path.write_text(_NO_SIBLING_PLAN, encoding="utf-8")
+    saved = _save_as_v3_sidecar(tmp_path, plan_path, AuditInputSnapshot.capture(plan_path, tmp_path))
+    view = project_saved_completeness_result(load_review(saved), plan_path, tmp_path)
+    assert view.view_revision_status == "current"
+
+
+def test_saved_v3_report_of_a_plan_with_siblings_reads_stale_after_upgrade(tmp_path: Path) -> None:
+    """Owner decision 2026-11-17: a one-time stale reading on upgrade when siblings apply."""
+    from plan_tool.review_persistence import (
+        AuditInputSnapshot, load_review, project_saved_completeness_result,
+    )
+
+    _helper, plan_path = _roadmap_snapshot_fixture(tmp_path)
+    saved = _save_as_v3_sidecar(tmp_path, plan_path, AuditInputSnapshot.capture(plan_path, tmp_path))
+    view = project_saved_completeness_result(load_review(saved), plan_path, tmp_path)
+    assert view.view_revision_status == "stale"
+
+
+def test_a_changed_plan_still_reads_stale_after_upgrade(tmp_path: Path) -> None:
+    from plan_tool.review_persistence import (
+        AuditInputSnapshot, load_review, project_saved_completeness_result,
+    )
+
+    plan_path = tmp_path / "1-demo.md"
+    plan_path.write_text(_NO_SIBLING_PLAN, encoding="utf-8")
+    saved = _save_as_v3_sidecar(tmp_path, plan_path, AuditInputSnapshot.capture(plan_path, tmp_path))
+    plan_path.write_text(plan_path.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
+    view = project_saved_completeness_result(load_review(saved), plan_path, tmp_path)
+    assert view.view_revision_status == "stale"

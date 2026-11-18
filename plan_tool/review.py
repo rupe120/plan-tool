@@ -2336,6 +2336,31 @@ def _eligible_planned_paths(
     return frozenset(selected)
 
 
+def sibling_creates_paths(
+    plan: Plan, plan_path: Path, repo_root: Path
+) -> frozenset[str]:
+    """Normalized same-roadmap sibling ``creates:`` paths, excluding the plan's own.
+
+    Empty for a plan with no roadmap identity (never the all-registered set) and
+    for any uncertain evidence, so no partial set escapes. Selection is
+    ``_eligible_planned_paths``'s; this adds no rule of its own.
+    """
+    from plan_tool.locator import ManifestError
+
+    try:
+        if _sibling_roadmap_identity(plan, plan_path, repo_root) is None:
+            return frozenset()
+        eligible = _eligible_planned_paths(plan, plan_path, repo_root)
+    except (OSError, UnicodeError, ValueError, ManifestError):
+        return frozenset()
+    own = {normalize_declared_path(path) for path in _planned_paths(plan)}
+    return frozenset(
+        normalized
+        for normalized in (normalize_declared_path(path) for path in eligible)
+        if normalized and normalized not in own
+    )
+
+
 def check_plan_input_contract_references(
     plan: Plan, plan_path: Path, repo_root: Path
 ) -> list[object]:

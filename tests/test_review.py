@@ -12753,7 +12753,7 @@ class TestAuditPromptIntentBlock:
 
         assert before.fingerprint != after.fingerprint
         assert before.revision != after.revision
-        assert after.revision["version"] == 3
+        assert after.revision["version"] == 4
         assert after.revision["project_context_digest"] is not None
         assert "Keep the audit focused." in after.project_context
 
@@ -19897,6 +19897,82 @@ class TestEligibleSiblingCreates:
             versions.AcceptedRoadmapHead(schema_version=versions.ROADMAP_VERSION_SCHEMA_VERSION,
                                          roadmap_slug=slug, version_id=record.version_id)
         ))
+
+    def roadmap_pair(self, root, *, own_creates="own.py", sibling_creates="sibling.py"):
+        self.accepted_roadmap(root, "demo", ["p1", "p2"])
+        for name, row in [("own-seed.md", "p1"), ("sibling-seed.md", "p2")]:
+            (root / name).write_text(f"---\nroadmap: demo\nplan_id: {row}\n---\n")
+        path, plan = self.plan(root, "own", source="own-seed.md", creates=own_creates)
+        self.plan(root, "sibling", source="sibling-seed.md", creates=sibling_creates)
+        self.manifest(root, ["own.md", "sibling.md"])
+        return path, plan
+
+    def test_sibling_helper_returns_same_roadmap_sibling_paths_and_excludes_own(self, tmp_path):
+        from plan_tool.review import sibling_creates_paths
+        path, plan = self.roadmap_pair(tmp_path)
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"sibling.py"})
+
+    def test_sibling_helper_empty_for_no_identity_even_when_other_registered_plans_create_paths(self, tmp_path):
+        from plan_tool.review import _eligible_planned_paths, sibling_creates_paths
+        path, plan = self.plan(tmp_path, "own")
+        self.plan(tmp_path, "sibling", creates="sibling.py")
+        self.manifest(tmp_path, ["sibling.md"])
+        assert _eligible_planned_paths(plan, path, tmp_path) == frozenset({"new.py", "sibling.py"})
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
+
+    def test_sibling_helper_excludes_plan_from_a_different_roadmap(self, tmp_path):
+        from plan_tool.review import sibling_creates_paths
+        self.accepted_roadmap(tmp_path, "demo", ["p1"])
+        self.accepted_roadmap(tmp_path, "other", ["p2"])
+        (tmp_path / "own-seed.md").write_text("---\nroadmap: demo\nplan_id: p1\n---\n")
+        (tmp_path / "other-seed.md").write_text("---\nroadmap: other\nplan_id: p2\n---\n")
+        path, plan = self.plan(tmp_path, "own", source="own-seed.md")
+        self.plan(tmp_path, "other", source="other-seed.md", creates="other.py")
+        self.manifest(tmp_path, ["other.md"])
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
+
+    def test_sibling_helper_empty_when_identity_is_uncertain(self, tmp_path):
+        from plan_tool.review import sibling_creates_paths
+        path, plan = self.roadmap_pair(tmp_path)
+        (tmp_path / "own-seed.md").write_text("---\nroadmap: demo\n---\n")
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
+
+    def test_sibling_helper_empty_when_source_seed_is_unreadable_and_does_not_raise(self, tmp_path):
+        from plan_tool.review import sibling_creates_paths
+        path, plan = self.roadmap_pair(tmp_path)
+        (tmp_path / "own-seed.md").write_bytes(b"\xff\xfe\x00 not utf-8 \xc3\x28")
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
+
+    def test_sibling_helper_own_subtraction_compares_normalized_paths(self, tmp_path):
+        from plan_tool.review import sibling_creates_paths
+        path, plan = self.roadmap_pair(
+            tmp_path, own_creates="a.py", sibling_creates="./a.py (new), b.py"
+        )
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"b.py"})
+
+    def test_sibling_set_normalizes_annotated_and_dot_slash_paths(self, tmp_path):
+        from plan_tool.review import sibling_creates_paths
+        path, plan = self.roadmap_pair(
+            tmp_path, sibling_creates="./src/x.py (new module), src/x.py"
+        )
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"src/x.py"})
+
+    @pytest.mark.parametrize("failure", [OSError, UnicodeError, ValueError, "ManifestError"])
+    def test_sibling_selection_treats_each_uncertain_class_like_the_deterministic_check(
+        self, tmp_path, monkeypatch, failure
+    ):
+        """Both selectors stay uncertain-safe: own paths only vs. an empty sibling set."""
+        from plan_tool import review
+        from plan_tool.locator import ManifestError
+        exc = ManifestError if failure == "ManifestError" else failure
+        path, plan = self.roadmap_pair(tmp_path)
+
+        def boom(*_args, **_kwargs):
+            raise exc("uncertain")
+
+        monkeypatch.setattr(review, "_sibling_roadmap_identity", boom)
+        assert review._eligible_planned_paths(plan, path, tmp_path) == frozenset({"own.py"})
+        assert review.sibling_creates_paths(plan, path, tmp_path) == frozenset()
 
     def test_same_slug_separate_owners_and_unselected_rows_do_not_supply_promises(self, tmp_path):
         from plan_tool.review import _eligible_planned_paths
