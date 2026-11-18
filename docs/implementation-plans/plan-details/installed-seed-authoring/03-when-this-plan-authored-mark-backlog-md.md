@@ -4,7 +4,7 @@
 
 ## Summary
 
-Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while implementation or verification is pending. That status already points to `docs/implementation-plans/2-installed-seed-authoring.md`. Remove only the #377 entry once the guidance ships and step 2 confirms that the required source-install and isolated wheel checks pass, including explicit `--copy`.
+Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while implementation or verification is pending. Once the guidance ships and step 2 confirms source and isolated wheel checks including explicit `--copy`, remove the entry and update the active references that still present #377 as pending.
 
 ## Table of Contents
 
@@ -33,13 +33,15 @@ Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while
 
 - **New files** — None.
 - **Existing files (edits only)**
-  - `BACKLOG.md` — Keep #377’s linked authoring status while the work is pending. Remove the #377 entry when the closure conditions are met.
+  - `BACKLOG.md` — Hold the linked status while work is pending, then remove #377 and update active priority, arc, and dependency references to it.
+  - `docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md` — Update #377's disposition and the ordered pickup.
+  - `docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md` and `backlog-arc-public-release.md` in the same directory — Mark the seed-authoring prerequisite fulfilled while keeping remaining work visible.
 
 ## Implementation
 
 - **Foundational rule — shipment and passing checks together close #377.** Apply the existing unpromoted-entry rule in `docs/TRACKING.md` under `Promotion stubs`. The current `Status` field already records plan authorship. Keep the full entry and its link while shipment or any required result is pending, missing, or failing.
 - **Check the evidence before removing the entry.** Confirm that step 1’s guidance ships and that step 2’s source and isolated wheel results cover the guidance that ships. Default Codex installation copies files, but that result does not cover an invocation with explicit `--copy`.
-- **Limit the removal to the #377 entry.** Find it by its bold entry opener in `BACKLOG.md` and use the next entry opener, `#378`, as the end boundary. The installed-skill arc summary, the priority list, and other entries also cite #377. Use the entry boundaries to scope the deletion and preserve those references. A direct backlog edit is enough because step 2 already supplies the evidence needed for the decision.
+- **Reconcile the #377 entry and active references.** Remove only that entry. Search the working board and the three active arc documents by ID and by the seed-authoring terminology. Remove #377 from selectable-work lists and update pending dependencies to reflect shipment. Keep useful dated provenance and live references that already describe delivered behavior. Preserve the scope and remaining dependencies of #378, #510, and the public sign-off.
 
 ## Tests
 
@@ -49,7 +51,7 @@ Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while
 
 1. **Open entry and link** — While shipment or any required check is pending, failing, or missing, confirm that the full #377 entry remains and its status link opens the Installed Seed Authoring plan.
 2. **Closure evidence** — Before removal, confirm shipment and review step 2’s source-install and isolated wheel results. Check for a passing result in both modes for each backend, including the explicit `--copy` invocation for Codex.
-3. **Diff boundary** — Review `git diff -- BACKLOG.md` against the pre-edit state. Confirm that closure removes the #377 entry and preserves both neighboring entries and #377 references elsewhere in the file.
+3. **Diff boundary** — Review the backlog and three arc diffs against the pre-edit state. Confirm that closure removes the #377 entry and its pending references while preserving neighboring work and useful provenance.
 4. `tests/test_backlog_ids.py:test_backlog_entry_ids_are_unique` — Remaining backlog entry IDs are unique.
 5. `tests/test_backlog_readability.py:test_backlog_is_fully_readable_by_the_id_guard` — The backlog remains readable by the entry ID check.
 
@@ -57,7 +59,7 @@ Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while
 
 - While shipment or any required verification is pending, missing, or failing, `BACKLOG.md` contains the full #377 entry with a working `Plan authored` link.
 - After the guidance ships and all step 2 acceptance checks pass, including explicit `--copy` in both the source-install and isolated wheel runs, the #377 entry is absent.
-- The closure diff touches only the #377 entry in `BACKLOG.md`. The #378 and #510 entries remain intact, and both backlog checks pass.
+- The backlog and active arcs no longer present #377 as selectable or pending. The #378 and #510 work stays open with its own scope, and both backlog checks pass.
 
 ## References
 
@@ -68,7 +70,7 @@ Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while
 
 ## Applicable guardrails
 
-- **The plan’s `## Scope guardrails`, tracking boundary.** Limit edits to #377 bookkeeping in `BACKLOG.md`.
+- **The plan’s `## Scope guardrails`, tracking boundary.** Limit edits to #377 bookkeeping in the backlog and its active arcs.
 - **The plan’s `## Audit guardrails`, review boundary.** Base closure on the installed authoring path and the plan’s acceptance evidence. Public onboarding sign-off has its own owner.
 - **The plan’s `## Expected placement`, guidance ownership.** Use the installed shared reference as evidence of shipment. Keep authoring instructions in their owning documents.
 - **The plan’s `## Out of scope`, tracker boundary.** Apply the existing closure rule only to the originating entry. Tracker policy stays with its existing owner.

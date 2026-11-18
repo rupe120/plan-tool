@@ -77,6 +77,9 @@ steps:
     checks pass.'
   files:
   - BACKLOG.md
+  - docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md
+  - docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md
+  - docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md
   complexity: low
   change_type: non-code
   depends_on:
@@ -85,10 +88,10 @@ steps:
     2: 'Provides the installation and seed-intake evidence required to remove #377.'
   detail: docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md
   description: 'When this plan is authored, mark BACKLOG.md #377 as plan-authored
-    and link the plan. Remove only the #377 entry after the guidance ships and the
-    required source and wheel checks pass, including explicit --copy. Keep the entry
-    open if any required check is pending, and leave the #510 and #378 work in their
-    own entries.'
+    and link the plan. After shipment and passing source and wheel checks, including
+    explicit --copy, remove the #377 entry and reconcile active references that list
+    it as selectable work or a pending dependency. Keep #510 and #378 open under
+    their own scope and keep useful references to #377 as delivered provenance.'
 ---
 # Installed Seed Authoring
 
@@ -177,6 +180,8 @@ Review the intake claims against SEED_FORMAT.md and file-backed intake.
 
 - Each installed router leads to the same guidance. The big-document
   shortcuts use the same canonical-shape routing rule.
+- The guidance explains the evidence a preparation seed must provide and
+  limits strict source step import to direct-ready seeds.
 - Both examples ground the seed in local evidence and carry each binding
   limit in the appropriate guardrail. The examples show where `None` is
   appropriate.
@@ -184,6 +189,7 @@ Review the intake claims against SEED_FORMAT.md and file-backed intake.
   that approved input before `create --from-existing`.
 - Source-install checks and the separate wheel verification pass, including
   copy mode, before the source entry closes.
+- Upon closure, the working board and its active arcs reflect #377 delivery.
 
 ## Deferred
 
