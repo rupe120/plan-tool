@@ -68,6 +68,8 @@ for that step).
 Live steps need an authenticated backend, take real time and cost tokens, and
 their output will differ from the baked copy. Step 1 has no command (a seed is
 written with an assistant); step 8 is a `/code-review` session activity.
+Before running step 2 with a seed you write yourself, check its References and
+guardrail headings against the [seed format](../../../SEED_FORMAT.md#core-directives).
 
 ## What is real and what is authored
 
