@@ -2789,3 +2789,71 @@ def test_a_changed_plan_still_reads_stale_after_upgrade(tmp_path: Path) -> None:
     plan_path.write_text(plan_path.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
     view = project_saved_completeness_result(load_review(saved), plan_path, tmp_path)
     assert view.view_revision_status == "stale"
+
+
+class TestLegacyPlansRelativeSourceSeed:
+    """``create`` once recorded ``source_seed`` relative to the plans directory (Loom's
+    2026-10 plans). Those values keep resolving, and nothing that resolves repo-relative moves."""
+
+    @staticmethod
+    def _plan(value: str):
+        from types import SimpleNamespace
+
+        return SimpleNamespace(source_seed=value)
+
+    @staticmethod
+    def _layout(tmp_path):
+        plans = tmp_path / "docs" / "implementation-plans"
+        plans.mkdir(parents=True)
+        return tmp_path, plans
+
+    def test_a_plans_relative_value_resolves_through_the_plans_directory(self, tmp_path):
+        from plan_tool.review_persistence import _resolve_source_seed_path
+
+        repo, plans = self._layout(tmp_path)
+        seed = plans / "roadmaps" / "r" / "seed.md"
+        seed.parent.mkdir(parents=True)
+        seed.write_text("# s\n")
+        plan = self._plan("roadmaps/r/seed.md")
+        assert _resolve_source_seed_path(plan, repo, plans_dir=plans) == seed
+        assert _resolve_source_seed_path(plan, repo, plans_dir=None) is None
+
+    def test_a_repo_relative_file_wins_over_a_plans_relative_one(self, tmp_path):
+        from plan_tool.review_persistence import _resolve_source_seed_path
+
+        repo, plans = self._layout(tmp_path)
+        (repo / "seed.md").write_text("repo\n")
+        (plans / "seed.md").write_text("plans\n")
+        got = _resolve_source_seed_path(self._plan("seed.md"), repo, plans_dir=plans)
+        assert got == repo / "seed.md"
+
+    def test_a_repo_relative_archive_wins_over_a_plans_relative_live_file(self, tmp_path):
+        """Whatever resolved before, repo-relative live then archive, resolves identically."""
+        from plan_tool.review_persistence import _resolve_source_seed_path
+
+        repo, plans = self._layout(tmp_path)
+        (repo / "archive").mkdir()
+        archived = repo / "archive" / "seed.replaced.md"
+        archived.write_text("archived\n")
+        (plans / "seed.md").write_text("plans live\n")
+        got = _resolve_source_seed_path(self._plan("seed.md"), repo, plans_dir=plans)
+        assert got == archived
+
+    def test_a_plans_relative_archive_resolves_when_no_live_file_exists(self, tmp_path):
+        from plan_tool.review_persistence import _resolve_source_seed_path
+
+        repo, plans = self._layout(tmp_path)
+        (plans / "archive").mkdir()
+        archived = plans / "archive" / "seed.replaced.md"
+        archived.write_text("archived\n")
+        got = _resolve_source_seed_path(self._plan("seed.md"), repo, plans_dir=plans)
+        assert got == archived
+
+    def test_a_plans_relative_value_that_escapes_the_repo_never_resolves(self, tmp_path):
+        from plan_tool.review_persistence import _resolve_source_seed_path
+
+        repo, plans = self._layout(tmp_path / "repo")
+        outside = tmp_path / "outside.md"
+        outside.write_text("# outside\n")
+        plan = self._plan("../../../outside.md")
+        assert _resolve_source_seed_path(plan, repo, plans_dir=plans) is None

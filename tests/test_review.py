@@ -12956,11 +12956,11 @@ class TestAuditPromptScopeContractBlock:
     # -- _format_scope_contract_block (unit) --
 
     def test_empty_when_no_source_seed(self, tmp_path: Path) -> None:
-        assert _format_scope_contract_block(self._plan(), tmp_path) == ""
+        assert _format_scope_contract_block(self._plan(), tmp_path, plans_dir=None) == ""
 
     def test_empty_when_seed_file_missing(self, tmp_path: Path) -> None:
         plan = self._plan(source_seed="plan-seeds/gone.md")
-        assert _format_scope_contract_block(plan, tmp_path) == ""
+        assert _format_scope_contract_block(plan, tmp_path, plans_dir=None) == ""
 
     def test_falls_back_to_the_archived_seed_after_create_moves_it(
         self, tmp_path: Path
@@ -12985,7 +12985,7 @@ class TestAuditPromptScopeContractBlock:
         )
         plan = self._plan(source_seed="plan-seeds/notes.md")
 
-        block = _format_scope_contract_block(plan, tmp_path)
+        block = _format_scope_contract_block(plan, tmp_path, plans_dir=None)
 
         assert "Ship the demo feature end to end." in block
 
@@ -12996,7 +12996,7 @@ class TestAuditPromptScopeContractBlock:
         outside.write_text(self._SEED_WITH_FIELDS, encoding="utf-8")
         try:
             plan = self._plan(source_seed="../outside-scope-contract-seed.md")
-            assert _format_scope_contract_block(plan, tmp_path) == ""
+            assert _format_scope_contract_block(plan, tmp_path, plans_dir=None) == ""
         finally:
             outside.unlink(missing_ok=True)
 
@@ -13009,7 +13009,7 @@ class TestAuditPromptScopeContractBlock:
             encoding="utf-8",
         )
         plan = self._plan(source_seed="notes.md")
-        assert _format_scope_contract_block(plan, tmp_path) == ""
+        assert _format_scope_contract_block(plan, tmp_path, plans_dir=None) == ""
 
     def test_renders_only_the_present_canonical_fields(
         self, tmp_path: Path
@@ -13060,7 +13060,7 @@ class TestAuditPromptScopeContractBlock:
         seed = tmp_path / "notes.md"
         seed.write_text(self._SEED_WITH_FIELDS, encoding="utf-8")
         plan = self._plan(source_seed="notes.md")
-        block = _format_scope_contract_block(plan, tmp_path)
+        block = _format_scope_contract_block(plan, tmp_path, plans_dir=None)
         assert "notes.md" in block
         assert "the plan body wins on conflict" in block
         assert "Ship the demo feature end to end." in block
@@ -13074,7 +13074,7 @@ class TestAuditPromptScopeContractBlock:
             encoding="utf-8",
         )
         plan = self._plan(source_seed="notes.md")
-        block = _format_scope_contract_block(plan, tmp_path, max_bytes=64)
+        block = _format_scope_contract_block(plan, tmp_path, max_bytes=64, plans_dir=None)
         assert "truncated" in block
         assert len(block.encode("utf-8")) < 500
 
@@ -13236,14 +13236,14 @@ class TestAuditPromptScopeContractBlock:
         )
 
         frozen_block = _format_scope_contract_block(
-            snapshot.plan, tmp_path, audit_input_snapshot=snapshot
+            snapshot.plan, tmp_path, audit_input_snapshot=snapshot, plans_dir=None
         )
         assert "Ship the demo feature end to end." in frozen_block
         assert "EDITED AFTER CAPTURE" not in frozen_block
 
         # Without a snapshot, the same call reads live and sees the edit —
         # confirming the frozen result above isn't just a stale plan object.
-        live_block = _format_scope_contract_block(snapshot.plan, tmp_path)
+        live_block = _format_scope_contract_block(snapshot.plan, tmp_path, plans_dir=None)
         assert "EDITED AFTER CAPTURE" in live_block
 
     def test_snapshot_source_seed_bytes_is_none_when_unresolvable(
@@ -19916,6 +19916,25 @@ class TestEligibleSiblingCreates:
         from plan_tool.review import sibling_creates_paths
         path, plan = self.roadmap_pair(tmp_path)
         assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"sibling.py"})
+
+    def test_a_loom_shaped_plan_with_a_plans_relative_source_seed_resolves_its_siblings(self, tmp_path):
+        """Plans live under docs/implementation-plans/ with source_seed recorded relative to it,
+        as Loom's 2026-10 plans do: the sibling set resolves instead of being unknown."""
+        from plan_tool.review import sibling_creates_paths
+        from plan_tool.review_persistence import AuditInputSnapshot
+
+        plans = tmp_path / "docs" / "implementation-plans"
+        plans.mkdir(parents=True)
+        path, plan = self.roadmap_pair(plans)
+        (tmp_path / ".plan-tool").mkdir(exist_ok=True)
+        (tmp_path / ".plan-tool/plans.json").write_text(
+            json.dumps({"plans": ["docs/implementation-plans/own.md", "docs/implementation-plans/sibling.md"]})
+        )
+        assert plan.source_seed == "own-seed.md"  # recorded relative to the plans directory
+        assert sibling_creates_paths(plan, path, tmp_path) == frozenset({"sibling.py"})
+        snapshot = AuditInputSnapshot.capture(path, tmp_path)
+        assert snapshot.sibling_creates_paths == ("sibling.py",)
+        assert snapshot.source_seed_bytes is not None
 
     def test_sibling_helper_empty_for_no_identity_even_when_other_registered_plans_create_paths(self, tmp_path):
         from plan_tool.review import _eligible_planned_paths, sibling_creates_paths

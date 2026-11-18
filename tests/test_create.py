@@ -7783,7 +7783,7 @@ class TestSourceSeedProvenance:
         plan = parse_plan(out_dir / "2-demo.md")
         assert plan.source_seed == "notes.md"
 
-        block = _format_scope_contract_block(plan, tmp_path)
+        block = _format_scope_contract_block(plan, tmp_path, plans_dir=None)
         assert "Ship the demo feature end to end." in block
 
 

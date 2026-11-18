@@ -2210,7 +2210,7 @@ def _sibling_roadmap_identity(
 
     if not plan.source_seed:
         return None
-    source = _resolve_source_seed_path(plan, repo_root)
+    source = _resolve_source_seed_path(plan, repo_root, plans_dir=plan_path.parent)
     if source is None:
         raise ValueError("Source identity unavailable")
     text = source.read_text(encoding="utf-8")
@@ -7480,6 +7480,7 @@ def _format_scope_contract_block(
     plan: Plan,
     repo_root: Path,
     *,
+    plans_dir: Optional[Path],
     max_bytes: int = _MAX_PROMPT_FILE_BYTES,
     audit_input_snapshot=None,
 ) -> str:
@@ -7513,7 +7514,7 @@ def _format_scope_contract_block(
     else:
         from plan_tool.review_persistence import _read_source_seed_bytes
 
-        seed_bytes = _read_source_seed_bytes(plan, repo_root)
+        seed_bytes = _read_source_seed_bytes(plan, repo_root, plans_dir=plans_dir)
     if seed_bytes is None:
         return ""
     text = seed_bytes.decode("utf-8", errors="replace")
@@ -7716,7 +7717,10 @@ def render_plan_audit_prompt(
         audit_input_snapshot=audit_input_snapshot,
     )
     scope_contract_rendered = _format_scope_contract_block(
-        plan, repo_root, audit_input_snapshot=audit_input_snapshot
+        plan,
+        repo_root,
+        plans_dir=plan_path.parent,
+        audit_input_snapshot=audit_input_snapshot,
     )
     intent_rendered = _format_intent_block(plan)
     project_context_rendered = (

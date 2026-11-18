@@ -574,8 +574,12 @@ class AuditInputSnapshot:
                         step.id, branch, selected_path, "present", content
                     )
                 )
-        source_seed_path = _resolve_source_seed_path(plan, repo_root)
-        source_seed_bytes = _read_source_seed_bytes(plan, repo_root)
+        source_seed_path = _resolve_source_seed_path(
+            plan, repo_root, plans_dir=plan_path.parent
+        )
+        source_seed_bytes = _read_source_seed_bytes(
+            plan, repo_root, plans_dir=plan_path.parent
+        )
         if source_seed_bytes is not None and source_seed_path is not None:
             try:
                 source_seed_text = source_seed_bytes.decode("utf-8")
@@ -628,24 +632,38 @@ def _reject_unmatched_audit_fence(source_text: str, source: Path) -> None:
         )
 
 
-def _resolve_source_seed_path(plan: Plan, repo_root: Path) -> Optional[Path]:
-    """Resolve the readable live or archived source seed without changing fallback."""
+def _resolve_source_seed_path(
+    plan: Plan, repo_root: Path, *, plans_dir: Optional[Path]
+) -> Optional[Path]:
+    """Resolve the readable live or archived source seed.
+
+    ``create`` records ``source_seed`` repo-relative, so that lookup comes first
+    (live file, then archive) and anything that resolves that way resolves
+    identically. Plans written by an older ``create`` recorded it relative to
+    the plans directory, so ``plans_dir`` (the plan file's own directory) is
+    tried second; ``None`` turns that legacy lookup off for a caller that has no
+    plan file. A seed that escapes the repository never resolves.
+    """
     if not plan.source_seed:
         return None
     from plan_tool.pathutil import is_within, latest_seed_archive
 
-    seed_path = repo_root / plan.source_seed
-    if not is_within(seed_path, repo_root):
-        return None
-    if not seed_path.is_file():
+    bases = [repo_root] if plans_dir is None else [repo_root, plans_dir]
+    for base in bases:
+        seed_path = base / plan.source_seed
+        if not is_within(seed_path, repo_root):
+            continue
+        if seed_path.is_file():
+            return seed_path
         archived = latest_seed_archive(seed_path)
-        if archived is None or not is_within(archived, repo_root):
-            return None
-        seed_path = archived
-    return seed_path
+        if archived is not None and is_within(archived, repo_root):
+            return archived
+    return None
 
 
-def _read_source_seed_bytes(plan: Plan, repo_root: Path) -> Optional[bytes]:
+def _read_source_seed_bytes(
+    plan: Plan, repo_root: Path, *, plans_dir: Optional[Path]
+) -> Optional[bytes]:
     """Bytes of ``plan.source_seed`` at capture time, or ``None``.
 
     Same containment posture as :func:`plan_tool.review._format_scope_contract_block`
@@ -658,7 +676,7 @@ def _read_source_seed_bytes(plan: Plan, repo_root: Path) -> Optional[bytes]:
     the common case, not an edge case, so a missing seed at its original
     path must not read as "never had one" before checking there).
     """
-    seed_path = _resolve_source_seed_path(plan, repo_root)
+    seed_path = _resolve_source_seed_path(plan, repo_root, plans_dir=plans_dir)
     if seed_path is None:
         return None
     try:
