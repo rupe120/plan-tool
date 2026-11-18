@@ -35,8 +35,11 @@ steps:
     References, Testing, and acceptance evidence. For backlog work, carry the source
     contract, entry ID, any promoted ticket key, and the eventual backlog update into
     the seed. Replace the stale size and heading advice with the actual intake rules.
+    Send each router's big-document shortcut to those same rules.
     Explain the unmatched-fence refusal, the single usable References section, and
-    the three required guardrail sections with their explicit None option. Explain
+    the three required guardrail sections. Distinguish the full scope contract
+    from binding limits carried in the named guardrails. Use None only where
+    no boundary of that kind applies. Explain
     which canonical body headings make a seed eligible for direct assessment and when
     an otherwise valid seed goes through preparation. Link the same section from all
     three routers' authoring rows, update the existing phase-link unit tests, and
@@ -54,16 +57,17 @@ steps:
   - 1
   depends_on_notes:
     1: Provides the shared authoring contract, examples, and router links to verify.
-  description: Extend the existing install-skill coverage with a class-level integration
-    test that follows the required authoring link from each installed router to the
+  description: Extend the existing install-skill coverage to follow the required
+    authoring link from each installed router to the
     seed contract in its installed sibling. Use temporary consuming repos and exercise
     the default and explicit --copy modes for Claude, Codex, and Cursor, with Codex
     copying in both cases. Check the user-request and backlog-derived examples against
     the authoring contract and pass their text through validate_from_existing_seed
-    to verify direct readiness and preparation without a model call. Confirm that
-    the References point to usable evidence in the example repo. Repeat the installed-link
-    check using the actual CLI from a wheel built and installed with the existing
-    build tools in an isolated environment outside the source checkout. Confirm that
+    to verify direct readiness and preparation without a model call. Check that
+    the References point to usable evidence and each binding limit appears in
+    the corresponding guardrail. In a separate acceptance run outside pytest,
+    repeat the installed-link check with the actual CLI from an isolated wheel
+    installation outside the source checkout. Confirm that
     the wheel is the source of the installed guidance and that both install modes
     expose the same contract without opening SEED_FORMAT.md from the checkout. Use
     fresh destinations for the proof so existing installs are left alone. Keep fixture
@@ -154,24 +158,31 @@ updating entries found already addressed (the former #379, now part of #378).
 ## Risks
 
 An incomplete summary can imply a preparation-only heading is a hard preflight
-requirement, or omit a guardrail that create actually checks. Review each claim
-against SEED_FORMAT.md and file-backed intake.
+requirement, or show a seed whose binding limit is missing from its guardrails.
+Review the intake claims against SEED_FORMAT.md and file-backed intake.
 
 ## Testing
 
-install each backend's skill from a source checkout and a
-wheel, including `--copy`; from the installed location, follow its seed
-authoring and format links without relying on the source checkout. Check
-example seeds from both a user request and a backlog item for `Outcome`,
-scope fence, usable `References`, testing and acceptance evidence, and
-documented direct-versus-preparation routing.
+- Check installed links and default and `--copy` modes for every backend
+  using the existing source-install tests. Build and install a wheel in a
+  separate isolated acceptance run and repeat those checks outside the
+  source checkout. Ordinary pytest runs use the source install.
+- Review the user-request and backlog-derived examples for `Outcome`, the
+  scope contract, guardrails, usable `References`, testing and acceptance
+  evidence, and the order of review, commit and `create`. Check the
+  examples' direct readiness and preparation route with intake preflight.
 
 ## Acceptance criteria
 
-From each installed router an assistant can reach the shared guidance, author
-a user-request or backlog-derived seed against local evidence, check the required
-headings and choose the correct create handoff. Verify source and wheel
-installs, including copy mode, before closing the source entry.
+- Each installed router leads to the same guidance. The big-document
+  shortcuts use the same canonical-shape routing rule.
+- Both examples ground the seed in local evidence and carry each binding
+  limit in the appropriate guardrail. The examples show where `None` is
+  appropriate.
+- The installed walkthrough puts user approval of the seed and a commit of
+  that approved input before `create --from-existing`.
+- Source-install checks and the separate wheel verification pass, including
+  copy mode, before the source entry closes.
 
 ## Deferred
 
