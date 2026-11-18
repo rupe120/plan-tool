@@ -450,8 +450,8 @@ a plan-body edit — is what pulls detail into plans.
   another plan in the same roadmap declares in `creates:`: the audit is shown
   those paths and told not to report them, but that is an instruction to the
   model, not a filter. Check the cited path against the prompt's sibling list,
-  or against the sibling plans' `creates:` when the prompt says the sibling set
-  could not be determined; if a sibling declares it, it is T. A path no plan in
+  or against the sibling plans' `creates:` when the prompt lists none or says
+  they are unavailable; if a sibling declares it, it is T. A path no plan in
   the roadmap declares is an ordinary finding.
 
 **Diff a bare-round fix before committing it.** If it adds a table, algorithm,
