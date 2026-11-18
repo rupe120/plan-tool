@@ -59,6 +59,16 @@ uv run pytest -m integration tests/ -q
   session-scoped fixtures run `git init` / `git config` before any
   per-test fixture. The pre-push hook unsets the same variables before
   starting pytest; the conftest scrub covers every other way pytest starts.
+- **Captured examples of versioned formats.** `tests/fixtures/versioned/` holds
+  files written by the code of the release or commit named in each file, captured
+  once and never edited, and `tests/test_versioned_examples.py` loads every one
+  through today's reader. A record built by deleting a key from current output
+  checks only the shape its author expects. A failing example means the reader
+  regressed: fix the reader, not the example. A change that bumps a persisted
+  format's version adds an example of the new version, captured from the commit
+  that introduced it, in the same change; a guard in that test fails without one.
+  The fixture README says how each file was captured and which formats still have
+  none.
 
 ## Backend fallback seams
 

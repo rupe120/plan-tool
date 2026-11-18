@@ -3495,7 +3495,7 @@ working straight down the tiers.
 - **Verification:** removing a version branch from a reader (for example the v3 arm of `normalize_audit_revision`) turns the matching example's test red, and bumping a version constant without adding an example fails the coverage guard.
 - **Stop / defer:** a format with no tagged release to capture from is listed in the README as pending, not filled with a synthetic example.
 - **Quality:** gate-signal — old-version compatibility rests on captured evidence instead of synthetic records.
-- **Status:** not started.
+- **Status:** first slice shipped 2026-11-18: six captured examples of the saved-review sidecar (`completeness` final and checkpoint at audit-revision v3 from v1.6.0 and v4 from `main`, and the v1 reconcile kinds), the load test, a version-coverage guard and `tests/fixtures/versioned/README.md`, which lists what is still pending. Remaining: an example for each other versioned format, each captured from the release that wrote it, and the older sidecar and audit-revision versions if an older writer turns up (none is retrievable: every tag back to v0.2.0 writes sidecar 4 and revision 3).
 
 ### B. Significant UX changes
 
