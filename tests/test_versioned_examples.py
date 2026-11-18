@@ -16,11 +16,9 @@ from pathlib import Path
 import pytest
 
 from plan_tool.review_persistence import (
-    SCHEMA_VERSION,
-    _AUDIT_REVISION_SCHEMA_VERSION,
+    _SUPPORTED_SCHEMA_VERSIONS,
     AuditInputSnapshot,
     load_review,
-    normalize_audit_revision,
 )
 
 FIXTURES = Path(__file__).parent / "fixtures" / "versioned"
@@ -32,6 +30,10 @@ NAME_RE = re.compile(
 SHAPE_KIND = {
     "completeness-final": "completeness",
     "completeness-checkpoint": "completeness",
+    "completeness-legacy": "completeness",
+    "completeness-advisory": "completeness",
+    "completeness-checkpoint-no-revision": "completeness",
+    "review": "review",
     "run-reconcile": "run-reconcile",
     "detail-reconcile": "detail-reconcile",
 }
@@ -77,7 +79,14 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
 
     assert raw["version"] == int(parts["sidecar"])
     assert saved.kind == SHAPE_KIND[parts["shape"]]
-    assert len(saved.recommendations) == len(raw["recommendations"])
+    assert [(r.id, r.severity) for r in saved.recommendations] == [
+        (r["id"], r["severity"]) for r in raw["recommendations"]
+    ]
+    assert saved.plan_fingerprint == raw["plan_fingerprint"]
+    assert saved.is_pre_apply_checkpoint is bool(raw.get("is_pre_apply_checkpoint"))
+    if parts["shape"] == "completeness-advisory":
+        assert saved.audit_shape_advisory is not None
+        assert saved.audit_shape_advisory.shape_id == raw["audit_shape_advisory"]["shape_id"]
 
     raw_revision = _raw_revision(raw, parts["shape"])
     if parts["revision"] is None:
@@ -89,10 +98,14 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
     current = _current_revision_version(tmp_path)
     loaded = saved.audit_revision
     assert loaded is not None, "the reader dropped a revision an older release wrote"
-    assert loaded == normalize_audit_revision(raw_revision)
-    assert loaded["version"] == current
+    # The expected record is written out here, not computed by the reader: a current-version
+    # revision loads unchanged, and an older one gains only its version and the digests it
+    # lacked, read as None (a report of a plan without siblings stays current after upgrade).
+    expected = dict(raw_revision)
     if int(parts["revision"]) < 4:
-        assert loaded["sibling_paths_digest"] is None  # absent before v4: reads as none
+        assert "sibling_paths_digest" not in raw_revision
+        expected.update(version=current, sibling_paths_digest=None)
+    assert loaded == expected
     if parts["shape"] == "completeness-checkpoint":
         assert saved.is_pre_apply_checkpoint is True
         assert saved.qualified_result is None
@@ -102,19 +115,26 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
         assert saved.qualified_result["coverage"] == "confirmed"
 
 
-def test_every_current_format_version_has_a_captured_example(tmp_path: Path) -> None:
-    """A version bump must add an example of the new version in the same change."""
-    names = [_parts(path) for path in EXAMPLES]
-    completeness = {int(m["sidecar"]) for m in names if SHAPE_KIND[m["shape"]] == "completeness"}
-    reconcile = {int(m["sidecar"]) for m in names if SHAPE_KIND[m["shape"]].endswith("-reconcile")}
-    revisions = {int(m["revision"]) for m in names if m["revision"]}
+def test_every_supported_sidecar_version_has_a_captured_example(tmp_path: Path) -> None:
+    """A version bump must add an example of the new version in the same change. The bound is
+    the reader's own supported set, so a new sidecar version cannot be added without one."""
+    sidecars = {int(_parts(path)["sidecar"]) for path in EXAMPLES}
+    missing = set(_SUPPORTED_SCHEMA_VERSIONS) - sidecars
+    assert not missing, f"no example of sidecar version(s) {sorted(missing)}"
+    assert sidecars <= set(_SUPPORTED_SCHEMA_VERSIONS), "an example claims a version the reader no longer supports"
 
-    assert _AUDIT_REVISION_SCHEMA_VERSION in completeness, "no example of the current completeness sidecar version"
-    assert SCHEMA_VERSION in reconcile, "no example of the current reconcile sidecar version"
+
+def test_the_current_audit_revision_version_has_a_captured_example(tmp_path: Path) -> None:
+    revisions = {int(_parts(path)["revision"]) for path in EXAMPLES if _parts(path)["revision"]}
     assert _current_revision_version(tmp_path) in revisions, "no example of the current audit-revision version"
 
 
-def test_the_readme_lists_every_example() -> None:
-    readme = (FIXTURES / "README.md").read_text(encoding="utf-8")
+def test_the_readme_table_has_a_row_for_every_example() -> None:
+    rows = [
+        line for line in (FIXTURES / "README.md").read_text(encoding="utf-8").splitlines()
+        if line.startswith("| `")
+    ]
     for path in EXAMPLES:
-        assert path.name in readme, f"{path.name} is not described in tests/fixtures/versioned/README.md"
+        assert any(row.startswith(f"| `{path.name}` |") for row in rows), (
+            f"{path.name} has no row in tests/fixtures/versioned/README.md"
+        )
