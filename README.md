@@ -46,9 +46,19 @@ Reload your assistant and open the Git repository you want to work on.
 
 ### Your first plan
 
+In your coding assistant, start with one sentence.
+
+> use the plan tool skill to create a website scraper cli
+
+The assistant may ask what the scraper should extract. For example, reply
+“Take a URL and print the page title.” Review the plan it prepares before
+asking it to implement anything.
+
+#### Follow a worked plan
+
 In the worked example, a task-list CLI needs optional due dates and a way to
-list overdue tasks. Try the request below in that repo, or adapt it to a small,
-independently testable change in yours.
+list overdue tasks. This request asks the assistant to pause at each review
+checkpoint.
 
 > Use the plan-tool skill to plan optional due dates and `todo list --overdue`.
 > Leave reminders and changes to ordering outside the scope. Inspect the repo

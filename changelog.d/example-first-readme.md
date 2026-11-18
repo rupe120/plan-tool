@@ -1,3 +1,3 @@
 ### Changed
 
-- The README walks through a first plan with a worked due-dates example, from the seed and bare audit through step details and the grounded audit.
+- Start your first plan from a one-line request in the README, then follow a worked due-dates example through the seed, plan, audits, and step details.
