@@ -78,8 +78,11 @@ tracked `scripts/hooks/` directory, installing two hooks.
 
 The `pre-push` hook runs the test suite (`uv run pytest tests/ -q -n auto`)
 and fails the push if anything is red, so a change can't land on a remote
-while it breaks a module it never touched. It only verifies; it never edits
-files. The full output is left at `/tmp/plan-tool-prepush.log`.
+while it breaks a module it never touched. It runs for a push that updates
+`main` and for any push to a remote with a github.com push URL, because no
+pull-request pipeline gates those. A feature-branch push to Bitbucket skips it;
+that pull request runs the suite in `bitbucket-pipelines.yml`. It only verifies;
+it never edits files. The full output is left at `/tmp/plan-tool-prepush.log`.
 
 One member of that suite is the generated CLI reference under
 [`docs/cli/`](docs/cli/README.md). It fails when the reference has drifted
@@ -389,7 +392,7 @@ A plan-route ticket has two review moments:
    branch's total change since its merge-base with `origin/main`, one snapshot
    commit each. Push both, open a pull request for each with `gh pr create` (or `bkt pr create` on
    Bitbucket; see [`DIRECTIVES.md`](integrations/shared/DIRECTIVES.md#opening-bitbucket-pull-requests-with-bkt)),
-   and lead both titles with the ticket key. The pre-push hook runs the suite on each push.
+   and lead both titles with the ticket key. Each pull request pipeline runs the suite.
 
 Merge the code pull request first when the plan branch marks steps done, so
 `main` never records work that has not landed.
@@ -482,7 +485,7 @@ three role-shaped paths together for later reference.
 - **Assistant attribution is welcome here.** This is an internal project, so
   commit trailers and notes about which assistant or model helped are fine.
   Client repositories follow their own rules.
-- **Don't push red.** The pre-push hook runs the suite for you.
+- **Don't push red.** The pull request pipeline runs the suite, and the pre-push hook runs it for pushes to `main` and GitHub.
 
 ## Writing docs
 

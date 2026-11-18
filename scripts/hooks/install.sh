@@ -15,5 +15,5 @@ chmod +x scripts/hooks/pre-commit
 git config core.hooksPath scripts/hooks
 
 echo "Installed: core.hooksPath -> scripts/hooks"
-echo "The pre-push hook now runs the full parallel test suite before every push."
+echo "The pre-push hook now runs the full parallel test suite before a push to main or to GitHub."
 echo "The pre-commit hook now scans staged changes for likely secrets."
