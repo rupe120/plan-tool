@@ -189,7 +189,8 @@ Review the intake claims against SEED_FORMAT.md and file-backed intake.
   limit in the appropriate guardrail. The examples show where `None` is
   appropriate.
 - The installed walkthrough puts user approval of the seed and a commit of
-  that approved input before `create --from-existing`.
+  that approved input before `create --from-existing`. Each authoring route,
+  including the big-document shortcut, passes the exact approved seed path.
 - Source-install checks and the separate wheel verification pass, including
   copy mode, before the source entry closes.
 - Upon closure, the working board and its active arcs reflect #377 delivery.

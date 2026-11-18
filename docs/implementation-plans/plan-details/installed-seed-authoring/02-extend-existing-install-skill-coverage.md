@@ -51,7 +51,7 @@ Extend `tests/cli/test_skill_cmd.py` to follow both authoring entry points from 
 
 1. `tests/cli/test_skill_cmd.py:test_installed_router_links_resolve_against_the_installed_directives` — All six fresh installs have the expected file types, retain their phase links, and expose the required authoring link in both router entries.
 2. `tests/cli/test_skill_cmd.py:test_installed_seed_examples_match_intake_and_source_evidence` — The two shipped examples pass preflight with their expected readiness results, cite usable fixture evidence, and carry their binding limits under the correct guardrails.
-3. Installed walkthrough review — Confirm that source and code checks precede user approval, then the approved seed is committed before `create --from-existing`.
+3. Installed walkthrough review — Confirm that source and code checks precede user approval for the walkthrough and the big-document shortcut. Verify that each path commits the approved seed and passes that same path to `create --from-existing`. For the shortcut, the source document remains evidence and the reviewed input is the standalone seed.
 4. Isolated wheel acceptance — Outside pytest, repeat the six-case link check through the installed executable, confirm wheel provenance, and report the result for step 3.
 
 ## Acceptance criteria
