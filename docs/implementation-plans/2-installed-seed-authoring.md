@@ -58,7 +58,7 @@ steps:
   depends_on_notes:
     1: Provides the shared authoring contract, examples, and router links to verify.
   detail: docs/implementation-plans/plan-details/installed-seed-authoring/02-extend-existing-install-skill-coverage.md
-  status: current
+  status: done
   description: Extend the existing install-skill coverage to follow the required authoring
     link from each installed router to the seed contract in its installed sibling.
     Use temporary consuming repos and exercise the default and explicit --copy modes
@@ -88,6 +88,7 @@ steps:
   depends_on_notes:
     2: 'Provides the installation and seed-intake evidence required to remove #377.'
   detail: docs/implementation-plans/plan-details/installed-seed-authoring/03-when-this-plan-authored-mark-backlog-md.md
+  status: current
   description: 'When this plan is authored, mark BACKLOG.md #377 as plan-authored
     and link the plan. After shipment and passing source and wheel checks, including
     explicit --copy, remove the #377 entry and reconcile active references that list
