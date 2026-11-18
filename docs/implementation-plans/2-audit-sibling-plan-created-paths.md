@@ -6,7 +6,7 @@ intent: A roadmap-derived plan's completeness audit is told which paths the othe
   those paths as missing. A multi-plan roadmap batch no longer re-raises the same
   false finding every round, and `integrations/shared/DIRECTIVES.md` § "T — tool artifacts"
   no longer needs to tell triagers to ignore it.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -143,7 +143,7 @@ steps:
   depends_on_notes:
     2: the shipped prompt block that makes the sibling-path T case obsolete
   detail: docs/implementation-plans/plan-details/audit-sibling-plan-created-paths/03-rewrite-integrations-shared-directives.md
-  status: current
+  status: done
   description: 'Rewrite `integrations/shared/DIRECTIVES.md` § "T — tool artifacts"
     so the sibling-path case is described as handled by the audit, which now receives
     same-roadmap sibling `creates:` paths, while the stale roadmap or seed path case
