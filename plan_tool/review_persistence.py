@@ -517,8 +517,9 @@ class AuditInputSnapshot:
     # repositories without a valid profile, preserving legacy fingerprints.
     project_context: str = ""
     # Normalized, sorted same-roadmap sibling ``creates:`` paths captured once;
-    # empty for plans without roadmap siblings (fingerprint unchanged then).
-    sibling_creates_paths: tuple[str, ...] = ()
+    # ``()`` when none apply, ``None`` when they could not be determined. Both
+    # leave the fingerprint unchanged; only the prompt tells them apart.
+    sibling_creates_paths: Optional[tuple[str, ...]] = ()
 
     def __post_init__(self) -> None:
         if self.detail_grade != GRADE_RUN:
@@ -535,7 +536,7 @@ class AuditInputSnapshot:
         )
         from plan_tool.parser import _split_frontmatter, parse_plan_text
         from plan_tool.project_profile import project_profile_context
-        from plan_tool.review import sibling_creates_paths
+        from plan_tool.review import _captured_sibling_paths
 
         plan_bytes = plan_path.read_bytes()
         plan_text = plan_bytes.decode("utf-8")
@@ -581,9 +582,7 @@ class AuditInputSnapshot:
                 source_seed_text = ""
             _reject_unmatched_audit_fence(source_seed_text, source_seed_path)
         project_context = project_profile_context(repo_root)
-        sibling_paths = tuple(
-            sorted(sibling_creates_paths(plan, plan_path, repo_root))
-        )
+        sibling_paths = _captured_sibling_paths(plan, plan_path, repo_root)
         return cls(
             plan=plan,
             plan_bytes=plan_bytes,
@@ -673,7 +672,7 @@ def _audit_input_fingerprint(
     *,
     source_seed_bytes: Optional[bytes] = None,
     project_context: str = "",
-    sibling_creates_paths: tuple[str, ...] = (),
+    sibling_creates_paths: Optional[tuple[str, ...]] = (),
 ) -> str:
     """Hash framed prompt inputs without the generic saved-review glob."""
     h = hashlib.sha256()
@@ -701,6 +700,8 @@ def _audit_input_fingerprint(
         add("source-seed", source_seed_bytes)
     if project_context:
         add("project-context", project_context.encode("utf-8"))
+    # An unknown set (None) adds nothing, like an empty one: owner decision
+    # 2026-11-17, so an unresolvable identity does not make saved evidence stale.
     if sibling_creates_paths:
         add("sibling-paths", "\0".join(sibling_creates_paths).encode("utf-8"))
     return h.hexdigest()

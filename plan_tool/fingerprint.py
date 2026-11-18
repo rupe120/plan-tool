@@ -92,7 +92,7 @@ def audit_input_revision(snapshot) -> dict[str, object]:
     ).encode("utf-8")
     source_seed_bytes = snapshot.source_seed_bytes
     project_context = snapshot.project_context
-    sibling_paths = tuple(getattr(snapshot, "sibling_creates_paths", ()))
+    sibling_paths = snapshot.sibling_creates_paths
     return {
         "version": 4,
         "detail_grade": "run",
@@ -109,6 +109,8 @@ def audit_input_revision(snapshot) -> dict[str, object]:
             if project_context
             else None
         ),
+        # null both when no sibling paths apply and when they could not be
+        # determined (owner decision 2026-11-17); the prompt tells them apart.
         "sibling_paths_digest": (
             _audit_input_digest("\0".join(sibling_paths).encode("utf-8"))
             if sibling_paths

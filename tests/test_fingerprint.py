@@ -737,3 +737,26 @@ def test_saved_v4_record_round_trips_through_normalize_audit_revision(tmp_path):
     revision = audit_input_revision(snapshot)
     assert revision["sibling_paths_digest"] is not None
     assert normalize_audit_revision(json.loads(json.dumps(revision))) == revision
+
+
+def test_unknown_sibling_set_keeps_the_record_of_an_empty_one(tmp_path) -> None:
+    """Deliberate (owner decision 2026-11-17): 'could not be determined' changes only the
+    prompt, never the fingerprint or digest, so an unresolvable roadmap identity does not
+    make saved evidence stale. A listed set still changes both."""
+    import dataclasses
+
+    from plan_tool.fingerprint import audit_input_revision
+    from plan_tool.review_persistence import _audit_input_fingerprint
+
+    unknown = _audit_input_fingerprint(b"plan", (), sibling_creates_paths=None)
+    empty = _audit_input_fingerprint(b"plan", (), sibling_creates_paths=())
+    listed = _audit_input_fingerprint(b"plan", (), sibling_creates_paths=("a.py",))
+    assert unknown == empty == _audit_input_fingerprint(b"plan", ())
+    assert listed != empty
+
+    def digest(paths):
+        snapshot = dataclasses.replace(_plain_snapshot(tmp_path), sibling_creates_paths=paths)
+        return audit_input_revision(snapshot)["sibling_paths_digest"]
+
+    assert digest(None) is None and digest(()) is None
+    assert digest(("a.py",)) is not None

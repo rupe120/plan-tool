@@ -19936,17 +19936,17 @@ class TestEligibleSiblingCreates:
         self.manifest(tmp_path, ["other.md"])
         assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
 
-    def test_sibling_helper_empty_when_identity_is_uncertain(self, tmp_path):
+    def test_sibling_helper_is_unknown_not_empty_when_identity_is_uncertain(self, tmp_path):
         from plan_tool.review import sibling_creates_paths
         path, plan = self.roadmap_pair(tmp_path)
         (tmp_path / "own-seed.md").write_text("---\nroadmap: demo\n---\n")
-        assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
+        assert sibling_creates_paths(plan, path, tmp_path) is None
 
-    def test_sibling_helper_empty_when_source_seed_is_unreadable_and_does_not_raise(self, tmp_path):
+    def test_sibling_helper_is_unknown_when_source_seed_is_unreadable_and_does_not_raise(self, tmp_path):
         from plan_tool.review import sibling_creates_paths
         path, plan = self.roadmap_pair(tmp_path)
         (tmp_path / "own-seed.md").write_bytes(b"\xff\xfe\x00 not utf-8 \xc3\x28")
-        assert sibling_creates_paths(plan, path, tmp_path) == frozenset()
+        assert sibling_creates_paths(plan, path, tmp_path) is None
 
     def test_sibling_helper_own_subtraction_compares_normalized_paths(self, tmp_path):
         from plan_tool.review import sibling_creates_paths
@@ -19977,7 +19977,7 @@ class TestEligibleSiblingCreates:
 
         monkeypatch.setattr(review, "_sibling_roadmap_identity", boom)
         assert review._eligible_planned_paths(plan, path, tmp_path) == frozenset({"own.py"})
-        assert review.sibling_creates_paths(plan, path, tmp_path) == frozenset()
+        assert review.sibling_creates_paths(plan, path, tmp_path) is None
 
     def test_same_slug_separate_owners_and_unselected_rows_do_not_supply_promises(self, tmp_path):
         from plan_tool.review import _eligible_planned_paths
@@ -20293,7 +20293,7 @@ class TestPlanAuditSiblingPlannedPathsBlock:
             tmp_path, own_creates="own_only.py", sibling_creates="plan_one_made.py"
         )
         block = self.block(self.render(plan, path, tmp_path))
-        assert "\nplan_one_made.py\n" in block
+        assert "- `plan_one_made.py`" in block
         assert "not a missing file" in block
         assert "own_only.py" not in block
         assert self.EMPTY_STATEMENT not in block
@@ -20309,11 +20309,12 @@ class TestPlanAuditSiblingPlannedPathsBlock:
         assert self.EMPTY_STATEMENT in block
         assert "sibling.py" not in block
 
-    def test_audit_prompt_with_uncertain_identity_renders_the_empty_statement(self, tmp_path):
+    def test_audit_prompt_with_uncertain_identity_says_the_set_is_unknown(self, tmp_path):
         _helper, path, plan = self.pair(tmp_path)
         (tmp_path / "own-seed.md").write_bytes(b"\xff\xfe\x00 not utf-8 \xc3\x28")
         block = self.block(self.render(plan, path, tmp_path))
-        assert self.EMPTY_STATEMENT in block
+        assert "could not be determined" in block
+        assert self.EMPTY_STATEMENT not in block
         assert "sibling.py" not in block
 
     def test_audit_prompt_omits_a_different_roadmaps_path(self, tmp_path):
@@ -20342,7 +20343,7 @@ class TestPlanAuditSiblingPlannedPathsBlock:
         block = self.block(
             self.render(plan, path, tmp_path, audit_input_snapshot=snapshot)
         )
-        assert "\nsibling.py\n" in block
+        assert "- `sibling.py`" in block
         assert "added_after_capture.py" not in block
 
     def test_every_plan_audit_placeholder_is_supplied_and_none_is_left_in_the_render(self, tmp_path):
