@@ -59,6 +59,8 @@ Model selection uses the first available value for the selected backend:
 | 4 | Backend manifest `default_model` |
 | 5 | Provider CLI default (no model argument) |
 
+When plan-tool selects Codex without a model override, it uses `gpt-6.2-sol`.
+
 `--backend` selects the backend while retaining its configured model defaults.
 `--model` overrides model defaults. Both are global flags before the subcommand.
 An explicit backend wins over model-family inference, allowing intentional
@@ -74,10 +76,10 @@ Store project choices in `<repo-root>/.plan-tool/backends.json`:
   "default_backend": "codex",
   "backends": {
     "codex": {
-      "model": "gpt-6.1-sol",
+      "model": "gpt-6.2-sol",
       "commands": {
-        "create": {"model": "gpt-6.1-sol"},
-        "detail": {"model": "gpt-6.1-sol"}
+        "create": {"model": "gpt-6.2-sol"},
+        "detail": {"model": "gpt-6.2-sol"}
       },
       "extra_batch_argv": [],
       "extra_streaming_argv": []
@@ -133,7 +135,7 @@ plan-tool completeness-audit my-feature --iterate --commit -y < /dev/null
 plan-tool detail my-feature --commit -y < /dev/null
 ```
 
-Without selection flags, `create` and `detail` use Codex with `gpt-6.1-sol`.
+Without selection flags, `create` and `detail` use Codex with `gpt-6.2-sol`.
 Nested calls retain their outer command's choice. The per-command entries show
 where a different model would go; choose available models for your account. Complete the detail-grounded audit before implementation.
 `plan-tool --backend codex detail my-feature --commit -y < /dev/null` retains

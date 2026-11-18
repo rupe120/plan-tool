@@ -673,6 +673,7 @@ def test_structural_codex_backend_uses_only_the_captured_read_only_argv(
     evaluator = structural_codex_backend(tmp_path / "empty")
 
     assert evaluator.name == "codex-structural-read-only"
+    assert evaluator.default_model is None
     assert evaluator.batch_argv("P") == [
         "codex", "exec", "--json", "-C", str((tmp_path / "empty").resolve()),
         "-s", "read-only", "--skip-git-repo-check", "--ephemeral",
@@ -1471,9 +1472,16 @@ def test_claude_backend_model_fields() -> None:
     assert CLAUDE_BACKEND.default_model is None
 
 
-def test_codex_backend_model_fields() -> None:
-    assert CODEX_BACKEND.model_flag == "-m"
-    assert CODEX_BACKEND.default_model is None
+def test_codex_default_model_reaches_batch_and_streaming_argv(
+    tmp_path: Path,
+    _restore_backend_state,
+) -> None:
+    selection = select_active_backend("codex", repo_root=tmp_path)
+
+    assert CODEX_BACKEND.default_model == "gpt-6.2-sol"
+    assert selection.effective.resolved_model == "gpt-6.2-sol"
+    assert selection.effective.batch_argv("P")[-3:] == ["-m", "gpt-6.2-sol", "P"]
+    assert selection.effective.streaming_argv("P")[-3:] == ["-m", "gpt-6.2-sol", "P"]
 
 
 def test_load_omits_default_model_from_closure(tmp_path: Path) -> None:
