@@ -667,6 +667,43 @@ Durable re-open conditions for retired items are recorded in
   former BUG_BACKLOG entry on `create --iterate` carrying `status` onto a
   different step).
 
+### Roadmap plans whose `source_seed` is relative to the plans directory never resolve their roadmap identity, so every sibling-aware check is inert
+
+- **Files:** `plan_tool/review_persistence.py:_resolve_source_seed_path` (joins
+  `plan.source_seed` to the repository root only), and its consumers:
+  `plan_tool/review.py:_sibling_roadmap_identity`, `_eligible_planned_paths`,
+  `sibling_creates_paths`, the scope-contract block, and `source_seed_digest`.
+- **Symptom:** every roadmap-derived plan in Loom (24 plans, written
+  2026-10-11) records `source_seed` relative to the plans directory, for example
+  `roadmaps/loom-aidlc-mvp/plan-seed-drafts/connector-registry-seed.md`, while
+  this repository's `create` records it relative to the repository root
+  (`docs/implementation-plans/…`). The repo-root join finds no file, so
+  `_sibling_roadmap_identity` raises "Source identity unavailable" for every
+  Loom plan. The deterministic sibling merge (archived plan
+  `2-sibling-planned-input-paths`) falls back to the plan's own paths, and the
+  conceptual audit's sibling block states the sibling set could not be
+  determined, so neither sibling fix takes effect in the only real roadmap
+  consumer. Measured 2026-11-17 on a read-only copy of Loom's plans and
+  roadmaps.
+- **Fix:** first establish whether a current writer still produces
+  plans-relative `source_seed` (Loom's batch driver passing a path relative to
+  its working directory, or `create` recording the argument as given) or the
+  values are legacy. Then either normalize `source_seed` to repo-relative at
+  write time, or resolve a plans-relative value as a fallback, with a test on a
+  Loom-shaped fixture where a plan's sibling identity resolves.
+- **Deliberately not:** rewriting Loom's plan files from this repository.
+- **Follow-up once identities resolve:** measure `AuditInputSnapshot.capture`
+  cost on a real multi-plan roadmap. Each capture now selects siblings, which
+  parses manifest plans and resolves each one's identity, and status paths call
+  capture once per saved report (code review of the sibling-path audit fix,
+  2026-11-17). On Loom today the expensive path never runs (0.006 s per
+  capture, no identity resolved), so the cost is unmeasured.
+- **Approach:** direct once the writer question is answered; plan-tool if it
+  needs a `source_seed` format decision.
+- **Route:** direct · **Readiness:** evidence-gated (which writer produces
+  plans-relative paths) · **Tier:** experienced.
+- **Origin:** 2026-11-17, review of the sibling-path audit fix.
+
 ## MINOR
 
 ### Candidate consolidation: ~12 independent copies of the same "reject unmatched opening code fence" check (unverified — needs identity check before any merge)
