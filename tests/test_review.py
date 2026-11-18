@@ -13179,8 +13179,12 @@ class TestAuditPromptScopeContractBlock:
         # line versus the pre-feature template (caught in code review —
         # both blocks empty must leave the same one-blank-line gap
         # ``${intent_block}`` alone left before ``## Plan body``).
-        assert before_no_seed.endswith("\n\n\n\n")
-        assert not before_no_seed.endswith("\n\n\n\n\n")
+        # The sibling-paths block is never empty (it states the no-siblings
+        # case explicitly), so it is now the last line before the same gap.
+        assert before_no_seed.endswith(
+            "no sibling plan paths apply to this plan.\n\n\n"
+        )
+        assert not before_no_seed.endswith("\n\n\n\n")
 
     def test_prompt_has_no_unresolved_template_placeholder(
         self, tmp_path: Path
@@ -13821,6 +13825,7 @@ class TestAuditPromptBudgetAdvisory:
             "detail bundle",
             "detail-bundle status",
             "scope contract",
+            "sibling planned paths",
         ]
         assert prompt is not None
         # Breakdown is display-only — the sum may be under the full prompt's
@@ -20258,3 +20263,111 @@ def test_plan_audit_prompt_uses_run_grade_bundle_framing(run_grade_audit_bundle)
     assert _RUN_GRADE_BUNDLE_FRAMING in prompt
     assert "jira-grade" not in prompt
     assert "Declared detail evidence." in prompt
+
+
+class TestPlanAuditSiblingPlannedPathsBlock:
+    """The audit prompt delivers same-roadmap sibling ``creates:`` paths as planned work."""
+
+    EMPTY_STATEMENT = "no sibling plan paths apply to this plan"
+
+    def pair(self, root, **kwargs):
+        helper = TestEligibleSiblingCreates()
+        path, plan = helper.roadmap_pair(root, **kwargs)
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n# Plan\n\nBody.\n")
+        return helper, path, parse_plan(path)
+
+    def render(self, plan, path, root, **kwargs):
+        from plan_tool.review import render_plan_audit_prompt
+
+        prompt = render_plan_audit_prompt(plan, path, repo_root=root, **kwargs)
+        assert prompt is not None
+        return prompt
+
+    def block(self, prompt):
+        start = prompt.index("**Sibling plans' planned paths:**")
+        return prompt[start:].split("## Plan body", 1)[0]
+
+    def test_audit_prompt_for_plan_two_lists_plan_one_creates_path_and_not_its_own(self, tmp_path):
+        _helper, path, plan = self.pair(
+            tmp_path, own_creates="own_only.py", sibling_creates="plan_one_made.py"
+        )
+        block = self.block(self.render(plan, path, tmp_path))
+        assert "\nplan_one_made.py\n" in block
+        assert "not a missing file" in block
+        assert "own_only.py" not in block
+        assert self.EMPTY_STATEMENT not in block
+
+    def test_audit_prompt_without_roadmap_identity_renders_the_empty_statement(self, tmp_path):
+        helper = TestEligibleSiblingCreates()
+        path, _ = helper.plan(tmp_path, "own")
+        helper.plan(tmp_path, "sibling", creates="sibling.py")
+        helper.manifest(tmp_path, ["own.md", "sibling.md"])
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n# Plan\n\nBody.\n")
+        block = self.block(self.render(parse_plan(path), path, tmp_path))
+        assert self.EMPTY_STATEMENT in block
+        assert "sibling.py" not in block
+
+    def test_audit_prompt_with_uncertain_identity_renders_the_empty_statement(self, tmp_path):
+        _helper, path, plan = self.pair(tmp_path)
+        (tmp_path / "own-seed.md").write_bytes(b"\xff\xfe\x00 not utf-8 \xc3\x28")
+        block = self.block(self.render(plan, path, tmp_path))
+        assert self.EMPTY_STATEMENT in block
+        assert "sibling.py" not in block
+
+    def test_audit_prompt_omits_a_different_roadmaps_path(self, tmp_path):
+        helper = TestEligibleSiblingCreates()
+        helper.accepted_roadmap(tmp_path, "demo", ["p1"])
+        helper.accepted_roadmap(tmp_path, "other", ["p2"])
+        (tmp_path / "own-seed.md").write_text("---\nroadmap: demo\nplan_id: p1\n---\n")
+        (tmp_path / "other-seed.md").write_text("---\nroadmap: other\nplan_id: p2\n---\n")
+        path, _ = helper.plan(tmp_path, "own", source="own-seed.md")
+        helper.plan(tmp_path, "other", source="other-seed.md", creates="other_roadmap.py")
+        helper.manifest(tmp_path, ["other.md"])
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n# Plan\n\nBody.\n")
+        prompt = self.render(parse_plan(path), path, tmp_path)
+        assert "other_roadmap.py" not in prompt
+        assert self.EMPTY_STATEMENT in self.block(prompt)
+
+    def test_snapshot_backed_render_uses_the_captured_set_not_a_recompute(self, tmp_path):
+        from plan_tool.review_persistence import AuditInputSnapshot
+
+        helper, path, plan = self.pair(tmp_path)
+        snapshot = AuditInputSnapshot.capture(path, tmp_path)
+        helper.plan(tmp_path, "sibling", source="sibling-seed.md", creates="added_after_capture.py")
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n")
+        block = self.block(
+            self.render(plan, path, tmp_path, audit_input_snapshot=snapshot)
+        )
+        assert "\nsibling.py\n" in block
+        assert "added_after_capture.py" not in block
+
+    def test_every_plan_audit_placeholder_is_supplied_and_none_is_left_in_the_render(self, tmp_path):
+        import re
+
+        from plan_tool.renderer import prompts_dir
+        from plan_tool.review_persistence import AuditInputSnapshot
+
+        template = (prompts_dir() / "plan-audit.md").read_text(encoding="utf-8")
+        names = set(re.findall(r"\$\{(\w+)\}", template))
+        assert "sibling_planned_paths_block" in names
+        _helper, path, plan = self.pair(tmp_path)
+        snapshot = AuditInputSnapshot.capture(path, tmp_path)
+        for prompt in (
+            self.render(plan, path, tmp_path),
+            self.render(plan, path, tmp_path, audit_input_snapshot=snapshot),
+        ):
+            assert "${" not in prompt
+
+    def test_collect_blocks_reports_the_sibling_paths_block_size(self, tmp_path):
+        _helper, path, plan = self.pair(tmp_path)
+        blocks: list[tuple[str, int]] = []
+        prompt = self.render(plan, path, tmp_path, collect_blocks=blocks)
+        from plan_tool.review import _format_sibling_planned_paths_block
+
+        expected = _format_sibling_planned_paths_block(("sibling.py",))
+        assert expected in prompt
+        assert dict(blocks)["sibling planned paths"] == len(expected.encode("utf-8"))
