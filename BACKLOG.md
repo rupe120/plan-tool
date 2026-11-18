@@ -416,6 +416,8 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
   (contract-trace audit mode) · **#539** (`decision-needed` — exit checks
   reported as unverified; setting `test_command` is the interim workaround) ·
   **#202** (each acceptance criterion names its test, checked to exist) ·
+  **#543** (a captured example of every persisted format version, checked to
+  load) ·
   **#312** (`detail` grounds on the reference text `create` already fetched)
   · **#332** (a run-log sink for `create`'s developer-doc research call).
   **#385** is P2 and `ready` but routed by `backlog-arc-roadmap.md`.
@@ -3471,6 +3473,28 @@ working straight down the tiers.
 - **Verification:** one fixture plan audited at two tiers the decision treats differently yields identical correctness findings and differs only in the severity of robustness findings.
 - **Stop / defer:** tier-aware detail generation beyond #182's advisory context is a separate entry.
 - **Quality:** convergence — rounds stop when the remaining findings exceed the declared tier.
+- **Status:** not started.
+
+**#543 — Keep a captured example of every version of each persisted format, and check every one still loads**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `deterministic-non-determinism`
+- **What:** no test holds a real saved example of an older persisted format. Tests that cover an older version build it synthetically from current output (delete a key, set `version`), so they check only the shape the author expects old records to have, and they move with the code that generates them. A reader change that breaks real old files, or an old shape nobody remembered, passes.
+- **Evidence:** 2026-11-17, the audit-revision v4 change (PR #260). Every "saved v3" test was synthetic; one first assumed the revision lived in `qualified_result` and failed because the completeness fixture writes a top-level legacy `audit_revision`, a shape a captured v3 sidecar would have shown at once.
+- **Formats:** each versioned format whose reader must keep accepting older versions: the saved-review sidecar (`review_persistence.SCHEMA_VERSION` through `_AUDIT_REVISION_SCHEMA_VERSION`, 1–4) and its nested `audit_revision` (1–4); plan and detail `format_version`; roadmap version records; and the single-version formats (`checkpoint`, `grounding`, `concept_tree`, `purity_cache`, `project_profile`, the decision-settlement receipt), which get their v1 now so the first bump has a baseline.
+- **Effort:** medium: capturing examples from tagged releases, one fixture directory, one parametrized test, one version-coverage guard.
+- **Risks / fallout:** an example regenerated from current code would test nothing; examples are captured once from the code that wrote that version and never rewritten. A failing example means the reader regressed, not that the example is stale.
+- **Dependencies:** none. Capture a v3 sidecar from a release before #260 and a v4 one after it as the first entries.
+- **Outcome:** a fixture directory holds one captured example per version per format (plus any edge shape a version introduced), and one test loads each through the current reader, checks it normalizes to the current shape with its meaning intact, and fails when a format's version constant is newer than its newest example.
+- **In scope:** `tests/fixtures/versioned/` (or a sibling directory), its README naming each example's source release, the parametrized load test, the version-coverage guard, and `TESTING.md`'s note on adding an example with every version bump.
+- **Out of scope / Non-goals:** hand-written or regenerated examples; non-persisted or unversioned outputs; migrating or rewriting stored files; validating semantic content beyond "loads and normalizes".
+- **Allowed behavior changes:** none (tests only).
+- **Allowed reorganization:** none.
+- **Verification:** removing a version branch from a reader (for example the v3 arm of `normalize_audit_revision`) turns the matching example's test red, and bumping a version constant without adding an example fails the coverage guard.
+- **Stop / defer:** a format with no tagged release to capture from is listed in the README as pending, not filled with a synthetic example.
+- **Quality:** gate-signal — old-version compatibility rests on captured evidence instead of synthetic records.
 - **Status:** not started.
 
 ### B. Significant UX changes
