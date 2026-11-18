@@ -6623,6 +6623,27 @@ working straight down the tiers.
 - **Origin:** 2026-11-16, review of the #502 change (a side-agent note on the
   uncovered refusals); owner chose to file.
 
+**#544 — `AuditInputSnapshot.capture` re-parses every registered plan on each call, so status paths cost grows with the square of the plan count**
+
+- **Labels:** Route `direct`
+  · Readiness `evidence-gated` (measure on a roadmap larger than 24 plans, and decide whether the status sweep matters)
+  · Tier `experienced`
+  · Principle `none` — throughput
+- **What:** each capture selects same-roadmap siblings, which parses every manifest plan and resolves each one's roadmap identity, and status paths (`list --status`, the freshness projection) capture once per saved report. Cut work first (resolve the roadmap membership once per sweep) before any other speed-up.
+- **Evidence:** 2026-11-17 on a read-only copy of Loom's 24 registered plans, after plans-directory-relative `source_seed` values began to resolve: 0.087 s per capture (2.1 s for 24), against 0.006 s when identities did not resolve; the nine roadmap plans had up to 268 sibling paths. Measured with a throwaway patch, not shipped code.
+- **Effort:** small: a per-sweep memo of the manifest parse and identity, passed into capture.
+- **Risks / fallout:** a memo that outlives its sweep would serve stale membership; it is scoped to one command invocation.
+- **Dependencies:** the plans-directory `source_seed` fallback shipped in the fix this entry follows.
+- **Outcome:** a status sweep over N plans parses the manifest once, not N times.
+- **In scope:** `plan_tool/review.py:sibling_creates_paths` and its callers on status paths.
+- **Out of scope / Non-goals:** changing which paths are selected, or the audit revision.
+- **Allowed behavior changes:** none visible except speed.
+- **Allowed reorganization:** none.
+- **Verification:** a counting patch shows one manifest parse for a sweep of N plans; the selected sets are byte-identical.
+- **Stop / defer:** defer if a larger roadmap shows the cost stays under a second.
+- **Quality:** none — throughput.
+- **Status:** not started.
+
 ### E. Cosmetic / churn
 
 **#393 — `ROADMAP_FORMAT.md` calls a field "discharges" where the schema keyword is `constraint_ids`**
