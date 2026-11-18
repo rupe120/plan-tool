@@ -350,11 +350,11 @@ priority*; the mission decides.
 **Current queue facts (checked 2026-11-17):**
 
 1. **`BUG_BACKLOG.md` has no entry that is both Route `direct` and Readiness
-   `ready`**, in `BUG` or `MINOR`. Two `BUG` entries are Route `plan` and
-   Readiness `ready`, and they lead the execution order: `create`'s single
-   "record unbuilt upstreams and stop" step, and the audit reporting a sibling
-   plan's created path as missing (the bare `0N-*.md` citation entry shipped
-   2026-11-17 in PR #254). None is routed by `backlog-arc-roadmap.md`; each goes through
+   `ready`**, in `BUG` or `MINOR`. One `BUG` entry is Route `plan` and
+   Readiness `ready` and leads the execution order: `create`'s single "record
+   unbuilt upstreams and stop" step, whose Fix is an either/or contract choice
+   that needs an owner decision first. The bare `0N-*.md` citation entry
+   shipped 2026-11-17 in PR #254 and the sibling-path audit entry in PR #260. None is routed by `backlog-arc-roadmap.md`; each goes through
    `plan-tool create`, so a drain surfaces it rather than taking it. The
    other live entries are promotion stubs, `evidence-gated`,
    `decision-needed`, or unlabelled entries whose Approach waits on a
