@@ -46,6 +46,9 @@ def _parts(path: Path) -> re.Match[str]:
     return match
 
 
+PARTS = {path: _parts(path) for path in EXAMPLES}
+
+
 def _raw_revision(raw: dict, shape: str) -> dict | None:
     if shape == "completeness-final":
         return raw["qualified_result"]["audit_revision"]
@@ -73,14 +76,14 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
     """The file's own claims (sidecar and revision version, kind, shape) hold, and the reader
     keeps its meaning: kind, checkpoint flag, recommendations, and the revision upgraded to
     today's version with the digests an older record lacked read as ``None``."""
-    parts = _parts(path)
+    parts = PARTS[path]
     raw = json.loads(path.read_text(encoding="utf-8"))
     saved = load_review(path)
 
     assert raw["version"] == int(parts["sidecar"])
     assert saved.kind == SHAPE_KIND[parts["shape"]]
-    assert [(r.id, r.severity) for r in saved.recommendations] == [
-        (r["id"], r["severity"]) for r in raw["recommendations"]
+    assert [(r.id, r.severity, r.impact, r.step_id) for r in saved.recommendations] == [
+        (r["id"], r["severity"], r.get("impact"), r.get("step_id")) for r in raw["recommendations"]
     ]
     assert saved.plan_fingerprint == raw["plan_fingerprint"]
     assert saved.is_pre_apply_checkpoint is bool(raw.get("is_pre_apply_checkpoint"))
@@ -102,7 +105,7 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
     # revision loads unchanged, and an older one gains only its version and the digests it
     # lacked, read as None (a report of a plan without siblings stays current after upgrade).
     expected = dict(raw_revision)
-    if int(parts["revision"]) < 4:
+    if int(parts["revision"]) < 4:  # v4 introduced sibling_paths_digest
         assert "sibling_paths_digest" not in raw_revision
         expected.update(version=current, sibling_paths_digest=None)
     assert loaded == expected
@@ -115,26 +118,30 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
         assert saved.qualified_result["coverage"] == "confirmed"
 
 
-def test_every_supported_sidecar_version_has_a_captured_example(tmp_path: Path) -> None:
+def test_every_supported_sidecar_version_has_a_captured_example() -> None:
     """A version bump must add an example of the new version in the same change. The bound is
     the reader's own supported set, so a new sidecar version cannot be added without one."""
-    sidecars = {int(_parts(path)["sidecar"]) for path in EXAMPLES}
-    missing = set(_SUPPORTED_SCHEMA_VERSIONS) - sidecars
-    assert not missing, f"no example of sidecar version(s) {sorted(missing)}"
-    assert sidecars <= set(_SUPPORTED_SCHEMA_VERSIONS), "an example claims a version the reader no longer supports"
+    sidecars = {int(parts["sidecar"]) for parts in PARTS.values()}
+    supported = set(_SUPPORTED_SCHEMA_VERSIONS)
+    assert not supported - sidecars, (
+        f"no example of sidecar version(s) {sorted(supported - sidecars)}"
+    )
+    assert sidecars <= supported, "an example claims a version the reader no longer supports"
 
 
-def test_the_current_audit_revision_version_has_a_captured_example(tmp_path: Path) -> None:
-    revisions = {int(_parts(path)["revision"]) for path in EXAMPLES if _parts(path)["revision"]}
-    assert _current_revision_version(tmp_path) in revisions, "no example of the current audit-revision version"
+def test_the_current_and_an_older_audit_revision_version_have_captured_examples(
+    tmp_path: Path,
+) -> None:
+    """The current revision version, and at least one older one, so the upgrade branch of the
+    normalizer stays covered when the current version moves."""
+    revisions = {int(parts["revision"]) for parts in PARTS.values() if parts["revision"]}
+    current = _current_revision_version(tmp_path)
+    assert current in revisions, "no example of the current audit-revision version"
+    assert any(version < current for version in revisions), "no example of an older revision"
 
 
-def test_the_readme_table_has_a_row_for_every_example() -> None:
-    rows = [
-        line for line in (FIXTURES / "README.md").read_text(encoding="utf-8").splitlines()
-        if line.startswith("| `")
-    ]
-    for path in EXAMPLES:
-        assert any(row.startswith(f"| `{path.name}` |") for row in rows), (
-            f"{path.name} has no row in tests/fixtures/versioned/README.md"
-        )
+def test_the_readme_table_lists_exactly_the_examples() -> None:
+    """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
+    text = (FIXTURES / "README.md").read_text(encoding="utf-8")
+    rows = set(re.findall(r"^\| `([^`]+\.json)` \|", text, flags=re.M))
+    assert rows == {path.name for path in EXAMPLES}
