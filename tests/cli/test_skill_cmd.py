@@ -20,6 +20,7 @@ import plan_tool.cli as cli
 from plan_tool.backend import _packaged_integrations_dir
 from plan_tool.cli.authoring import _read_seed_body
 from plan_tool.create import select_file_backed_source, validate_from_existing_seed
+from plan_tool.review import fenced_spans
 from plan_tool.scope_fence import extract_h2_sections
 from tests.skill_router_phase import LINK_RE, anchors, phase_section
 
@@ -486,7 +487,16 @@ def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> N
     phase = phase_section(router_path.read_text(encoding="utf-8"), "installed Claude")
     [authoring_row] = [line for line in phase.splitlines() if line.startswith("| Authoring (")]
     directives = _follow_authoring_link(router_path, authoring_row)
-    walkthrough = extract_h2_sections(directives, ignore_fenced_code=True)[
+    fences = fenced_spans(directives)
+    headings = (
+        match for match in re.finditer(r"^# (.+)$", directives, re.M)
+        if not any(start <= match.start() < end for start, end in fences)
+    )
+    authoring_heading = next(match for match in headings if match[1] == "Authoring hygiene")
+    next_heading = next(headings, None)
+    end = next_heading.start() if next_heading else len(directives)
+    authoring = directives[authoring_heading.end():end]
+    walkthrough = extract_h2_sections(authoring, ignore_fenced_code=True)[
         "from a request to an approved seed"
     ]
     request_seed, backlog_seed = re.findall(r"^```markdown\n(.*?)^```$", walkthrough, re.M | re.S)
