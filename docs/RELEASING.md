@@ -127,10 +127,16 @@ Release preparation refuses, with a message, in these cases:
 | scriv's output disagrees with the derived categories, or leaves a fragment behind | The script restores the release paths. Read scriv's parse of the fragments before trusting any bump. |
 | `git`, `uv lock`, or `uvx scriv collect` is missing or fails; `uv lock` changes more than plan-tool's own version line in `uv.lock`; `pyproject.toml` is unreadable or has no `[project].version` line | Fix the cause and run again; the script restores the release paths first. For a drifted lock, commit the lock update on its own first. |
 
-**The fragment-coverage check.** Preparation (and `--dry-run`) lists every
+**The fragment-coverage check.** The same rule runs twice. On each pull request,
+the Bitbucket pipeline and the GitHub workflow run
+`scripts/release.py --check-fragment <destination branch>`, which refuses a
+branch that changed `plan_tool/` without adding a fragment. A commit message
+line `No-changelog: <reason>` (a non-empty reason) records that the change has no
+user-visible effect; both this check and the release-time check below accept it.
+At release time, preparation (and `--dry-run`) lists every
 pull request merged on `main` since the last tag whose subject reads
 `Merged in … (pull request #N)`, and refuses when one changed a path under
-`plan_tool/` without adding or amending a file in `changelog.d/`. The binary
+`plan_tool/` without adding or amending a file in `changelog.d/` or carrying that line. The binary
 fact is path presence in that pull request's diff. Deliberately not checked:
 whether a `plan_tool/` change is user-visible (`--no-fragment-ok N` records the
 author's decision that it is not), changes outside `plan_tool/` such as

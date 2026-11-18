@@ -50,6 +50,7 @@ A fragment can carry several categories:
 Deliberately no fragment for documentation-only changes, test-only changes, or
 an internal refactor with no user-visible effect. Say so in the pull request
 description, so the omission reads as a decision and not an oversight, and put
-the `no-changelog` label on the ticket. The release check compares the
+the `no-changelog` label on the ticket. A change under `plan_tool/` also carries
+`No-changelog: <reason>` in a commit message, which the pull-request check reads. The release check compares the
 tickets that need a fragment with the fragments, and the label is what tells
 it which tickets to leave out ([`docs/RELEASING.md`](../docs/RELEASING.md)).

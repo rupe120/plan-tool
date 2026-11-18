@@ -3,6 +3,7 @@
 
     uv run scripts/release.py [--minor] [--no-fragment-ok N] [--dry-run]
     uv run scripts/release.py --publish [--remote NAME] [--dry-run]
+    uv run scripts/release.py --check-fragment BASE
 
 Runs the release-commit step of docs/RELEASING.md; --publish tags and pushes
 an already merged release on main and, for a GitHub destination, creates the
@@ -32,6 +33,7 @@ PATCH_CATEGORIES = ("Fixed", "Security")
 FRAGMENT_DIR = "changelog.d"
 SHIPPED_PREFIX = "plan_tool/"
 MERGE_SUBJECT_RE = re.compile(r"^Merged in .+ \(pull request #(\d+)\)$")
+NO_CHANGELOG_RE = re.compile(r"^No-changelog:[ \t]*\S", re.M)
 RELEASE_PATHS = ("pyproject.toml", "uv.lock", "CHANGELOG.md", FRAGMENT_DIR)
 VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 VERSION_LINE_RE = re.compile(r'^version\s*=\s*"[^"]*"\s*(?:#.*)?$')
@@ -202,6 +204,28 @@ def ensure_github_release(root: Path, repository: str, tag: str, notes: str, *, 
     print(f"Created GitHub release {tag} on {repository}")
 
 
+def needs_fragment(files: Sequence[str], messages: str) -> bool:
+    """A change touching `plan_tool/` needs a fragment unless it adds one or a commit says `No-changelog: <reason>`."""
+    fragment = any(f.startswith(f"{FRAGMENT_DIR}/") and f != f"{FRAGMENT_DIR}/README.md" for f in files)
+    return (
+        any(f.startswith(SHIPPED_PREFIX) for f in files)
+        and not fragment
+        and not NO_CHANGELOG_RE.search(messages)
+    )
+
+
+def check_branch_fragment(root: Path, base: str) -> None:
+    """Refuse a branch that changes `plan_tool/` against `base` without a fragment or a `No-changelog:` line."""
+    files = _git(root, "diff", "--name-only", f"{base}...HEAD").splitlines()
+    messages = _git(root, "log", "--first-parent", f"{base}..HEAD", "--format=%B")
+    if needs_fragment(files, messages):
+        raise ReleaseError(
+            f"this branch changes {SHIPPED_PREFIX} but adds no {FRAGMENT_DIR}/ fragment; add one "
+            f"({FRAGMENT_DIR}/README.md), or put `No-changelog: <reason>` in a commit message when the change "
+            "has no user-visible effect"
+        )
+
+
 def unfragmented_prs(root: Path, tag: str, acknowledged: Sequence[int]) -> list[str]:
     """Merged pull requests since `tag` that changed `plan_tool/` and added no fragment.
 
@@ -216,8 +240,8 @@ def unfragmented_prs(root: Path, tag: str, acknowledged: Sequence[int]) -> list[
         if not match or int(match[1]) in acknowledged:
             continue
         files = _git(root, "diff", "--name-only", f"{sha}^1", sha).splitlines()
-        fragment = any(f.startswith(f"{FRAGMENT_DIR}/") and f != f"{FRAGMENT_DIR}/README.md" for f in files)
-        if any(f.startswith(SHIPPED_PREFIX) for f in files) and not fragment:
+        messages = _git(root, "log", "--first-parent", f"{sha}^1..{sha}^2", "--format=%B")
+        if needs_fragment(files, messages):
             flagged.append(f"#{match[1]} {subject}")
     return flagged
 
@@ -433,7 +457,14 @@ def main(argv: list[str] | None = None) -> int:
         metavar="N",
         help="acknowledge merged pull request #N as a plan_tool/ change that needs no fragment (repeatable)",
     )
+    parser.add_argument(
+        "--check-fragment",
+        metavar="BASE",
+        help="check that this branch's diff against BASE carries a fragment or a `No-changelog:` line; changes nothing",
+    )
     args = parser.parse_args(argv)
+    if args.check_fragment and (args.publish or args.minor or args.dry_run or args.remote or args.no_fragment_ok):
+        parser.error("--check-fragment takes no other option")
     if args.publish and args.no_fragment_ok:
         parser.error("--no-fragment-ok applies to release preparation, not --publish")
     if args.publish and args.minor:
@@ -442,6 +473,10 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--remote requires --publish")
     try:
         root = Path(_git(Path.cwd(), "rev-parse", "--show-toplevel").strip())
+        if args.check_fragment:
+            check_branch_fragment(root, args.check_fragment)
+            print(f"fragment check: ok against {args.check_fragment}")
+            return 0
         if args.publish:
             return publish(root, remote=args.remote or "origin", dry_run=args.dry_run)
         return cut(root, force_minor=args.minor, dry_run=args.dry_run, acknowledged=args.no_fragment_ok)

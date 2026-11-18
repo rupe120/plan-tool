@@ -413,6 +413,61 @@ def test_release_accepts_an_acknowledged_pr_and_still_refuses_the_others(repo: R
     assert release.cut(repo.path, force_minor=False, dry_run=True, acknowledged=[7, 9]) == 0
 
 
+def _branch(repo: Repo, files: dict[str, str], message: str = "Work") -> None:
+    repo.git("checkout", "-q", "-b", "topic")
+    for rel, content in files.items():
+        repo.write(rel, content)
+    repo.commit_all(message)
+
+
+def test_check_fragment_refuses_a_branch_that_changes_plan_tool_without_one(repo: Repo) -> None:
+    _branch(repo, {"plan_tool/feature.py": "x = 1\n"})
+
+    with pytest.raises(release.ReleaseError, match="No-changelog: <reason>"):
+        release.check_branch_fragment(repo.path, "v0.1.0")
+
+
+def test_check_fragment_accepts_a_fragment_a_docs_only_change_and_a_reasoned_no_changelog_line(repo: Repo) -> None:
+    """Each is a deliberate way through; an empty `No-changelog:` is not, because the reason is the record."""
+    _branch(repo, {"plan_tool/a.py": "x = 1\n", "changelog.d/IPPT-1.md": "### Added\n\n- A (IPPT-1).\n"})
+    release.check_branch_fragment(repo.path, "v0.1.0")
+
+    repo.git("checkout", "-q", "release-branch")
+    repo.git("branch", "-D", "topic")
+    _branch(repo, {"docs/guide.md": "text\n"})
+    release.check_branch_fragment(repo.path, "v0.1.0")
+
+    repo.git("checkout", "-q", "release-branch")
+    repo.git("branch", "-D", "topic")
+    _branch(repo, {"plan_tool/a.py": "x = 1\n"}, "Refactor\n\nNo-changelog: internal rename, no user-visible effect")
+    release.check_branch_fragment(repo.path, "v0.1.0")
+
+    repo.git("checkout", "-q", "release-branch")
+    repo.git("branch", "-D", "topic")
+    _branch(repo, {"plan_tool/a.py": "x = 1\n"}, "Refactor\n\nNo-changelog:")
+    with pytest.raises(release.ReleaseError):
+        release.check_branch_fragment(repo.path, "v0.1.0")
+
+
+def test_a_no_changelog_line_in_a_merged_pr_satisfies_the_release_check_too(repo: Repo) -> None:
+    """The pull-request check and the release check share one rule, so a PR that passed the first is not refused by the second."""
+    repo.git("checkout", "-q", "-b", "pr-5")
+    repo.write("plan_tool/a.py", "x = 1\n")
+    repo.commit_all("Refactor\n\nNo-changelog: internal rename")
+    repo.git("checkout", "-q", "release-branch")
+    repo.git("merge", "-q", "--no-ff", "-m", "Merged in pr-5 (pull request #5)", "pr-5")
+    repo.fragment("IPPT-1", "Added")
+    repo.commit_all("Fragments")
+
+    assert release.cut(repo.path, force_minor=False, dry_run=True) == 0
+
+
+def test_check_fragment_is_its_own_mode_and_takes_no_other_option(capsys) -> None:
+    with pytest.raises(SystemExit):
+        release.main(["--check-fragment", "main", "--dry-run"])
+    assert "--check-fragment takes no other option" in capsys.readouterr().err
+
+
 def test_no_fragment_ok_is_a_preparation_flag_and_refused_with_publish(capsys) -> None:
     with pytest.raises(SystemExit):
         release.main(["--publish", "--no-fragment-ok", "7"])

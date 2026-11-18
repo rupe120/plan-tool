@@ -24,10 +24,23 @@ definitions:
           - uv sync
           - uv run pytest tests/ -q -n auto
 
+    # A pull request that changes plan_tool/ adds a changelog fragment or says
+    # `No-changelog: <reason>` in a commit message (docs/RELEASING.md). The full
+    # clone gives the merge-base diff its history.
+    - step: &fragment
+        name: Changelog fragment
+        clone:
+          depth: full
+        script:
+          - git fetch origin "+refs/heads/${BITBUCKET_PR_DESTINATION_BRANCH}:refs/remotes/origin/${BITBUCKET_PR_DESTINATION_BRANCH}"
+          - python3 scripts/release.py --check-fragment "origin/${BITBUCKET_PR_DESTINATION_BRANCH}"
+
 pipelines:
   pull-requests:
     '**':
-      - step: *test
+      - parallel:
+          - step: *test
+          - step: *fragment
   branches:
     main:
       - step: *test
