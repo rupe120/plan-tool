@@ -139,7 +139,7 @@ contract.
 
 ## References
 
-- BACKLOG.md #377 owns the scope and release bookkeeping.
+- [Backlog before closure](https://bitbucket.org/protagona/plan-tool/src/f6e6a6f7e9a60925abb50570eb1dc6dbb75ad5b1/BACKLOG.md) records #377's scope and release bookkeeping.
 - SEED_FORMAT.md covers scope, canonical headings, preflight and source routing.
 - plan_tool/cli/skill_cmd.py:cmd_install_skill selects the bundled router and
   shared reference for copy or symlink installation.

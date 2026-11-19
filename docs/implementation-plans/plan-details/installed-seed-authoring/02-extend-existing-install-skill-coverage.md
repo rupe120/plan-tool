@@ -70,7 +70,7 @@ Extend `tests/cli/test_skill_cmd.py` to follow both authoring entry points from 
 - [Skill installer — Find `cmd_install_skill()` and its mode and destination rules](../../../../plan_tool/cli/skill_cmd.py)
 - [Wheel configuration — Find the console entry point and `tool.hatch.build.targets.wheel.force-include`](../../../../pyproject.toml)
 - [Installed Seed Authoring — Check ownership, verification, and release criteria](../../2-installed-seed-authoring.md)
-- [Backlog — Find entry #377 for the source scope and verification requirements](../../../../BACKLOG.md)
+- [Plan references — Source scope and verification for backlog entry #377](../../2-installed-seed-authoring.md#references)
 
 ## Applicable guardrails
 
