@@ -6,6 +6,13 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.8.0'></a>
+## 1.8.0 — 2026-11-19
+
+### Changed
+
+- `plan-tool install-skill` names the assistant to reload and prints a refresh command for copied skill files.
+
 <a id='changelog-1.7.0'></a>
 ## 1.7.0 — 2026-11-19
 
