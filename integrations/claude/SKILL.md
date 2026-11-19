@@ -90,6 +90,17 @@ Rate-limit recovery remains separate: `--on-rate-limit wait|switch|stop|ask`
 `PLAN_TOOL_FALLBACK_BACKEND`. A confirmed Cursor monthly plan quota is terminal;
 resolve the provider condition and begin a new command (see RUNBOOK.md).
 
+## Choose a pull-request host
+
+Read the Git remote the user selected, or use `git remote get-url origin`.
+Use `gh` for GitHub HTTPS or SSH URLs on `github.com` or `ssh.github.com`.
+Use `bkt` for Bitbucket HTTPS or SSH URLs on `bitbucket.org` or
+`ssh.bitbucket.org`.
+For a custom host, ambiguous URL, or mismatched CLI context, ask the user to
+confirm the provider and target before proceeding. Check the chosen CLI's
+help before use and confirm the exact target before publication.
+[Verify the repository and branch](DIRECTIVES.md#select-the-pull-request-system-before-use)
+
 ## Running from chat / automation (no TTY)
 
 When you (the agent) invoke plan-tool on the user's behalf, treat every run as
