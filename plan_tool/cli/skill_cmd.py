@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shlex
 from pathlib import Path
 from typing import Literal, NamedTuple
 
@@ -199,7 +200,10 @@ def cmd_install_skill(args: argparse.Namespace) -> int:
     if installed_any:
         info(f"  location: {location}")
         if copy:
-            refresh = ["plan-tool", "install-skill", "--integration", args.integration]
+            refresh = ["plan-tool"]
+            if not args.user:
+                refresh.extend(("--repo-root", str(repo_root)))
+            refresh.extend(("install-skill", "--integration", args.integration))
             if args.user:
                 refresh.append("--user")
             if args.root:
@@ -208,7 +212,7 @@ def cmd_install_skill(args: argparse.Namespace) -> int:
                 refresh.append("--copy")
             refresh.append("--force")
             scope = "from this project" if not args.user else "for this user install"
-            info(f"  Refresh copied files after a tool update {scope}: {' '.join(refresh)}")
+            info(f"  Refresh copied files after a tool update {scope}: {shlex.join(refresh)}")
         else:
             info("  Linked files follow the bundled source. Reinstall if its path changes.")
             if not args.user:

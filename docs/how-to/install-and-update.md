@@ -100,7 +100,8 @@ select that assistant.
 
 A project symlink works on the machine that installed it. Choose `--copy` for
 files you want to commit. The installer prints a refresh command for copied
-files and names the assistant to reload. For manual installation,
+files and names the assistant to reload. A project refresh command includes
+the resolved repository path. For manual installation,
 put `integrations/<integration>/SKILL.md` and
 `integrations/shared/DIRECTIVES.md` in the same skill directory. Reload the
 assistant and confirm it discovers the skill. [Installer options](../cli/install-skill.md)
