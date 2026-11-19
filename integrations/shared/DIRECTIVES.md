@@ -1195,14 +1195,14 @@ git branch --show-current
 | Remote host | CLI | Verify the target |
 | --- | --- | --- |
 | `bitbucket.org` or `ssh.bitbucket.org` | `bkt` | Check `bkt context list` and `bkt repo view` for the selected host, workspace, and repository. |
-| `github.com` or `ssh.github.com` | `gh` | Check `gh repo view <repo> --json nameWithOwner,defaultBranchRef` for the selected repository and default branch. |
+| `github.com` or `ssh.github.com` | `gh` | Check `gh repo view <repo> --json url,nameWithOwner,defaultBranchRef` against the confirmed repository URL and base branch. |
 
 These host rules cover HTTPS and SSH Git URLs. For a custom host, an
 ambiguous remote, or a mismatched CLI context, ask the user to confirm the
 provider and target. Check the chosen tool's command help before using it.
 Use the confirmed repository and branches when opening the pull request.
-For GitHub, use `OWNER/REPO` for GitHub.com or `HOST/OWNER/REPO` for a
-confirmed custom host.
+For GitHub, use `HOST/OWNER/REPO` in both commands. Use `github.com` as
+`HOST` for GitHub.com SSH URLs on either recognized hostname.
 
 ### Opening Bitbucket pull requests with `bkt`
 
@@ -1230,8 +1230,9 @@ gh pr create --repo <repo> --head <branch> --base <target-branch> \
   --title "<one concern>" --body-file .tmp/<slug>.pr-body.md
 ```
 
-Use `gh pr view`, `gh pr checks`, and `gh pr comment` for the corresponding
-review work. Publication and merge each need their own authorization.
+If the source branch lives in a user fork, qualify `--head` as `USER:BRANCH`.
+Use the same `--repo` with `gh pr view`, `gh pr checks`, and `gh pr comment`.
+Publication and merge each need their own authorization.
 
 ## The two reconcile verbs are not interchangeable
 
