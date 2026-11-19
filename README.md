@@ -2,12 +2,12 @@
 
 # plan-tool
 
-**A skill that turns rough requests into audited plans your coding assistant can carry out.**
+**A skill that helps your coding assistant plan first and ship more reliable code.**
 
-Give Claude Code, Codex, or Cursor a rough request. Review the plan and its
-audits before asking the assistant to implement it step by step. The plan,
-audit reports, and progress stay in your repo so you can resume the work or
-hand it off.
+Give Claude Code, Codex, or Cursor a rough request. Review the implementation
+plan and its audits before asking the assistant to write code step by step.
+The plan, audit reports, and progress stay in your repo so you can resume the
+work or hand it off.
 
 [![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue&style=flat)](https://github.com/rupe120/plan-tool/releases/latest)
 [![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green&style=flat)](LICENSE)
