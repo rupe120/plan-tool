@@ -1165,134 +1165,71 @@ same test defect.
 
 ## Feature-branch durability and merge order
 
-**The default branch is protected: use a plan pull request before `run` reads
-the bundle.** Start a plan branch from the intended default-branch base and
-keep only plan artifacts on it: the seed commit, generated plan, every
-session-directed audit correction, and each `detail --commit`. Push that plan
-branch after each bounded commit and merge its pull request only after both
-completeness-audit gates converge. Never push directly to the default branch,
-even when credentials allow it. The merged plan and detail bundle must be on
-the default branch before an implementation run starts.
+Read the consuming repository's contributor instructions for branch names,
+review roles, and publication rules. Commit bounded work locally. Push,
+publish, or merge only with the user's authorization for that action.
 
-In a repository with an `origin`, `run` enforces the same requirement
-regardless of route: it refuses on the default branch itself, and refuses
-until the plan and a detail file for every committed step are on
-`origin/<default>` (`git fetch` first). Verify the merged plan pull request
-through that remote branch before creating the implementation branch. Do not
-pass `--skip-merge-check` to get past the refusal when the bundle has not
-actually landed; merge the plan pull request, or ask the user.
+When the merged-plan check is enabled (the default in a repository with an
+`origin`), `run` requires an implementation branch and the plan plus every
+committed step's detail on `origin/<default>`. Fetch `origin` and verify the
+approved bundle there before branching for `run --commit`. If the bundle is
+missing, follow the repository's review process. Do not use
+`--skip-merge-check` to bypass a pending review.
 
-Then branch from the updated `main` and `run --commit` there. Push that branch
-after every green `run --commit` step and every bounded review or
-reconciliation fix. A local commit is a checkpoint; its pushed feature-branch
-copy protects it from checkout loss, machine loss, and accidental cleanup.
-
-Completion means the plan's implemented steps are green and committed, its
-required post-run `reconcile-code` and code-review tails have converged, its
-documentation and tracking records are reconciled, and the final worktree is
-clean. Then merge the reviewed run branch through its pull request; never push
-directly to `main`. Do not merge a partially executed plan's code merely
-because some steps are durable; leave it on its feature branch until its
-stated completion contract is met.
+Keep the plan review distinct from implementation review. Review the final
+implemented steps, reconciliation, tests, and tracking before merging the
+implementation branch. Use authorized pushes to preserve completed checkpoints
+when the repository's workflow calls for them.
 
 ### Select the pull-request system before use
 
-Before creating, inspecting, commenting on, or merging a pull request, verify
-the target system and repository rather than inferring them from the checkout:
+Read the remote URL for the selected repository, using `origin` when the user
+does not name another remote. Check the current branch and the intended target
+branch.
 
 ```bash
 git remote get-url origin
 git branch --show-current
 ```
 
-- An `origin` on `bitbucket.org` uses `bkt`. Run `bkt context list` and
-  `bkt repo view` to confirm that the active context selects the expected
-  Bitbucket host, workspace, and repository before any `bkt pr` command.
-- An `origin` on `github.com` uses `gh`. Run
-  `gh repo view --json nameWithOwner,defaultBranchRef` to confirm the expected
-  GitHub repository and base branch before any `gh pr` command.
-- For another host, an ambiguous remote, or a mismatched CLI context, stop and
-  resolve the target with the user. Do not create a pull request through the
-  other CLI or by guessing a repository flag.
+| Remote host | CLI | Verify the target |
+| --- | --- | --- |
+| `bitbucket.org` or `ssh.bitbucket.org` | `bkt` | Check `bkt context list` and `bkt repo view` for the selected host, workspace, and repository. |
+| `github.com` or `ssh.github.com` | `gh` | Check `gh repo view --json nameWithOwner,defaultBranchRef` for the selected repository and default branch. |
 
-Use the verified source branch and default branch in the create command. A
-configured CLI context is not evidence that it matches the current checkout.
+These host rules cover HTTPS and SSH Git URLs. For a custom host, an
+ambiguous remote, or a mismatched CLI context, ask the user to confirm the
+provider and target. Check the chosen tool's command help before using it.
+Use the confirmed repository and branches when opening the pull request.
 
 ### Opening Bitbucket pull requests with `bkt`
 
-Use the Bitbucket CLI (`bkt`, <https://github.com/avivsinai/bitbucket-cli>) for
-all Bitbucket pull-request lifecycle work: create, inspect, comment, review,
-and merge. Do not use an Atlassian MCP tool for Bitbucket pull requests;
-reserve that integration for Jira and Confluence. Resolve the Bitbucket
-workspace and repository from the verified remote; internal workstation
-settings may live in ignored local context.
-
-**One-time setup.** `bkt auth login` (the OAuth token expires; `bkt auth status`
-shows when), then bind the repository so commands need no flags:
+Use the Bitbucket CLI for a verified Bitbucket target. Authenticate and select
+the context for that repository before opening or inspecting a request. Read
+the body from a file to preserve line breaks, quotes, and backticks.
 
 ```bash
-bkt context create plan-tool --host https://api.bitbucket.org/2.0 --workspace <workspace> --repo <repository> --set-active
+bkt pr create --source <branch> --target <target-branch> \
+  --title "<one concern>" --description "$(cat .tmp/<slug>.pr-body.md)"
 ```
 
-The host is the key `bkt auth status` prints for the Cloud login
-(`https://api.bitbucket.org/2.0`); `--host bitbucket.org` is refused with
-`host "bitbucket.org" not found`.
-
-Without an active context `bkt pr list` refuses with `no active context`.
-
-**Creating the pull request.** Opening one publishes the branch's content to
-the team, so confirm with the user before the first `bkt pr create` for a
-branch; approval for one pull request does not carry to the next.
-
-```bash
-bkt pr create --source <branch> --target main \
-  --title "IPPT-123: <one concern>" --description "$(cat .tmp/<slug>.pr-body.md)"
-```
-
-- **Title** leads with the ticket key (`CONTRIBUTING.md` § "Commits"). Read the
-  body from a file, never inline: bodies carry backticks and quotes.
-- **Body** carries what `CONTRIBUTING.md` § "Pull-request review: team
-  checkpoint" requires: outcome and settled decisions, the merge-base review
-  range, checks run, changelog fragment or the reason for none, and the
-  related backlog entry and ledger.
-- **`--draft`** while a gate is still open (an unconverged completeness audit,
-  an unfinished review tail); `bkt pr publish <id>` when the branch is ready
-  for a bounded review.
-- **Plan and code are separate pull requests** (§ above): the plan pull request
-  holds only plan artifacts and merges before `run` reads the bundle; the run
-  branch's pull request follows. Create each from its own branch.
-- **Link it:** comment the pull request URL on the Jira ticket
-  (`docs/TRACKING.md` § "Labels, statuses, and comments").
-
-**Checking state.** `bkt pr view <id>`, `bkt pr checks <id>` for CI, and
-`bkt pr comments <id>` for review threads (record each with its disposition in
-the review ledger). Verify a plan pull request has merged with `bkt pr view <id>`
-*and* `git fetch` then `origin/main`: `run` reads the remote branch, not the
-pull-request state.
-
-**Deliberately not done by a session:** `bkt pr merge`, `approve`, `decline`,
-and `auto-merge`. Merging is the Architect's approval (`docs/TRACKING.md`), and
-a session approving or merging its own pull request removes the review the pull
-request exists for. Run them only when the user explicitly asks for that one
-action.
-
-**If `bkt` is unavailable or unauthenticated,** report it and give the user the
-compare URL `git push` prints; do not fall back to a direct push to `main`.
+Include the scope, review range, verification, and known gaps. Follow the
+repository's conventions for titles, reviewers, and tracking links. Open a
+draft while work is still in progress. Use `bkt pr view`, `bkt pr checks`, and
+`bkt pr comments` to inspect state. If `bkt` is unavailable, report the blocker
+and use the compare link from an authorized push.
 
 ### Opening GitHub pull requests with `gh`
 
-For a verified GitHub target, use `gh pr create`, not `bkt` or an Atlassian MCP
-tool. Write the review body to a file and pass it with `--body-file` so quotes,
-backticks, and newlines remain intact:
+For a verified GitHub target, pass the description file directly.
 
 ```bash
-gh pr create --head <branch> --base <default-branch> \
+gh pr create --head <branch> --base <target-branch> \
   --title "<one concern>" --body-file .tmp/<slug>.pr-body.md
 ```
 
 Use `gh pr view`, `gh pr checks`, and `gh pr comment` for the corresponding
-GitHub review work. The same review, validation, and merge-authorization rules
-above apply regardless of the hosting system.
+review work. Publication and merge each need their own authorization.
 
 ## The two reconcile verbs are not interchangeable
 

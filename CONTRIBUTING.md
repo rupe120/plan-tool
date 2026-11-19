@@ -401,6 +401,33 @@ The script never touches your working tree or your branch and never pushes. It
 creates both branches or neither, and it refuses a dirty tree or a target
 branch that already exists. A change with no plan artifacts needs no split.
 
+### Bitbucket pull requests for this repository
+
+Use `bkt` for Bitbucket reviews. Use the Atlassian integration for Jira and
+Confluence. Before using `bkt pr`, check `bkt context list` and `bkt repo view`
+against the Git remote. To set up a Bitbucket Cloud context, sign in with
+`bkt auth login`, then use the host key shown by `bkt auth status`.
+
+```bash
+bkt context create plan-tool --host https://api.bitbucket.org/2.0 \
+  --workspace <workspace> --repo <repository> --set-active
+```
+
+Confirm authorization for each new pull request. Use `main` as the target,
+lead the title with the ticket key when one exists, and link the pull request
+from its Jira ticket when the work is tracked there. Prepare the body in a
+file. Use `bkt pr checks` for CI and `bkt pr comments` for review threads.
+An assistant runs merge, approve, decline, or auto-merge only on an explicit
+request for that action. A plan pull request's merge records architect approval.
+[Pull-request review](#pull-request-review-team-checkpoint) · [Tracking rules](docs/TRACKING.md#labels-statuses-and-comments)
+
+With publication authorized, push feature-branch checkpoints after each
+bounded plan-authoring commit, green `run --commit` step, and review or
+reconciliation fix. Verify the final worktree is clean and review findings
+have dispositions before requesting merge. Land changes to `main` through
+pull requests. Keep partially executed plans on their feature branch until
+the agreed delivery checks pass.
+
 ## Three ways in
 
 These describe **work**, not people. Pick the path that matches the job in

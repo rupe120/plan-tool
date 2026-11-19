@@ -99,7 +99,9 @@ Use `bkt` for Bitbucket HTTPS or SSH URLs on `bitbucket.org` or
 `ssh.bitbucket.org`.
 For a custom host, ambiguous URL, or mismatched CLI context, ask the user to
 confirm the provider and target before proceeding. Check the chosen CLI's
-help before use and confirm the exact target before publication.
+help before use and confirm the exact target before publication. Read the
+consuming repository's contributor instructions for its review and tracking
+rules.
 [Verify the repository and branch](DIRECTIVES.md#select-the-pull-request-system-before-use)
 
 ## Running from chat / automation (no TTY)
