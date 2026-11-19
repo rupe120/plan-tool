@@ -163,13 +163,14 @@ original command has definitely exited.
 
 **Classify preflight refusals accurately.** After confirmed exit, read the
 reason. For an unmatched fence, unusable References, or a missing, duplicate,
-empty, or placeholder guardrail section, fix the seed, review and commit the
-correction, then retry. These preflight checks stop before routing and leave
-no run record. A `route: refused — file-backed source: …` message reports a
-decision after preflight. When preparation reports unsupported evidence,
-check the named section in the approved seed. If the evidence is missing,
-add it under that heading, review and commit the correction, then retry. If
-the evidence is already there, follow the emitted instruction to retry unchanged.
+empty, or placeholder guardrail section, fix the seed, get the user's approval
+of the revised file, and commit it before retrying. These preflight checks
+stop before routing and leave no run record. A `route: refused — file-backed
+source: …` message reports a decision after preflight. When preparation
+reports unsupported evidence, look through the approved seed for evidence
+that supports the named section. If it is missing, add it under that heading,
+get the user's approval of the corrected seed, and commit it before retrying.
+If the evidence is present, follow the emitted instruction to retry unchanged.
 For other route refusals, follow the printed reason and next action.
 
 **A run another session launched is not yours to poll.** Watching a

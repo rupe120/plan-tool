@@ -571,6 +571,8 @@ def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> N
             assert f"def {symbol}(" in source
 
     assert "User request and follow-up" in request["references"]
+    assert "no-selection default" in request["scope guardrails"]
+    assert "CSV header and column order" in request["scope guardrails"]
     assert request["expected placement"] != "None"
 
     [stub_path] = re.findall(r"^- `([^`]+)` #42\b", backlog["references"], re.M)
