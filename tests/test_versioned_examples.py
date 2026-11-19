@@ -14,15 +14,27 @@ import re
 from pathlib import Path
 
 import pytest
+import yaml
 
+from plan_tool.detail import parse_acceptance_bullets
+from plan_tool.detail_artifacts import SUPPORTED_DETAIL_FORMAT_VERSIONS
+from plan_tool.parser import parse_plan, split_plan_document
+from plan_tool.renderer import _load_detail
 from plan_tool.review_persistence import (
     _SUPPORTED_SCHEMA_VERSIONS,
     AuditInputSnapshot,
     load_review,
 )
+from plan_tool.schema import SUPPORTED_PLAN_FORMAT_VERSIONS
 
 FIXTURES = Path(__file__).parent / "fixtures" / "versioned"
 EXAMPLES = sorted((FIXTURES / "saved-review").glob("*.json"))
+# Explicit versions of the plan and its detail, respectively.
+AUTHORED_VERSIONS = {
+    "v0.2.0": (1, 1),
+    "5d9ce9aca": (None, None),
+}
+CAPTURED_DETAIL = "plan-details/orch/01-wire-up-renderer.md"
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
     r"(?:\.revision-v(?P<revision>\d+))?\.(?P<source>.+)\.json$"
@@ -140,8 +152,56 @@ def test_the_current_and_an_older_audit_revision_version_have_captured_examples(
     assert any(version < current for version in revisions), "no example of an older revision"
 
 
+@pytest.mark.parametrize("source", AUTHORED_VERSIONS)
+def test_a_captured_plan_and_its_detail_load_through_current_readers(source: str) -> None:
+    plan_version, detail_version = AUTHORED_VERSIONS[source]
+    root = FIXTURES / "authored" / source
+    plan_path = root / "2-orch.md"
+    document = split_plan_document(plan_path.read_text(encoding="utf-8"))
+    frontmatter = yaml.safe_load(document.frontmatter_yaml)
+    if plan_version is None:
+        assert "format_version" not in frontmatter
+    else:
+        assert frontmatter["format_version"] == plan_version
+
+    plan = parse_plan(plan_path)
+    assert plan.format_version == (1 if plan_version is None else plan_version)
+    assert plan.title == "Orchestrator Plan"
+    step = plan.step_by_id(1)
+    assert step.detail == CAPTURED_DETAIL
+    assert plan.step_by_id(2).depends_on == [1]
+
+    detail = _load_detail(step, repo_root=root, plan=plan, plan_path=plan_path)
+    assert detail == (root / CAPTURED_DETAIL).read_text(encoding="utf-8")
+    marker_slot = next(line for line in detail.splitlines()[1:] if line.strip())
+    if detail_version is None:
+        assert "plan-tool:detail-format-version" not in detail
+    else:
+        assert marker_slot == f"<!-- plan-tool:detail-format-version: {detail_version} -->"
+    assert parse_acceptance_bullets(detail) == ["function returns 42"]
+
+
+def test_every_supported_plan_and_detail_version_has_a_captured_example() -> None:
+    plans = {plan for plan, _ in AUTHORED_VERSIONS.values() if plan is not None}
+    details = {detail for _, detail in AUTHORED_VERSIONS.values() if detail is not None}
+    missing_plans = SUPPORTED_PLAN_FORMAT_VERSIONS - plans
+    missing_details = SUPPORTED_DETAIL_FORMAT_VERSIONS - details
+    assert not missing_plans, f"no example of plan format version(s) {sorted(missing_plans)}"
+    assert not missing_details, (
+        f"no example of detail format version(s) {sorted(missing_details)}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
-    rows = set(re.findall(r"^\| `([^`]+\.json)` \|", text, flags=re.M))
-    assert rows == {path.name for path in EXAMPLES}
+    rows = set(re.findall(r"^\| `([^`]+\.(?:json|md))` \|", text, flags=re.M))
+    authored = {
+        f"authored/{source}/{path}"
+        for source in AUTHORED_VERSIONS
+        for path in ("2-orch.md", CAPTURED_DETAIL)
+    }
+    assert authored == {
+        path.relative_to(FIXTURES).as_posix() for path in (FIXTURES / "authored").rglob("*.md")
+    }
+    assert rows == {path.name for path in EXAMPLES} | authored
