@@ -114,8 +114,8 @@ over a tier doc whenever your session is already committed to its theme:
   active routing target. #102 remains separate heading-alias work.
 - [`backlog-arc-operator-workflow.md`](docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md)
   — operator visibility, deferred-work selection, and reader-facing surface
-  quality, without changing correctness or ownership contracts; #510/#515 add the public
-  onboarding walkthrough and fresh-repository verification. Draws on the
+  quality, without changing correctness or ownership contracts. The #510 walkthrough
+  is verified through detail review, and #515 owns fresh-repository verification. Draws on the
   idle-plans list (T3's exit hands off there) and gates T5 hygiene work.
 - [`backlog-arc-headless-process.md`](docs/implementation-plans/backlog-arcs/backlog-arc-headless-process.md)
   — the evidence-first route for remaining headless human-input and
@@ -8651,34 +8651,6 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
-**#510 — Make onboarding skill-first with one bounded first-task walkthrough**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **Arc assignment:** `backlog-arc-operator-workflow`.
-- **Effort:** medium.
-- **Outcome:** A new user installs the tool and skill, requests a small plan, and
-  reviews it before implementation.
-- **In scope:** Short README entry path, explicit assistant choices, prerequisites,
-  sample request, expected artifacts and review points; retain direct CLI routing and
-  link deeper reference material.
-- **Out of scope / Non-goals:** A whole documentation rewrite, new pipeline rules,
-  package publishing, or making roadmap a required first task.
-- **Allowed behavior changes:** Change navigation and examples only; retain clone plus
-  uv tool install --editable . as the supported installation method.
-- **Allowed reorganization:** only the smallest relocation needed for this outcome; no
-  unrelated restructuring.
-- **Verification:** Walk the instructions in a consuming repository; check links and
-  command examples, including the installed seed-authoring guidance shipped as #377.
-  The recipe-consistency prerequisite is satisfied (skill-router repair).
-- **Public sign-off:** #515 owns disposition of #508. The first-task walkthrough
-  ends at detail review and can proceed with the installed skill. If repository-specific
-  guidance obstructs that path, record the concrete issue in the walkthrough.
-- **Stop / defer:** file adjacent work separately; resolve missing owner decisions
-  before dependent implementation.
-
 **#511 — Explain skill installation, refresh and the next action**
 
 - **Labels:** Route `direct`
@@ -8782,7 +8754,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 **#515 — Verify public onboarding in a fresh consuming repository**
 
 - **Labels:** Route `direct`
-  · Readiness `blocked-on #510`
+  · Readiness `ready`
   · Tier `experienced`
   · Principle `write-for-the-human`
 - **Arc assignment:** `backlog-arc-operator-workflow`.
@@ -8926,7 +8898,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
   · Readiness `blocked-on #515`
   · Tier `experienced`
   · Principle `write-for-the-human`
-- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped. The section-by-section readability audit of the remaining live developer documents (`CONTRIBUTING.md` drive-or-review workflow, `docs/ARCHITECTURE.md` subsystem paragraphs, `docs/ITERATION.md` and `docs/GATES.md` matrices, the `docs/TRACKING.md` lifecycle) judges an unobservable property section by section, so it is not run as a batch. The four reader journeys (install and begin, run or review a plan safely, change `plan-tool` itself, find ownership, tracking, and escalation routes) are checked by a fresh reader instead: #515 verifies the first journey in a fresh repository, and #510 covers the first-task walkthrough.
+- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped. The section-by-section readability audit of the remaining live developer documents (`CONTRIBUTING.md` drive-or-review workflow, `docs/ARCHITECTURE.md` subsystem paragraphs, `docs/ITERATION.md` and `docs/GATES.md` matrices, the `docs/TRACKING.md` lifecycle) judges an unobservable property section by section, so it is not run as a batch. The four reader journeys (install and begin, run or review a plan safely, change `plan-tool` itself, find ownership, tracking, and escalation routes) are checked by a fresh reader instead: #515 verifies the first journey in a fresh repository. The #510 first-task walkthrough is verified through detail review.
 - **Effort:** small to medium; one fix batch per place a reader stumbled.
 - **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact.
 - **Outcome:** each place the fresh-reader walkthrough recorded as blocking a reader (normal path, an exception, an owner, or a next action not findable) is fixed or filed, with links, terminology, and authority boundaries in agreement.

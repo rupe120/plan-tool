@@ -12,8 +12,8 @@
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
 | Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo at `f6e6a6f7e`. |
-| Local follow-up | `docs/close-installed-seed-authoring` contains the completed #377 plan and the post-shipment backlog and arc cleanup. |
-| Next | Finish #510's consuming-repository walkthrough through detail review, then use #515's fresh-reader observations to select the next documentation slice. |
+| Local follow-up | `docs/close-installed-seed-authoring` contains the #377 closure. `docs/verify-first-plan-onboarding` builds on that branch and records #510 verification through detail review. |
+| Next | Run #515's independent fresh-reader verification. Use its observations to select the next documentation slice under #530. |
 
 ### What to carry forward
 
@@ -65,10 +65,14 @@ exit before returning to the prepared branches.
 
 ### Verification and next pickup
 
-1. **Finish #510.** Verify the first-task path with the shipped seed guidance
-   in a consuming repository through detail review before closing the
-   walkthrough entry. #508 can proceed
-   independently and remains part of #515's public sign-off. [Backlog](../BACKLOG.md)
+1. **#510 walkthrough verified.** The isolated editable install, project-local
+   Codex seed review, and live due-dates continuation reach detail review.
+   The live report covers 4 of 4 details with confirmed, current evidence.
+   Its `awaiting-human-action` result leaves the sample's stored-date
+   validation decision open. The rehearsal uses the reviewed prepared seed
+   for `create` and tests the independently drafted seed through intake.
+   [Walkthrough evidence](../docs/demos/getting-started/RUNBOOK.md#live-first-plan-walkthrough)
+
    The [#377 plan](../docs/implementation-plans/2-installed-seed-authoring.md)
    takes the direct route from its [archived seed](../docs/implementation-plans/plan-seeds/archive/installed-seed-authoring.replaced.md).
    The owner authorizes Codex `gpt-6.2-sol` to author and audit the plan.
@@ -152,8 +156,8 @@ exit before returning to the prepared branches.
    paths. Record where the reader guesses or backtracks. The pilot's local
    checks cover 71 legacy README anchors, 76 local links, six skill commands,
    the two prepared audit checkpoints, and CLI validation of the demo plan.
-   Fresh-reader skill discovery and live bare and grounded audit review
-   still need their own evidence.
+   #515 owns independent fresh-reader evidence and disposition of #508–#514
+   for public sign-off.
    [Install guide](../docs/how-to/install-and-update.md) · [Backlog](../BACKLOG.md)
 3. **Use #530 for observed stumbles.** If reading the final audit result is
    the friction, start the audit guide with the pilot's paired bare and

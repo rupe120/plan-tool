@@ -3,8 +3,9 @@
 ## File intent
 
 Use this route to prepare public onboarding and select a safe publication
-boundary. BACKLOG #508–#515 own the scope contracts; this file coordinates their
-order without replacing the installed-skill and operator-workflow arcs.
+boundary. `BACKLOG.md` owns the open scope contracts in #508–#515. This file
+coordinates their order alongside the installed-skill and operator-workflow
+arcs.
 
 ## Choose this arc when
 
@@ -19,11 +20,11 @@ publication, remote changes, history rewriting, or independent team-policy chang
 | 2 | #514 distribution, license and history decisions | Apache-2.0, the GitHub source and a shared sanitized root for both hosts define the release route. Review install/update and synchronization guidance, then verify the final candidate and destinations. |
 | 3 | #508; recipe consistency satisfied (skill-router repair) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
 | 4 | #509, #511, #512 | Hosting selection, skill installation and refresh, and model guidance support the consuming repository. Seed-authoring support is complete (#377). |
-| 5 | #510, then #515 | A skill-first walkthrough works in a fresh consuming repository, with prerequisites resolved or explicitly dispositioned. |
+| 5 | #515 | A fresh reader verifies the #510 walkthrough, with prerequisites resolved or explicitly dispositioned. |
 
-The installed-skill arc owns #508/#509/#511/#512. The
-operator-workflow arc owns #510/#515. This coordination arc routes the separate
-remaining release prerequisite #514 and consults the other arcs for their lanes.
+The installed-skill arc owns #508/#509/#511/#512. The operator-workflow arc
+owns #515 and the completed #510 walkthrough. This coordination arc routes
+the separate release prerequisite #514 and consults the other arcs for their lanes.
 Do not duplicate #378's tracker-convention or stale-entry work.
 
 Next bounded action: review #514's [install/update instructions](../../how-to/install-and-update.md)
