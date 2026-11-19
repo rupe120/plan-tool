@@ -390,8 +390,8 @@ A plan-route ticket has two review moments:
    saved reports. Run `scripts/split_pr.py IPPT-123` (`--dry-run` previews the
    file counts). It builds `IPPT-123-plan` and `IPPT-123-code` from the
    branch's total change since its merge-base with `origin/main`, one snapshot
-   commit each. Push both, open a pull request for each with `gh pr create` (or `bkt pr create` on
-   Bitbucket; see [`DIRECTIVES.md`](integrations/shared/DIRECTIVES.md#opening-bitbucket-pull-requests-with-bkt)),
+   commit each. Push both, open a pull request for each against the
+   [verified repository](integrations/shared/DIRECTIVES.md#select-the-pull-request-system-before-use),
    and lead both titles with the ticket key. Each pull request pipeline runs the suite.
 
 Merge the code pull request first when the plan branch marks steps done, so

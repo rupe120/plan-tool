@@ -1188,19 +1188,21 @@ does not name another remote. Check the current branch and the intended target
 branch.
 
 ```bash
-git remote get-url origin
+git remote get-url <remote>
 git branch --show-current
 ```
 
 | Remote host | CLI | Verify the target |
 | --- | --- | --- |
 | `bitbucket.org` or `ssh.bitbucket.org` | `bkt` | Check `bkt context list` and `bkt repo view` for the selected host, workspace, and repository. |
-| `github.com` or `ssh.github.com` | `gh` | Check `gh repo view --json nameWithOwner,defaultBranchRef` for the selected repository and default branch. |
+| `github.com` or `ssh.github.com` | `gh` | Check `gh repo view <repo> --json nameWithOwner,defaultBranchRef` for the selected repository and default branch. |
 
 These host rules cover HTTPS and SSH Git URLs. For a custom host, an
 ambiguous remote, or a mismatched CLI context, ask the user to confirm the
 provider and target. Check the chosen tool's command help before using it.
 Use the confirmed repository and branches when opening the pull request.
+For GitHub, use `OWNER/REPO` for GitHub.com or `HOST/OWNER/REPO` for a
+confirmed custom host.
 
 ### Opening Bitbucket pull requests with `bkt`
 
@@ -1224,7 +1226,7 @@ and use the compare link from an authorized push.
 For a verified GitHub target, pass the description file directly.
 
 ```bash
-gh pr create --head <branch> --base <target-branch> \
+gh pr create --repo <repo> --head <branch> --base <target-branch> \
   --title "<one concern>" --body-file .tmp/<slug>.pr-body.md
 ```
 
