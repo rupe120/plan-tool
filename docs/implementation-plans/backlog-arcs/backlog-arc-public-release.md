@@ -18,10 +18,10 @@ publication, remote changes, history rewriting, or independent team-policy chang
 | 1 | Content preparation — complete (#513) | PR #123 is merged; its selected bytes match the independently verified 2,588-path prose candidate. Preserve the selection and verification evidence when preparing a release. |
 | 2 | #514 distribution, license and history decisions | Apache-2.0, the GitHub source and a shared sanitized root for both hosts define the release route. Review install/update and synchronization guidance, then verify the final candidate and destinations. |
 | 3 | #508; recipe consistency satisfied (skill-router repair) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
-| 4 | #509, #511, #512 and existing #377 | Hosting selection, skill installation/refresh, model guidance and seed authoring support the consuming repository. These are separate bounded items, not one combined implementation. |
+| 4 | #509, #511, #512 | Hosting selection, skill installation and refresh, and model guidance support the consuming repository. Seed-authoring support is complete (#377). |
 | 5 | #510, then #515 | A skill-first walkthrough works in a fresh consuming repository, with prerequisites resolved or explicitly dispositioned. |
 
-The installed-skill arc owns #508/#509/#511/#512 and #377. The
+The installed-skill arc owns #508/#509/#511/#512. The
 operator-workflow arc owns #510/#515. This coordination arc routes the separate
 remaining release prerequisite #514 and consults the other arcs for their lanes.
 Do not duplicate #378's tracker-convention or stale-entry work.
