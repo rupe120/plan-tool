@@ -11,8 +11,8 @@
 | Field | Value |
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
-| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo at `f6e6a6f7e`. |
-| Local follow-up | `docs/close-installed-seed-authoring` contains the #377 closure. `docs/verify-first-plan-onboarding` builds on that branch and records #510 verification through detail review. |
+| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo. [PR #276](https://bitbucket.org/protagona/plan-tool/pull-requests/276) closes #377 at `bd0ea279e`. |
+| Local follow-up | `docs/verify-first-plan-onboarding` is based on `bd0ea279e` and records #510 verification through detail review. |
 | Next | Run #515's independent fresh-reader verification. Use its observations to select the next documentation slice under #530. |
 
 ### What to carry forward
@@ -134,8 +134,8 @@ exit before returning to the prepared branches.
    and 66 skipped.
    PR #275 merges the tested guidance and example checks without changes.
    `run installed-seed-authoring --step 3 --commit -y` passes the full test
-   gate and marks the plan completed at `5811ce4d1`. The local tracking
-   cleanup removes #377 from the backlog and updates its three active arcs.
+   gate and marks the plan completed at `5811ce4d1`. PR #276 removes #377
+   from the backlog and updates its three active arcs.
    `reconcile-code installed-seed-authoring --all -y` finds zero eligible
    steps because the plan covers guidance, tests, and tracking.
    Review of `f6e6a6f7e..5811ce4d1` finds two stale references. This handoff
