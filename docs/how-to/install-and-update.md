@@ -1,5 +1,8 @@
 # Install and update plan-tool
 
+To use the skill, install the `plan-tool` CLI and then register the skill with
+your coding assistant. [Try your first plan](../../README.md#your-first-plan)
+
 Most users install from GitHub with uv and need no clone. Contributors install
 from a source clone instead: an editable installation reads code from that
 directory, so keep that clone at a stable path and use a separate clone for
@@ -83,8 +86,9 @@ open a new shell, then check the executable path again.
 ## Install the assistant skill
 
 For a user-level install across projects, choose an assistant in the
-[README install table](../../README.md#install-the-assistant-skill). The backend
-CLI needs its own installation and authentication. [Backend setup](../BACKENDS.md)
+[README install table](../../README.md#install-the-assistant-skill). That
+choice controls which assistant discovers the skill. Install and authenticate
+the CLI that runs the plan's model calls separately. [Backend setup](../BACKENDS.md)
 
 From the consuming repository, choose `plan-tool install-skill` for a
 project-local Claude Code symlink or `plan-tool install-skill --copy` for a
@@ -98,7 +102,9 @@ select that assistant.
 | Skill root | Use `--root .claude` or `--root .agents` to select a supported root. |
 
 A project symlink works on the machine that installed it. Choose `--copy` for
-files you want to commit and refresh after upgrades. For manual installation,
+files you want to commit. The installer prints a refresh command for copied
+files and names the assistant to reload. A project refresh command includes
+the resolved repository path. For manual installation,
 put `integrations/<integration>/SKILL.md` and
 `integrations/shared/DIRECTIVES.md` in the same skill directory. Reload the
 assistant and confirm it discovers the skill. [Installer options](../cli/install-skill.md)

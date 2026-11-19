@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shlex
 from pathlib import Path
 from typing import Literal, NamedTuple
 
@@ -37,6 +38,7 @@ _VALID_ROOTS = (".claude", ".agents")
 # SKILL.md without logging, so its integration defaults to ``.agents`` and
 # always copies. Measured 2026-10-06 on codex-cli 0.160.1.
 _CODEX_ROOT = ".agents"
+_ASSISTANT_NAMES = {"claude": "Claude Code", "codex": "Codex", "cursor": "Cursor"}
 
 
 def _bundled_source(subdir: str, filename: str) -> Path | None:
@@ -198,19 +200,29 @@ def cmd_install_skill(args: argparse.Namespace) -> int:
     if installed_any:
         info(f"  location: {location}")
         if copy:
-            info(
-                "  (committed copies travel with the repo but go stale on a "
-                "plan-tool upgrade — re-run install-skill --copy --force to "
-                "refresh: a changed source no longer byte-matches the "
-                "committed copy, so it classifies as a collision)"
-            )
-        elif not args.user:
-            warn(
-                "these symlinks point outside the repo (into the plan-tool "
-                "clone), so they're machine-local — they won't survive a "
-                "fresh clone or run in CI. Use --copy to commit the skill, "
-                "or --user to install it once for every project."
-            )
+            refresh = ["plan-tool"]
+            if not args.user:
+                refresh.extend(("--repo-root", str(repo_root)))
+            refresh.extend(("install-skill", "--integration", args.integration))
+            if args.user:
+                refresh.append("--user")
+            if args.root:
+                refresh.extend(("--root", args.root))
+            if args.copy:
+                refresh.append("--copy")
+            refresh.append("--force")
+            scope = "from this project" if not args.user else "for this user install"
+            info(f"  Refresh copied files after a tool update {scope}: {shlex.join(refresh)}")
+        else:
+            info("  Linked files follow the bundled source. Reinstall if its path changes.")
+            if not args.user:
+                warn(
+                    "Project symlinks are machine-local. Use --copy for files you can commit, "
+                    "or --user for an install available across projects."
+                )
+        assistant = _ASSISTANT_NAMES[args.integration]
+        info(f"  Reload {assistant} and confirm it finds the plan-tool skill.")
+        info("  Install and authenticate the execution backend separately.")
 
     return 0
 

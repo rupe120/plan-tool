@@ -3,6 +3,7 @@
 | Section | Opened |
 | --- | --- |
 | [Two-tier documentation rollout](#two-tier-documentation-rollout) | 2026-11-18 |
+| [Scraper output in the onboarding lead](#scraper-output-in-the-onboarding-lead) | 2026-11-19 |
 
 ## Two-tier documentation rollout
 
@@ -11,8 +12,8 @@
 | Field | Value |
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
-| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo. [PR #276](https://bitbucket.org/protagona/plan-tool/pull-requests/276) closes #377 at `bd0ea279e`. |
-| Local follow-up | `docs/verify-first-plan-onboarding` is based on `bd0ea279e` and records #510 verification through detail review. |
+| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo. [PR #276](https://bitbucket.org/protagona/plan-tool/pull-requests/276) closes #377. [PR #277](https://bitbucket.org/protagona/plan-tool/pull-requests/277) closes #510 at `b2081217a`. |
+| Local follow-up | `docs/portable-onboarding-followups` holds #508, #509, #511, and #512 plus the public installation evidence. |
 | Next | Run #515's independent fresh-reader verification. Use its observations to select the next documentation slice under #530. |
 
 ### What to carry forward
@@ -167,5 +168,67 @@ exit before returning to the prepared branches.
    edit. Keep the general link guard under #529. [Pilot examples](../docs/design-plans/example-first-documentation.md#draft-audit-and-recovery-openings) ·
    [Audit result contract](../docs/how-to/pipeline/audit.md#reading-the-final-qualified-result)
 
+### Portable guidance and public installation
+
+[PR #277](https://bitbucket.org/protagona/plan-tool/pull-requests/277) passed
+[pipeline #24](https://bitbucket.org/protagona/plan-tool/pipelines/results/24)
+at `585ca01d8` and merged at `b2081217a`. The local follow-up branch is based
+on that merge.
+
+| Item | Local change and evidence |
+| --- | --- |
+| #508 | The installed guide uses the consuming repo's workflow. `CONTRIBUTING.md` retains this repo's protected branch, Bitbucket, approval, and tracking rules. An unrelated `trunk` checkout contains a matching installed Codex pair. |
+| #509 | All routers select the tool from the named remote, including SSH hosts. The shared GitHub commands pin the verified repository, and custom targets require confirmation. |
+| #511 | Successful installs report refresh and reload steps. Copy refreshes pin the resolved project path. Tests cover all six assistant/mode cases and a conflicting environment root with a path containing spaces. |
+| #512 | The shared guide distinguishes driver, backend, model, and effort. It links provider billing pages and preserves runtime selection and defaults. |
+| #514 | The public Git URL, pinned tag, editable clone, shared ancestry, and redacted history checks have current evidence. [Destination verification](../docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md#destination-verification) |
+
+The public v1.6.0 tool installs both skill files in all six assistant/mode
+cases. Codex reports a usable local login. Claude reports no active login,
+and Cursor's read-only discovery attempt stops at its authentication prompt.
+Claude and Cursor live discovery remain open. The independent #515 reader
+starts from the [README](../README.md) and records the executable,
+installation revision, assistant, backend, model, checkpoints, and where
+they guess or backtrack. Record the reader's observations before choosing
+any #530 edit.
+
+The #529 read-only inventory checked 1,003 relative targets outside archived
+bundles, reports, fixtures, and the installed-router sibling exception. Its
+two matches are inline code examples. The decision on an ongoing link guard
+remains open.
+
 Use the backlog for readiness and scope decisions. Retire this section once
 the live pickup and evidence are recorded in their owning documents.
+
+## Scraper output in the onboarding lead
+
+*Opened 2026-11-19.*
+
+| Field | Value |
+| --- | --- |
+| Scope | Keep the skill-first onboarding order; restore concrete audited-plan positioning and show the scraper plan and code-review output briefly. |
+| Review base | `e02cdeffa` on `docs/portable-onboarding-followups`. |
+| Evidence | Consuming `test-demo` checkout, application revision `8c3e420`, review checkpoint `8e4926f`, and its committed implementation-review record. |
+| Checks | Source/fact review, reading-order and scope review, preserved README anchors, local link checks, and `git diff --check`. |
+| Disposition | Two manual documentation passes find no unresolved correctness or completeness issue. No runtime behavior changes; no changelog fragment needed. |
+
+The plan steps and review explanation are condensed excerpts. The 98-test result
+and two clean code reviews describe this run after implementation approval,
+not a guaranteed result for every invocation. The consumer's tracked
+`docs/implementation-plans/plan-details/website-scraper-cli/reports/implementation-review.md`
+records the fixes and validation. The original prompt remains verbatim.
+
+Are we overengineering this? The two small snippets are sufficient. Preserve
+the existing install, backend, portable guidance and worked-plan sections;
+installer behavior stays within the branch's existing scope. Local review
+closes as converged. The owner authorizes pushing this branch update.
+
+### Public scraper example
+
+On 2026-11-19 the owner authorizes the public `rupe120/plan-tool-scraper-example`
+repository. The complete application, plan, audit reports, tests and review record
+are published on its `main` branch. The README lead links directly to this
+example so readers can inspect the artifacts behind the condensed snippets.
+Local review verifies the destination and preserves existing onboarding anchors;
+this is a documentation-only link addition. The owner's earlier request to
+merge PR #279 remains pending its CI result.

@@ -1,9 +1,13 @@
-# plan-tool - audited plans your coding assistant can carry out
+<a id="plan-tool---audited-plans-your-coding-assistant-can-carry-out"></a>
 
-plan-tool turns a rough idea into an implementation plan, audits it before any
-code is written, then runs it step by step with Claude Code, Codex or Cursor.
-The plan, its audits and its progress live in your repository, so the work can
-be reviewed, resumed and handed off.
+# plan-tool
+
+**A skill that helps your coding assistant plan first and ship more reliable code.**
+
+Give Claude Code, Codex, or Cursor a rough request. Review the implementation
+plan and its audits before asking the assistant to write code step by step.
+The plan, audit reports, and progress stay in your repo so you can resume the
+work or hand it off.
 
 [![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue&style=flat)](https://github.com/rupe120/plan-tool/releases/latest)
 [![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green&style=flat)](LICENSE)
@@ -13,16 +17,51 @@ Use it when the work has dependent changes, spans several sessions, or will be
 handed off. For a small edit, skip it and just make the change.
 
 <a id="start-here"></a>
-<a id="use-with-your-assistant"></a>
 
-## Install
+## Your first plan
+
+With the [skill installed](#install-the-skill), start with one sentence.
+
+> use the plan tool skill to create a website scraper cli
+
+In a real run, the scope settles on Python, one URL, CSS selectors and JSON.
+The plan breaks the work into testable steps (condensed):
+
+```text
+1. Package and CSS text extraction
+2. HTTP fetching with timeout and redirect limits
+3. Installed CLI, JSON output and end-to-end tests
+```
+
+Before approving implementation, check that the plan covers the one-URL
+scope, defines how CSS selectors should behave, and calls for end-to-end CLI
+tests.
+
+After implementation, code review catches an error the initial tests miss.
+
+```text
+[P2] Handle unsupported pseudo-elements as selector errors
+p::before produces a traceback instead of the expected exit code 2.
+```
+
+The assistant fixes it and adds regression tests. The final suite passes
+**98 tests**, followed by two clean code reviews. You get the plan, step details,
+audit reports and tested code in Git.
+[Explore the complete scraper example](https://github.com/rupe120/plan-tool-scraper-example).
+
+[Install the skill](#install-the-skill) · [Follow a worked plan](#follow-a-worked-plan)
+
+<a id="use-with-your-assistant"></a>
+<a id="install"></a>
+
+## Install the skill
 
 <a id="requirements"></a>
 <a id="install-the-cli"></a>
 
+Install the `plan-tool` CLI, then register the skill with your assistant.
 You’ll need uv, Git, and an installed and authenticated backend CLI. uv
-provides Python 3.13 or newer. Install plan-tool, then choose the skill for your
-assistant. [Backend setup](docs/BACKENDS.md)
+provides Python 3.13 or newer. [Backend setup](docs/BACKENDS.md)
 
 ```bash
 uv tool install git+https://github.com/rupe120/plan-tool
@@ -45,17 +84,7 @@ Reload your assistant and open the Git repository you want to work on.
 [Installation options and updates](docs/how-to/install-and-update.md#install-the-assistant-skill) ·
 [Companion skills](docs/how-to/companion-skills.md)
 
-## Your first plan
-
-In your coding assistant, start with one sentence.
-
-> use the plan tool skill to create a website scraper cli
-
-The assistant may ask what the scraper should extract. For example, reply
-“Take a URL and print the page title.” Review the plan it prepares before
-asking it to implement anything.
-
-### Follow a worked plan
+## Follow a worked plan
 
 In the worked example, a task-list CLI needs optional due dates and a way to
 list overdue tasks. This request asks the assistant to pause at each review
@@ -178,7 +207,7 @@ operation. [Command guide](docs/reference/commands.md) · [CLI options](docs/cli
 
 ### Backend configuration
 
-[Choose and configure a backend](docs/BACKENDS.md)
+[Choose and configure a backend](docs/BACKENDS.md#selecting-a-backend)
 
 <a id="iterating-to-convergence---iterate"></a>
 <a id="carve-an-over-packed-step-out-plan-tool-scope-out"></a>

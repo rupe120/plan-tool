@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import re
+import shlex
 from pathlib import Path
 
 import pytest
@@ -460,7 +461,7 @@ def _follow_authoring_link(router_path: Path, row: str) -> str:
 @pytest.mark.parametrize("flags", [[], ["--copy"]], ids=["default", "copy"])
 @pytest.mark.parametrize("integration", ("claude", "codex", "cursor"))
 def test_installed_router_links_resolve_against_the_installed_directives(
-    tmp_repo, integration: str, flags: list[str]
+    tmp_repo, integration: str, flags: list[str], capsys
 ) -> None:
     assert cli.main(tmp_repo.argv("install-skill", "--integration", integration, *flags)) == 0
     root = ".agents" if integration == "codex" else ".claude"
@@ -469,6 +470,20 @@ def test_installed_router_links_resolve_against_the_installed_directives(
     for installed in (router_path, directives_path):
         assert installed.is_file()
         assert installed.is_symlink() == (integration != "codex" and not flags)
+
+    result = capsys.readouterr()
+    output = result.out + result.err
+    assistant = {"claude": "Claude Code", "codex": "Codex", "cursor": "Cursor"}[integration]
+    assert f"Reload {assistant}" in output
+    assert "execution backend separately" in output
+    if integration == "codex" or flags:
+        refresh = [
+            "plan-tool", "--repo-root", str(tmp_repo.root), "install-skill",
+            "--integration", integration, *flags, "--force",
+        ]
+        assert shlex.join(refresh) in output
+    else:
+        assert "Project symlinks are machine-local" in output
 
     router = router_path.read_text(encoding="utf-8")
     phase = phase_section(router, f"installed {integration}")
@@ -479,6 +494,23 @@ def test_installed_router_links_resolve_against_the_installed_directives(
     directives = _follow_authoring_link(router_path, authoring_row)
     assert _follow_authoring_link(router_path, big_doc_row) == directives
     assert set(LINK_RE.findall(phase)) <= anchors(directives)
+
+
+def test_copied_skill_refresh_pins_project_over_a_different_environment_root(
+    tmp_repo, tmp_path, monkeypatch, capsys
+) -> None:
+    consumer = tmp_path / "consumer repo"
+    consumer.mkdir()
+    monkeypatch.setenv("PLAN_TOOL_REPO_ROOT", str(tmp_repo.root))
+    install = [
+        "--repo-root", str(consumer), "install-skill", "--integration", "cursor",
+        "--root", ".agents", "--copy",
+    ]
+    assert cli.main(install) == 0
+    captured = capsys.readouterr()
+    assert shlex.join(["plan-tool", *install, "--force"]) in captured.out + captured.err
+    assert (consumer / ".agents/skills/plan-tool/SKILL.md").is_file()
+    assert not (tmp_repo.root / ".agents/skills/plan-tool").exists()
 
 
 def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> None:
