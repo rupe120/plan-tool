@@ -1,5 +1,8 @@
 # Install and update plan-tool
 
+To use the skill, install the `plan-tool` CLI and then register the skill with
+your coding assistant. [Try your first plan](../../README.md#your-first-plan)
+
 Most users install from GitHub with uv and need no clone. Contributors install
 from a source clone instead: an editable installation reads code from that
 directory, so keep that clone at a stable path and use a separate clone for

@@ -1,6 +1,8 @@
 # Documentation map
 
-*Start at the repository [README](../README.md) for common tasks and first use.*
+Start with the [first-plan example](../README.md#your-first-plan) to see what
+to ask the skill and what to review before implementation. For setup, see
+[Install the skill](../README.md#install-the-skill).
 
 The documents at this level are shared operating references. Choose a section
 below when you need a task procedure, exact contract, rationale, evidence, or
