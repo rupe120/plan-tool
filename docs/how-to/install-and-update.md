@@ -14,6 +14,8 @@ uv tool install git+https://github.com/rupe120/plan-tool
 plan-tool --version
 ```
 
+Before installing the assistant skill, [check the selected executable](#check-the-selected-executable).
+
 To pin a release, add its tag: `git+https://github.com/rupe120/plan-tool@vX.Y.Z`.
 Update with `uv tool upgrade plan-tool`, which fetches the newest commit of the
 branch you installed (a pinned tag stays put; reinstall with a new tag and
@@ -39,12 +41,7 @@ plan-tool --version
 uv tool list
 ```
 
-Check which executable your shell selects with `command -v plan-tool`. Compare
-its directory with `uv tool dir --bin`, even if `plan-tool --version` reports
-the expected version. If the command is missing or selects another install,
-put uv's executable directory first on PATH or run its `plan-tool` directly.
-To add the uv directory to your shell setup, run `uv tool update-shell` and
-open a new shell, then check the executable path again.
+Before installing the assistant skill, [check the selected executable](#check-the-selected-executable).
 
 If the source repository requires access, authenticate with the host before
 cloning. Use the maintainer's announced source URL if its organization or location
@@ -73,6 +70,15 @@ Preserve optional extras when reinstalling, for example
 The optional `spell` extra adds a local, advisory spell check for the plan slug
 and title during `create`. To add it to an editable install, run
 `uv tool install --editable '.[spell]'`.
+
+## Check the selected executable
+
+Check which executable your shell selects with `command -v plan-tool`. Compare
+its directory with `uv tool dir --bin`, even if `plan-tool --version` reports
+the expected version. If the command is missing or selects another install,
+put uv's executable directory first on PATH or run its `plan-tool` directly.
+To add the uv directory to your shell setup, run `uv tool update-shell` and
+open a new shell, then check the executable path again.
 
 ## Install the assistant skill
 

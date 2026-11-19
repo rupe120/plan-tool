@@ -29,6 +29,8 @@ uv tool install git+https://github.com/rupe120/plan-tool
 plan-tool --version
 ```
 
+Before installing the skill, [check which `plan-tool` your shell selects](docs/how-to/install-and-update.md#check-the-selected-executable).
+
 <a id="optional-the-agent-skill"></a>
 <a id="install-the-assistant-skill"></a>
 <a id="installation-options"></a>

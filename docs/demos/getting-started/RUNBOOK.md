@@ -106,11 +106,13 @@ available on their demo branches.
 
 On 2026-11-18, a clone at `f6e6a6f7e` supplied an isolated editable
 installation of plan-tool 1.6.0. A fresh Codex session with `gpt-6.2-sol`
-followed the project-local skill from the README request, proposed a seed that
-passes file-backed intake, and paused for approval. An initial check resolved
-another `plan-tool` executable with the same version string. The retry used
-the selected executable and only the consuming repository and its skill for
-authoring context. [Executable check](../../how-to/install-and-update.md#install-from-source)
+followed the project-local skill from the README request, proposed a seed,
+and paused for approval. An initial check resolved another `plan-tool`
+executable with the same version string. The retry put the isolated install
+first on PATH and limited the assistant to the consuming repository and its
+skill. A separate model-free intake check using that installation confirmed
+that the draft was direct-ready.
+[Executable check](../../how-to/install-and-update.md#check-the-selected-executable)
 
 The live continuation starts from the reviewed, prepared due-dates seed and
 its registered four-step plan. The initial bare audit covers 0 of 4 steps,
