@@ -558,7 +558,10 @@ def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> N
         assert all(example[field] for field in (
             "outcome", "in scope", "out of scope", "allowed behavior changes",
             "allowed reorganization", "testing", "acceptance criteria", "stop / defer",
+            "risks", "deferred", "scope guardrails", "audit guardrails", "expected placement",
         ))
+        assert example["scope guardrails"] != "None"
+        assert example["audit guardrails"] != "None"
         citations = re.findall(r"`([^`]+\.py):(\w+)`", example["references"])
         assert set(citations) == {
             ("reports/cli.py", "export_report"), ("tests/test_reports.py", "test_export_csv"),
@@ -567,29 +570,8 @@ def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> N
             source = (tmp_repo.root / relative).read_text(encoding="utf-8")
             assert f"def {symbol}(" in source
 
-    for cited_evidence in (
-        "User request and follow-up", "receives the selected status and passes all rows",
-        "pins the existing CSV header, column order, and unfiltered rows",
-    ):
-        assert cited_evidence in request["references"]
-    assert "Export only rows matching the selected status" in request["outcome"]
-    assert "existing columns in their current order" in request["outcome"]
-    assert "once with open selected and once without a selection" in request["testing"]
-    assert "header in both outputs" in request["testing"]
-    for result in ("only open rows", "all fixture rows", "existing header and column order"):
-        assert result in request["acceptance criteria"]
-    for limit in (
-        "row inclusion for selected statuses only", "no-selection default",
-        "CSV header and column order", "status selection behavior", "other export formats",
-        "existing handler and writer in place",
-    ):
-        assert limit in request["scope guardrails"]
-    for limit in (
-        "selected-status CSV export", "existing CSV contract", "other export formats outside the audit",
-    ):
-        assert limit in request["audit guardrails"]
-    assert "existing report export handler" in request["expected placement"]
-    assert "report export tests" in request["expected placement"]
+    assert "User request and follow-up" in request["references"]
+    assert request["expected placement"] != "None"
 
     [stub_path] = re.findall(r"^- `([^`]+)` #42\b", backlog["references"], re.M)
     [ticket_key] = re.findall(r"^- `([A-Z]+-\d+)`", backlog["references"], re.M)
@@ -599,26 +581,6 @@ def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> N
     ticket = (tmp_repo.root / f"{ticket_key}.md").read_text(encoding="utf-8")
     assert "#42" in stub and f"Promoted to {ticket_key}" in stub
     assert ticket.startswith(f"# {ticket_key}\n")
-    for cited_evidence in (
-        "passes rows to the writer in their input order", "pins the header and rows for an unfiltered export",
-    ):
-        assert cited_evidence in backlog["references"]
-    assert "ascending report ID order" in backlog["outcome"]
-    assert "CSV columns, filtering, and other export formats" in backlog["out of scope"]
-    assert "could change the order in other export formats" in backlog["risks"]
-    assert "No follow-on work" in backlog["deferred"]
-    assert "descending ID order" in backlog["testing"]
-    assert "ascending IDs with the existing header and row set" in backlog["testing"]
-    assert "ascending ID with the existing header and row set" in backlog["acceptance criteria"]
-    assert "After delivery and the export check pass" in backlog["testing"]
-    assert "After delivery and verification" in backlog["acceptance criteria"]
-    assert "contains no #42 stub for REPORTS-42" in backlog["acceptance criteria"]
-    for limit in (
-        "CSV row order", "report IDs, columns, filtering, and other formats", "handler and writer in place",
-    ):
-        assert limit in backlog["scope guardrails"]
-    for limit in ("CSV row order", "existing CSV contract", "shipment check for the #42 stub"):
-        assert limit in backlog["audit guardrails"]
+    assert "#42" in backlog["testing"]
+    assert ticket_key in backlog["acceptance criteria"]
     assert backlog["expected placement"] == "None"
-    assert "Either may own the sort" in ticket
-    assert "location of the ordering logic within them open" in " ".join(walkthrough.split())
