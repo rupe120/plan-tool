@@ -66,7 +66,7 @@ Use the linked `Plan authored` status in `BACKLOG.md` to keep #377 visible while
 - [Tracking rules — Read the unpromoted-entry rule under Promotion stubs](../../../../docs/TRACKING.md#promotion-stubs)
 - [Installed Seed Authoring — Read the source-entry obligation and acceptance criteria](../../2-installed-seed-authoring.md#acceptance-criteria)
 - [Step 2 — Review the installed-guidance checks required for closure](02-extend-existing-install-skill-coverage.md#acceptance-criteria)
-- [Backlog — Find #377 by its entry title and Status field](../../../../BACKLOG.md)
+- [Plan references — Backlog entry #377 before closure](../../2-installed-seed-authoring.md#references)
 
 ## Applicable guardrails
 

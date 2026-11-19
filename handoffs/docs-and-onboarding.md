@@ -11,9 +11,9 @@
 | Field | Value |
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
-| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510 and the install and format references. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here`, clarifies the prepared demo, and lands the #377 plan and details. |
-| Local follow-up | `docs/installed-seed-authoring`, based on `c4f0afd07`, runs #377 steps 1 and 2 and corrects a preparation refusal in the due-dates demo. |
-| Next | Review and ship the installed guidance, then reconcile #377 tracking after shipment. Finish #510 and use #515's fresh-reader observations to select the next documentation slice. |
+| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo at `f6e6a6f7e`. |
+| Local follow-up | `docs/close-installed-seed-authoring` contains the completed #377 plan and the post-shipment backlog and arc cleanup. |
+| Next | Finish #510's consuming-repository walkthrough through detail review, then use #515's fresh-reader observations to select the next documentation slice. |
 
 ### What to carry forward
 
@@ -65,9 +65,9 @@ exit before returning to the prepared branches.
 
 ### Verification and next pickup
 
-1. **Finish #510.** Keep the first-task walkthrough scoped through detail
-   review. Complete #377 seed-authoring support and verify the path in a
-   consuming repository before closing the entry. #508 can proceed
+1. **Finish #510.** Verify the first-task path with the shipped seed guidance
+   in a consuming repository through detail review before closing the
+   walkthrough entry. #508 can proceed
    independently and remains part of #515's public sign-off. [Backlog](../BACKLOG.md)
    The [#377 plan](../docs/implementation-plans/2-installed-seed-authoring.md)
    takes the direct route from its [archived seed](../docs/implementation-plans/plan-seeds/archive/installed-seed-authoring.replaced.md).
@@ -128,8 +128,15 @@ exit before returning to the prepared branches.
    The follow-up review of `b25dfc03a..326a1947f` confirms all four remedies
    with no new material issues. The final full suite reports 15,372 passed
    and 66 skipped.
-   Step 3 requires shipment evidence. #377 and its linked Plan authored
-   status remain open while the guidance is on the local branch.
+   PR #275 merges the tested guidance and example checks without changes.
+   `run installed-seed-authoring --step 3 --commit -y` passes the full test
+   gate and marks the plan completed at `5811ce4d1`. The local tracking
+   cleanup removes #377 from the backlog and updates its three active arcs.
+   `reconcile-code installed-seed-authoring --all -y` finds zero eligible
+   steps because the plan covers guidance, tests, and tracking.
+   Review of `f6e6a6f7e..5811ce4d1` finds two stale references. This handoff
+   records shipment, and the completed plan and details now point to the
+   pre-closure backlog for the original scope.
 
    A wheel-backed live `create` rehearsal in a disposable consuming repo
    initially refused preparation because the demo seed lacked Risks evidence.

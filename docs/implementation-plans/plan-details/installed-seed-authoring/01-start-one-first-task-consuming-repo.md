@@ -97,7 +97,7 @@ This step changes guidance and its tests. The `enforce_step_tests` run gate appl
 - [File-backed classifier — `validate_from_existing_seed()` and the source-readiness predicates](../../../../plan_tool/create.py)
 - [Skill installer — `cmd_install_skill()` and the sibling destinations](../../../../plan_tool/cli/skill_cmd.py)
 - [Installed Seed Authoring — Step ownership, scope, and acceptance](../../2-installed-seed-authoring.md)
-- [Backlog — Entry #377 and the source scope contract](../../../../BACKLOG.md)
+- [Plan references — Source scope for backlog entry #377](../../2-installed-seed-authoring.md#references)
 
 ## Applicable guardrails
 

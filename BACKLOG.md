@@ -136,8 +136,10 @@ over a tier doc whenever your session is already committed to its theme:
   before it has to find the answer itself: the thin router/shared-reference
   split, skill trigger fields, seed authoring, and out-of-scope/stale-entry
   backlog capture. Public onboarding additions #508/#509/#511/#512 also route
-  here. Its items (#377, #378; #379 is merged into #378) are untiered — this arc is
-  their sole router; #371 (skill frontmatter trigger fields) also shipped
+  here. This arc is the sole router for untiered #378, which includes the
+  former #379. Seed authoring (#377) shipped with the
+  [Installed Seed Authoring plan](docs/implementation-plans/2-installed-seed-authoring.md).
+  #371 (skill frontmatter trigger fields) also shipped
   from this arc, 2026-09-17. #443 (`DIRECTIVES.md` beside the tracked
   skill) and #444 (quote the routers' `argument-hint`) shipped 2026-10-06.
 - [`backlog-arc-driver-contract.md`](docs/implementation-plans/backlog-arcs/backlog-arc-driver-contract.md)
@@ -429,8 +431,7 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
   entries **#230** (`--time-budget` at durable batch boundaries) and **#89**
   (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
   see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entries
-  **#520**, **#542**, **#497**, **#486**; the P5 `plan` entries **#377**
-  (installed skills author and validate seeds) and **#149** (compact detail
+  **#520**, **#542**, **#497**, **#486**; the P5 `plan` entry **#149** (compact detail
   schema; its plan is on the board's Blocked lane despite the `ready` label);
   **#56**; and the Bucket D consolidation pair
   **#79**–**#80** — where **#79 carries a warning**: four of its five original
@@ -1095,8 +1096,8 @@ working straight down the tiers.
       from #425, which operationalizes an existing rule.
     - Changing what the machine-local `~/.claude/directives/plan-tool.md`
       symlink and the project-`CLAUDE.md` pointer reach.
-    - Seed-authoring guidance (#377) and capture rules (#378, including the
-      former #379).
+    - Seed-authoring guidance (shipped as #377) and capture rules (#378,
+      including the former #379).
     - A phase row for `jira` export, or for the reconcile verbs apart from the
       post-run tail: no measured incident broke their rules. Add one only if the
       re-measurement shows those rules skipped.
@@ -3071,8 +3072,8 @@ working straight down the tiers.
   gate or duplicate checks that belong to the feature that owns them; the
   revisit condition keeps that from being designed early.
 - **Dependencies:** #525 ships the skill-staleness check independently; related
-  to #318's broad ignore-rule audit but does not depend on it. The
-  installed-skill entries #377–#378 are not reopened.
+  to #318's broad ignore-rule audit but does not depend on it. Installed
+  seed guidance shipped as #377. Tracker capture stays with #378.
 - **Approach:** direct — a one-line doc fix and bookkeeping.
 - **Origin:** 2026-09-21, a Integration roadmap run left a persistent local writer
   lock that needed a precise `.gitignore` rule, alongside questions about the
@@ -3167,62 +3168,6 @@ working straight down the tiers.
   plan against its seed exposed that the audit sees both artifacts but is told
   not to judge whether the generated plan preserves or delivers their intent.
 - **Status:** not started; architect decision required before implementation.
-
-**#377 — Teach installed plan-tool skills to author and validate plan seeds**
-
-- **Labels:** Route `plan`
-  · Readiness `ready`
-  · Tier `architect` — it changes the guidance available to every driving assistant before plan creation
-  · Principle `write-for-the-human`
-- **What:** give an assistant driving `plan-tool` from chat an explicit route
-  from a requested outcome or selected backlog item to a reviewable seed file,
-  before it invokes `create --from-existing`. The installed guidance must make
-  `SEED_FORMAT.md`'s scope contract and canonical heading rules available at
-  the point of authoring, require a source and live-code claim check, and tell
-  the assistant to validate the finished seed against those rules before the
-  first `create` call. Keep the seed as a committed, reusable input and carry
-  backlog reconciliation forward when the seed comes from a backlog entry.
-- **Why:** the current skill routers route an existing plan or document into
-  the CLI. `create --from-existing` consumes a seed; it does not author one.
-  Chat orchestration frequently owns that preceding step, while the installed
-  skill only points to `SEED_FORMAT.md` in the source repository. That pointer
-  is not a usable authoring contract in a consuming repository with only the
-  installed skill.
-- **Dependencies:** none — the thin routers and installer-carried shared
-  reference (formerly #370) shipped 2026-09-16. This item adds seed-authoring
-  content and any necessary format access without expanding that plan's
-  router and installer relocation work.
-- **Outcome:** a Claude Code, Codex, or Cursor session using the installed skill
-  can author and check a seed from a user request or backlog entry, then hand
-  that seed to `create --from-existing` with its intent and scope intact.
-- **In scope:** the shared installed guidance, a working installed path to the
-  authoritative seed format or a bounded authoring contract derived from it,
-  router entry points where needed, installation coverage for that path, and
-  focused documentation and tests.
-- **Out of scope / Non-goals:** changing `create` ingestion or seed semantics;
-  making the CLI generate seeds; expanding the shipped router architecture
-  (formerly #370) or the shipped skill trigger fields (formerly #371);
-  requiring a fully canonical body when the documented preparation route is
-  appropriate; recording discoveries outside a plan's fence (#378) or
-  updating entries found already addressed (the former #379, now part of #378).
-- **Allowed behavior changes:** the installed skills guide the orchestrating
-  assistant through seed authoring and validation before `create`. No CLI
-  command or artifact behavior changes.
-- **Allowed reorganization:** only the guidance and packaging needed to give
-  every installed backend the same seed-authoring contract.
-- **Verification:** install each backend's skill from a source checkout and a
-  wheel, including `--copy`; from the installed location, follow its seed
-  authoring and format links without relying on the source checkout. Check
-  example seeds from both a user request and a backlog item for `Outcome`,
-  scope fence, usable `References`, testing and acceptance evidence, and
-  documented direct-versus-preparation routing.
-- **Stop / defer:** separate any proposed automatic seed generator, new seed
-  lint command, or change to file-backed ingestion into its own backlog item.
-- **Origin:** 2026-09-16, user clarification that chat orchestration often
-  creates the seed and the router/reference plan (formerly #370) should stay
-  focused on the router.
-- **Status:** [Plan authored](docs/implementation-plans/2-installed-seed-authoring.md).
-  Installed guidance and acceptance checks remain pending.
 
 **#378 — Installed skills route discoveries outside a plan's intent, proportionality, or scope into the host repo's tracker**
 
@@ -3363,8 +3308,7 @@ working straight down the tiers.
 - **Dependencies:** none — the shared reference is the installed
   `DIRECTIVES.md` file, shipped 2026-09-16 as the skill-router-and-shared-reference
   plan (formerly tracked as #370); that plan's own Non-goals excluded
-  directive content changes beyond relocating roadmap guidance. This item
-  edits the same files as #377; sequence after #377 if it is also taken.
+  directive content changes beyond relocating roadmap guidance.
 - **Outcome:** a session driving `plan-tool` through an installed skill
   reaches, from every site that defers, one rule that turns an out-of-scope
   discovery into a record in the host repo's own tracker or an explicit,
@@ -3382,8 +3326,8 @@ working straight down the tiers.
   entry format and the existing override rule already carry); a command that detects or closes addressed
   entries; closing items in an external issue tracker; this repo's closure
   convention in `docs/TRACKING.md`; the scope guard's stub output (#380); seed-time
-  source-entry reconciliation (#377 and the existing "Backlog-derived seeds"
-  rule); a CLI that harvests or promotes deferrals
+  source-entry reconciliation (shipped seed guidance from #377 and the
+  existing "Backlog-derived seeds" rule); a CLI that harvests or promotes deferrals
   (`docs/implementation-plans/2-deferred-scan-digest.md`,
   `docs/implementation-plans/2-deferred-select-promote.md`); changing
   `docs/TRACKING.md`'s entry format. Deliberately not done, each with its
@@ -8727,7 +8671,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Walk the instructions in a consuming repository; check links and
-  command examples. Complete #377 seed-authoring support before calling the walkthrough complete.
+  command examples, including the installed seed-authoring guidance shipped as #377.
   The recipe-consistency prerequisite is satisfied (skill-router repair).
 - **Public sign-off:** #515 owns disposition of #508. The first-task walkthrough
   ends at detail review and can proceed with the installed skill. If repository-specific
@@ -8856,10 +8800,10 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Record environment, commands, assistant/backend/model, observations
-  and limitations. Require #377 and #508–#514 to be
-  resolved or explicitly dispositioned before public onboarding sign-off. The
-  recipe-consistency prerequisite is satisfied (skill-router repair); missing
-  credentials remain an explicit coverage gap.
+  and limitations. Require #508–#514 to be resolved or explicitly dispositioned
+  before public onboarding sign-off. Seed-authoring support (#377) and recipe
+  consistency (skill-router repair) are complete. Missing credentials remain
+  an explicit coverage gap.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 

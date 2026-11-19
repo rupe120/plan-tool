@@ -4,14 +4,10 @@
 
 This file is the execution guide for what an installed `plan-tool` skill
 (Claude Code, Codex, or Cursor) gives a driving session before it needs to go
-find the answer itself. It sequenced #370 — shipped 2026-09-16 as the
-skill-router-and-shared-reference plan — ahead of the four items that
-depended on it: #371, #377, #378, #379 (since merged into #378). #371 has since shipped too
-(2026-09-17, direct: the routers' `when_to_use`/`paths` frontmatter and
-situational `description`), leaving #377 and #378 (#379 is now part of #378). `BACKLOG.md` owns each
-item; this file owns only their working order. Both remaining items are
-untiered in the priority (mission-grounded) sense — this arc is their sole
-router, the same convention `backlog-arc-roadmap.md` uses for its own items.
+find the answer itself. The router split (#370), trigger fields (#371), and
+seed authoring (#377) have shipped. This arc routes untiered #378, which
+includes the former #379, and the public onboarding work listed below.
+`BACKLOG.md` owns each open item's scope. This file owns the working order.
 
 ## Details
 
@@ -35,13 +31,11 @@ Carved out of #371 as a separate decision: #390, decided 2026-10-06 — the
 routers leave `model:` unset so the session's own model drives the skill
 (`docs/history/backlog-decisions.md` § "#390").
 
-Three separate, verified gaps remain — a driving session still doesn't
-reliably get what it needs beyond the router/reference split alone:
+**#377 shipped in PR #275.** The installed routers lead to shared guidance
+for authoring and checking a seed before `create --from-existing`. Source
+and isolated wheel checks cover Claude, Codex, and Cursor in default and
+explicit `--copy` modes. [Installed Seed Authoring](../2-installed-seed-authoring.md)
 
-- **#377** — `create --from-existing` consumes a seed; nothing installed
-  teaches a driving session to *author* one first. `SEED_FORMAT.md`'s scope
-  contract and canonical headings aren't reachable from an installed skill in
-  a consuming repo.
 - **#378** — nine sections of `DIRECTIVES.md` tell a session to defer an
   out-of-scope discovery without naming a destination, and the installed
   routers carry almost none of the capture discipline that already works in
@@ -52,18 +46,10 @@ reliably get what it needs beyond the router/reference split alone:
   when it finds an *existing* entry already addressed, so entries drift stale
   or get deleted incorrectly (`5042c3ba` restored #337 after exactly this).
 
-**#377 and #378 are each independently ready now that #370 has shipped;
-neither depends on the other.** #378 additionally touches the same router
-files #377 does and prefers to land after it if a session also takes #377,
-purely to avoid double-editing (that concern no longer applies to #371,
-which already shipped in its own commit). The former #379 is now part of #378 and shares its
-convention-discovery and commit rhythm.
-
-**Route differs across the remaining items.** #377 is `plan` (its authority
-line needs a paper trail). #378 is `direct` since 2026-11-14: one section in
-`DIRECTIVES.md` with citations, and it includes the former #379, whose
-`Escalate to plan if:` for per-entry confirmation still applies. #371, also
-`direct`, shipped 2026-09-17.
+**#378 is ready and uses the `direct` route.** It adds one section in
+`DIRECTIVES.md` with citations. The former #379 shares its convention
+discovery and commit rules and retains its escalation condition for
+per-entry confirmation.
 
 ## Choose this arc when
 
@@ -88,64 +74,52 @@ requests it.
 1. **#370 shipped 2026-09-16** (skill-router-and-shared-reference plan) — the
    installer now carries more than one file, which unblocks everything below.
 2. **#371 shipped 2026-09-17** (skill frontmatter trigger fields).
-3. **#377, #378 in any order.** No dependency runs between them. Prefer
-   taking #378 after #377 if a session also selects it, since it edits the
-   same router files.
-4. **#443 shipped 2026-10-06** (`DIRECTIVES.md` beside the tracked skill).
+3. **#443 shipped 2026-10-06** (`DIRECTIVES.md` beside the tracked skill).
    **#444 shipped 2026-10-06** (quoted `argument-hint`, so the routers'
    frontmatter parses as YAML). #442 (AI-DLC coexistence) was closed as not
    reproducible, 2026-10-06 (`docs/history/backlog-decisions.md` § "#442").
+4. **#377 shipped in PR #275** (installed seed-authoring guidance).
+5. **Pick up #378** for tracker discovery, out-of-scope capture, and
+   stale-entry handling.
 
 ## Decision gates
 
 - **The shipped #370 plan's own Non-goals stay the boundary for that plan's
   content:** relocating roadmap operational guidance into `DIRECTIVES.md` was
-  in scope for it; any *other* directive content addition (seed authoring,
-  discovery capture, stale-entry handling) belongs to #377/#378, not
-  folded back into that shipped work.
+  in scope for it. Seed authoring shipped separately as #377. Discovery
+  capture and stale-entry handling belong to #378.
 - **No drift-detection machinery.** The shipped #370 plan deliberately
   deferred a lint or gate that fails when a router restates a rule the shared
   reference owns — one shared file is already the anti-drift mechanism. This
-  holds for every remaining item in this arc: neither #377 nor #378
-  introduces a check, gate, or exit-code flip on guidance content (each
-  states this in its own Non-goals; the shipped #371 introduced none either).
+  constraint applies to #378. The shipped #371 and #377 introduced no
+  runtime gate or exit-code change on guidance content.
 - **#378's capture rule stays incidental, never a proactive sweep** (its own
   default 1), and **the staleness rule absorbed from #379 stays the same** (its own
   closing default C1) — neither becomes a background job that grooms the backlog on its own.
 
 ## Exit and handoff
 
-**This arc's original handoff condition — #370 shipping — is satisfied**:
-the skill-router-and-shared-reference plan shipped 2026-09-16, #371 shipped
-2026-09-17, and #377 and #378 are each now independently selectable
-single-item work, no longer needing this file's ordering beyond the
-#378-after-#377 preference above. This arc doc itself is not retired:
-`BACKLOG.md`'s arc-index line still names it as the sole router for
-#377/#378 (and records #371 as shipped from it), so it keeps that role
-even though its original sequencing job — getting #370 landed first — is
-done. A future related gap gets its own item filed against this same theme
-rather than a new arc. Full closure (both remaining items shipped) is
-not required to exit this arc's original job.
+The #370 shipment satisfies the original handoff condition. This arc remains
+the sole router for #378 and routes the public onboarding work below. File
+future related gaps as separate entries under the same theme.
 
 ## Out of scope
 
-The original #377/#378 lane (including the former #379) changes guidance content and installer
-plumbing only; it does not change CLI runtime behavior. The public onboarding
-extension below adds no runtime change (#509 is router guidance only). It does not add a seed-generating command (#377's own Non-goals),
-a lint or gate on unrecorded discoveries (#378's), an automated backlog
-staleness sweep (the former #379's), or a `.plan-tool/project.json` tracker-location key
-(#378's, absent evidence the ask-once fallback falls short). It does not
-decide a Cursor-specific product question beyond what the shipped #370 plan
-already settled (one shared reference, not three).
+The arc covers guidance content and installer plumbing. The shipped #377
+plan excludes a seed-generating command. #378 excludes a lint or gate on
+unrecorded discoveries, an automated stale-entry sweep, and a
+`.plan-tool/project.json` tracker-location key absent evidence that its
+ask-once fallback falls short. #509 covers router guidance. The installed
+skill uses the single shared reference established by #370.
 
 ## Public onboarding extension
 
 Choose #508 for portable guidance versus local team policy, #509 for consuming
 repository hosting-provider guidance in the router, #511 for installation/refresh clarity, and
 #512 for model choice and rationale. The recipe-consistency prerequisite is
-satisfied (skill-router repair). #377 remains the owner of
-seed-authoring support; #378 retains tracker convention discovery and
-stale-entry handling. #509 is router guidance telling the installed session to
+satisfied (skill-router repair). Seed-authoring support (#377) is complete.
+#378 retains tracker convention discovery and stale-entry handling.
+#509 is router guidance telling the installed session to
 detect the hosting provider from the remote and confirm it with the user; it adds
 no configuration surface and does not authorize a hosting framework.
 

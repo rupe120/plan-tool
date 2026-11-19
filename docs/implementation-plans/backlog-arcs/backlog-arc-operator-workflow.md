@@ -85,7 +85,6 @@ underlying plan/detail data model.
 #510 gives a new user a skill-first README and bounded first-task walkthrough;
 #515 verifies that path in a fresh consuming repository. Keep clone plus editable
 `uv` installation as the supported method. The installed-skill arc routes
-#508/#509/#511/#512 and existing #377; consult those dependencies rather than
-duplicating their scopes here. #513 (private-content sanitization) and #514
-(license, distribution and history boundary) are separate public-release
-prerequisites, not new reader-surface machinery.
+#508/#509/#511/#512. The installed skill supplies the seed-authoring guidance
+shipped as #377. #513 (private-content sanitization) and #514 (license,
+distribution and history boundary) are separate public-release prerequisites.
