@@ -30,6 +30,27 @@ Do not duplicate #378's tracker-convention or stale-entry work.
 Next bounded action: review #514's [install/update instructions](../../how-to/install-and-update.md)
 and [shared-root sync procedure](../../RELEASING.md#keep-bitbucket-and-github-synchronized),
 then verify the final candidate and both destinations.
+
+### Destination verification
+
+On 2026-11-18, the GitHub repository responded without authentication and
+reported `main` and Apache-2.0. The GitHub `main` commit `b1ccba9ca` also
+carried tag `v1.6.0`. The Git URL install, pinned tag install, and editable
+install from a fresh clone each reported plan-tool 1.6.0 in isolated uv tool
+environments. `uv tool upgrade plan-tool` found the Git install current.
+
+GitHub `main` and Bitbucket `main` at `bd0ea279e` shared the reviewed root
+`9c10d74ca`. The GitHub head was an ancestor of the Bitbucket head, 111
+commits behind. This checks
+the public installation route at its published revision. #514 retains
+verification of the exact candidate selected for the next synchronization.
+
+Gitleaks 8.30.1 scanned the history reachable from GitHub `main` and the
+range `b1ccba9ca..bd0ea279e`, including first-parent merge diffs. The public
+scan's 68 generic matches all correspond to 64-character file digests in
+archived reports' `detail_bundle_fingerprint` maps. The Bitbucket range
+produced no matches. The scan covers those commit ranges and the enabled
+credential patterns.
 Keep distribution, updates and fresh-consumer verification
 with their separate work items.
 

@@ -167,5 +167,29 @@ exit before returning to the prepared branches.
    edit. Keep the general link guard under #529. [Pilot examples](../docs/design-plans/example-first-documentation.md#draft-audit-and-recovery-openings) ·
    [Audit result contract](../docs/how-to/pipeline/audit.md#reading-the-final-qualified-result)
 
+### Portable guidance and public installation
+
+[PR #277](https://bitbucket.org/protagona/plan-tool/pull-requests/277) has a
+passing [pipeline #24](https://bitbucket.org/protagona/plan-tool/pipelines/results/24)
+at `585ca01d8`. The local branch `docs/portable-onboarding-followups` builds
+on that reviewed snapshot.
+
+| Item | Local change and evidence |
+| --- | --- |
+| #508 | The installed guide uses the consuming repo's workflow. `CONTRIBUTING.md` retains this repo's protected branch, Bitbucket, approval, and tracking rules. An unrelated `trunk` checkout contains a matching installed Codex pair. |
+| #509 | All routers select the tool from the named remote, including SSH hosts. The shared GitHub commands pin the verified repository, and custom targets require confirmation. |
+| #511 | Successful installs report refresh and reload steps. Copy refreshes pin the resolved project path. Tests cover all six assistant/mode cases and a conflicting environment root with a path containing spaces. |
+| #512 | The shared guide distinguishes driver, backend, model, and effort. It links provider billing pages and preserves runtime selection and defaults. |
+| #514 | The public Git URL, pinned tag, editable clone, shared ancestry, and redacted history checks have current evidence. [Destination verification](../docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md#destination-verification) |
+
+The public v1.6.0 tool installs both skill files in all six assistant/mode
+cases. Codex reports a usable local login. The local Claude authentication
+check exits 1, and Cursor's `agent status` exits on signal 11. Claude and
+Cursor live discovery remain open. The independent #515 reader starts from
+the [README](../README.md#your-first-plan) and records the executable,
+installation revision, assistant, backend, model, checkpoints, and where
+they guess or backtrack. Record the reader's observations before choosing
+any #530 edit.
+
 Use the backlog for readiness and scope decisions. Retire this section once
 the live pickup and evidence are recorded in their owning documents.
