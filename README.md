@@ -178,7 +178,7 @@ operation. [Command guide](docs/reference/commands.md) · [CLI options](docs/cli
 
 ### Backend configuration
 
-[Choose and configure a backend](docs/BACKENDS.md)
+[Choose and configure a backend](docs/BACKENDS.md#selecting-a-backend)
 
 <a id="iterating-to-convergence---iterate"></a>
 <a id="carve-an-over-packed-step-out-plan-tool-scope-out"></a>

@@ -282,6 +282,12 @@ Expect to find an altitude mismatch, not only a wrong answer.
 
 ## Which model to run a subcommand with
 
+The driving assistant reads this skill and manages review checkpoints. The
+execution backend is the CLI that plan-tool starts for model-backed work. The
+model is the provider identifier sent to that CLI. A Codex driving session,
+for example, can request the Claude backend if the Claude CLI is installed
+and authenticated.
+
 **Honor explicit user requests for backend and model. Otherwise, when
 `.plan-tool/backends.json` exists, omit `--backend` and `--model` so its choices
 apply; when it does not exist, pass the recommendations below.** The file can
@@ -313,6 +319,10 @@ machine without that CLI.
 | Claude Code | Opus: `claude-opus-5-5` | Sonnet: `claude-sonnet-5-5` |
 | Cursor | no `--model`; Cursor's Auto | no `--model`; Cursor's Auto |
 
+These are workflow recommendations. The benchmark records results on its
+own fixtures and task families. See `docs/evidence/backend-recommendations.md`
+in the plan-tool repository for the measured comparison.
+
 Check model availability with `codex debug models` or `agent models` for the
 installed backend.
 
@@ -337,6 +347,22 @@ plan's motivating symptom did not reproduce; a single conceptual question and a
 throwaway replay script settled it in ~15 minutes. A stronger model there buys
 sharper findings inside the frame that was already the problem. Spend it at
 `create`, where the frame is still being chosen.
+
+### Reasoning effort and billing
+
+Reasoning effort controls how much work a supported model can spend on a
+response. Higher effort can use more tokens and take longer. Set it through
+the selected backend's settings or supported CLI arguments. `--model`
+selects the model identifier. [Codex configuration](https://learn.chatgpt.com/docs/config-file/config-reference) ·
+[Claude Code costs and effort](https://code.claude.com/docs/en/costs)
+
+Billing follows the account and authentication mode of the subprocess.
+API-key usage follows the provider's API billing. Signed-in CLI usage
+follows the account's plan, allowances, and any enabled extra usage. Check
+the current terms with the provider. [OpenAI API pricing](https://developers.openai.com/api/docs/pricing) ·
+[Codex plan limits](https://learn.chatgpt.com/docs/pricing) ·
+[Claude API pricing](https://platform.claude.com/docs/en/about-claude/pricing) ·
+[Cursor models and pricing](https://cursor.com/docs/models-and-pricing)
 
 ---
 

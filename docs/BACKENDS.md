@@ -34,6 +34,11 @@ regenerated from the synthetic backend-quality benchmark
 
 ## Selecting a backend
 
+The assistant that loads the skill can differ from the backend CLI that
+plan-tool starts. Install and authenticate the backend you choose. For
+recommended models by stage, reasoning effort, and billing links, follow the
+[model selection guide](../integrations/shared/DIRECTIVES.md#which-model-to-run-a-subcommand-with).
+
 Backend selection uses the first available value:
 
 | Priority | Backend source |
