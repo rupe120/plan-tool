@@ -47,6 +47,7 @@ p::before produces a traceback instead of the expected exit code 2.
 The assistant fixes it and adds regression tests. The final suite passes
 **98 tests**, followed by two clean code reviews. You get the plan, step details,
 audit reports and tested code in Git.
+[Explore the complete scraper example](https://github.com/rupe120/plan-tool-scraper-example).
 
 [Install the skill](#install-the-skill) · [Follow a worked plan](#follow-a-worked-plan)
 

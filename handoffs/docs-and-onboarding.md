@@ -222,3 +222,13 @@ Are we overengineering this? The two small snippets are sufficient. Preserve
 the existing install, backend, portable guidance and worked-plan sections;
 installer behavior stays within the branch's existing scope. Local review
 closes as converged. The owner authorizes pushing this branch update.
+
+### Public scraper example
+
+On 2026-11-19 the owner authorizes the public `rupe120/plan-tool-scraper-example`
+repository. The complete application, plan, audit reports, tests and review record
+are published on its `main` branch. The README lead links directly to this
+example so readers can inspect the artifacts behind the condensed snippets.
+Local review verifies the destination and preserves existing onboarding anchors;
+this is a documentation-only link addition. The owner's earlier request to
+merge PR #279 remains pending its CI result.
