@@ -183,13 +183,18 @@ on that reviewed snapshot.
 | #514 | The public Git URL, pinned tag, editable clone, shared ancestry, and redacted history checks have current evidence. [Destination verification](../docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md#destination-verification) |
 
 The public v1.6.0 tool installs both skill files in all six assistant/mode
-cases. Codex reports a usable local login. The local Claude authentication
-check exits 1, and Cursor's `agent status` exits on signal 11. Claude and
-Cursor live discovery remain open. The independent #515 reader starts from
-the [README](../README.md#your-first-plan) and records the executable,
+cases. Codex reports a usable local login. Claude reports no active login,
+and Cursor's read-only discovery attempt stops at its authentication prompt.
+Claude and Cursor live discovery remain open. The independent #515 reader
+starts from the [README](../README.md) and records the executable,
 installation revision, assistant, backend, model, checkpoints, and where
 they guess or backtrack. Record the reader's observations before choosing
 any #530 edit.
+
+The #529 read-only inventory checked 1,003 relative targets outside archived
+bundles, reports, fixtures, and the installed-router sibling exception. Its
+two matches are inline code examples. The decision on an ongoing link guard
+remains open.
 
 Use the backlog for readiness and scope decisions. Retire this section once
 the live pickup and evidence are recorded in their owning documents.
