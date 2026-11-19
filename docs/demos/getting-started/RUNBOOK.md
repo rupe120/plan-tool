@@ -14,7 +14,7 @@ when a live step misbehaves.
 | --- | --- |
 | Building, `step.sh next/prev/goto/live/transcript`, the dirty-tree refusal, `git checkout -f` recovery and `live/*` cleanup | Run against a built demo repo. |
 | `plan-tool validate` and `status` on every plan branch; tests at steps 6–8 | Run; they pass. |
-| Live model output | A headless `create` rehearsal reaches a registered plan from the prepared seed. See [Rehearsal notes](#rehearsal-notes). |
+| Live model output | The headless rehearsal reaches detail review with a registered plan, four details, and a current grounded report. See [Live first-plan walkthrough](#live-first-plan-walkthrough). |
 | Whether `create` prompts for confirmation when its output is piped through `tee` | **Not run.** Check `.tmp/due-dates.create.log` and monitor the original invocation. Consider a retry with `-y`/`--yes` only after it exits and you have reviewed its outcome. |
 | Backend authentication check | Use whatever you normally use; this runbook does not prescribe one. |
 
@@ -99,8 +99,51 @@ An isolated plan-tool 1.6.0 wheel with Codex `gpt-6.2-sol` on macOS arm64
 refused the first prepared seed after 24 seconds because it lacked explicit
 Risks evidence. With Risks, Acceptance criteria, and Deferred supplied, the
 retry selected preparation and registered a four-step plan in 135 seconds.
-The prepared plan has three steps. The live invocation stops at plan creation
-and leaves the two authored audit transcripts available on their demo branches.
+The prepared plan has three steps. Its two authored audit transcripts remain
+available on their demo branches.
+
+### Live first-plan walkthrough
+
+On 2026-11-18, a clone at `f6e6a6f7e` supplied an isolated editable
+installation of plan-tool 1.6.0. A fresh Codex session with `gpt-6.2-sol`
+followed the project-local skill from the README request, proposed a seed that
+passes file-backed intake, and paused for approval. An initial check resolved
+another `plan-tool` executable with the same version string. The retry used
+the selected executable and only the consuming repository and its skill for
+authoring context. [Executable check](../../how-to/install-and-update.md#install-from-source)
+
+The live continuation starts from the reviewed, prepared due-dates seed and
+its registered four-step plan. The initial bare audit covers 0 of 4 steps,
+with confirmed current evidence and one blocking finding. The plan asks its
+storage step to prove CLI behavior that later steps introduce. The reviewed
+correction keeps the storage round trip in step 1 and moves the whole CLI
+proof to step 4. The bare re-audit is confirmed-dry and current with zero
+blocking gaps.
+
+`detail --commit` writes four detail files. Its automatic audit reaches its
+pass limit with four findings, including one repeated across two categories.
+The corrected details require the invalid-date test to catch saves that leave
+the same bytes and call for rerunning the earlier plain-list and full-save
+tests. They retain the separate-process check for due-date persistence.
+
+The grounded re-audit covers 4 of 4 details with confirmed, current evidence.
+It reports `awaiting-human-action` for one question about where to enforce
+valid dates on writes that bypass the CLI. The sampler's `confirmed-dry`
+result records a pass with no new findings. The remaining finding still
+needs review. This is the rehearsal's stopping point. The application and
+test files match the scaffold, and its four baseline tests still pass.
+[Read the final qualified result](../../how-to/pipeline/audit.md#reading-the-final-qualified-result)
+
+The rehearsal saves reports under
+`docs/implementation-plans/plan-details/due-dates/reports/`. Compare the
+status, coverage, and next action at each checkpoint.
+
+| Checkpoint | Saved report | What the reader does |
+| --- | --- | --- |
+| Bare audit, 0 of 4 details | `20261119-023418-completeness.md` | Move the CLI proof after the steps that supply its prerequisites. |
+| Bare re-audit, 0 of 4 details | `20261119-023533-completeness.md` | Confirm the corrected plan can proceed to detail. |
+| Automatic grounded audit | `20261119-024228-completeness.md` | Read the reported gaps and pass limit before editing the details. |
+| Grounded re-audit, 4 of 4 details | `20261119-024505-completeness.md` | Review the saved-date validation question and stop at detail review. |
 
 ## Deliberately not included
 
