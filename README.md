@@ -2,7 +2,7 @@
 
 # plan-tool
 
-**Audited plans your coding assistant can carry out.**
+**A skill that turns rough requests into audited plans your coding assistant can carry out.**
 
 Give Claude Code, Codex, or Cursor a rough request. Review the plan and its
 audits before asking the assistant to implement it step by step. The plan,
@@ -33,7 +33,11 @@ The plan breaks the work into testable steps (condensed):
 3. Installed CLI, JSON output and end-to-end tests
 ```
 
-After approval to implement, code review catches an error the initial tests miss:
+Before approving implementation, check that the plan covers the one-URL
+scope, defines how CSS selectors should behave, and calls for end-to-end CLI
+tests.
+
+After implementation, code review catches an error the initial tests miss.
 
 ```text
 [P2] Handle unsupported pseudo-elements as selector errors
