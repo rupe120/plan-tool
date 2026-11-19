@@ -27,13 +27,29 @@ A task can carry an optional due date, and `todo list --overdue` shows only the 
 
 None.
 
+## Risks
+
+- Existing task files have no `due` key. Loading them must still work.
+- The overdue filter can accidentally include completed tasks or tasks with no date.
+
 ## Testing
 
 Prove the Outcome with the existing pytest suite: a due date round-trips through the store, an invalid date is refused with a non-zero exit, a pre-change task file still loads, and `--overdue` excludes done tasks and tasks without a due date.
 
+## Acceptance criteria
+
+- A due date survives a save and load, and a pre-change task file still loads.
+- `todo add --due YYYY-MM-DD` accepts a valid date and reports an error for a malformed date.
+- `todo list --overdue` lists only open tasks with a due date that has passed.
+- Listed tasks with a due date display that date without changing task order.
+
 ## Stop / defer
 
 File anything outside this fence (for example editing a due date) in `BACKLOG.md` instead of widening the plan.
+
+## Deferred
+
+Editing an existing due date and recurring tasks belong in separate backlog work.
 
 ## References
 

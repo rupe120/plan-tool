@@ -14,7 +14,7 @@ when a live step misbehaves.
 | --- | --- |
 | Building, `step.sh next/prev/goto/live/transcript`, the dirty-tree refusal, `git checkout -f` recovery and `live/*` cleanup | Run against a built demo repo. |
 | `plan-tool validate` and `status` on every plan branch; tests at steps 6–8 | Run; they pass. |
-| Any live model command, its duration, its cost, and how its output differs from the baked copy | **Not run.** Measure on your first rehearsal and write the numbers into § "Rehearsal notes". |
+| Live model output | A headless `create` rehearsal reaches a registered plan from the prepared seed. See [Rehearsal notes](#rehearsal-notes). |
 | Whether `create` prompts for confirmation when its output is piped through `tee` | **Not run.** Check `.tmp/due-dates.create.log` and monitor the original invocation. Consider a retry with `-y`/`--yes` only after it exits and you have reviewed its outcome. |
 | Backend authentication check | Use whatever you normally use; this runbook does not prescribe one. |
 
@@ -69,6 +69,8 @@ Run `./step.sh goto N` (or `next`) first. Each row names the one point to land.
 | --- | --- |
 | `./step.sh` says `working tree not clean` | Run `git status` to inspect the changes, then follow [Return to the baked path](#return-to-the-baked-path). |
 | A live command is slow or silent | Read `.tmp/due-dates.<verb>.log` and monitor the original invocation through confirmed exit. To show the authored output while you wait, read it without switching branches with `git show demo/N-name:DEMO.transcript.txt`. [Monitoring procedure](../../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely) |
+| After confirmed exit, `create` reports unsupported preparation evidence | Open the named section of the approved seed. Add missing source evidence, review it, and commit before retrying. If the evidence is present, follow the printed instruction to retry unchanged. [File-backed intake](../../../integrations/shared/DIRECTIVES.md#file-backed-intake) |
+| Headless `create` omits `test_command` | The demo does not meet automatic test-command preflight. Run `uv run pytest -q` and review the plan's test command before approving implementation. [Test command reference](../../../PLAN_FORMAT.md#field-semantics) |
 | A live command exits with an error or produces an unexpected result | Inspect the log and saved artifacts. Keep the live result if you need it, then return to the baked path and describe the output as an authored example. |
 | You are lost | `git branch --show-current`, then `./step.sh goto N`. |
 | Branches look damaged | Build into a new directory to restart at step 1. To rebuild in place, confirm any live command has exited and preserve results you want to keep before using `docs/demos/getting-started/build.sh --force`. |
@@ -93,10 +95,14 @@ Review the `git clean -fdn` preview before running `git clean -fd`.
 
 ## Rehearsal notes
 
-*(none yet — record live timings, cost, and how each live result differed from its baked copy here after the first rehearsal)*
+An isolated plan-tool 1.6.0 wheel with Codex `gpt-6.2-sol` on macOS arm64
+refused the first prepared seed after 24 seconds because it lacked explicit
+Risks evidence. With Risks, Acceptance criteria, and Deferred supplied, the
+retry selected preparation and registered a four-step plan in 135 seconds.
+The prepared plan has three steps. The live invocation stops at plan creation
+and leaves the two authored audit transcripts available on their demo branches.
 
 ## Deliberately not included
 
-- **Timings and cost for live steps.** Unmeasured; see § "Verified versus unverified".
 - **Backend authentication steps.** They depend on your backend; use your usual procedure.
 - **Pushing or publishing the `demo/*` branches.** A separate decision.
