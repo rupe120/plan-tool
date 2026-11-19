@@ -39,8 +39,12 @@ plan-tool --version
 uv tool list
 ```
 
-If `plan-tool` is not on PATH, run `uv tool update-shell` and open a new shell,
-or add the executable directory reported by uv to PATH.
+Check which executable your shell selects with `command -v plan-tool`. Compare
+its directory with `uv tool dir --bin`, even if `plan-tool --version` reports
+the expected version. If the command is missing or selects another install,
+put uv's executable directory first on PATH or run its `plan-tool` directly.
+To add the uv directory to your shell setup, run `uv tool update-shell` and
+open a new shell, then check the executable path again.
 
 If the source repository requires access, authenticate with the host before
 cloning. Use the maintainer's announced source URL if its organization or location
