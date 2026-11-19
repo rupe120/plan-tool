@@ -3,6 +3,7 @@
 | Section | Opened |
 | --- | --- |
 | [Two-tier documentation rollout](#two-tier-documentation-rollout) | 2026-11-18 |
+| [Scraper output in the onboarding lead](#scraper-output-in-the-onboarding-lead) | 2026-11-19 |
 
 ## Two-tier documentation rollout
 
@@ -198,3 +199,26 @@ remains open.
 
 Use the backlog for readiness and scope decisions. Retire this section once
 the live pickup and evidence are recorded in their owning documents.
+
+## Scraper output in the onboarding lead
+
+*Opened 2026-11-19.*
+
+| Field | Value |
+| --- | --- |
+| Scope | Keep the skill-first onboarding order; restore concrete audited-plan positioning and show the scraper plan and code-review output briefly. |
+| Review base | `e02cdeffa` on `docs/portable-onboarding-followups`. |
+| Evidence | Consuming `test-demo` checkout, application revision `8c3e420`, review checkpoint `8e4926f`, and its committed implementation-review record. |
+| Checks | Source/fact review, reading-order and scope review, preserved README anchors, local link checks, and `git diff --check`. |
+| Disposition | Two manual documentation passes find no unresolved correctness or completeness issue. No runtime behavior changes; no changelog fragment needed. |
+
+The plan steps and review explanation are condensed excerpts. The 98-test result
+and two clean code reviews describe this run after implementation approval,
+not a guaranteed result for every invocation. The consumer's tracked
+`docs/implementation-plans/plan-details/website-scraper-cli/reports/implementation-review.md`
+records the fixes and validation. The original prompt remains verbatim.
+
+Are we overengineering this? The two small snippets are sufficient. Preserve
+the existing install, backend, portable guidance and worked-plan sections;
+installer behavior stays within the branch's existing scope. Local review
+closes as converged. The owner authorizes pushing this branch update.

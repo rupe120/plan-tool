@@ -2,7 +2,7 @@
 
 # plan-tool
 
-**A skill that helps your coding assistant plan first and ship more reliable code.**
+**Audited plans your coding assistant can carry out.**
 
 Give Claude Code, Codex, or Cursor a rough request. Review the plan and its
 audits before asking the assistant to implement it step by step. The plan,
@@ -20,13 +20,29 @@ handed off. For a small edit, skip it and just make the change.
 
 ## Your first plan
 
-In your coding assistant, start with one sentence.
+With the [skill installed](#install-the-skill), start with one sentence.
 
 > use the plan tool skill to create a website scraper cli
 
-The assistant may ask what the scraper should extract. For example, reply
-“Take a URL and print the page title.” Review the plan it prepares before
-asking it to implement anything.
+In a real run, the scope settles on Python, one URL, CSS selectors and JSON.
+The plan breaks the work into testable steps (condensed):
+
+```text
+1. Package and CSS text extraction
+2. HTTP fetching with timeout and redirect limits
+3. Installed CLI, JSON output and end-to-end tests
+```
+
+After approval to implement, code review catches an error the initial tests miss:
+
+```text
+[P2] Handle unsupported pseudo-elements as selector errors
+p::before produces a traceback instead of the expected exit code 2.
+```
+
+The assistant fixes it and adds regression tests. The final suite passes
+**98 tests**, followed by two clean code reviews. You get the plan, step details,
+audit reports and tested code in Git.
 
 [Install the skill](#install-the-skill) · [Follow a worked plan](#follow-a-worked-plan)
 
