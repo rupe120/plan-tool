@@ -124,5 +124,5 @@ detect the hosting provider from the remote and confirm it with the user; it add
 no configuration surface and does not authorize a hosting framework.
 
 Public-content sanitization (#513) and distribution/history decisions (#514)
-remain separate release prerequisites. README walkthrough #510 and fresh-user
-verification #515 route through operator-workflow.
+remain separate release prerequisites. The verified README walkthrough (#510)
+and fresh-reader verification (#515) belong to the operator-workflow arc.
