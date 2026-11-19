@@ -1409,6 +1409,13 @@ backlog entry, or one effort from a larger document into a reviewed input for
 `create --from-existing`. `SEED_FORMAT.md` in the plan-tool repository remains
 the authoritative seed format.
 
+Suppose a user asks, “Make CSV export honor the status I selected. Keep the
+same output columns.” Confirm what happens when no status is selected, then
+put that decision and the checks in a seed for the user to approve. The
+[worked seed](#request-example) keeps the existing all-rows default.
+For a selected backlog entry, follow the [backlog example](#backlog-derived-variation).
+Use the [file-backed intake rules](#file-backed-intake) to check either seed.
+
 ## From a request to an approved seed
 
 1. **Check the request and the live code.** Start with the requested result and
@@ -1473,15 +1480,12 @@ each limit during seed review. Intake checks section structure and presence.
 
 ### Request example
 
-In this sample repository, the user asks “Make CSV export honor the status
-I selected. Keep the same output columns.” The assistant reads
-`reports/cli.py:export_report` and finds that the handler reads the selected
-status but passes all rows to the writer. It checks the CSV header and
-unfiltered rows pinned by `tests/test_reports.py:test_export_csv`. The request
-leaves the default open, so the assistant asks what to export when no status
-is selected. The user confirms that the existing all-rows default should stay.
-The paths and symbols below illustrate what to verify in the consuming repo.
-This seed has the canonical body needed for direct assessment.
+In this sample repository, `reports/cli.py:export_report` receives the
+selected status and passes all rows to the writer. The assistant checks
+the CSV header and unfiltered rows in `tests/test_reports.py:test_export_csv`.
+The user confirms the all-rows default should stay. The paths and symbols
+illustrate what to verify in a consuming repo. This seed has the canonical
+body needed for direct assessment.
 
 ```markdown
 # Filter report CSV export by selected status
