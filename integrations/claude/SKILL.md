@@ -45,7 +45,7 @@ the minimum reading, not the whole of DIRECTIVES.md.
 
 | Phase | Read in full | Checklist |
 | --- | --- | --- |
-| Authoring (`create`, `detail`) | [Explicit overengineering checkpoints](DIRECTIVES.md#explicit-overengineering-checkpoints); [Pause on a product question — ask, don't infer](DIRECTIVES.md#pause-on-a-product-question--ask-dont-infer) | Ask the user on a product question instead of inferring the answer. Give the overengineering answer at each transition. |
+| Authoring (`create`, `detail`) | [Authoring hygiene](DIRECTIVES.md#authoring-hygiene); [Explicit overengineering checkpoints](DIRECTIVES.md#explicit-overengineering-checkpoints); [Pause on a product question — ask, don't infer](DIRECTIVES.md#pause-on-a-product-question--ask-dont-infer) | Ask the user on a product question instead of inferring the answer. Give the overengineering answer at each transition. |
 | Auditing (`completeness-audit`) | [Gate 1 — the bare-plan audit](DIRECTIVES.md#gate-1--the-bare-plan-audit-before-detail); [Gate 2 — the detail-grounded audit](DIRECTIVES.md#gate-2--the-detail-grounded-audit-after-detail); [Stage-differentiated conceptual bar](DIRECTIVES.md#stage-differentiated-conceptual-bar-completeness-audit); [Close conceptual gaps through judged hand-edits](DIRECTIVES.md#close-conceptual-gaps-through-judged-hand-edits); [Before applying anything: audit the why, not the what](DIRECTIVES.md#before-applying-anything-audit-the-why-not-the-what); [Trajectory, stopping, and the three exits](DIRECTIVES.md#trajectory-stopping-and-the-three-exits) | Three audit snapshots are the minimum window; stop only at one of the three exits. Surface a scope move to the user before making it. Record an owner's answer to a product question as one dated decision line in the plan. Present in-scope plan-level findings as the plan-gap map. |
 | Running and the post-run tail | [`--commit`](DIRECTIVES.md#--commit); [When a `run` step's own tests fail](DIRECTIVES.md#when-a-run-steps-own-tests-fail); [After `run` finishes a plan](DIRECTIVES.md#after-run-finishes-a-plan); [Post-run reconcile-tail stop rule](DIRECTIVES.md#post-run-reconcile-tail-stop-rule); [The two reconcile verbs are not interchangeable](DIRECTIVES.md#the-two-reconcile-verbs-are-not-interchangeable) | Run a plan's steps through `run`, with `--commit` unless the user withholds commits (then one step at a time); never mark a step `done` by hand-editing. After the last green step, run `reconcile-code <name> --all`, then a code-review pass to convergence; the reconcile tail has its own stop rule. |
 | Roadmap | [Roadmap](DIRECTIVES.md#roadmap) | Read the section before `roadmap`, including its resume and refusal semantics. |
@@ -95,12 +95,12 @@ resolve the provider condition and begin a new command (see RUNBOOK.md).
 When you (the agent) invoke plan-tool on the user's behalf, treat every run as
 **headless**: close stdin and pass `-y`.
 
-These are independent headless syntax examples, not a stage sequence. For
-sequential authoring, use the completeness recipe below and the two audit
-gates in DIRECTIVES.md; review and commit judged corrections between stages.
+These independent headless syntax examples use an approved, committed seed
+for `create`. Follow [Authoring hygiene](DIRECTIVES.md#authoring-hygiene) for
+that handoff and the completeness recipe below for the audit sequence.
 
 ```bash
-plan-tool create <slug> --from-existing /tmp/seed.md --output-dir docs/implementation-plans -y < /dev/null
+plan-tool create <slug> --from-existing <approved-seed> --output-dir docs/implementation-plans -y < /dev/null
 plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first
 plan-tool reconcile-plan <slug> -y < /dev/null # pre-execution only; -y auto-applies every recommendation without judgment
 ```
@@ -138,11 +138,11 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 | "reconcile printed `[REDIRECT]` — is it broken?" | Read the saved redirect and judge its root cause. Before execution, plan-side reconciliation may be appropriate. After execution, preserve the plan’s authority: correct a false plan claim through a session-directed edit or surface a scope decision; do not automatically invoke `detail --reconcile` or `reconcile-plan`. See DIRECTIVES.md’s reconciliation directionality rule. |
 | "show me the prompt without running it" | add `--dry-run` |
 | "this run feels slow / hung" | `plan-tool runs list --slug X`, then `plan-tool runs show X/<run_id>`; or `cat .plan-tool/runs/X/in-flight.json` live |
-| "make the plan as complete as possible" | Commit a clean baseline before each stage. Ground and review a seed, then `plan-tool create <slug> --from-existing <seed> --iterate -y < /dev/null` → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (bare) → `plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first` (one-shot) → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (detail-grounded). Read each report and apply judged conceptual corrections through the session; commit corrections before re-auditing and continue under the canonical convergence rules. Preserve user review/continuation boundaries and stop before implementation. |
-| "I have a big doc — make a plan from it" | `plan-tool create <slug> --from-existing <path>` (a distill first-pass reorganizes the seed; if it spans several independent efforts, create proposes a multi-plan split and writes a `<slug>-split-proposal.md` worksheet instead of a plan) |
+| "make the plan as complete as possible" | Follow [Authoring hygiene](DIRECTIVES.md#authoring-hygiene) to ground a standalone seed, get the user's approval, and commit the reviewed file. Use its exact path and commit a clean baseline before each stage. `plan-tool create <slug> --from-existing <seed> --iterate -y < /dev/null` → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (bare) → `plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first` (one-shot) → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (detail-grounded). Read each report and apply judged conceptual corrections through the session; commit corrections before re-auditing and continue under the canonical convergence rules. Preserve user review/continuation boundaries and stop before implementation. |
+| "I have a big doc — make a plan from it" | Follow [Authoring hygiene](DIRECTIVES.md#authoring-hygiene) to ground a standalone seed for one effort, cite the original document in References, get approval, and commit the seed. Pass the reviewed seed's path to `plan-tool create <slug> --from-existing <path>`. |
 | "I have a project-sized concept, not a single feature" | `plan-tool roadmap <slug> --from-existing <concept.md>` — see DIRECTIVES.md's Roadmap section for artifact layout, resume, and refusal semantics |
 | "reopen a retained roadmap feedback item" | `plan-tool roadmap <slug> --reopen-ledger-feedback ITEM_ID` — see DIRECTIVES.md's Roadmap section |
-| "author a plan and classify each step" | `plan-tool create <slug>` — the wizard prints each step's proposed `change_type` + rationale and prompts `(r)efactor / (f)eature / (n)on-code / (s)plit` per step |
+| "author a plan and classify each step" | Follow [Authoring hygiene](DIRECTIVES.md#authoring-hygiene) and use the approved seed with `plan-tool create <slug> --from-existing <path>`. In an interactive run, the wizard prints each step's proposed `change_type` + rationale and prompts `(r)efactor / (f)eature / (n)on-code / (s)plit` per step |
 | "split step N of plan X into smaller steps" / completeness flagged a BLOCKED 'needs a new step' | `plan-tool split X --step N --into "<first>" --into "<second>"` — renumbers the plan, authors the new halves, then re-runs the completeness audit |
 | "merge steps N and M of plan X into one" / a plan is over-decomposed | `plan-tool merge X --steps N --steps M` — folds the set into one step, renumbers the plan, re-authors the merged detail, then re-runs the completeness audit (confirmed at the TTY; bypassed under `--yes` / non-TTY) |
 | "a step keeps re-flagging and won't shrink / carve it out and defer it" | `plan-tool scope-out X --step N` — carves the over-packed step out of the plan into a `create --from-existing` forward-seed and narrows the plan (recommend-only by default; `--apply` + a TTY confirm to mutate; seed-first, no model call) |
@@ -169,7 +169,7 @@ directives for judged corrections, user review and continuation.
 | **Roadmap** (project-altitude, above the pipeline) | `roadmap <slug> --from-existing <concept.md>` [`--apply` [`-y`]] [`--view ...`] [`--compare`] — see DIRECTIVES.md | Yes (`--apply`, `--view`, `--compare`: no) |
 | **Discovery** | `list`, `list --status` (cached annotate rollup), `status <name>`, `validate <name>` | No |
 | **Project context** | `init --intent '…' [--non-goal '…'] [--decision '…']` — create the tracked, operator-confirmed `.plan-tool/project.json` profile before scope-bearing authoring and audit prompts. Revise it by editing the file and committing the change. | No |
-| **Authoring** | `create <slug>`, `detail <name>`, `split <name> --step N --into "..." --into "..."` (split one step into named sub-steps, author them, re-audit), `merge <name> --steps N --steps M` (fold a contiguous set of steps into one, re-author it, re-audit), `scope-out <name> --step N` (carve an over-packed step out into a `create --from-existing` forward-seed and narrow the plan; recommend-only, `--apply` to mutate) | Yes |
+| **Authoring** | [Authoring hygiene](DIRECTIVES.md#authoring-hygiene) → `create <slug> --from-existing <path>`, `detail <name>`, `split <name> --step N --into "..." --into "..."` (split one step into named sub-steps, author them, re-audit), `merge <name> --steps N --steps M` (fold a contiguous set of steps into one, re-author it, re-audit), `scope-out <name> --step N` (carve an over-packed step out into a `create --from-existing` forward-seed and narrow the plan; recommend-only, `--apply` to mutate) | Yes |
 | **Annotate** (forward seed) | `annotate <path-or-glob>...` — judge old plans against current code, emit `<stem>.annotated.md` (verbatim + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED/NEEDS-REVIEW plus grounding) and a carryover `<stem>.seed.md` for the next `create --from-existing`; batch runs end with a coverage/grounding summary table; read-only on sources except opt-in `--archive` (numbered on archive collisions). `--iterate` is rejected; iterate the follow-up `create`, not annotate. | Yes |
 | **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (pre-execution only; edit a stale plan against current code), `reconcile-code <name>` (post-execution; plan is canonical, edits code), `detail <name> --reconcile` (pre-execution, per-step plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip backend calls on no drift) | Yes (walk/refresh-no-drift: no) |
 | **Audit · verify** (read-only) | `verify-all <name> --rollup` (verdict), `verify-all <name> --mode <m>` (sweep), `run <name> --mode <review>` | Yes |
@@ -255,9 +255,8 @@ These live in the plan-tool repo (paths relative to its root):
 - **`RUNBOOK.md`** — operational walkthroughs ("how do I X?"): start a plan,
   drive to completion, converge with `--iterate`, review before running,
   export to JIRA, recover an interrupted run, investigate a slow run.
-- **`SEED_FORMAT.md`** — authoring directives for the `docs/implementation-plans/plan-seeds/*.md`
-  briefs fed to `create --from-existing`: density, single-effort focus,
-  destinations-not-turn-by-turn, and the required scope-contract fence.
+- **`SEED_FORMAT.md`** — the authoritative seed format. Start with
+  [Authoring hygiene](DIRECTIVES.md#authoring-hygiene) in the installed sibling.
 - **`PLAN_FORMAT.md`** — the frontmatter schema, field semantics, and the
   canonical step layout.
 - **`ROADMAP_FORMAT.md`** — the on-disk schema for `roadmap`'s four artifacts,

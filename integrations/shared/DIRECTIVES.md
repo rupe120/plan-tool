@@ -114,8 +114,9 @@ up through conversation:
 ## Running from chat / automation (no TTY)
 
 Treat every assistant-driven run as **headless**: close stdin and pass `-y`.
-These are independent syntax examples, not a stage sequence: sequential
-authoring follows Gate 1 and Gate 2 below.
+These independent syntax examples use an approved, committed seed for
+`create`. Follow [Authoring hygiene](#authoring-hygiene) for that handoff,
+then Gate 1 and Gate 2 for sequential authoring.
 
 ```bash
 plan-tool create <slug> --from-existing <seed> --output-dir docs/implementation-plans -y < /dev/null
@@ -160,14 +161,17 @@ Continue monitoring and report that evidence; ask the user before stopping or
 killing a live `plan-tool` process. Consider recovery or resume only after the
 original command has definitely exited.
 
-**Classify preflight refusals accurately.** A seed or command preflight refusal
-is a normal no-authoring outcome, not a backend or execution failure. That
-covers a missing required `## References` section and a
-`route: refused — file-backed source: …` exit 2 from the distill route: both are
-a defect in the seed, not model variance. Do not retry the same input; read the
-reason printed after `file-backed source:`, correct the seed to clear it,
-commit the correction, and start a new invocation only after any prior
-invocation has exited.
+**Classify preflight refusals accurately.** After confirmed exit, read the
+reason. For an unmatched fence, unusable References, or a missing, duplicate,
+empty, or placeholder guardrail section, fix the seed, get the user's approval
+of the revised file, and commit it before retrying. These preflight checks
+stop before routing and leave no run record. A `route: refused — file-backed
+source: …` message reports a decision after preflight. When preparation
+reports unsupported evidence, look through the approved seed for evidence
+that supports the named section. If it is missing, add it under that heading,
+get the user's approval of the corrected seed, and commit it before retrying.
+If the evidence is present, follow the emitted instruction to retry unchanged.
+For other route refusals, follow the printed reason and next action.
 
 **A run another session launched is not yours to poll.** Watching a
 `plan-tool` command you did not start — reading its `in-flight.json` or run log
@@ -315,10 +319,10 @@ installed backend.
 - **Creation tier — roadmap, seeds, and `create`.** These establish scope and constrain
   everything downstream: the seed scope, step list, `depends_on` graph, and file
   footprints that every later `detail`, `run`, and audit round inherits. A wrong
-  decomposition compounds because it gets
-  *elaborated* by every step that follows. `create`'s two conceptual sub-passes
-  are the reason — the distill "one plan, or many?" decision, and the step
-  proposal that authors the dependency graph.
+  decomposition compounds because every step that follows elaborates it.
+  File-backed `create` decides whether the seed supports one plan through
+  direct assessment or preparation. When it needs a step proposal, that
+  proposal authors the dependency graph.
 - **Working tier — subsequent work,** including `detail`, `run`, both reconcile
   verbs, `verify-all`, `jira`, and the completeness audit. These scale with
   steps and iterations, and a weaker call surfaces as a failing test or a
@@ -1401,53 +1405,291 @@ model; they do not certify the semantic quality of a generated design.
 
 # Authoring hygiene
 
-**Feed `create` a seed file via `--from-existing <path>`, not an inline `--from`
-string.** A seed file is reviewable, diffable, and re-runnable; a long inline
-`--from` is none of those. Reserve `--from` for throwaway one-liners.
+Use this section from the installed router to turn one request, a selected
+backlog entry, or one effort from a larger document into a reviewed input for
+`create --from-existing`. `SEED_FORMAT.md` in the plan-tool repository remains
+the authoritative seed format.
 
-**Use the canonical H2 section names** so the seed's prose lands in the plan body
-instead of falling through to `_(TODO)_` placeholders — `_render_plan_body`
-matches by case-insensitive exact name, with no synonym mapping:
+Suppose a user asks, “Make CSV export honor the status I selected. Keep the
+same output columns.” Confirm what happens when no status is selected, then
+put that decision and the checks in a seed for the user to approve. The
+[worked seed](#request-example) keeps the existing all-rows default.
+For a selected backlog entry, follow the [backlog example](#backlog-derived-variation).
+Use the [file-backed intake rules](#file-backed-intake) to check either seed.
 
-`## Overview` · `## Problem statement` · `## Architecture` ·
-`## Scope of work` (extracted to `## Steps`) · `## Out of scope` · `## Risks` ·
-`## Testing` · `## Acceptance criteria` · `## Deferred`
+## From a request to an approved seed
 
-Free-form sections that don't fit (design decisions, context already in place)
-fold into `## Architecture`; if they fit nowhere canonical they belong in
-per-step detail files, not the seed.
+1. **Check the request and the live code.** Start with the requested result and
+   its limits. Open the current entry point and relevant tests at HEAD. Use
+   repo-relative paths and symbols or test names to record what each source
+   establishes. Ask the user to settle a product choice before writing it as
+   a commitment.
+2. **Write one standalone brief** at
+   `docs/implementation-plans/plan-seeds/<slug>.md`. Put one measurable result
+   in the first non-empty paragraph of `## Outcome`. `create` reads it from the
+   raw selected source before routing, ignores standalone `---`, `***`, and
+   `___` thematic breaks, and collapses whitespace for the plan's `intent`.
+   Cite the original request, backlog entry, or larger document in
+   `## References` alongside the code and tests you opened. Leave out legacy
+   YAML provenance that can select a different input file.
+3. **State the full scope contract and carry its binding limits forward.**
+   Use the fields below. Name the smallest end-to-end proof and the existing
+   behavior it must preserve. State guarantees, their owners, and any
+   required ordering. When the brief names a closed set of states, describe
+   each state's contract or assign that work to `create`.
+4. **Check and review the file.** Check each claim against the request or
+   backlog entry and live code, trace the boundaries into the guardrails, and
+   check the [file-backed intake rules](#file-backed-intake). Fix material
+   correctness gaps and any omission that contradicts the Outcome or scope,
+   leaves a settled decision incomplete, or prevents a coherent plan. Leave
+   per-step mechanics to the pipeline. Show the user the seed and its evidence
+   and ask them to review it. Apply requested edits and repeat these checks.
+5. **Commit the approved file and use that exact path.** All three installed
+   routers hand the approved standalone seed to
+   `plan-tool create <slug> --from-existing <path>`. Apply the
+   [model-selection rules](#which-model-to-run-a-subcommand-with) and
+   [headless rules](#running-from-chat--automation-no-tty). For the example
+   below, the invocation before any required backend or model flags is
 
-**Seed size:** below 16 KB a seed skips distillation (assumed canonical-shaped);
-above it, a distill pass either reorganizes into canonical sections or returns a
-multi-plan split proposal. No truncation. Opt out with `--no-distill`.
+   ```bash
+   plan-tool create report-status-export --from-existing docs/implementation-plans/plan-seeds/report-status-export.md --output-dir docs/implementation-plans --iterate -y < /dev/null
+   ```
 
-**State the seed's commitments explicitly — the audit traces what a seed stakes
-out.** Completeness audits discover defects by inventorying commitments (closed
-vocabularies, guarantees, lifecycles, precedence rules, checkable code claims)
-and tracing each end-to-end; a commitment the seed implies but never states is
-reconstructed one finding arc at a time. Concretely: a guarantee ("never X")
-names its mechanism, owning destination, and ordering fence; a named enum or
-state set carries a per-value contract (definition, producer, precedence,
-consumers, operator exit path) or assigns it to `create` in one line; every
-checkable claim about existing code is grep-verified with a named anchor before
-`create` runs; and an In-scope item whose core design question sits in the same
-seed's Deferred list is a second effort — fence it out. Full directives and the
-measured evidence: `SEED_FORMAT.md` in the plan-tool repo.
+The full scope contract describes the effort.
 
-**Do not kill the iterate loop mid-flight.** The convergence pass is what fills
-remaining TODO body sections. Killing the process before convergence leaves
-TODOs that must be hand-filled.
+| Field | What to write |
+| --- | --- |
+| Outcome | The measurable user result that supplies plan intent. |
+| In scope | The surfaces and seams the effort touches. |
+| Out of scope / Non-goals | The work the plan excludes. Use `## Out of scope` to also supply the canonical body section. |
+| Allowed behavior changes | The permitted changes and the behavior to preserve. |
+| Allowed reorganization | Any permitted move and the ownership blocker that requires it, or state that no moves are needed. |
+| Verification | Under `## Testing`, name the proof and the preserved behavior it checks. Under `## Acceptance criteria`, state the observable results. |
+| Stop / defer | When to stop and where to record work outside the fence. |
 
-**Backlog-derived seeds carry backlog reconciliation forward.** Name the source
-entry in the seed and require the resulting plan to update the originating
-backlog file when the work ships — usually in its final docs/status step and
-acceptance criteria. Authoring the plan alone does not remove the entry. A
-backlog-derived seed also **inherits the source entry's full scope contract**;
-the seed elaborates that fence rather than inventing a different one. Where a
-repo promotes backlog items to tracker tickets and leaves a one-line stub (the
-entry's id, title, and ticket key) in the backlog, the seed also names the
-ticket, copies the scope contract from it, and the plan's final step removes
-the stub.
+Use the exact guardrail H2s for limits that must bind the plan and downstream
+prompts. `create` carries these bodies forward from the selected raw source.
+
+| Heading | Binding limit |
+| --- | --- |
+| `## Scope guardrails` | Which changes are permitted and what must be preserved. |
+| `## Audit guardrails` | Which commitments the audit evaluates and where its scope ends. |
+| `## Expected placement` | The required home for the work. |
+
+Use `None` only when no boundary of that kind applies. Check the meaning of
+each limit during seed review. Intake checks section structure and presence.
+
+### Request example
+
+In this sample repository, `reports/cli.py:export_report` receives the
+selected status and passes all rows to the writer. The assistant checks
+the CSV header and unfiltered rows in `tests/test_reports.py:test_export_csv`.
+The user confirms the all-rows default should stay. The paths and symbols
+illustrate what to verify in a consuming repo. This seed has the canonical
+body needed for direct assessment.
+
+```markdown
+# Filter report CSV export by selected status
+
+## Outcome
+
+Export only rows matching the selected status in the report CSV, with the existing columns in their current order.
+
+## Overview
+
+Apply the selected status to the existing report export.
+
+## Problem statement
+
+The export handler receives the selected status and sends all rows to the CSV writer.
+
+## In scope
+
+The report CSV export and its command-level regression coverage.
+
+## Architecture
+
+Apply the selection in the existing export handler before calling the CSV writer.
+
+## Out of scope
+
+Changes to status selection, other export formats, and the CSV schema.
+
+## Allowed behavior changes
+
+Only row inclusion changes when a status is selected. Keep the all-rows default.
+
+## Allowed reorganization
+
+Keep the existing handler and writer in their current modules.
+
+## Risks
+
+Applying a status predicate when no status is selected could drop rows from the default export.
+
+## Testing
+
+Run the export command against a fixture with open and closed rows, once with open selected and once without a selection. Check the header in both outputs.
+
+## Acceptance criteria
+
+- Selecting open exports only open rows.
+- With no selection, the CSV contains all fixture rows.
+- Both exports retain the existing header and column order.
+
+## Stop / defer
+
+Stop if delivery requires changing the CSV schema or other formats. Record that work separately in the backlog.
+
+## Deferred
+
+Other export formats stay outside this effort.
+
+## Scope guardrails
+
+Change row inclusion for selected statuses only. Preserve the no-selection default, CSV header and column order, status selection behavior, and other export formats. Keep the existing handler and writer in place.
+
+## Audit guardrails
+
+Judge selected-status CSV export and preservation of the existing CSV contract. Leave other export formats outside the audit.
+
+## Expected placement
+
+Keep selection handling in the existing report export handler and command coverage with the report export tests.
+
+## References
+
+- User request and follow-up in this conversation — change selected-status row inclusion, preserve the columns, and keep the all-rows default.
+- `reports/cli.py:export_report` — receives the selected status and passes all rows to the writer.
+- `tests/test_reports.py:test_export_csv` — pins the existing CSV header, column order, and unfiltered rows.
+```
+
+### Backlog-derived variation
+
+Select one entry. Copy its full seven-field scope contract into the seed and
+elaborate within that fence. For promoted work, read the contract in the
+ticket and cite both the ticket key and the local promotion stub. Check both
+the source commitments and the live code before user review. Require the
+resulting plan to include and verify the backlog update when the work ships.
+While execution is pending, mark an unpromoted entry plan-authored and link its
+plan. Remove the shipped entry or promotion stub after delivery and verification.
+
+In this sample repository, `BACKLOG.md` #42 points to `REPORTS-42`. The ticket's
+seven fields appear under their matching headings below, with Verification
+under Testing. The assistant opens the stub and ticket, then confirms the
+export order in the handler and the test. This seed leaves Overview
+derivable, so it takes the preparation route.
+
+```markdown
+# Order report CSV rows by report ID
+
+## Outcome
+
+Export report CSV rows in ascending report ID order.
+
+## In scope
+
+Report CSV row order and regression coverage.
+
+## Out of scope
+
+CSV columns, filtering, and other export formats.
+
+## Allowed behavior changes
+
+Change only CSV row order.
+
+## Allowed reorganization
+
+Keep the existing export handler and writer.
+
+## Testing
+
+Export a fixture supplied in descending ID order and verify ascending IDs with the existing header and row set.
+
+After delivery and the export check pass, verify that BACKLOG.md no longer contains the #42 promotion stub.
+
+## Stop / defer
+
+Stop and file separate backlog work if delivery requires changes to report IDs or filtering.
+
+## Risks
+
+Applying the sort to shared report data could change the order in other export formats.
+
+## Deferred
+
+No follow-on work is required for this entry.
+
+## Acceptance criteria
+
+- The CSV lists the fixture rows by ascending ID with the existing header and row set.
+- After delivery and verification, BACKLOG.md contains no #42 stub for REPORTS-42.
+
+## Scope guardrails
+
+Limit product changes to CSV row order. Preserve report IDs, columns, filtering, and other formats. Keep the handler and writer in place.
+
+## Audit guardrails
+
+Check CSV row order, the existing CSV contract, and the shipment check for the #42 stub.
+
+## Expected placement
+
+None
+
+## References
+
+- `BACKLOG.md` #42 — local promotion stub for REPORTS-42 and target of the shipment update.
+- `REPORTS-42` — source of the scope contract and required ordering.
+- `reports/cli.py:export_report` — passes rows to the writer in their input order.
+- `tests/test_reports.py:test_export_csv` — pins the header and rows for an unfiltered export.
+```
+
+Here, the ticket fixes the existing component boundaries and leaves the
+location of the ordering logic within them open. That leaves no additional
+placement requirement.
+
+## File-backed intake
+
+- **Pass preflight.** Close every Markdown code fence with a matching fence
+  so later headings remain visible. Supply exactly one real `## References`
+  with usable, non-placeholder evidence outside fenced code. A heading shown
+  inside an example or a References body made entirely of fenced code cannot
+  satisfy the check. Supply each of the three guardrail H2s exactly once
+  outside fenced code, with a non-empty, non-placeholder body. `_(TODO)_`
+  fails. `None` passes guardrail presence, as does fenced content beneath a
+  real guardrail heading. Preflight refusals occur before routing, model calls,
+  and a run record.
+- **Select direct assessment with the canonical body.** After preflight,
+  direct readiness requires exactly one non-empty, non-placeholder body
+  for each of `## Overview`, `## Problem statement`, `## Architecture`,
+  `## Out of scope`, `## Risks`, `## Testing`, `## Acceptance criteria`, and
+  `## Deferred` after fenced code is stripped. Heading matching normalizes
+  case and an optional closing ATX sequence such as `## Testing ##`. Use
+  those names as written. Keep `## Outcome`, `## In scope`, and the rest of the
+  scope contract as well. `create` assesses the raw source. A valid
+  single-plan result publishes directly and can import valid strict
+  `## Steps` or use a step proposal. A split proposes carving the source.
+  An invalid assessment refuses the source.
+- **Use preparation for an otherwise valid seed with an incomplete canonical
+  body.** A missing, duplicate, empty, or placeholder canonical section
+  selects visible preparation. A Testing section containing only a fenced
+  command is empty for this check. Preparation can derive Overview, Problem
+  statement, and Architecture from intent. Give it source evidence for scope
+  exclusions, risks, testing, and acceptance criteria. Name any real
+  deferrals and state when there are no known risks. One-plan normalization
+  uses the ordinary step proposal. Preparation can also propose a split or
+  refuse.
+
+**Read the result after confirmed exit.** A direct or normalized plan is
+published and registered. A split proposal or refusal leaves the seed
+available without publishing a plan. Follow the printed carving or recovery
+action and the rule in “Classify preflight refusals accurately” above. When a
+normalized plan is already registered and the command prints
+`iteration loop FAILED` or records `iteration_incomplete`, continue it with
+`plan-tool completeness-audit <slug> --iterate` and the shared headless and
+model-selection rules.
 
 **Route out-of-scope findings to the backlog files**, not standalone findings
 docs. A `steps: []` findings stub falls outside plan discovery, never converges,

@@ -18,6 +18,10 @@ import yaml
 
 import plan_tool.cli as cli
 from plan_tool.backend import _packaged_integrations_dir
+from plan_tool.cli.authoring import _read_seed_body
+from plan_tool.create import select_file_backed_source, validate_from_existing_seed
+from plan_tool.review import fenced_spans
+from plan_tool.scope_fence import extract_h2_sections
 from tests.skill_router_phase import LINK_RE, anchors, phase_section
 
 
@@ -444,17 +448,141 @@ def test_skill_file_discovery_finds_every_router_and_the_tracked_skill() -> None
     } <= names
 
 
-@pytest.mark.parametrize("flags", [[], ["--copy"]], ids=["symlink", "copy"])
+def _follow_authoring_link(router_path: Path, row: str) -> str:
+    fragment = "authoring-hygiene"
+    assert LINK_RE.findall(row).count(fragment) == 1, row
+    # A relative link starts at the install location, even for a symlinked router.
+    directives = router_path.with_name("DIRECTIVES.md").read_text(encoding="utf-8")
+    assert fragment in anchors(directives)
+    return directives
+
+
+@pytest.mark.parametrize("flags", [[], ["--copy"]], ids=["default", "copy"])
 @pytest.mark.parametrize("integration", ("claude", "codex", "cursor"))
 def test_installed_router_links_resolve_against_the_installed_directives(
     tmp_repo, integration: str, flags: list[str]
 ) -> None:
-    """The reader sees the installed pair, not the repo files: both install modes keep the links live."""
     assert cli.main(tmp_repo.argv("install-skill", "--integration", integration, *flags)) == 0
     root = ".agents" if integration == "codex" else ".claude"
-    skill_dir = tmp_repo.root / root / "skills" / "plan-tool"
-    router = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
-    directives = (skill_dir / "DIRECTIVES.md").read_text(encoding="utf-8")
-    linked = LINK_RE.findall(phase_section(router, f"installed {integration}"))
-    assert linked
-    assert set(linked) <= anchors(directives)
+    router_path = _dest(tmp_repo, root)
+    directives_path = _directives_dest(tmp_repo, root)
+    for installed in (router_path, directives_path):
+        assert installed.is_file()
+        assert installed.is_symlink() == (integration != "codex" and not flags)
+
+    router = router_path.read_text(encoding="utf-8")
+    phase = phase_section(router, f"installed {integration}")
+    [authoring_row] = [line for line in phase.splitlines() if line.startswith("| Authoring (")]
+    [big_doc_row] = [
+        line for line in router.splitlines() if line.startswith('| "I have a big doc')
+    ]
+    directives = _follow_authoring_link(router_path, authoring_row)
+    assert _follow_authoring_link(router_path, big_doc_row) == directives
+    assert set(LINK_RE.findall(phase)) <= anchors(directives)
+
+
+def test_installed_seed_examples_match_intake_and_source_evidence(tmp_repo) -> None:
+    assert cli.main(tmp_repo.argv("install-skill", "--copy")) == 0
+    router_path = _dest(tmp_repo)
+    phase = phase_section(router_path.read_text(encoding="utf-8"), "installed Claude")
+    [authoring_row] = [line for line in phase.splitlines() if line.startswith("| Authoring (")]
+    directives = _follow_authoring_link(router_path, authoring_row)
+    fences = fenced_spans(directives)
+    headings = (
+        match for match in re.finditer(r"^# (.+)$", directives, re.M)
+        if not any(start <= match.start() < end for start, end in fences)
+    )
+    authoring_heading = next(match for match in headings if match[1] == "Authoring hygiene")
+    next_heading = next(headings, None)
+    end = next_heading.start() if next_heading else len(directives)
+    authoring = directives[authoring_heading.end():end]
+    walkthrough = extract_h2_sections(authoring, ignore_fenced_code=True)[
+        "from a request to an approved seed"
+    ]
+    request_seed, backlog_seed = re.findall(r"^```markdown\n(.*?)^```$", walkthrough, re.M | re.S)
+    request = extract_h2_sections(request_seed)
+    backlog = extract_h2_sections(backlog_seed)
+    fenced_testing = request_seed.replace(request["testing"], "```sh\nreport export\n```", 1)
+
+    seeds_dir = tmp_repo.root / "docs/implementation-plans/plan-seeds"
+    seeds_dir.mkdir(parents=True)
+    for name, seed, direct_ready in (
+        ("report-status-export", request_seed, True),
+        ("report-csv-order", backlog_seed, False),
+        ("report-status-export-fenced-testing", fenced_testing, False),
+    ):
+        path = seeds_dir / f"{name}.md"
+        path.write_text(seed, encoding="utf-8")
+        text = path.read_text(encoding="utf-8")
+        assert text.startswith("# ")  # The example starts with its own title, without provenance.
+        separate_source = _read_seed_body(path, text)
+        assert separate_source is None
+        selected = select_file_backed_source(separate_source, text)
+        assert selected == seed
+        intake = validate_from_existing_seed(selected, source=path)
+        assert intake.references_ready
+        assert intake.direct_ready is direct_ready
+        assert intake.needs_preparation == (not direct_ready)
+
+    # The examples describe the same sample repo and cite these live seams.
+    evidence = {
+        "reports/cli.py": (
+            "def export_report(rows, selected_status, writer):\n"
+            "    writer.writerow(('id', 'status'))\n"
+            "    writer.writerows(rows)\n"
+        ),
+        "tests/test_reports.py": (
+            "import csv\n"
+            "from io import StringIO\n"
+            "from reports.cli import export_report\n\n"
+            "def test_export_csv():\n"
+            "    output = StringIO()\n"
+            "    export_report([(2, 'closed'), (1, 'open')], None, csv.writer(output))\n"
+            "    assert output.getvalue().splitlines() == ['id,status', '2,closed', '1,open']\n"
+        ),
+        "BACKLOG.md": "## #42 — Order report CSV rows by report ID\n\nPromoted to REPORTS-42.\n",
+        "REPORTS-42.md": (
+            "# REPORTS-42\n\n"
+            "Sort CSV by ascending report ID. Keep IDs, columns, filtering and other formats.\n"
+            "Keep the export handler and writer. Either may own the sort.\n"
+            "Verify with out-of-order IDs and unchanged headers and rows, then remove stub #42.\n"
+            "Defer changes to report IDs or filtering.\n"
+        ),
+    }
+    for relative, body in evidence.items():
+        source = tmp_repo.root / relative
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text(body, encoding="utf-8")
+
+    for example in (request, backlog):
+        assert all(example[field] for field in (
+            "outcome", "in scope", "out of scope", "allowed behavior changes",
+            "allowed reorganization", "testing", "acceptance criteria", "stop / defer",
+            "risks", "deferred", "scope guardrails", "audit guardrails", "expected placement",
+        ))
+        assert example["scope guardrails"] != "None"
+        assert example["audit guardrails"] != "None"
+        citations = re.findall(r"`([^`]+\.py):(\w+)`", example["references"])
+        assert set(citations) == {
+            ("reports/cli.py", "export_report"), ("tests/test_reports.py", "test_export_csv"),
+        }
+        for relative, symbol in citations:
+            source = (tmp_repo.root / relative).read_text(encoding="utf-8")
+            assert f"def {symbol}(" in source
+
+    assert "User request and follow-up" in request["references"]
+    assert "no-selection default" in request["scope guardrails"]
+    assert "CSV header and column order" in request["scope guardrails"]
+    assert request["expected placement"] != "None"
+
+    [stub_path] = re.findall(r"^- `([^`]+)` #42\b", backlog["references"], re.M)
+    [ticket_key] = re.findall(r"^- `([A-Z]+-\d+)`", backlog["references"], re.M)
+    assert stub_path == "BACKLOG.md"
+    assert ticket_key == "REPORTS-42"
+    stub = (tmp_repo.root / stub_path).read_text(encoding="utf-8")
+    ticket = (tmp_repo.root / f"{ticket_key}.md").read_text(encoding="utf-8")
+    assert "#42" in stub and f"Promoted to {ticket_key}" in stub
+    assert ticket.startswith(f"# {ticket_key}\n")
+    assert "#42" in backlog["testing"]
+    assert ticket_key in backlog["acceptance criteria"]
+    assert backlog["expected placement"] == "None"

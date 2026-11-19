@@ -24,6 +24,7 @@ BACKENDS = ("claude", "codex", "cursor")
 PHASES = {
     "Authoring": (
         (
+            "authoring-hygiene",
             "explicit-overengineering-checkpoints",
             "pause-on-a-product-question--ask-dont-infer",
         ),

@@ -11,9 +11,9 @@
 | Field | Value |
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
-| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) merged at `d2112d875`. It covers the README slice of #510, the install and format references, and a changelog fragment. |
-| Local follow-up | `c5b202ed6` applies the owner-approved README heading cleanup and keeps `#start-here` working. `01390e991` brings the prepared demo seed and plan checkpoints into line with file-backed create preflight. |
-| Next | Complete the remaining #510 verification, then use #515's fresh-reader observations to select the next documentation slice. |
+| Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510 and the install and format references. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here`, clarifies the prepared demo, and lands the #377 plan and details. |
+| Local follow-up | `docs/installed-seed-authoring`, based on `c4f0afd07`, runs #377 steps 1 and 2 and corrects a preparation refusal in the due-dates demo. |
+| Next | Review and ship the installed guidance, then reconcile #377 tracking after shipment. Finish #510 and use #515's fresh-reader observations to select the next documentation slice. |
 
 ### What to carry forward
 
@@ -105,15 +105,48 @@ exit before returning to the prepared branches.
    provenance selection paths. The audit has no clean verdict for the final
    commit. The tool's step 3 authoring fingerprint remains advisory and
    reflects the plan footprint before the tracking paths were added. Step 3's
-   detail covers those paths. The reviewed bundle still needs approval and
-   normal merge to the remote default branch before execution.
+   detail covers those paths. PR #273 merged the plan and all three details
+   to `main` at `f968d7386`.
+
+   `run installed-seed-authoring --step 1 --commit -y` and the equivalent
+   step 2 command pass with Codex `gpt-6.2-sol`. The installed Authoring row
+   and big-document shortcut lead to the same shared walkthrough. Source
+   tests cover all three assistants in default and explicit `--copy` modes,
+   and removing either required link from a test-owned copy makes those
+   checks fail. The final isolated wheel (plan-tool 1.6.0, Python 3.14.7,
+   macOS 27.2.1 arm64) passes the same six install cases outside the source
+   checkout. Model-free intake confirms direct readiness for the request
+   seed and preparation for the backlog seed.
+
+   A report-only Codex review of `c4f0afd07..b25dfc03a` identifies four
+   corrections. `326a1947f` requires renewed seed approval on correction,
+   searches the whole approved seed for preparation evidence, verifies the
+   CSV preservation limits in the request guardrail, and records the
+   verified test command before any live demo implementation approval. The
+   focused suite passes 1,194 tests, the wheel repeats all six install
+   cases, and removing the CSV preservation limits fails the targeted test.
+   The follow-up review of `b25dfc03a..326a1947f` confirms all four remedies
+   with no new material issues. The final full suite reports 15,372 passed
+   and 66 skipped.
+   Step 3 requires shipment evidence. #377 and its linked Plan authored
+   status remain open while the guidance is on the local branch.
+
+   A wheel-backed live `create` rehearsal in a disposable consuming repo
+   initially refused preparation because the demo seed lacked Risks evidence.
+   Commit `b25dfc03a` adds source-backed risks, acceptance criteria, and
+   deferrals. The retry publishes and registers a normalized plan, and
+   `plan-tool validate due-dates` passes. The prepared reading walkthrough
+   reaches detail review with both authored audit transcripts. The [presenter
+   runbook](../docs/demos/getting-started/RUNBOOK.md#rehearsal-notes) owns the
+   live outcome and recovery steps.
 2. **Run #515.** Ask a fresh reader to install and discover the skill, follow
    a short prompt, review the seed and both audits, and stop at detail review.
    Capture the environment, assistant, backend, model, commands and artifact
    paths. Record where the reader guesses or backtracks. The pilot's local
    checks cover 71 legacy README anchors, 76 local links, six skill commands,
    the two prepared audit checkpoints, and CLI validation of the demo plan.
-   Fresh-reader and live-backend verification still need their own evidence.
+   Fresh-reader skill discovery and live bare and grounded audit review
+   still need their own evidence.
    [Install guide](../docs/how-to/install-and-update.md) · [Backlog](../BACKLOG.md)
 3. **Use #530 for observed stumbles.** If reading the final audit result is
    the friction, start the audit guide with the pilot's paired bare and
