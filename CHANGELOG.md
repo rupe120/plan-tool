@@ -6,6 +6,22 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.7.0'></a>
+## 1.7.0 — 2026-11-19
+
+### Changed
+
+- The conceptual audit of a roadmap-derived plan is now shown the paths that the other plans in the same roadmap will create, so it stops reporting those as missing files. Its findings are not filtered, so a finding of that kind is still worth checking against the sibling plans' `creates:`.
+- The saved audit revision moves to version 4 and records a `sibling_paths_digest`. After upgrading, a saved audit of a roadmap plan that has sibling plans reads stale once, and re-auditing is enough; a plan without siblings is unchanged, and so is an older saved report of one.
+
+- plan-tool uses `gpt-6.2-sol` by default when it selects Codex. Choose another model with `--model` or in your project’s backend configuration.
+
+- Start your first plan from a one-line request in the README, then follow a worked due-dates example through the seed, plan, audits, and step details.
+
+### Fixed
+
+- A plan written by an older `create`, whose `source_seed` is recorded relative to the plans directory, now resolves its seed. Its audit sees the seed's scope contract and, for a roadmap plan, the `creates:` paths of the sibling plans, and its saved audits read stale once after upgrade: re-audit once and treat that run as the new baseline. A `source_seed` that resolves repo-relative resolves exactly as before, and a plan whose seed file is gone stays unresolved.
+
 <a id='changelog-1.6.0'></a>
 ## 1.6.0 — 2026-11-17
 
