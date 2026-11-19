@@ -1,6 +1,6 @@
 # Captured examples of versioned persisted formats
 
-Each file here was written by the code of the release or commit in its name,
+Each file here was written by the code of the release or commit in its path,
 captured once, and is never edited or regenerated. A test
 (`tests/test_versioned_examples.py`) loads every example through today's reader
 and checks it against an expected record written in the test, so a reader change
@@ -51,6 +51,23 @@ it, so a reader that starts resolving them must cope with files that do not exis
 | `completeness-final.sidecar-v4.revision-v4.main-4226931b3.json` | `main` at `4226931b3` (revision v4, `sibling_paths_digest`, was introduced earlier in `6e873dd59`) | 4 | 4 |
 | `completeness-checkpoint.sidecar-v4.revision-v4.main-4226931b3.json` | `main` at `4226931b3` | 4 | 4 |
 
+## Plan and run-grade detail
+
+In throwaway checkouts of `v0.2.0` (`03cbb6882`) and `5d9ce9aca`, a one-off
+test in `tests/test_detail.py` calls the revision's `_write_orchestrator_plan`
+and runs its `generate_detail` for step 1 with `_GOOD_BODY` as the stubbed
+model response. The writer saves the detail and rewrites the plan with its
+detail pointer. Both output files are copied verbatim with their relative paths
+intact. `5d9ce9aca` comes from the pre-publication history, before the format
+declarations. It supplies the two declaration-free legacy version 1 examples.
+
+| File | Source | Declared format version |
+| --- | --- | --- |
+| `authored/v0.2.0/2-orch.md` | v0.2.0 | 1 |
+| `authored/v0.2.0/plan-details/orch/01-wire-up-renderer.md` | v0.2.0 | 1 |
+| `authored/5d9ce9aca/2-orch.md` | `5d9ce9aca` | none |
+| `authored/5d9ce9aca/plan-details/orch/01-wire-up-renderer.md` | `5d9ce9aca` | none |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -59,9 +76,9 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
 - the `data-contract` kind of saved report;
-- every other versioned format: plan and detail `format_version`, roadmap version
-  records, checkpoints, grounding, concept tree, purity cache, project profile, and
-  the decision-settlement receipt. Each needs its own capture from the release that
+- every other versioned format: roadmap version records, checkpoints, grounding,
+  concept tree, purity cache, project profile, and the decision-settlement
+  receipt. Each needs its own capture from the release that
   wrote it (BACKLOG #543).
 
 ## When a version changes
