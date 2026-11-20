@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from plan_tool.checkpoint import CHECKPOINT_SCHEMA_VERSION, Checkpoint, load_if_valid
 from plan_tool.cli.data_contract_cmd import _filter_candidates, _load_payloads
 from plan_tool.detail import parse_acceptance_bullets
 from plan_tool.detail_artifacts import SUPPORTED_DETAIL_FORMAT_VERSIONS
@@ -39,6 +40,14 @@ CAPTURED_DETAIL = "plan-details/orch/01-wire-up-renderer.md"
 CAPTURED_DATA_CONTRACT_REPORT = (
     FIXTURES / "data-contract" / "v1.8.0" / "20260526-120000-completeness.json"
 )
+CHECKPOINT_EXAMPLES = {
+    "checkpoint/v1.8.0/cp.json": Checkpoint(
+        input_hash="match",
+        payload="hello",
+        created_at="2026-11-20T04:10:32+00:00",
+        schema_version=1,
+    ),
+}
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
     r"(?:\.revision-v(?P<revision>\d+))?\.(?P<source>.+)\.json$"
@@ -222,6 +231,30 @@ def test_a_captured_data_contract_finding_loads_with_its_apply_payload() -> None
     }
 
 
+@pytest.mark.parametrize(("path", "expected"), CHECKPOINT_EXAMPLES.items())
+def test_a_captured_checkpoint_loads_only_for_the_matching_input(
+    path: str, expected: Checkpoint
+) -> None:
+    fixture = FIXTURES / path
+    raw = json.loads(fixture.read_text(encoding="utf-8"))
+    assert raw["schema_version"] == expected.schema_version
+
+    # Frozen captures outlive the normal resume window.
+    assert load_if_valid(
+        fixture, expected_input_hash=expected.input_hash, max_age_seconds=None
+    ) == expected
+    assert load_if_valid(
+        fixture, expected_input_hash="different-input", max_age_seconds=None
+    ) is None
+
+
+def test_the_current_checkpoint_schema_has_a_captured_example() -> None:
+    versions = {example.schema_version for example in CHECKPOINT_EXAMPLES.values()}
+    assert CHECKPOINT_SCHEMA_VERSION in versions, (
+        f"no example of checkpoint schema version {CHECKPOINT_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -239,4 +272,9 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         for path in CAPTURED_DATA_CONTRACT_REPORT.parent.iterdir()
         if path.is_file()
     }
-    assert rows == {path.name for path in EXAMPLES} | authored | data_contract
+    checkpoints = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "checkpoint").rglob("*.json")
+    }
+    assert checkpoints == CHECKPOINT_EXAMPLES.keys()
+    assert rows == {path.name for path in EXAMPLES} | authored | data_contract | checkpoints

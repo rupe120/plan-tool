@@ -82,6 +82,18 @@ retain their original names so the current reader can resolve the companion.
 | `data-contract/v1.8.0/20260526-120000-completeness.json` | v1.8.0 | Saved-review sidecar v1 |
 | `data-contract/v1.8.0/20260526-120000-completeness-data-contract.json` | v1.8.0 | Companion apply payload |
 
+## Checkpoint
+
+The `v1.8.0` release's
+`tests/test_checkpoint.py::test_load_returns_checkpoint_when_hash_matches`
+writes this checkpoint. The compatibility test uses the current reader with
+its age limit disabled because the captured timestamp stays fixed. It checks
+the stored payload and requires the original input hash.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `checkpoint/v1.8.0/cp.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -89,7 +101,7 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- every other versioned format: roadmap version records, checkpoints, grounding,
+- every other versioned format: roadmap version records, grounding,
   concept tree, purity cache, project profile, and the decision-settlement
   receipt. Each needs its own capture from the release that
   wrote it (BACKLOG #543).
