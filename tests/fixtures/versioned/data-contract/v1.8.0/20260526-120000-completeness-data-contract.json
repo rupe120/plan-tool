@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "dc": {
+      "candidate_fields": {
+        "field": "new_field"
+      },
+      "freshness": {
+        "contract_fingerprint": "contract",
+        "registry_fingerprint": "registry"
+      },
+      "operation": "add",
+      "target_section": "SavedReview"
+    }
+  },
+  "review_id": "20260526-120000-completeness"
+}

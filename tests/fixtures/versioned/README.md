@@ -68,6 +68,20 @@ declarations. It supplies the two declaration-free legacy version 1 examples.
 | `authored/5d9ce9aca/2-orch.md` | `5d9ce9aca` | none |
 | `authored/5d9ce9aca/plan-details/orch/01-wire-up-renderer.md` | `5d9ce9aca` | none |
 
+## Completeness report with a data-contract finding
+
+The `v1.8.0` release's
+`tests/test_completeness_report.py::test_write_report_persists_data_contract_recommendations_without_schema_change`
+writes all three files. The saved-review JSON carries the finding, and the
+companion JSON carries the apply payload keyed by the finding ID. The files
+retain their original names so the current reader can resolve the companion.
+
+| File | Source | Contents |
+| --- | --- | --- |
+| `data-contract/v1.8.0/20260526-120000-completeness.md` | v1.8.0 | Rendered report |
+| `data-contract/v1.8.0/20260526-120000-completeness.json` | v1.8.0 | Saved-review sidecar v1 |
+| `data-contract/v1.8.0/20260526-120000-completeness-data-contract.json` | v1.8.0 | Companion apply payload |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -75,7 +89,6 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- the `data-contract` kind of saved report;
 - every other versioned format: roadmap version records, checkpoints, grounding,
   concept tree, purity cache, project profile, and the decision-settlement
   receipt. Each needs its own capture from the release that
