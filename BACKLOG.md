@@ -423,9 +423,8 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
 - **T5 — export leg / UX / hygiene / cosmetic, and P4:** the P4 `plan`
   entries **#230** (`--time-budget` at durable batch boundaries) and **#89**
   (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
-  see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entry
-  **#497**; the P5 `plan` entry **#149** (compact detail
-  schema; its plan is on the board's Blocked lane despite the `ready` label);
+  see its entry's "Evidence it recurs"); the P5 `plan` entry **#149** (compact
+  detail schema; its plan is on the board's Blocked lane despite the `ready` label);
   **#56**; and the Bucket D consolidation pair
   **#79**–**#80** — where **#79 carries a warning**: four of its five original
   "duplicated helper" claims were wrong in the direction that breaks things,
@@ -3453,112 +3452,6 @@ working straight down the tiers.
   2026-11-14 from a history-counting advisory to one static line.
 - **Status:** not started.
 
-**#167 — Make plain English the default writing style for every generated plan-detail file**
-
-- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` · Principle `untriaged`
-- **Escalate to plan if:** the rubric change needs more than prompt text under
-  `plan_tool/prompts/`.
-- **What:** Change the `plan-tool detail` prompts so every generated per-step
-  detail file is understandable in plain English on a first read. The change is
-  a prompt-rubric delta: compare the rubric below with what
-  `plan_tool/prompts/detail.md` already says (it already carries a plain-language
-  top rule, a swap list, and an active-voice rule) and add only the missing
-  items. Keep concrete file paths,
-  symbol anchors, constraints, test intent, acceptance criteria, and any required
-  call order or compatibility rule. Those technical facts are non-negotiable;
-  rewrite only the prose around them into short, direct sentences and familiar
-  words. Detail should explain what to change, why it matters, and how to tell it
-  worked without making the reader decode dense phrasing.
-- **Why:** Detail is handed to people and executing agents after the planning
-  context has faded. Dense abstractions, stacked clauses, unexplained jargon, and
-  long lists of conditional mechanics make it hard to tell the required outcome
-  from optional implementation suggestions. They also encourage stale,
-  over-prescriptive prose. Plain English improves reviewability and supports
-  #164's lower-altitude contract without removing the evidence an implementer
-  needs to find the right code.
-- **Design (reshaped 2026-11-14 from four steps to two):**
-  1. Define the rubric delta for run-grade detail: lead with the outcome; **be
-     to the point — say each thing once, no filler, no restated context**;
-     expand or explain project abbreviations; separate required constraints
-     from suggested implementation; and use a small concrete example instead of
-     a dense abstract paragraph. Both directives (plain English and
-     conciseness) target the descriptive prose only — they never reduce code
-     anchors, paths, symbols, examples, or stated constraints. Add each item
-     that `detail.md` does not already say to `detail.md`, and the reviewer
-     wording to `detail-quality.md`. Preserve every full repo-relative path,
-     symbol anchor, identifier, test reference, and required
-     mechanical/compatibility sequence.
-  2. Land it together with #497's shared plain-words swap list, so the swap list
-     and the rubric are edited in one pass rather than twice.
-- **Cut 2026-11-14 (do not re-open without new evidence):** mechanical
-  readability checks (sentence length, undefined acronyms, buried outcomes) and
-  an opt-in re-author path for existing bundles. The checks are a
-  semantic-property proxy that fires on legitimate prose, which `CLAUDE.md`
-  § "Validating a semantic property you cannot observe" and #497 refuse; a
-  clarity finding comes from the model reviewer reading the rubric in
-  `detail-quality.md`, not from a heuristic. New detail is the target; existing
-  bundles are not rewritten.
-- **Decision (2026-08-27): plain, self-stated rubric — not an external writing
-  standard.** An earlier version of this entry proposed sourcing the
-  sentence-length/mechanical-signal thresholds from ASD-STE100 (Simplified
-  Technical English, an aerospace/defense controlled-language spec), reasoning
-  that an externally validated source would beat thresholds invented per plan.
-  Reconsidered: the core ask — short sentences, active voice, no filler — does
-  not need a licensed external standard's provenance to be legitimate; this repo
-  already states every other convention in its own words (this file, CLAUDE.md,
-  the format docs), and importing ASD-STE100 added real cost with no
-  corresponding benefit — a restricted-redistribution PDF to store and
-  hand-transcribe, and a controlled dictionary that would have flagged
-  legitimate API names (`invoker`, `fingerprint`, `worktree`) as violations had
-  it been adopted. With the mechanical checks cut, no thresholds remain to
-  source. Do not re-open without a concrete case where a self-stated rubric
-  produced a materially worse result than a sourced one would have.
-- **Effort:** small — `plan_tool/prompts/detail.md`,
-  `plan_tool/prompts/detail-quality.md`, and the prompt-rendering tests; no
-  parser or check code.
-- **Risks / fallout:** simplistic readability rules can erase necessary precision.
-  Treat paths, symbols, identifiers, code spans, test references, and stated
-  mechanical/compatibility constraints as immutable facts and keep the rubric
-  scoped to descriptive prose.
-- **Dependencies:** lands together with #497 (shared swap list); complements
-  #149 (compact structure). Jira-grade detail is retired, so this entry applies
-  only to supported run-grade detail.
-- **Scope contract:**
-  - **Outcome:** newly authored plan detail is clear, direct plain English while
-    retaining the actionable technical facts needed to implement and verify it.
-  - **In scope:** `detail.md` and `detail-quality.md` rubric text (the delta
-    against what they already say), and prompt-rendering tests.
-  - **Out of scope / Non-goals:** deliberately not mechanical readability checks
-    or thresholds (sentence length, undefined acronyms, buried outcomes) — a
-    semantic-property proxy that fires on legitimate prose, refused by
-    `CLAUDE.md` and #497; deliberately not an opt-in re-author path or any
-    rewrite of existing bundles; changing plan-body prose; removing, weakening,
-    or generalizing required evidence, file paths, symbols, tests, acceptance
-    criteria, or mechanical constraints; changing implementation behavior;
-    sourcing thresholds from an external writing standard (decided above).
-  - **Allowed behavior changes:** new detail output may be more concise and less
-    prescriptive; existing read compatibility remains.
-  - **Allowed reorganization:** only the prompt text needed to use one rubric
-    for supported run-grade detail, shared with #497's swap list.
-  - **Verification:** a prompt-rendering test shows each rubric item appears in
-    the rendered `detail.md` and `detail-quality.md` once, with the rubric
-    stating that paths, symbols, examples, and constraints are never reduced.
-    Review a sample run-grade detail for direct, outcome-first language without
-    loss of anchors.
-  - **Stop / defer:** if the delta against `detail.md` is empty, close this entry
-    with that finding rather than adding text.
-- **Approach:** `plan-tool`, direct. Prompt text only; no open architectural
-  experiment.
-- **Status:** not started. 2026-07-22 — two directives recorded: (1) the
-  rubric explicitly includes **conciseness** (prose to the point, not
-  verbose) alongside plain English, both aimed at descriptions only — code
-  anchors and examples are never reduced; (2) the then-supported Jira-grade
-  authoring lane applied this rubric at birth. That lane is retired;
-  this entry now owns only existing run-grade surfaces. Extending the same
-  rubric to **plan-body
-  prose** (`create` output) is outside this entry's fence — promote it to
-  its own entry when scheduling this work.
-
 **#149 — Compact `detail` output: a compact required-H2 authoring schema (phase B is the only phase) — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
 
 - **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `write-for-the-human`
@@ -4543,53 +4436,6 @@ working straight down the tiers.
 - **Origin:** 2026-11-14, `/code-review` of `commit-scoped-to-verb-footprint`
   (deferred as a cost, not a defect).
 - **Status:** not started.
-
-**#497 — Keep one plain-words swap list for the detail, audit, and apply prompts**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **What:** `plan_tool/prompts/detail.md` and `plan_tool/prompts/plan-audit.md`
-  each carry their own "Use plain, everyday words" swap list (for example
-  "key" not "load-bearing"). Extracting every quoted alternative after "not" from that
-  bullet in each file (so "fall-through" and "falls through" count separately)
-  gives 19 terms in `detail.md` and 17 in `plan-audit.md`;
-  14 are in both. Only `detail.md` has "fall-through", "falls through",
-  "kind-dispatch", "resolves", and "spans its footprint"; only `plan-audit.md`
-  has "a tautology", "footprint", and "vacuously". A swap added to one list does
-  not reach the other, so a reviewer sees different rules depending on which
-  prompt wrote the text. The roadmap stages already share one fragment
-  (`plan_tool/prompts/roadmap-writing-style.md`).
-- **Also decide:** both lists tell the model to swap "byte-identical" for
-  "unchanged" and "short-circuit" for "stop early". Those are exact claims (a
-  byte comparison, a control-flow behavior), and `synthesize-body.md` now says
-  not to loosen such terms. The merged list should keep or drop them on purpose.
-- **Why:** the lists are maintained by hand in two files, and they have already
-  drifted.
-- **Effort:** small; one shared fragment loaded as a template variable, as the
-  roadmap stages do.
-- **Risks:** the two prompts address different readers (an implementer for
-  `detail.md`, an operator triaging a finding for `plan-audit.md`), so the
-  lead-in sentence must stay per prompt; only the swap list is shared. Identity
-  was established by a regex over each bullet's quoted terms (counts above), not
-  an AST comparison, so re-run it before merging. Deliberately not merged:
-  `apply-finding.md` (no swap list, only a short style note),
-  `detail-quality.md` (a reviewer checklist of style nits, not a rewrite list),
-  `jira.md` (a plain-English summary rule for a product manager), and
-  `roadmap-writing-style.md` (roadmap prose, a different reader and rule set).
-- **Scope contract:**
-  - **Outcome:** one swap list included by both prompts.
-  - **In scope:** the two lists and the loader that renders them.
-  - **Out of scope / Non-goals:** changing any other prompt text; adding a
-    readability checker (the style guide and `CLAUDE.md` refuse one).
-  - **Allowed behavior changes:** each prompt gains the other's missing swaps.
-  - **Allowed reorganization:** none beyond the shared fragment.
-  - **Verification:** a test that both rendered prompts contain every term in
-    the shared list.
-  - **Stop / defer:** if the two readers need different lists, close this entry
-    with that reason.
-- **Origin:** 2026-10-19 review of generated plan and roadmap prose.
 
 **#431 — `_gate_correction`'s prefix matcher → one exhaustive `kind → remedy` table**
 
