@@ -183,25 +183,24 @@ obligation in `## Acceptance criteria`, `## Implementation` guarantees, or
 `must` / `must not` / `may` / `can`, and any of the three reads as
 ambiguous about whether it's required or merely recommended.
 
-Style nits (flag at **NIT**, never block): vague intensifiers ("a lot",
-"various"), filler ("it is worth noting"), historical narration
-("previously…", "(was: X)"), prose blocks >~5 lines that should be
-bullets, and fancy/uncommon vocabulary where a plain word reads the
-same — "load-bearing", "byte-identical", "elision/elided", "footprint",
-"self-referential", "posture", "tenet", "short-circuit",
-"fall-through", "kind-dispatch", "vacuous", "tautological",
-"unfalsifiable", "by construction", "orthogonal", "altitude",
-"fan-out" → "key/most important", "unchanged",
-"left out/dropped", "set of files", "refers to itself",
-"approach/rule", "stop early", "falls back", "splits by kind",
-"always true so it can never fail", "true by definition",
-"nothing could prove it wrong", "by the way it is built",
-"independent", "level of detail", "one call that runs several
-checks". The test
-is whether you'd say the word aloud to a teammate; if not, flag it.
-Don't flag exact technical identifiers (type/field/flag names, library
-concepts, named project terms like "leaf module") — only decorative
-word choices.
+Review clarity at **NIT** (advisory). Look for these writing choices:
+
+- Lead with the step's observable outcome in the Summary.
+- Say each thing once. Flag repeated context, vague intensifiers ("a lot",
+  "various"), filler ("it is worth noting"), and historical narration
+  ("previously…", "(was: X)").
+- Explain project abbreviations on first use.
+- Separate hard requirements from suggested implementation.
+- Use a small concrete example where it would make an abstract rule easier
+  to apply. Flag long blocks that would be easier to scan as bullets.
+
+Flag decorative words when a familiar phrase means the same thing. Common
+examples include "key" for "load-bearing", "left out" for "elided", "refers
+to itself" for "self-referential", and "independent" for "orthogonal".
+Preserve file paths, symbols, identifiers, examples, test references,
+acceptance criteria, and required ordering and compatibility constraints.
+Keep precise claims such as a byte comparison ("byte-identical") or
+specific control flow ("short-circuit").
 
 Severity guidance:
 

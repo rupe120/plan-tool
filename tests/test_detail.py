@@ -9484,6 +9484,30 @@ def _seed_step1_detail_file(tmp_path: Path) -> Path:
 class TestRenderDetailQualityPrompt:
     """``render_detail_quality_prompt`` substitutes plan/step/body context."""
 
+    def test_run_grade_writing_rubric_appears_once_in_author_and_review_prompts(
+        self, tmp_path: Path
+    ) -> None:
+        plan = parse_plan(_write_orchestrator_plan(tmp_path))
+        step = plan.step_by_id(1)
+        author = render_detail_prompt(plan, step, repo_root=tmp_path)
+        reviewer = render_detail_quality_prompt(
+            plan, step, repo_root=tmp_path, detail_body=_GOOD_BODY
+        )
+        rubric = (
+            "lead with the step's observable outcome",
+            "say each thing once",
+            "explain project abbreviations on first use",
+            "separate hard requirements from suggested implementation",
+            "use a small concrete example",
+            "preserve file paths, symbols, identifiers, examples, test references, "
+            "acceptance criteria, and required ordering and compatibility constraints",
+        )
+        for prompt in (author, reviewer):
+            wording = " ".join(prompt.lower().split())
+            for rule in rubric:
+                assert wording.count(rule) == 1, rule
+        assert "Review clarity at **NIT** (advisory)." in reviewer
+
     def test_detail_quality_prompt_renders_supplied_risk_context_block(
         self, tmp_path: Path
     ) -> None:
