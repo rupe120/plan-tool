@@ -680,7 +680,6 @@ Each lives in its canonical home (`DATA_CONTRACT.md` qualified-result revision, 
 ### Open items
 
 - `tracked` BUG_BACKLOG: "Roadmap plans whose `source_seed` is relative to the plans directory never resolve their roadmap identity…". Until it lands, this fix has no effect in Loom, and the capture-cost measurement waits on it.
-- `tracked` BACKLOG #543: captured examples of every persisted format version; its first entries are a v3 sidecar from release 1.6.0 and a v4 one from after #260.
 
 ## Plans-relative source_seed resolution — review ledger
 
@@ -743,11 +742,15 @@ Three findings repeat round 1 and keep its dispositions (#1 fence refusal, #3 pr
 | Field | Value |
 | --- | --- |
 | Opened | 2026-11-18 |
-| Change | BACKLOG #543 first slice: captured saved-review sidecars written by v1.6.0 and by `main` at `4226931b3`, loaded through today's reader by `tests/test_versioned_examples.py` |
+| Change | The first #543 slice captured saved-review sidecars written by `v1.6.0` and `main` at `4226931b3`. `tests/test_versioned_examples.py` loads them through the current reader. |
 | Branch | `tests/versioned-format-examples` (direct route; tests and docs only, no `plan_tool/` change, so no changelog fragment) |
 | Checks | full suite green; mutation checks on each guard |
 | Reviewer | `/code-review high`, forked report-only |
-| Disposition | rounds 1–2 dispositioned; owner call on PR vs round 3 |
+| Disposition | The first slice shipped in PR #274 after two review passes. |
+
+On 2026-11-20, PR #285 completed #543. The [fixture inventory](../tests/fixtures/versioned/README.md)
+records all capture sources, including the recovered writers for audit
+revisions 1 and 2.
 
 ### Settled decisions
 

@@ -791,7 +791,9 @@ def resolve_plan(plans_dir: Path, name: str) -> Path:
     )
 
 
-def resolve_registered_plan(entries: Sequence[PlanEntry], name: str) -> Path:
+def resolve_registered_plan(
+    entries: Sequence[PlanEntry], name: str, *, require_unique: bool = False
+) -> Path:
     """Resolve ``name`` to a path among manifest-registered plan entries.
 
     When no registered entry matches, scan the directories of existing
@@ -800,12 +802,23 @@ def resolve_registered_plan(entries: Sequence[PlanEntry], name: str) -> Path:
     scan is cheap (a handful of ``Path.is_file`` checks per directory)
     and resolves the long-standing "completeness says missing, create
     says exists" asymmetry by giving the user a concrete recovery step.
+
+    ``require_unique`` refuses ambiguous matches before a named mutation.
     """
     cleaned = name.removesuffix(".md")
     stems = {cleaned, f"1-{cleaned}", f"2-{cleaned}", f"3-{cleaned}"}
+    target = None
     for e in entries:
         if e.slug == cleaned or e.path.stem in stems or e.path.name == f"{cleaned}.md":
-            return e.path
+            if not require_unique:
+                return e.path
+            if target is not None:
+                raise ValueError(
+                    f"multiple registered plans match {name!r}; choose a unique plan name"
+                )
+            target = e.path
+    if target is not None:
+        return target
     orphan = _find_orphan_plan_file(entries, cleaned)
     if orphan is not None:
         raise FileNotFoundError(

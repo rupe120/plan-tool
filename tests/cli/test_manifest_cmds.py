@@ -885,19 +885,25 @@ class TestAttachDetachParserSurface:
 
 
 class TestSweepCommit:
-    def test_commit_archives_completed_plan_and_commits(self, tmp_repo) -> None:
+    @pytest.mark.parametrize("named", [False, True])
+    def test_commit_archives_completed_plan_and_commits(self, tmp_repo, named) -> None:
         from plan_tool.cli import main
 
         _real_git_repo(tmp_repo)
         plan = _add_completed_plan(tmp_repo)
+        other = _add_completed_plan(tmp_repo, "2-other") if named else None
         tmp_repo.write_manifest()
         _git_commit_all(tmp_repo.root, "init")
 
-        rc = main(tmp_repo.argv("sweep", "--commit", "-y"))
+        names = ["done"] if named else []
+        rc = main(tmp_repo.argv("sweep", *names, "--commit", "-y"))
 
         assert rc == 0
         assert not plan.exists()
         assert (tmp_repo.plans_dir / "archive" / "1-done.md").is_file()
+        if other is not None:
+            assert other.is_file()
+            assert not (tmp_repo.plans_dir / "archive" / other.name).exists()
         assert (
             _git_log_subjects(tmp_repo.root)[0]
             == "sweep: archive 1 completed plan"
