@@ -180,6 +180,7 @@ exit until it's enabled.
 | Run | …to |
 | --- | --- |
 | `plan-tool sweep` | Archive finished plans / report stray ones |
+| `plan-tool sweep <name>` | Archive one registered plan if complete |
 | `plan-tool sweep --commit` | Archive finished plans, then stage the manifest + moves |
 | `plan-tool withdraw <name> --reason "..."` | Archive a plan being *abandoned* (premise disproved, carved wrong) — distinct from `sweep`'s completion path; `--reason` is required |
 | `plan-tool checkpoint list` · `plan-tool runs list` | Recover or profile an interrupted run |

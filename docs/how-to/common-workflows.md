@@ -513,7 +513,14 @@ plan-tool sweep -y              # headless: archive + prune
 plan-tool sweep --dry-run       # preview every mutation, touch nothing
 plan-tool sweep --report-only   # just the status report, no offers
 plan-tool sweep -y --commit     # archive + prune, then commit the result
+plan-tool sweep my-plan --dry-run # preview one plan
+plan-tool sweep my-plan          # archive only my-plan if complete
 ```
+
+Pass a unique registered plan slug or filename to limit the report and archive
+to that plan. A named sweep leaves missing entries and duplicate copies alone.
+If registered plans share a detail directory, resolve that overlap before
+sweeping one of them. Use `--archive-duplicates` with a bare sweep.
 
 `--commit` requires a clean working tree up front and is incompatible
 with `--dry-run` / `--report-only`; it makes one commit (`sweep: archive

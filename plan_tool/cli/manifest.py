@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -42,6 +43,7 @@ from plan_tool.create import CreateError, append_to_manifest, remove_from_manife
 from plan_tool.locator import (
     PlanToolContext,
     default_manifest_path,
+    resolve_registered_plan,
     slug_from_filename,
 )
 from plan_tool.project_config import (
@@ -576,6 +578,9 @@ def cmd_detach_branch(args: argparse.Namespace) -> int:
 def cmd_sweep(args: argparse.Namespace) -> int:
     """Sweep registered plans: archive completed ones, report on the rest.
 
+    A name confines the sweep to one registered plan. See the sweep workflow
+    in docs/how-to/common-workflows.md.
+
     Intent: collapse the steady-state housekeeping a long-lived plan
     list accumulates. A plan whose top-level ``status: completed``
     AND every step ``status: done`` is moved to ``<plan-dir>/archive/``
@@ -619,6 +624,34 @@ def cmd_sweep(args: argparse.Namespace) -> int:
         )
         return 2
 
+    name = getattr(args, "name", None)
+    if name is not None:
+        if getattr(args, "archive_duplicates", False):
+            error("--archive-duplicates requires a sweep without a plan name.")
+            return 2
+        try:
+            target = resolve_registered_plan(ctx.entries, name, require_unique=True)
+        except ValueError as exc:
+            error(str(exc))
+            return 2
+        selected = next(entry for entry in ctx.entries if entry.path == target)
+        slug = selected.slug
+        if (target.parent / "plan-details" / slug).is_dir() and any(
+            entry.path != target and entry.path.parent == target.parent and entry.slug == slug
+            for entry in ctx.entries
+        ):
+            error(
+                f"multiple registered plans share the plan-details directory for {slug!r}. "
+                "Resolve the shared directory before sweeping this plan."
+            )
+            return 2
+        ctx = replace(
+            ctx,
+            entries=[selected],
+            missing_paths=[],
+            duplicate_paths=[],
+        )
+
     # ``--commit`` gates up front: it commits the archival/manifest edits
     # the sweep itself produces, so a mode that writes nothing (--dry-run,
     # --report-only) has nothing to commit, and a dirty tree would fold
@@ -652,7 +685,9 @@ def cmd_sweep(args: argparse.Namespace) -> int:
 
     # Read-only discovery. Reporting an unregistered file must not turn a
     # sweep into an implicit registration operation, including under ``-y``.
-    orphans = discover_orphan_plans(ctx.entries, ctx.missing_paths)
+    orphans = (
+        discover_orphan_plans(ctx.entries, ctx.missing_paths) if name is None else []
+    )
 
     duplicate_archive_results: list[tuple[Path, Path]] = []
     if ctx.duplicate_paths and getattr(args, "archive_duplicates", False):
@@ -672,7 +707,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
 
     # Missing entries remain sweep-owned housekeeping. Unregistered plans
     # above are report-only and must go through the explicit ``register`` verb.
-    if not args.report_only:
+    if name is None and not args.report_only:
         _prompt_remove_missing(
             ctx.missing_paths,
             manifest_path=manifest_path,
@@ -1052,6 +1087,11 @@ def register(subparsers) -> dict[str, Handler]:
         parents=[yes_parent],
     )
     p_sweep.add_argument(
+        "name",
+        nargs="?",
+        help="sweep only this registered plan (unique slug or filename)",
+    )
+    p_sweep.add_argument(
         "--dry-run",
         action="store_true",
         help=(
@@ -1075,7 +1115,7 @@ def register(subparsers) -> dict[str, Handler]:
             "candidate repo roots to an `archive/` subdirectory beside "
             "each duplicate. Use this after auto-discovery surfaces "
             "stale copies from a forgotten checkout or pre-move "
-            "location. Requires -y for non-interactive runs."
+            "location. Use without a plan name. Requires -y for non-interactive runs."
         ),
     )
     p_sweep.add_argument(

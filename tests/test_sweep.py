@@ -799,6 +799,102 @@ def test_sweep_plans_report_only_skips_archive_pass(tmp_path: Path) -> None:
 class TestCmdSweep:
     """End-to-end coverage for ``plan-tool sweep``."""
 
+    @pytest.mark.parametrize(
+        ("name", "mode"),
+        [("selected", "--dry-run"), ("selected", "--report-only"), ("1-selected.md", None)],
+    )
+    def test_named_sweep_is_limited_to_the_selected_plan(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str], name: str, mode: str | None
+    ) -> None:
+        completed = _plan_text(status="completed", step_statuses=["done"])
+        repo, plans_dir, manifest = _seed_repo(
+            tmp_path, plans={"1-selected.md": completed, "2-other.md": completed}
+        )
+        _add_missing_entry(manifest, "plans/3-missing.md")
+        (plans_dir / "3-orphan.md").write_text(completed, encoding="utf-8")
+        args = [
+            "--repo-root", str(repo), "--manifest", str(manifest), "sweep", name, "-y",
+        ]
+
+        assert main(args + ([mode] if mode else [])) == 0
+
+        out = capsys.readouterr().out
+        assert "other" not in out
+        assert "missing" not in out
+        assert "unregistered" not in out
+        assert (plans_dir / "2-other.md").read_text(encoding="utf-8") == completed
+        assert not (plans_dir / "archive" / "2-other.md").exists()
+        expected_manifest = ["plans/2-other.md", "plans/3-missing.md"]
+        if mode is None:
+            assert "1 archived" in out and "selected" in out
+            assert (plans_dir / "archive" / "1-selected.md").is_file()
+            assert not (plans_dir / "1-selected.md").exists()
+        else:
+            if mode == "--dry-run":
+                assert "1 would archive" in out and "selected" in out
+            else:
+                assert "1 completed (not archived)" in out
+            assert not (plans_dir / "archive").exists()
+            expected_manifest.insert(0, "plans/1-selected.md")
+        assert json.loads(manifest.read_text(encoding="utf-8"))["plans"] == expected_manifest
+
+    def test_named_sweep_of_a_partial_plan_leaves_completed_plans_in_place(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        repo, plans_dir, manifest = _seed_repo(
+            tmp_path,
+            plans={
+                "1-done.md": _plan_text(status="completed", step_statuses=["done"]),
+                "2-active.md": _plan_text(status="planning", step_statuses=["pending"]),
+            },
+        )
+        before = manifest.read_bytes()
+
+        assert main(["--repo-root", str(repo), "--manifest", str(manifest), "sweep", "active"]) == 0
+
+        out = capsys.readouterr().out
+        assert "0 archived, 1 partial" in out
+        assert "active" in out
+        assert not (plans_dir / "archive").exists()
+        assert manifest.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        ("name", "flags", "diagnostic"),
+        [
+            ("missing", [], "no plan matching"),
+            ("1-shared", [], "multiple registered plans match"),
+            ("2-shared.md", [], "multiple registered plans share the plan-details directory"),
+            ("shared", ["--archive-duplicates"], "--archive-duplicates requires"),
+        ],
+    )
+    def test_named_sweep_refuses_invalid_selections_before_moving_files(
+        self,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+        name: str,
+        flags: list[str],
+        diagnostic: str,
+    ) -> None:
+        completed = _plan_text(status="completed", step_statuses=["done"])
+        repo, plans_dir, manifest = _seed_repo(
+            tmp_path,
+            plans={
+                "1-shared.md": completed,
+                "2-shared.md": completed,
+                "2-1-shared.md": completed,
+            },
+        )
+        (plans_dir / "plan-details" / "shared").mkdir(parents=True)
+        before = manifest.read_bytes()
+
+        assert main([
+            "--repo-root", str(repo), "--manifest", str(manifest), "sweep", name, *flags,
+        ]) == 2
+
+        assert diagnostic in capsys.readouterr().err
+        assert not (plans_dir / "archive").exists()
+        assert manifest.read_bytes() == before
+
     def test_archives_completed_and_reports_partial(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
