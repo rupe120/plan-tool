@@ -373,17 +373,17 @@ competes for the next session?"
 |---|---|---|
 | **Now — drain candidates (unpicked)** | *(none)* | The board lists unpicked `direct` + `ready` P1 and P2 entries. The remaining matches are routed by an arc (#66 and #488) or are experiments (#534). The ordinary bug drain has no `direct` + `ready` entry. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
-| **Next (idle plans)** | `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
+| **Next (idle plans)** | `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Parked plans: `lessons-reuse-instrumentation` (9 steps; see the disposition below) and `security-check-command` (10 steps, open design issues in-plan) · Deferred without the label: the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
+| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Parked plans: `jira-sweep-deterministic` (#142), `lessons-reuse-instrumentation` (9 steps; see the disposition below) and `security-check-command` (10 steps, open design issues in-plan) · Deferred without the label: the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`; the manifest's two roadmap-owned planning plans, `roadmap-source-baseline-recovery` and `roadmap-candidate-vocabulary-retry`, and its three completed plans are not listed):
 
 | Plan | Steps | Disposition |
 |---|---|---|
 | `lessons-reuse-instrumentation` | 9 | **Parked** — reopen for a specific decision that requires prompt-exposure data. See [lesson influence](docs/history/backlog-decisions.md#196--infer-lesson-influence-and-evict-inert-lessons). |
-| `jira-sweep-deterministic` | 9 | Next — export-leg hygiene; `jira-sweep-verify-code-truth` waits on it |
+| `jira-sweep-deterministic` | 9 | **Parked** under #142 until an active Jira export workflow needs the standalone status report. `jira-sweep-verify-code-truth` waits on it. |
 | `detail-verbosity-compact-summary` | 6 | Blocked — re-baseline on run-grade-owned schema authority |
 | `deferred-scan-digest` | 11 | Next — deferred-work triage surface |
 | `deferred-select-promote` | 9 | Next — the promote half of the same surface |
@@ -416,8 +416,7 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
   **#312** (`detail` grounds on the reference text `create` already fetched)
   · **#332** (a run-log sink for `create`'s developer-doc research call).
   **#385** is P2 and `ready` but routed by `backlog-arc-roadmap.md`.
-- **T4 — grounding/workflow refinements (P3) + blocked:** **#142** (link
-  local plan-story ids to Jira keys by bracket token) · **#198** (plan
+- **T4 — grounding/workflow refinements (P3) + blocked:** **#198** (plan
   provenance trailers on green and archive commits). Its former members #69,
   #38 and #30 are promoted (IPPT-13, IPPT-14, IPPT-15).
 - **T5 — export leg / UX / hygiene / cosmetic, and P4:** the P4 `plan`
@@ -1973,7 +1972,11 @@ working straight down the tiers.
 
 **#142 — Jira ID-linking sweep: map local plan-story IDs to real Jira keys via summary bracket-token**
 
-- **Labels:** Route `plan` · Readiness `ready` · Tier `architect` · Principle `keep-the-plan-true-to-code` (re-grounds plans' story status markers against live Jira state)
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect` · Principle `keep-the-plan-true-to-code` (re-grounds plans' story status markers against live Jira state)
+- **Unpark when:** an active Jira export workflow needs the standalone ticket
+  status report. Recheck the authored `jira-sweep-deterministic` plan before
+  authoring details. Its proposed report leaves archive rules unchanged,
+  and the older integration plan is already in the archive.
 - **What:** A read-only sweep that scans a Jira project and links each local
   plan-story ID (the epic-scoped label the plans use, e.g. `AIHARD-S38b`,
   `VNDSFTP-S29`, `NOTIF-S01`) to its real Jira issue key (e.g. `PS-197`) and
@@ -2035,10 +2038,9 @@ working straight down the tiers.
   of the `example-app-amplify` plan-details `jira-stories.md` files against the
   live `PS` project (epics `PS-1`=AIHARD, `PS-3`=VNDSFTP); title-match in the
   saved `report.md` had mislabeled already-`Done` stories as unmatched.
-- **Status:** not started as a plan-tool feature. A manual, by-hand dry run of
-  exactly this workflow was carried out in `example-app-amplify` on 2026-07-17
-  (bracket-token join across 99 stories / 3 Jira epics) — see #143's Origin
-  for what happened next when the naive trust-Jira version was tried.
+- **Status:** owner parked the authored plan on 2026-11-20. The 2026-07-17
+  manual dry run in `example-app-amplify` joined 99 stories across three Jira
+  epics by bracket token. See #143's Origin for the subsequent sync trial.
 
 **#143 — Code-truth verification of status divergences: feed #142's divergent stories through the existing step-coverage verifiers, report only**
 
@@ -2066,8 +2068,8 @@ working straight down the tiers.
   verifiers it would rebuild already exist. The seed is reshaped to this
   entry's scope before `create`. Sequenced in
   `docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md`'s
-  Prioritized selection: execute `jira-sweep-deterministic` (#142) first, then
-  evaluate this one.
+  Prioritized selection: evaluate this follow-up once the parked
+  `jira-sweep-deterministic` plan (#142) has shipped its report.
 - **Scope contract:**
   - **Outcome:** each divergent story from #142's list has a printed
     Done / Partial / Absent verdict derived from the existing verifiers'

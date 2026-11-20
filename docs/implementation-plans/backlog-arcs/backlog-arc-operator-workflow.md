@@ -35,9 +35,9 @@ Do not push automatically; push only when the user explicitly requests it.
    any lane here. A completed prerequisite makes its dependent work eligible;
    it does not raise that work above a current board pick.
 2. Pick the one lane that matches the operator's immediate decision:
-   - **Export-state clarity:** execute `jira-sweep-deterministic`, then
-     evaluate the blocked `jira-sweep-verify-code-truth` work against its
-     actual exported artifact. The verifier is not ready before that sweep.
+   - **Export-state clarity:** `jira-sweep-deterministic` is parked under
+     #142 until an active Jira export workflow needs its standalone status
+     report. Evaluate `jira-sweep-verify-code-truth` once that report ships.
    - **Deferred-work triage:** execute `deferred-scan-digest`, then
      `deferred-select-promote`. The scan produces the normalized,
      deduplicated inventory that the selector consumes; do not author another
