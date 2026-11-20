@@ -5,14 +5,14 @@
 This file is the execution guide for what an installed `plan-tool` skill
 (Claude Code, Codex, or Cursor) gives a driving session before it needs to go
 find the answer itself. The router split (#370), trigger fields (#371), and
-seed authoring (#377) have shipped. This arc routes untiered #378, which
-includes the former #379, and the public onboarding work listed below.
+seed authoring (#377) and tracker guidance (#378, including the former
+#379) have shipped. This arc routes the public onboarding work below.
 `BACKLOG.md` owns each open item's scope. This file owns the working order.
 
 ## Details
 
 **#370 shipped 2026-09-16** as the skill-router-and-shared-reference plan
-(`docs/implementation-plans/2-skill-router-and-shared-reference.md`): each of
+([plan](../archive/2-skill-router-and-shared-reference.md)): each of
 the three routers (`integrations/claude/SKILL.md`,
 `integrations/codex/SKILL.md`, `integrations/cursor/SKILL.md`) is now a thin
 router citing the single shared `integrations/shared/DIRECTIVES.md`, and
@@ -36,26 +36,17 @@ for authoring and checking a seed before `create --from-existing`. Source
 and isolated wheel checks cover Claude, Codex, and Cursor in default and
 explicit `--copy` modes. [Installed Seed Authoring](../2-installed-seed-authoring.md)
 
-- **#378** — nine sections of `DIRECTIVES.md` tell a session to defer an
-  out-of-scope discovery without naming a destination, and the installed
-  routers carry almost none of the capture discipline that already works in
-  this repo (`TRACKING.md`, `CLAUDE.md`). Integration, the one real consumer, has no
-  `BACKLOG.md` at all — a bare "file it in the backlog" has no correct target
-  there.
-- **#379 (merged into #378, 2026-11-14)** — the mirror problem: no installed rule tells a session what to do
-  when it finds an *existing* entry already addressed, so entries drift stale
-  or get deleted incorrectly (`5042c3ba` restored #337 after exactly this).
-
-**#378 is ready and uses the `direct` route.** It adds one section in
-`DIRECTIVES.md` with citations. The former #379 shares its convention
-discovery and commit rules and retains its escalation condition for
-per-entry confirmation.
+**#378 shipped in [PR #292](https://bitbucket.org/protagona/plan-tool/pull-requests/292).**
+All three routers link to the shared
+[filing guidance](../../../integrations/shared/DIRECTIVES.md#filing-a-backlog-or-bug-entry).
+It covers tracker discovery, out-of-scope discoveries, and verified updates
+to already-addressed entries.
 
 ## Choose this arc when
 
 A session is already committed to improving what an installed skill gives a
 driving session — not merely because a gap surfaced while doing something
-else (file it per #378's own rule instead). Do not choose this arc for
+else (follow the shared filing guidance). Do not choose this arc for
 `roadmap`-verb capability or evidence work (`backlog-arc-roadmap.md`'s
 territory, even though #383/#384 are exactly the kind of content the shipped
 `DIRECTIVES.md` roadmap relocation — formerly #370's step 1 — now carries) or
@@ -79,15 +70,15 @@ requests it.
    frontmatter parses as YAML). #442 (AI-DLC coexistence) was closed as not
    reproducible, 2026-10-06 (`docs/history/backlog-decisions.md` § "#442").
 4. **#377 shipped in PR #275** (installed seed-authoring guidance).
-5. **Pick up #378** for tracker discovery, out-of-scope capture, and
-   stale-entry handling.
+5. **#378 shipped in PR #292** (tracker discovery, out-of-scope capture,
+   and already-addressed entries).
 
 ## Decision gates
 
 - **The shipped #370 plan's own Non-goals stay the boundary for that plan's
   content:** relocating roadmap operational guidance into `DIRECTIVES.md` was
   in scope for it. Seed authoring shipped separately as #377. Discovery
-  capture and stale-entry handling belong to #378.
+  capture and stale-entry handling ship in PR #292.
 - **No drift-detection machinery.** The shipped #370 plan deliberately
   deferred a lint or gate that fails when a router restates a rule the shared
   reference owns — one shared file is already the anti-drift mechanism. This
@@ -99,8 +90,8 @@ requests it.
 
 ## Exit and handoff
 
-The #370 shipment satisfies the original handoff condition. This arc remains
-the sole router for #378 and routes the public onboarding work below. File
+The #370 shipment satisfies the original handoff condition. This arc
+routes the public onboarding work below. File
 future related gaps as separate entries under the same theme.
 
 ## Out of scope
@@ -118,7 +109,6 @@ Choose #508 for portable guidance versus local team policy, #509 for consuming
 repository hosting-provider guidance in the router, #511 for installation/refresh clarity, and
 #512 for model choice and rationale. The recipe-consistency prerequisite is
 satisfied (skill-router repair). Seed-authoring support (#377) is complete.
-#378 retains tracker convention discovery and stale-entry handling.
 #509 is router guidance telling the installed session to
 detect the hosting provider from the remote and confirm it with the user; it adds
 no configuration surface and does not authorize a hosting framework.

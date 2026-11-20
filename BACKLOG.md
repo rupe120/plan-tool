@@ -136,8 +136,8 @@ over a tier doc whenever your session is already committed to its theme:
   before it has to find the answer itself: the thin router/shared-reference
   split, skill trigger fields, seed authoring, and out-of-scope/stale-entry
   backlog capture. Public onboarding additions #508/#509/#511/#512 also route
-  here. This arc is the sole router for untiered #378, which includes the
-  former #379. Seed authoring (#377) shipped with the
+  here. Tracker discovery and entry disposition shipped as #378, including
+  the former #379. Seed authoring (#377) shipped with the
   [Installed Seed Authoring plan](docs/implementation-plans/2-installed-seed-authoring.md).
   #371 (skill frontmatter trigger fields) also shipped
   from this arc, 2026-09-17. #443 (`DIRECTIVES.md` beside the tracked
@@ -1093,8 +1093,8 @@ working straight down the tiers.
       from #425, which operationalizes an existing rule.
     - Changing what the machine-local `~/.claude/directives/plan-tool.md`
       symlink and the project-`CLAUDE.md` pointer reach.
-    - Seed-authoring guidance (shipped as #377) and capture rules (#378,
-      including the former #379).
+    - Seed-authoring guidance and tracker capture, which ship under #377
+      and #378 respectively.
     - A phase row for `jira` export, or for the reconcile verbs apart from the
       post-run tail: no measured incident broke their rules. Add one only if the
       re-measurement shows those rules skipped.
@@ -3048,7 +3048,7 @@ working straight down the tiers.
   revisit condition keeps that from being designed early.
 - **Dependencies:** #525 ships the skill-staleness check independently; related
   to #318's broad ignore-rule audit but does not depend on it. Installed
-  seed guidance shipped as #377. Tracker capture stays with #378.
+  seed guidance shipped as #377. Tracker capture shipped as #378.
 - **Approach:** direct — a one-line doc fix and bookkeeping.
 - **Origin:** 2026-09-21, a Integration roadmap run left a persistent local writer
   lock that needed a precise `.gitignore` rule, alongside questions about the
@@ -3143,210 +3143,6 @@ working straight down the tiers.
   plan against its seed exposed that the audit sees both artifacts but is told
   not to judge whether the generated plan preserves or delivers their intent.
 - **Status:** not started; architect decision required before implementation.
-
-**#378 — Installed skills route discoveries outside a plan's intent, proportionality, or scope into the host repo's tracker**
-
-- **Labels:** Route `direct` — guidance text in one reference file plus citations; a missed site is caught by the binary citation check in Verification
-  · Readiness `ready` — the router/reference split it depended on (formerly #370) shipped 2026-09-16
-  · Tier `architect` — it changes the canonical directives every driving assistant follows
-  · Principle `untriaged`
-- **What:** one direct edit adds a single section to the installed shared
-  reference (`integrations/shared/DIRECTIVES.md`) for a discovery the driving
-  session will not act on because it falls outside the plan's stated intent,
-  the proportionality bound, or the scope contract. The section states four
-  things: the sink order, the ask-once fallback with an explicit "not filed"
-  report, an existing-record search before filing, and the entry's own commit.
-  Every directive site that says "defer", "present separately", or "file it"
-  without saying how cites that section instead of restating it.
-- **Absorbs #379 (merged 2026-11-14):** closing an already-addressed entry, as
-  a subsection beside this entry's rule. Tier stays `architect`: it governs
-  when a session may remove a record another author wrote. When a session
-  observes that a tracker entry other than the plan's own source entry is
-  already satisfied, partly satisfied, superseded, or based on a false
-  premise, these closing defaults C1–C6 apply, separate from this entry's own
-  defaults (confirm or revise before implementation): (C1) incidental only:
-  entries the session's work touched or its searches returned, never a
-  proactive staleness sweep; (C2) verify first against the entry's Outcome and
-  Verification (a bug's Symptom) at HEAD, citing the satisfying commit or
-  anchor, and annotate instead of closing if checking needs a new run,
-  measurement or model call; (C3) addressed: close by the host convention (a
-  more specific rule in the entry or its plan wins); partial: narrow to the
-  verified remainder and cite what shipped; superseded or false premise: close
-  with a dated reason; uncertain: add a dated evidence note; (C4) citation
-  sweep before closing: search tracked docs for the id and the entry's title
-  vocabulary (roll-up boards, arc and runbook docs, seeds, plans) and update
-  or explicitly keep each hit; (C5) surface instead of changing when the entry
-  is `decision-needed` or `parked`, or records a user decision not to reopen;
-  (C6) commit separately (tracker-only) and list each entry changed with its
-  disposition and evidence. Measured failures behind it: over-deletion
-  (`5042c3ba` restored #337 after a closure applied the general
-  remove-when-shipped convention) and a dangling citation (a step deleted #315
-  and checked only `BACKLOG.md`, missing an arc-doc citation). Resemblance is
-  not closure: four of five claimed duplicate helpers in #79 were wrong. If a
-  host's closure convention cannot be discovered generically, default to a
-  dated evidence note and surfacing. Escalate to a fuller plan if the user
-  wants per-entry confirmation before any closure (which also changes this
-  entry's authority line).
-- **Why:** the practice works where its rules are loaded, and the installed
-  skills carry almost none of them to any other repo. Verified 2026-09-16:
-  - **Installed guidance.** `integrations/codex/SKILL.md` never mentions a
-    backlog; `integrations/claude/SKILL.md` mentions one once, in exit (c);
-    `integrations/cursor/SKILL.md` (shipped 2026-09-16, formerly tracked as
-    #370) never mentions one either. `integrations/shared/DIRECTIVES.md` states
-    the rule in one sentence (§ "Authoring hygiene": "Route out-of-scope
-    findings to the backlog files") and defers or files without it in nine
-    sections:
-    - § "Gate 1 — the bare-plan audit": "defer the concern rather than
-      enlarging the arc" names no destination.
-    - § "Before applying anything": "Keep non-plan output separate" and "Keep
-      decisions human-owned" present out-of-scope suggestions and never record
-      them.
-    - § "Fix the class, not the cited spot", check 0: "state per site why it
-      stays" leaves an out-of-scope sibling unrecorded.
-    - § "Trajectory, stopping, and the three exits": `[out-of-scope-deferred]`
-      findings are only excluded from the streak; exit 3 names
-      `BACKLOG.md` / `BUG_BACKLOG.md` with no entry shape.
-    - § "After `run` finishes a plan": review keeps documentation accuracy and
-      speculative refactors "separate" from the verdict, with no destination.
-    - § "Post-run reconcile-tail stop rule": "record the evidence required to
-      unblock it, and defer it" names no destination.
-    - § "Direct changes get the same loop": the broader fix the
-      smallest-change rule declines is not recorded.
-    - § "When a chat concludes a plan is mis-decomposed", step 3: "Record the
-      case in `BACKLOG.md`" means `plan-tool`'s tracker, and in a consuming
-      repo it points at the host's.
-    - § "Escape hatch": "the repo's backlog / issue tracker", with no rule for
-      choosing either.
-  - **Rules that do not install.** The capture discipline lives only in this
-    repo: `docs/TRACKING.md` (the file-selection rule, the entry format,
-    § "Stop / defer during create, detail, completeness, and implementation"
-    including 3a, and "a finding that only lives in chat or `.tmp/` hasn't
-    been filed"); `CLAUDE.md` § "Authoring hygiene and anti-creep" (file a
-    consolidation opportunity; migrate a findings stub). A `plan-tool` defect
-    found while driving another project goes to the file that owns its
-    subsystem, when observed.
-  - **Measured.** All 9 distinct `[out-of-scope-deferred]` findings in this
-    repo's saved reports (6 plans, 2026-08-03 to 2026-08-27) reached an entry,
-    a seed, or an existing record — for example the `depends_on_notes`
-    consumers became #257–#259 (`a1fa6c6e`) and the `seed-state.json` locking
-    gap became #267 (`4b72f7f4`) — and `2b0273cc` filed three pre-existing
-    defects found during validation. This is evidence that the rules work when
-    loaded, **not** evidence of dropped findings; do not cite it as a failure
-    rate.
-  - **Consuming repo.** Integration, the one real consumer, has no `BACKLOG.md` or
-    `BUG_BACKLOG.md`. Its only backlog-named file,
-    `aidlc/spaces/default/intents/260909-integration-mvp/ideation/scope-definition/intent-backlog.md`,
-    is an ideation artifact of prioritized proto-units. A literal "file it in
-    the repo's backlog" has no correct target there, and one wrong one.
-  - **Signals the tool already emits.** `plan_tool/prompts/plan-audit.md` has
-    each `[out-of-scope-deferred]` finding state where it should be filed. The
-    scope guard prints `plan-tool: wrote N out-of-scope finding(s) (<kind>
-    scope) to <path>` and writes a stub whose `kept-by-impact` section records
-    a scope expansion that already landed — a review item, not a deferral.
-    #380 owns the tool side.
-- **The section's four rules (reshaped 2026-11-14 from six defaults):**
-  1. **Sink, in order.** The host repo's stated convention (its instruction
-     file, or a contributing or tracking doc); an existing forward-work and
-     defect tracker pair such as `BACKLOG.md` / `BUG_BACKLOG.md`, choosing by
-     "would a user filing this as an issue be right?"; the plan's own
-     `## Deferred` for later scope or an open decision that belongs to that
-     plan. A `plan-tool` defect goes to `plan-tool`'s tracker, not the host's;
-     with no writable `plan-tool` checkout, surface it with the evidence needed
-     to file it.
-  2. **Ask once, else "not filed".** With no sink identified, ask the user
-     once. Unanswered in a headless run, the item is listed in the final report
-     under an explicit *Not filed — no tracker identified* heading. Never
-     create a tracker, or file into a similarly named artifact with another
-     purpose, without the user.
-  3. **Existing record first.** Search by identifier and by vocabulary (check
-     0's two searches) and extend a matching entry with the new provenance
-     rather than duplicating it.
-  4. **Own commit.** Record once classified and before the next `plan-tool`
-     invocation's pre-call commit, as its own tracker-only commit and never
-     inside a plan-correction batch. A chat message, handoff note, or scratch
-     file is not a record. The session reports each record by location.
-  The section applies to a discovery outside the plan's fence (an
-  `[out-of-scope-deferred]` finding, a finding declined under the
-  proportionality rule, an out-of-scope sibling from check 0, a broader fix the
-  smallest-change rule declines, a scope-guard stub's reverted records, an
-  exit-3 item, a `plan-tool` defect found while driving another repo). An in-scope advisory tail is not covered; its
-  saved report already retains it. Deferring a material, in-scope-looking
-  finding that no explicit fence excludes remains a scope decision that the
-  existing override rule surfaces first.
-- **Effort:** small to medium — one new reference section, citation edits in
-  the nine sections above plus the router pointers, and two hand-walk checks.
-  No code.
-- **Risks:** filing noise if the section reads as "record every finding" — the
-  advisory-tail exclusion is load-bearing; drift if sites paraphrase the rule
-  instead of citing it; misrouting in a repo with an unusual convention, which
-  the ask-once fallback contains.
-- **Dependencies:** none — the shared reference is the installed
-  `DIRECTIVES.md` file, shipped 2026-09-16 as the skill-router-and-shared-reference
-  plan (formerly tracked as #370); that plan's own Non-goals excluded
-  directive content changes beyond relocating roadmap guidance.
-- **Outcome:** a session driving `plan-tool` through an installed skill
-  reaches, from every site that defers, one rule that turns an out-of-scope
-  discovery into a record in the host repo's own tracker or an explicit,
-  reported "not filed".
-- **In scope:** `integrations/shared/DIRECTIVES.md` (the new section, including
-  the closing-an-addressed-entry subsection absorbed from #379, and a
-  citation in each section above); the router pointers as the shipped
-  router/reference plan (formerly #370) leaves them; install and format tests
-  only where the edits require it.
-- **Out of scope / Non-goals:** deliberately not a plan route (guidance text
-  with an explicit Verification, reviewed through the normal pull request at
-  `architect` tier, needs no plan decomposition); deliberately not the six
-  numbered defaults the entry first proposed (a required minimum-content
-  template and a separate authority default restate content the host's own
-  entry format and the existing override rule already carry); a command that detects or closes addressed
-  entries; closing items in an external issue tracker; this repo's closure
-  convention in `docs/TRACKING.md`; the scope guard's stub output (#380); seed-time
-  source-entry reconciliation (shipped seed guidance from #377 and the
-  existing "Backlog-derived seeds" rule); a CLI that harvests or promotes deferrals
-  (`docs/implementation-plans/2-deferred-scan-digest.md`,
-  `docs/implementation-plans/2-deferred-select-promote.md`); changing
-  `docs/TRACKING.md`'s entry format. Deliberately not done, each with its
-  reason:
-  - a `.plan-tool/project.json` tracker-location key — a tool change with no
-    evidence that the ask-once fallback falls short; file it if sessions keep
-    asking;
-  - an external issue tracker as a default sink — publishing is outward-facing
-    and needs the user each time;
-  - recording in-scope advisory tails — the saved report retains them;
-  - qualifying the reference's own `BACKLOG #N` provenance citations as
-    `plan-tool`'s — noticed, and not needed for this Outcome;
-  - any lint, gate, or exit code keyed on unrecorded discoveries or entry
-    fields — a semantic property (`CLAUDE.md` § "Validating a semantic
-    property you cannot observe").
-- **Allowed behavior changes:** guidance text only; no command, prompt,
-  artifact, or exit behavior changes.
-- **Allowed reorganization:** moving § "Authoring hygiene"'s one-sentence
-  routing rule into the new section, because leaving it there would restate
-  the rule. Nothing else.
-- **Verification:**
-  - Every section listed above cites the new section, and each router points
-    to it (binary).
-  - A `--copy` install into a scratch repo resolves the section without a
-    source checkout (extends the install test from the shipped
-    router/reference plan, formerly #370).
-  - A hand walk of the rule reaches a sink or an explicit "not filed" for
-    (a) a scratch repo with `BACKLOG.md` / `BUG_BACKLOG.md` and (b) a
-    Integration-shaped repo with no tracker and a backlog-named ideation file.
-  - A hand replay of the closing rule reaches the right outcome on the three
-    measured incidents: #337 (the plan-specific retention rule beats general
-    removal), #315 (the sweep finds the arc-doc citation), and `2b0273cc`'s
-    already-fixed defect (verified, not filed).
-  - Deliberately not checked: whether a session records anything, entry
-    quality, the fence judgment, or whether a session notices an addressed
-    entry or verifies it soundly.
-- **Stop / defer:** if sink selection cannot be stated without a tool-side
-  key, ship the ask-once and "not filed" fallback and file the key as its own
-  entry.
-- **Origin:** 2026-09-16, a user-directed review of the installed skills and
-  this backlog for orchestration-layer duties when work surfaces outside a
-  plan's intent, proportionality, or scope; reshaped 2026-11-14 to one direct
-  section.
-- **Status:** not started.
 
 **#539 — A plan cannot mark a check as belonging to exit from local development, so `run` steps run integration suites inside the local iteration loop**
 
@@ -3748,8 +3544,8 @@ working straight down the tiers.
   - `docs/implementation-plans/2-deferred-scan-digest.md` harvests plan-body
     sections, report JSON, and `concepts.json`, and names no stub source.
 - **Options (none selected):**
-  - (a) Keep the stub and amend the routing rule to expect it, with #378
-    carrying the migration — the cheapest option, and it keeps the rot.
+  - (a) Keep the stub and revise the installed filing rule to recognize it.
+    This keeps the stub outside plan discovery.
   - (b) Persist the records in the loop's saved report under
     `plan-details/<slug>/reports/` and print a filing checklist that names the
     report. The draft digest plan lists saved reports as an input.
@@ -3763,8 +3559,8 @@ working straight down the tiers.
 - **Effort:** small — read-only analysis and a decision record.
 - **Risks:** the answer may be "unreachable in practice; no action", which is
   an acceptable outcome for a decision item.
-- **Dependencies:** none. It informs #378's stub trigger, and #378 does not
-  wait on it.
+- **Dependencies:** none. The installed filing guidance ships independently
+  in PR #292.
 - **Outcome:** one recorded decision on the destination for scope-guard
   records, consistent with the backlog-routing rule, plus either the follow-up
   entry that implements it or a dated no-action close.
@@ -3773,7 +3569,7 @@ working straight down the tiers.
   tests, and the two deferred-digest plans; the decision record.
 - **Out of scope / Non-goals:** implementing the chosen option; the scope
   guard's classification (revert, keep-by-impact, keep-documentation) and its
-  snapshot and revert mechanics; orchestrator guidance (#378); the digest
+  snapshot and revert mechanics; the installed filing guidance; the digest
   plans' harvest sources.
 - **Allowed behavior changes:** none.
 - **Allowed reorganization:** none.
@@ -8363,7 +8159,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **In scope:** Shared directives and all three skill routers; preserve this
   repository’s applicable policy in repository-owned developer guidance.
 - **Out of scope / Non-goals:** New workflow rules, tracker configuration, automatic
-  publication, or absorbing #378's convention discovery and closing rule.
+  publication, or changing the shipped tracker discovery and closure rules.
 - **Allowed behavior changes:** Relocate local policy and generalize examples without
   weakening this repository’s approval requirements.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
