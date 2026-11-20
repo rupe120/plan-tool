@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from plan_tool.cli.data_contract_cmd import _filter_candidates, _load_payloads
 from plan_tool.detail import parse_acceptance_bullets
 from plan_tool.detail_artifacts import SUPPORTED_DETAIL_FORMAT_VERSIONS
 from plan_tool.parser import parse_plan, split_plan_document
@@ -35,6 +36,9 @@ AUTHORED_VERSIONS = {
     "5d9ce9aca": (None, None),
 }
 CAPTURED_DETAIL = "plan-details/orch/01-wire-up-renderer.md"
+CAPTURED_DATA_CONTRACT_REPORT = (
+    FIXTURES / "data-contract" / "v1.8.0" / "20260526-120000-completeness.json"
+)
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
     r"(?:\.revision-v(?P<revision>\d+))?\.(?P<source>.+)\.json$"
@@ -192,6 +196,32 @@ def test_every_supported_plan_and_detail_version_has_a_captured_example() -> Non
     )
 
 
+def test_a_captured_data_contract_finding_loads_with_its_apply_payload() -> None:
+    path = CAPTURED_DATA_CONTRACT_REPORT
+    saved = load_review(path)
+    assert saved.schema_version == 1
+    assert saved.kind == "completeness"
+    assert saved.report_md == path.with_suffix(".md").read_text(encoding="utf-8")
+
+    candidates, non_applyable = _filter_candidates(
+        saved.recommendations, _load_payloads(path)
+    )
+    assert non_applyable == []
+    (candidate,) = candidates
+    assert (candidate.rec.id, candidate.rec.source, candidate.rec.severity) == (
+        "dc", "data-contract", "medium"
+    )
+    assert candidate.payload == {
+        "target_section": "SavedReview",
+        "operation": "add",
+        "candidate_fields": {"field": "new_field"},
+        "freshness": {
+            "contract_fingerprint": "contract",
+            "registry_fingerprint": "registry",
+        },
+    }
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -204,4 +234,9 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
     assert authored == {
         path.relative_to(FIXTURES).as_posix() for path in (FIXTURES / "authored").rglob("*.md")
     }
-    assert rows == {path.name for path in EXAMPLES} | authored
+    data_contract = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in CAPTURED_DATA_CONTRACT_REPORT.parent.iterdir()
+        if path.is_file()
+    }
+    assert rows == {path.name for path in EXAMPLES} | authored | data_contract
