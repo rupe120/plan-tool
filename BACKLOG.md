@@ -424,7 +424,7 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
   entries **#230** (`--time-budget` at durable batch boundaries) and **#89**
   (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
   see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entries
-  **#520**, **#542**, **#497**, **#486**; the P5 `plan` entry **#149** (compact detail
+  **#497**, **#486**; the P5 `plan` entry **#149** (compact detail
   schema; its plan is on the board's Blocked lane despite the `ready` label);
   **#56**; and the Bucket D consolidation pair
   **#79**–**#80** — where **#79 carries a warning**: four of its five original
@@ -1162,31 +1162,6 @@ working straight down the tiers.
 - **Verification:** enumerate all production opt-ins; test the selected route and
   preserve the generic walk's refusal to dispatch unopted structural findings.
 - **Stop / defer:** surface any need to change shared review authority separately.
-- **Origin:** completeness-apply-retirement step 6, 2026-11-04.
-
-**#520 — Prune current lesson guidance that points to retired application machinery**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **Evidence:** `.plan-tool/lessons/project.md` has current guidance anchored by
-  `completeness_apply_parallel.py` / `WorktreePool` (branchless worktree consumer),
-  `_CONCEPTUAL_APPLY_SOURCE_RANK` (saved replay routing), and
-  `_SAVED_SERIAL_APPLY_SOURCE_RANK` (serial/parallel source membership).
-  Those production owners no longer exist after completeness-apply-retirement.
-- **Outcome:** review and prune or narrow these stale instructional bullets so
-  lessons describe surviving machinery without losing useful dated provenance.
-- **In scope:** the named lesson bullets and directly related retirement claims;
-  verify each against current symbols and consumers before changing it.
-- **Out of scope:** blanket deletion of historical command mentions, lesson-store
-  redesign, shared review changes, or rewriting saved reports and run logs.
-- **Allowed behavior changes:** lesson text only.
-- **Allowed reorganization:** none.
-- **Verification:** compare each edited instruction with current code; inspect the
-  diff to preserve independent lessons, history, and surviving consumer guidance.
-- **Stop / defer:** file unrelated stale lessons separately rather than expanding
-  into a repository-wide lesson audit.
 - **Origin:** completeness-apply-retirement step 6, 2026-11-04.
 
 **#338 — Extend stage-lifecycle status output to `roadmap --refresh-seeds` and `--materialize`**
@@ -3715,26 +3690,6 @@ working straight down the tiers.
   completeness verbs.
 
 **#69 — Close (or explicitly document) the standalone `reconcile-plan` unattended-apply gap** → promoted to IPPT-13 (2026-09-27)
-
-**#542 — `sweep` archives every completed plan at once and takes no plan name**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **What:** archiving one finished plan means archiving all of them; an operator who wants one moved cannot do it with the tool.
-- **Evidence:** an integration consumer, 2026-11-16: a dry run to archive one finished plan listed 19 completed plans. It was not applied, because other documents cite the unrelated plans' paths.
-- **Effort:** small: an optional positional name and a filter.
-- **Risks / fallout:** none beyond the new argument.
-- **Dependencies:** none.
-- **Outcome:** `sweep <name>` archives only the named completed plan; bare `sweep` keeps its current behavior.
-- **In scope:** the `sweep` subcommand.
-- **Out of scope / Non-goals:** archive layout; updating inbound citations.
-- **Allowed behavior changes:** the optional name.
-- **Allowed reorganization:** none.
-- **Verification:** with two completed plans, `sweep <one> --dry-run` lists one.
-- **Stop / defer:** citation rewriting after an archive is a separate entry.
-- **Status:** not started.
 
 ### C. Investigations / decision-making
 
