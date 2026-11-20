@@ -3162,6 +3162,13 @@ def register(subparsers) -> dict[str, Handler]:
     p_detail = sub.add_parser(
         "detail",
         help="draft developer-actionable per-step detail markdown files",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=(
+            "Draft per-step detail files.\n\n"
+            "By default, after a successful authoring run, plan-tool runs a\n"
+            "completeness audit and saves its report under plan-details/<plan>/reports/.\n"
+            "Use --no-completeness to skip the audit."
+        ),
         parents=[yes_parent, iterate_parent],
     )
     # ``detail`` opts OUT of the per-step convergence loop by default --
@@ -3339,8 +3346,8 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "skip the conceptual completeness pass that runs after a "
             "clean authoring run. Default: once the detail files are "
-            "written, plan-tool runs `completeness` against the whole "
-            "plan — a single plan-audit claude call plus deterministic "
+            "written, plan-tool runs `completeness-audit` against the whole "
+            "plan — a conceptual audit plus deterministic "
             "well-formedness checks — surfacing cross-step contradictions, "
             "material ambiguities, and orphaned concepts the per-step "
             "detail-quality loop can't see, and (when --iterate is "

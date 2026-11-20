@@ -5071,7 +5071,8 @@ class TestPersistAndPresentReport:
         )
         assert report_path is not None
         assert report_path.is_file()
-        assert "Completeness report saved to" in capsys.readouterr().out
+        assert report_path.parent == path.parent / "plan-details" / "demo" / "reports"
+        assert f"Completeness report saved to {report_path}" in capsys.readouterr().out
 
     def test_plan_quota_markdown_report_omits_final_reusable_sidecar(
         self, tmp_repo, capsys

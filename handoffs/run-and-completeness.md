@@ -333,8 +333,8 @@ generic review/reconcile authority, benchmark fixtures, persisted schemas,
 legacy readers, blocking policy, and exit codes retain their contracts.
 
 BACKLOG #376 and removed-command-only requests are removed; mixed requests keep
-surviving work. #519 owns the unreachable structural opt-in disposition; #520
-owns stale lesson maintenance. A machine comparison with `origin/main` confirms
+surviving work. #519 owns the unreachable structural opt-in disposition. PR #286
+shipped the stale-lesson cleanup (#520) on 2026-11-20. A machine comparison with `origin/main` confirms
 the complete #369 block is byte-for-byte unchanged. The changelog fragment
 `changelog.d/completeness-apply-retirement.md` marks the CLI removal as breaking
 and gives the replacement workflow.
@@ -490,7 +490,7 @@ No material defects or functional regressions; one nit.
 
 - Suggestion 1, `BACKLOG.md` #256 still named the retired verb in its render target and acceptance criterion (g). Disposition: fixed (documentation-only follow-through: #256 now names the surviving finding anchors, saved readers and `apply_finding` caller context, with no new application authority or scope).
 - Suggestion 2, blank lines left in `DATA_CONTRACT.md` (~1766-1785) after the parallel-replay paragraphs and a missing blank line before `#### Escalate-to-split outcome`. Disposition: fixed (spacing normalized).
-- Out of scope: `.plan-tool/lessons/project.md` and `project-citations.jsonl` still carry `completeness_apply_parallel.py`/`WorktreePool` bullets, owned by #520; `_correctness_apply` keeps an "apply" name but is live (gates bare-plan wording at `completeness_phases.py` 3621, 3666, 3682) and is not renamed; launcher restoration-safety consolidation recorded as declined, with no speculative cleanup filed without verified evidence.
+- Out of scope for this pass: the project lesson store carried retired parallel-apply examples, which #520 tracked. The live `_correctness_apply` gated bare-plan wording and kept its name. The pass declined launcher restoration-safety consolidation pending verified evidence.
 - Verified clean: retired-surface searches over `plan_tool/`, `prompts/`, `integrations/`, `.claude/`, `RUNBOOK.md`, `README.md`, `CAPABILITIES.md`, `docs/cli`, `docs/how-to`, `docs/reference`; parser tests assert exit 2 and `invalid choice` for the three retired commands; `--commit` is accepted on exactly `run`, `detail`, `completeness-audit` and `manifest`; `apply_finding(record_verdict=False, verdict_observer=...)` at `review_actions.py:594` is unchanged; `test_files_coherence_findings_do_not_promote_allowed_mentions` pins the one deliberate behavior change; `test_saved_apply_annotations_remain_readable_without_apply_command` covers legacy annotations.
 
 ### Convergence status
@@ -499,7 +499,7 @@ No material defects or functional regressions; one nit.
 
 Final regression evidence after optional documentation follow-through: 14,702 passed, 67 skipped in 64.61 seconds (`.tmp/completeness-apply-retirement.final-claude-tests.log`). No runtime source changes follow pass 5. The restored persistence test is mutation-verified; tracked skill copies match their canonical sources. Prepared local code and plan-status branches are refreshed from the final committed work through the repository split script; pre-Claude snapshots are retained under suffixed branch names. Publication is verified in the Publication section above.
 
-Open items: #519 (unreachable structural opt-in and its comment wording), #520 (stale lessons), #369 (untouched, independent), and the pending Architect-tier review of the `CLAUDE.md` rule edits (A2/G1).
+Open items: #519 (unreachable structural opt-in and its comment wording), #369 (untouched, independent), and the pending Architect-tier review of the `CLAUDE.md` rule edits (A2/G1).
 
 ## Local-iteration backlog findings #539–#542 — review ledger and priority handoff
 
@@ -533,16 +533,16 @@ Open items: #519 (unreachable structural opt-in and its comment wording), #520 (
 | 7 | #541 lacked the `finding_churn` / `edit_drift` look-alikes; #490's evidence lacked a #111 cross-reference | **Fixed `535f47b6b`.** |
 | 8 | #541's evidence is a placeholder path in the consumer repo, so the replay its readiness waits on cannot run here | `pending` — copy the per-round planned-test and finding counts into the entry |
 
-Checked, no finding: id uniqueness, `sweep` taking no plan name (#542), `decide` accepting decomposition outcomes only (#490), `run`/`--accept` gate behavior (#539).
+On 2026-11-17 the review confirmed ID uniqueness, the absence of a plan-name argument to `sweep` (#542), the decomposition-only outcomes accepted by `decide` (#490), and the `run`/`--accept` gate behavior (#539).
 
 ### Priority (recommendation; the owner decides)
 
-None of the four belongs on the Now board, which lists `direct` + `ready` trust-core (P1/P2) entries.
+The three open entries remain off the Now board, which lists `direct` + `ready` P1/P2 entries.
 
 1. **#540 — highest value, decision first.** P1 with a measured cost (thirteen rounds, 91 → 43 planned tests). Next action is an owner call: reopen the risk-profile-3 seed's audit fence with #540's evidence, or fold #540 into that seed's decision. Placed in T2 with #490 (`BACKLOG.md` § "Priority bands", refreshed 2026-11-17); the decision itself stays `pending`.
 2. **#539 — not urgent.** The consumer can set `test_command` to its unit baseline today. The `DIRECTIVES.md` hand-fix wording (step 3 names this repo's own full pytest run) could be split out as a small `direct` entry if it misleads before #539 is decided. `pending`.
 3. **#541 — not pickable** until item 8 above lands; then a small advisory.
-4. **#542 — an ordinary drain pick.** `direct`, `ready`, P5, small; taken by `backlog-drain.md` in TRACKING order, no special priority.
+PR #286 shipped the named `sweep` route (#542) on 2026-11-20.
 
 ## Roadmap seed version-store citations — review ledger
 

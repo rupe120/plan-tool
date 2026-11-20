@@ -577,6 +577,11 @@ blocking predicate, or exit-code rule.
 
 ## Gate 2 — the detail-grounded audit (after `detail`)
 
+By default, a successful `detail` authoring run ends with a completeness
+audit. The console prints the saved report path under
+`plan-details/<plan>/reports/` beside the plan. Use `--no-completeness` to
+skip this automatic audit.
+
 Once every step has a detail file, run the **same iterative audit again** before
 implementation. This is the final, detail-grounded gate. Correct its conceptual
 findings through the same judged hand-edit loop below.
