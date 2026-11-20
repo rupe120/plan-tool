@@ -34,6 +34,7 @@ from plan_tool.grounding import (
     read_grounding,
 )
 from plan_tool.parser import parse_plan, split_plan_document
+from plan_tool.purity_cache import PURITY_CACHE_SCHEMA_VERSION, load_purity_cache
 from plan_tool.renderer import _load_detail
 from plan_tool.review_persistence import (
     _SUPPORTED_SCHEMA_VERSIONS,
@@ -74,6 +75,10 @@ GROUNDING_EXAMPLES = {
 CONCEPT_EXAMPLES = {
     "concepts/v1.8.0/full-tree/1-sample.md": (1, "full-tree"),
     "concepts/v1.8.0/decision-record/1-sample.md": (1, "decision-record"),
+}
+PURITY_CACHE_EXAMPLES = {
+    "purity-cache/v1.8.0/checked-pure/x.json": 1,
+    "purity-cache/v1.8.0/pruned-steps/x.json": 1,
 }
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
@@ -326,6 +331,31 @@ def test_the_current_concept_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("path", "version"), PURITY_CACHE_EXAMPLES.items())
+def test_a_captured_purity_cache_preserves_verdicts_and_prunes_removed_steps(
+    path: str, version: int
+) -> None:
+    fixture = FIXTURES / path
+    raw = json.loads(fixture.read_text(encoding="utf-8"))
+    cache = load_purity_cache(fixture)
+    assert raw["version"] == version
+    assert cache.plan_slug == "x"
+    assert {str(step_id): asdict(entry) for step_id, entry in cache.entries.items()} == {
+        step_id: {**entry, "step_id": int(step_id)}
+        for step_id, entry in raw["entries"].items()
+    }
+
+    # Step 3 is in the plan but has no saved verdict. Step 9 is no longer in the plan.
+    pruned = load_purity_cache(fixture, valid_step_ids={2, 3})
+    assert pruned.entries == {2: cache.entries[2]}
+
+
+def test_the_current_purity_cache_schema_has_a_captured_example() -> None:
+    assert PURITY_CACHE_SCHEMA_VERSION in PURITY_CACHE_EXAMPLES.values(), (
+        f"no example of purity cache schema version {PURITY_CACHE_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -364,7 +394,12 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         concepts_path(FIXTURES / plan).relative_to(FIXTURES).as_posix()
         for plan in CONCEPT_EXAMPLES
     }
+    purity_caches = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "purity-cache").rglob("*.json")
+    }
+    assert purity_caches == PURITY_CACHE_EXAMPLES.keys()
     assert rows == (
         {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
-        | concepts
+        | concepts | purity_caches
     )

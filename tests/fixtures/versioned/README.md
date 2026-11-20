@@ -119,6 +119,19 @@ after the plan changes.
 | `concepts/v1.8.0/full-tree/plan-details/sample/concepts.json` | v1.8.0 | 1 |
 | `concepts/v1.8.0/decision-record/plan-details/sample/concepts.json` | v1.8.0 | 1 |
 
+## Purity cache
+
+The `v1.8.0` tests `test_empty_findings_distinct_from_absent_entry` and
+`test_load_prunes_entries_for_absent_steps` in `tests/test_purity_cache.py`
+write these files. The first stores a completed check with no findings. The
+second stores findings for two steps, one of which a plan-aware read omits
+because that step is no longer in the plan.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `purity-cache/v1.8.0/checked-pure/x.json` | v1.8.0 | 1 |
+| `purity-cache/v1.8.0/pruned-steps/x.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -126,8 +139,8 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- every other versioned format: roadmap version records, purity cache,
-  project profile, and the decision-settlement receipt. Each needs its own
+- every other versioned format: roadmap version records, project profile,
+  and the decision-settlement receipt. Each needs its own
   capture from the release that wrote it (BACKLOG #543).
 
 ## When a version changes
