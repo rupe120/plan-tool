@@ -127,21 +127,23 @@ Release preparation refuses, with a message, in these cases:
 | scriv's output disagrees with the derived categories, or leaves a fragment behind | The script restores the release paths. Read scriv's parse of the fragments before trusting any bump. |
 | `git`, `uv lock`, or `uvx scriv collect` is missing or fails; `uv lock` changes more than plan-tool's own version line in `uv.lock`; `pyproject.toml` is unreadable or has no `[project].version` line | Fix the cause and run again; the script restores the release paths first. For a drifted lock, commit the lock update on its own first. |
 
-**The fragment-coverage check.** The same rule runs twice. On each pull request,
-the Bitbucket pipeline and the GitHub workflow run
-`scripts/release.py --check-fragment <destination branch>`, which refuses a
-branch that changed `plan_tool/` without adding a fragment. A commit message
-line `No-changelog: <reason>` (a non-empty reason) records that the change has no
-user-visible effect; both this check and the release-time check below accept it.
-At release time, preparation (and `--dry-run`) lists every
-pull request merged on `main` since the last tag whose subject reads
-`Merged in … (pull request #N)`, and refuses when one changed a path under
-`plan_tool/` without adding or amending a file in `changelog.d/` or carrying that line. The binary
-fact is path presence in that pull request's diff. Deliberately not checked:
-whether a `plan_tool/` change is user-visible (`--no-fragment-ok N` records the
-author's decision that it is not), changes outside `plan_tool/` such as
-`integrations/` or the FORMAT documents, and the Jira check in step 1, which
-stays a manual step.
+**The fragment-coverage check.** Both checks cover changes under `plan_tool/`
+and changes to the installed skill files. That includes the Claude Code,
+Codex, and Cursor `SKILL.md` routers under `integrations/` and
+`integrations/shared/DIRECTIVES.md`.
+
+- **Pull requests.** The Bitbucket pipeline and GitHub workflow run
+  `scripts/release.py --check-fragment <destination branch>`.
+- **Release preparation.** The release command and `--dry-run` check each pull
+  request merged on `main` since the last tag whose subject reads
+  `Merged in … (pull request #N)`.
+
+Both checks use paths in the pull request diff. For a covered change, add or
+amend a file in `changelog.d/`. For a change with no user-visible effect, use a
+commit message line `No-changelog: <reason>` with a non-empty reason.
+At release time, `--no-fragment-ok N` can acknowledge a deliberate omission by
+pull request number. Ordinary docs and tests are outside the path check. The
+Jira check in step 1 remains manual.
 
 If the script cannot restore the release paths after a failure, it prints the
 `git restore` command to run before retrying.

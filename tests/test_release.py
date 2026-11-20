@@ -373,8 +373,9 @@ def _merge_pr(repo: Repo, number: int, files: dict[str, str]) -> None:
     repo.git("merge", "-q", "--no-ff", "-m", f"Merged in pr-{number} (pull request #{number})", f"pr-{number}")
 
 
-def test_release_refuses_a_merged_pr_that_changed_plan_tool_without_a_fragment(repo: Repo) -> None:
-    _merge_pr(repo, 7, {"plan_tool/feature.py": "x = 1\n"})
+@pytest.mark.parametrize("path", ["plan_tool/feature.py", "integrations/shared/DIRECTIVES.md"])
+def test_release_refuses_unfragmented_package_and_skill_changes(repo: Repo, path: str) -> None:
+    _merge_pr(repo, 7, {path: "User-facing behavior\n"})
     repo.fragment("IPPT-1", "Added")
     repo.commit_all("Fragments")
     before = repo.head()
@@ -392,9 +393,12 @@ def test_release_accepts_a_pr_that_carries_its_own_fragment(repo: Repo) -> None:
     assert release.cut(repo.path, force_minor=False, dry_run=True) == 0
 
 
-def test_release_does_not_flag_a_pr_that_left_plan_tool_alone(repo: Repo) -> None:
-    """Docs-only and test-only changes need no fragment (changelog.d/README.md), so path presence under plan_tool/ is the trigger."""
-    _merge_pr(repo, 8, {"docs/guide.md": "text\n", "tests/test_x.py": "pass\n"})
+def test_release_allows_documentation_and_tests_without_a_fragment(repo: Repo) -> None:
+    _merge_pr(repo, 8, {
+        "docs/guide.md": "text\n",
+        "tests/test_x.py": "pass\n",
+        "integrations/shared/README.md": "Docs\n",
+    })
     repo.fragment("IPPT-1", "Added")
     repo.commit_all("Fragments")
 
@@ -420,8 +424,15 @@ def _branch(repo: Repo, files: dict[str, str], message: str = "Work") -> None:
     repo.commit_all(message)
 
 
-def test_check_fragment_refuses_a_branch_that_changes_plan_tool_without_one(repo: Repo) -> None:
-    _branch(repo, {"plan_tool/feature.py": "x = 1\n"})
+@pytest.mark.parametrize("path", [
+    "plan_tool/feature.py",
+    "integrations/claude/SKILL.md",
+    "integrations/codex/SKILL.md",
+    "integrations/cursor/SKILL.md",
+    "integrations/shared/DIRECTIVES.md",
+])
+def test_check_fragment_refuses_unfragmented_package_and_installed_skill_changes(repo: Repo, path: str) -> None:
+    _branch(repo, {path: "User-facing behavior\n"})
 
     with pytest.raises(release.ReleaseError, match="No-changelog: <reason>"):
         release.check_branch_fragment(repo.path, "v0.1.0")
@@ -434,12 +445,12 @@ def test_check_fragment_accepts_a_fragment_a_docs_only_change_and_a_reasoned_no_
 
     repo.git("checkout", "-q", "release-branch")
     repo.git("branch", "-D", "topic")
-    _branch(repo, {"docs/guide.md": "text\n"})
+    _branch(repo, {"docs/guide.md": "text\n", "integrations/shared/README.md": "Docs\n"})
     release.check_branch_fragment(repo.path, "v0.1.0")
 
     repo.git("checkout", "-q", "release-branch")
     repo.git("branch", "-D", "topic")
-    _branch(repo, {"plan_tool/a.py": "x = 1\n"}, "Refactor\n\nNo-changelog: internal rename, no user-visible effect")
+    _branch(repo, {"integrations/cursor/SKILL.md": "Editorial fix\n"}, "Edit guidance\n\nNo-changelog: spelling correction")
     release.check_branch_fragment(repo.path, "v0.1.0")
 
     repo.git("checkout", "-q", "release-branch")

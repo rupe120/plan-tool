@@ -32,6 +32,12 @@ MINOR_CATEGORIES = ("Added", "Changed", "Deprecated", "Removed")
 PATCH_CATEGORIES = ("Fixed", "Security")
 FRAGMENT_DIR = "changelog.d"
 SHIPPED_PREFIX = "plan_tool/"
+INSTALLED_SKILL_FILES = frozenset({
+    "integrations/claude/SKILL.md",
+    "integrations/codex/SKILL.md",
+    "integrations/cursor/SKILL.md",
+    "integrations/shared/DIRECTIVES.md",
+})
 MERGE_SUBJECT_RE = re.compile(r"^Merged in .+ \(pull request #(\d+)\)$")
 NO_CHANGELOG_RE = re.compile(r"^No-changelog:[ \t]*\S", re.M)
 RELEASE_PATHS = ("pyproject.toml", "uv.lock", "CHANGELOG.md", FRAGMENT_DIR)
@@ -205,29 +211,30 @@ def ensure_github_release(root: Path, repository: str, tag: str, notes: str, *, 
 
 
 def needs_fragment(files: Sequence[str], messages: str) -> bool:
-    """A change touching `plan_tool/` needs a fragment unless it adds one or a commit says `No-changelog: <reason>`."""
+    """Require release notes for changes to the package or installed skill."""
     fragment = any(f.startswith(f"{FRAGMENT_DIR}/") and f != f"{FRAGMENT_DIR}/README.md" for f in files)
     return (
-        any(f.startswith(SHIPPED_PREFIX) for f in files)
+        any(f.startswith(SHIPPED_PREFIX) or f in INSTALLED_SKILL_FILES for f in files)
         and not fragment
         and not NO_CHANGELOG_RE.search(messages)
     )
 
 
 def check_branch_fragment(root: Path, base: str) -> None:
-    """Refuse a branch that changes `plan_tool/` against `base` without a fragment or a `No-changelog:` line."""
+    """Check the fragment requirement against the pull request base."""
     files = _git(root, "diff", "--name-only", f"{base}...HEAD").splitlines()
     messages = _git(root, "log", "--first-parent", f"{base}..HEAD", "--format=%B")
     if needs_fragment(files, messages):
         raise ReleaseError(
-            f"this branch changes {SHIPPED_PREFIX} but adds no {FRAGMENT_DIR}/ fragment; add one "
+            f"this branch changes {SHIPPED_PREFIX} or installed skill files "
+            f"but adds no {FRAGMENT_DIR}/ fragment; add one "
             f"({FRAGMENT_DIR}/README.md), or put `No-changelog: <reason>` in a commit message when the change "
             "has no user-visible effect"
         )
 
 
 def unfragmented_prs(root: Path, tag: str, acknowledged: Sequence[int]) -> list[str]:
-    """Merged pull requests since `tag` that changed `plan_tool/` and added no fragment.
+    """Merged pull requests since `tag` with uncovered package or skill changes.
 
     The binary fact checked is path presence; whether a change is user-visible is
     left to the author, who acknowledges a deliberate omission by PR number.
@@ -309,7 +316,8 @@ def cut(
     flagged = unfragmented_prs(root, f"v{current}", acknowledged)
     if flagged:
         raise ReleaseError(
-            f"merged pull requests changed {SHIPPED_PREFIX} with no fragment since v{current}:\n  "
+            f"merged pull requests changed {SHIPPED_PREFIX} or installed skill files "
+            f"with no fragment since v{current}:\n  "
             + "\n  ".join(flagged)
             + f"\nadd a fragment for each on a branch and merge it first, or pass --no-fragment-ok N when the change"
             " has no user-visible effect (docs/RELEASING.md)"
@@ -455,7 +463,7 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         default=[],
         metavar="N",
-        help="acknowledge merged pull request #N as a plan_tool/ change that needs no fragment (repeatable)",
+        help="acknowledge merged pull request #N as a package or skill change that needs no fragment (repeatable)",
     )
     parser.add_argument(
         "--check-fragment",
