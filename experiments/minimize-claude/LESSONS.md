@@ -364,9 +364,9 @@ Phase-A audit findings:
   `_sample_conceptual_audit`) — no `claude_call_start/end`, only stderr
   heartbeats. That's completeness's single biggest Claude cost (the
   samples) and the analyzer can't see it.
-- The separate `completeness-apply` replay verb IS already instrumented
-  (routes through `review_actions.py`'s wrapped apply); only the
-  `--iterate` audit loop needs wrapping.
+- In this 2026-06-17 measurement, the former `completeness-apply` replay
+  already used the instrumented apply path in `review_actions.py`. The
+  `--iterate` audit loop was the remaining instrumentation target.
 - Likely conclusion: no reduction win in the loop; the only tunable cost
   is `--audit-samples` (a stability-vs-cost lever, not waste). Instrument
   to confirm, don't pre-optimize.
