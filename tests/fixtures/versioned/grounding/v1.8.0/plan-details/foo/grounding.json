@@ -1,0 +1,13 @@
+{
+  "plan_slug": "foo",
+  "grounded_at": "2026-11-20T13:27:04Z",
+  "plan_fingerprint": "b",
+  "code_fingerprint": {
+    "x": "y"
+  },
+  "step_authoring_fingerprints": {
+    "1": "fp1",
+    "2": "fp2"
+  },
+  "schema_version": 1
+}

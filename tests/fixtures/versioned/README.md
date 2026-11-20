@@ -94,6 +94,18 @@ the stored payload and requires the original input hash.
 | --- | --- | --- |
 | `checkpoint/v1.8.0/cp.json` | v1.8.0 | 1 |
 
+## Grounding
+
+The `v1.8.0` release's
+`tests/test_grounding.py::TestWriteGroundingPreservesStepFingerprints::test_omitted_kwarg_preserves_existing_step_map`
+writes the record twice. The capture is the second write, which carries
+forward the step fingerprints while updating the plan and code fingerprints.
+The fixture keeps the sidecar path that the reader derives from `2-foo.md`.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `grounding/v1.8.0/plan-details/foo/grounding.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -101,8 +113,8 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- every other versioned format: roadmap version records, grounding,
-  concept tree, purity cache, project profile, and the decision-settlement
+- every other versioned format: roadmap version records, concept tree,
+  purity cache, project profile, and the decision-settlement
   receipt. Each needs its own capture from the release that
   wrote it (BACKLOG #543).
 

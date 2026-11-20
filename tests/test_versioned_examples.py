@@ -20,6 +20,12 @@ from plan_tool.checkpoint import CHECKPOINT_SCHEMA_VERSION, Checkpoint, load_if_
 from plan_tool.cli.data_contract_cmd import _filter_candidates, _load_payloads
 from plan_tool.detail import parse_acceptance_bullets
 from plan_tool.detail_artifacts import SUPPORTED_DETAIL_FORMAT_VERSIONS
+from plan_tool.grounding import (
+    GROUNDING_SCHEMA_VERSION,
+    Grounding,
+    grounding_path,
+    read_grounding,
+)
 from plan_tool.parser import parse_plan, split_plan_document
 from plan_tool.renderer import _load_detail
 from plan_tool.review_persistence import (
@@ -45,6 +51,16 @@ CHECKPOINT_EXAMPLES = {
         input_hash="match",
         payload="hello",
         created_at="2026-11-20T04:10:32+00:00",
+        schema_version=1,
+    ),
+}
+GROUNDING_EXAMPLES = {
+    "grounding/v1.8.0/2-foo.md": Grounding(
+        plan_slug="foo",
+        grounded_at="2026-11-20T13:27:04Z",
+        plan_fingerprint="b",
+        code_fingerprint={"x": "y"},
+        step_authoring_fingerprints={"1": "fp1", "2": "fp2"},
         schema_version=1,
     ),
 }
@@ -255,6 +271,23 @@ def test_the_current_checkpoint_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("plan", "expected"), GROUNDING_EXAMPLES.items())
+def test_a_captured_grounding_record_preserves_all_fingerprints(
+    plan: str, expected: Grounding
+) -> None:
+    plan_path = FIXTURES / plan
+    raw = json.loads(grounding_path(plan_path).read_text(encoding="utf-8"))
+    assert raw["schema_version"] == expected.schema_version
+    assert read_grounding(plan_path) == expected
+
+
+def test_the_current_grounding_schema_has_a_captured_example() -> None:
+    versions = {example.schema_version for example in GROUNDING_EXAMPLES.values()}
+    assert GROUNDING_SCHEMA_VERSION in versions, (
+        f"no example of grounding schema version {GROUNDING_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -277,4 +310,14 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         for path in (FIXTURES / "checkpoint").rglob("*.json")
     }
     assert checkpoints == CHECKPOINT_EXAMPLES.keys()
-    assert rows == {path.name for path in EXAMPLES} | authored | data_contract | checkpoints
+    grounding = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "grounding").rglob("*.json")
+    }
+    assert grounding == {
+        grounding_path(FIXTURES / plan).relative_to(FIXTURES).as_posix()
+        for plan in GROUNDING_EXAMPLES
+    }
+    assert rows == (
+        {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
+    )
