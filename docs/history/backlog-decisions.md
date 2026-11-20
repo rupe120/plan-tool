@@ -306,6 +306,14 @@ remains after the unsupported influence claim is cut. #193, #194, #195,
 and #197 retained independent provenance, reconciliation, retrieval,
 and contradiction contracts; #197 is since discarded.
 
+The owner parked `lessons-reuse-instrumentation` on 2026-11-20 after its
+[bare-plan audit](../implementation-plans/plan-details/lessons-reuse-instrumentation/reports/20261120-192435-completeness.md).
+The separate extraction call sees the output and can estimate which lessons
+it reflects. To measure whether injection improves the result, compare the
+same tasks with and without injection. Reopen the instrumentation plan only
+when a specific decision requires evidence of which lessons reach live
+prompts, and scope the plan to that observable.
+
 ### #222 — Published-data-interface (ODCS) roadmap lens
 
 Retired 2026-08-27 (requirement decided no 2026-08-02; opt-in lens

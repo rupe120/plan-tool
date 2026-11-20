@@ -42,10 +42,11 @@ Do not push automatically; push only when the user explicitly requests it.
      `deferred-select-promote`. The scan produces the normalized,
      deduplicated inventory that the selector consumes; do not author another
      selection surface first.
-   - **Lesson-selection evidence:** execute `lessons-reuse-instrumentation`
-     before considering `lessons-store-restructure`. Reuse evidence, rather
-     than the current store's size alone, decides whether a restructure is
-     useful.
+   - **Lesson-selection evidence:** if lesson selection is the question,
+     compare matched tasks with and without injection before considering
+     `lessons-store-restructure`. The
+     [lesson influence decision](../../history/backlog-decisions.md#196--infer-lesson-influence-and-evict-inert-lessons)
+     records why `lessons-reuse-instrumentation` is parked.
 3. Treat reader-facing audit surfaces as later, decision-specific work. Choose
    only one of `completeness-output-quality` or
    `audit-finding-staleness-classification`, and only when it improves a named
