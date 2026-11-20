@@ -349,18 +349,13 @@ backlog entries below **and the authored plans** in
 mission-aligned one is the cheapest path to shipped value, but *authored ≠
 priority*; the mission decides.
 
-**Current queue facts (checked 2026-11-17):**
+**Current queue facts (checked 2026-11-20):**
 
-1. **`BUG_BACKLOG.md` has no entry that is both Route `direct` and Readiness
-   `ready`**, in `BUG` or `MINOR`. One `BUG` entry is Route `plan` and
-   Readiness `ready` and leads the execution order: `create`'s single "record
-   unbuilt upstreams and stop" step, whose Fix is an either/or contract choice
-   that needs an owner decision first. The bare `0N-*.md` citation entry
-   shipped 2026-11-17 in PR #254 and the sibling-path audit entry in PR #260. None is routed by `backlog-arc-roadmap.md`; each goes through
-   `plan-tool create`, so a drain surfaces it rather than taking it. The
-   other live entries are promotion stubs, `evidence-gated`,
-   `decision-needed`, or unlabelled entries whose Approach waits on a
-   prerequisite or a decision.
+1. **`BUG_BACKLOG.md` has no `direct` + `ready` entry outside the owner-tracked
+   `ROADMAP` section.** Two `BUG` entries are `plan` + `ready`. One covers
+   bare roadmap filenames in newly synthesized `create` prose. The other
+   covers stop-only plans for unbuilt upstreams and requires an owner
+   decision about how to handle those dependencies.
 2. **#102 is promoted (IPPT-11, 2026-09-27) and remains independent of the
    delivered seed-ingestion route.** Its future alias-matching decision does
    not reopen the source-selection or preparation contract.
@@ -376,7 +371,7 @@ competes for the next session?"
 
 | Lane | Item | Why |
 |---|---|---|
-| **Now — drain candidates (unpicked)** | *(none)* | Every `BACKLOG.md` entry that is Route `direct`, Readiness `ready` and serves a trust-core principle (P1 or P2), excluding entries an arc document routes (#66; #488 in `backlog-arc-roadmap.md`) and experiments (#534). None remains as of 2026-11-17. `BUG_BACKLOG.md` holds no `direct` + `ready` entry (queue fact 1) either, so the drain has no candidate until an entry is triaged to `direct` + `ready`. |
+| **Now — drain candidates (unpicked)** | *(none)* | The board lists unpicked `direct` + `ready` P1 and P2 entries. The remaining matches are routed by an arc (#66 and #488) or are experiments (#534). The ordinary bug drain has no `direct` + `ready` entry. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
@@ -418,8 +413,6 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
   (contract-trace audit mode) · **#539** (`decision-needed` — exit checks
   reported as unverified; setting `test_command` is the interim workaround) ·
   **#202** (each acceptance criterion names its test, checked to exist) ·
-  **#543** (a captured example of every persisted format version, checked to
-  load) ·
   **#312** (`detail` grounds on the reference text `create` already fetched)
   · **#332** (a run-log sink for `create`'s developer-doc research call).
   **#385** is P2 and `ready` but routed by `backlog-arc-roadmap.md`.
@@ -3419,28 +3412,6 @@ working straight down the tiers.
 - **Stop / defer:** tier-aware detail generation beyond #182's advisory context is a separate entry.
 - **Quality:** convergence — rounds stop when the remaining findings exceed the declared tier.
 - **Status:** not started.
-
-**#543 — Keep a captured example of every version of each persisted format, and check every one still loads**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `deterministic-non-determinism`
-- **What:** no test holds a real saved example of an older persisted format. Tests that cover an older version build it synthetically from current output (delete a key, set `version`), so they check only the shape the author expects old records to have, and they move with the code that generates them. A reader change that breaks real old files, or an old shape nobody remembered, passes.
-- **Evidence:** 2026-11-17, the audit-revision v4 change (PR #260). Every "saved v3" test was synthetic; one first assumed the revision lived in `qualified_result` and failed because the completeness fixture writes a top-level legacy `audit_revision`, a shape a captured v3 sidecar would have shown at once.
-- **Formats:** each versioned format whose reader must keep accepting older versions: the saved-review sidecar (`review_persistence.SCHEMA_VERSION` through `_AUDIT_REVISION_SCHEMA_VERSION`, 1–4) and its nested `audit_revision` (1–4); plan and detail `format_version`; roadmap version records; and the single-version formats (`checkpoint`, `grounding`, `concept_tree`, `purity_cache`, `project_profile`, the decision-settlement receipt), which get their v1 now so the first bump has a baseline.
-- **Effort:** medium: capturing examples from tagged releases, one fixture directory, one parametrized test, one version-coverage guard.
-- **Risks / fallout:** an example regenerated from current code would test nothing; examples are captured once from the code that wrote that version and never rewritten. A failing example means the reader regressed, not that the example is stale.
-- **Dependencies:** none. Capture a v3 sidecar from a release before #260 and a v4 one after it as the first entries.
-- **Outcome:** a fixture directory holds one captured example per version per format (plus any edge shape a version introduced), and one test loads each through the current reader, checks it normalizes to the current shape with its meaning intact, and fails when a format's version constant is newer than its newest example.
-- **In scope:** `tests/fixtures/versioned/` (or a sibling directory), its README naming each example's source release, the parametrized load test, the version-coverage guard, and `TESTING.md`'s note on adding an example with every version bump.
-- **Out of scope / Non-goals:** hand-written or regenerated examples; non-persisted or unversioned outputs; migrating or rewriting stored files; validating semantic content beyond "loads and normalizes".
-- **Allowed behavior changes:** none (tests only).
-- **Allowed reorganization:** none.
-- **Verification:** removing a version branch from a reader (for example the v3 arm of `normalize_audit_revision`) turns the matching example's test red, and bumping a version constant without adding an example fails the coverage guard.
-- **Stop / defer:** a format with no tagged release to capture from is listed in the README as pending, not filled with a synthetic example.
-- **Quality:** gate-signal — old-version compatibility rests on captured evidence instead of synthetic records.
-- **Status:** Captured fixtures cover all scoped formats, including saved-review sidecars and nested audit revisions 1–4. The fixture inventory at `tests/fixtures/versioned/README.md` records the source of each capture. The current readers and version-coverage tests exercise the captures.
 
 ### B. Significant UX changes
 
