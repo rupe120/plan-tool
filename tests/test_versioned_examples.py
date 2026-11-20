@@ -34,6 +34,12 @@ from plan_tool.grounding import (
     read_grounding,
 )
 from plan_tool.parser import parse_plan, split_plan_document
+from plan_tool.project_profile import (
+    PROJECT_PROFILE_SCHEMA_VERSION,
+    ProjectProfile,
+    project_profile_path,
+    read_project_profile,
+)
 from plan_tool.purity_cache import PURITY_CACHE_SCHEMA_VERSION, load_purity_cache
 from plan_tool.renderer import _load_detail
 from plan_tool.review_persistence import (
@@ -79,6 +85,14 @@ CONCEPT_EXAMPLES = {
 PURITY_CACHE_EXAMPLES = {
     "purity-cache/v1.8.0/checked-pure/x.json": 1,
     "purity-cache/v1.8.0/pruned-steps/x.json": 1,
+}
+PROJECT_PROFILE_EXAMPLES = {
+    "project-profile/v1.8.0": ProjectProfile(
+        schema_version=1,
+        intent="Keep delivery planning grounded in the current product.",
+        non_goals=("Do not infer unstated priorities.", "Do not change create yet."),
+        decisions=("Do not execute a plan without a demonstrated problem.",),
+    ),
 }
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
@@ -356,6 +370,23 @@ def test_the_current_purity_cache_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("directory", "expected"), PROJECT_PROFILE_EXAMPLES.items())
+def test_a_captured_project_profile_preserves_confirmed_settings(
+    directory: str, expected: ProjectProfile
+) -> None:
+    root = FIXTURES / directory
+    raw = json.loads(project_profile_path(root).read_text(encoding="utf-8"))
+    assert raw["schema_version"] == expected.schema_version
+    assert read_project_profile(root) == expected
+
+
+def test_the_current_project_profile_schema_has_a_captured_example() -> None:
+    versions = {profile.schema_version for profile in PROJECT_PROFILE_EXAMPLES.values()}
+    assert PROJECT_PROFILE_SCHEMA_VERSION in versions, (
+        f"no example of project profile schema version {PROJECT_PROFILE_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -399,7 +430,15 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         for path in (FIXTURES / "purity-cache").rglob("*.json")
     }
     assert purity_caches == PURITY_CACHE_EXAMPLES.keys()
+    profiles = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "project-profile").rglob("*.json")
+    }
+    assert profiles == {
+        project_profile_path(FIXTURES / directory).relative_to(FIXTURES).as_posix()
+        for directory in PROJECT_PROFILE_EXAMPLES
+    }
     assert rows == (
         {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
-        | concepts | purity_caches
+        | concepts | purity_caches | profiles
     )

@@ -132,6 +132,17 @@ because that step is no longer in the plan.
 | `purity-cache/v1.8.0/checked-pure/x.json` | v1.8.0 | 1 |
 | `purity-cache/v1.8.0/pruned-steps/x.json` | v1.8.0 | 1 |
 
+## Project profile
+
+The `v1.8.0` test `test_initialize_writes_the_v1_profile_and_reader_roundtrips`
+in `tests/test_project_profile.py` writes this profile. The capture keeps its
+project-relative path, and the current reader preserves the intent, non-goals,
+and settled decisions.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `project-profile/v1.8.0/.plan-tool/project.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -139,9 +150,8 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- every other versioned format: roadmap version records, project profile,
-  and the decision-settlement receipt. Each needs its own
-  capture from the release that wrote it (BACKLOG #543).
+- roadmap version records and the decision-settlement receipt. Each needs
+  a capture from the release that wrote it (BACKLOG #543).
 
 ## When a version changes
 
