@@ -494,6 +494,9 @@ def test_installed_router_links_resolve_against_the_installed_directives(
     directives = _follow_authoring_link(router_path, authoring_row)
     assert _follow_authoring_link(router_path, big_doc_row) == directives
     assert set(LINK_RE.findall(phase)) <= anchors(directives)
+    filing_anchor = "filing-a-backlog-or-bug-entry"
+    assert LINK_RE.findall(phase).count(filing_anchor) == 1
+    assert filing_anchor in anchors(directives)
 
 
 def test_copied_skill_refresh_pins_project_over_a_different_environment_root(

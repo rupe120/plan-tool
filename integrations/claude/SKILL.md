@@ -43,6 +43,9 @@ and apply its selection rule for backend and model. Each checklist item below
 points at the section that owns the rule; none is a new rule. The table is
 the minimum reading, not the whole of DIRECTIVES.md.
 
+When a discovery falls outside the work or an existing tracker entry appears
+addressed, read [Filing a backlog or bug entry](DIRECTIVES.md#filing-a-backlog-or-bug-entry).
+
 | Phase | Read in full | Checklist |
 | --- | --- | --- |
 | Authoring (`create`, `detail`) | [Authoring hygiene](DIRECTIVES.md#authoring-hygiene); [Explicit overengineering checkpoints](DIRECTIVES.md#explicit-overengineering-checkpoints); [Pause on a product question — ask, don't infer](DIRECTIVES.md#pause-on-a-product-question--ask-dont-infer) | Ask the user on a product question instead of inferring the answer. Give the overengineering answer at each transition. |
