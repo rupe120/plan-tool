@@ -60,6 +60,10 @@ def prompts_dir() -> Path:
     return _PROMPTS_DIR
 
 
+def read_plain_words_swaps() -> str:
+    return (prompts_dir() / "plain-words-swaps.md").read_text(encoding="utf-8").rstrip()
+
+
 def render_prompt(
     plan: Plan,
     step: Step,

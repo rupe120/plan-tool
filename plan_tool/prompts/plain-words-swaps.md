@@ -1,0 +1,16 @@
+  - "load-bearing" → "key" / "most important"
+  - "elided" / "elision" → "left out" / "dropped"
+  - "spans its footprint" → "covers"
+  - "footprint" → "set of files" when referring to files
+  - "resolves" → "points to a real X" when describing a reference
+  - "falls through" / "fall-through" → "falls back to the next level" when describing a fallback
+  - "posture" / "tenet" → "approach" / "stance" / "rule"
+  - "kind-dispatch" → "chooses what to do based on the kind"
+  - "vacuous" → "always true, so it can never fail"
+  - "vacuously" → "by default, because there is nothing to check"
+  - "tautological" / "a tautology" → "true by definition"
+  - "unfalsifiable" → "nothing could prove it wrong"
+  - "by construction" → "by the way it is built"
+  - "orthogonal" → "independent" / "unrelated"
+  - "altitude" → "level of detail"
+  - "fan-out" → "send work to several checks" when describing checks

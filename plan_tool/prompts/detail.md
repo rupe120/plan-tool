@@ -138,10 +138,9 @@ yourself. `## Summary` is the first heading you write.
 
 ## Summary
 
-3-5 sentence overview written for a reviewer skimming the file. State
-what the step does, the primary files affected, the most important
-design decision, and the observable result on green. No motivation
-prose here — save the "why we're doing this" for the Why section.
+3-5 sentence overview written for a reviewer skimming the file. Lead
+with the step's observable outcome. Name the primary files affected and
+the most important design decision. Save the motivation for the Why section.
 This is the elevator pitch a reviewer reads before deciding which
 sections to drill into.
 
@@ -185,11 +184,10 @@ Cover, grounded in real anchors:
   are *not* free to vary (a required signature, an ordering that must
   hold, an invariant to preserve)
 
-This is the most important section. Be concrete about **what** must hold
-and **why**; leave room on the **how**. Prescribe an exact mechanism only
-where it is genuinely the constraint, not as the default — and when you're
-recommending rather than requiring, say so ("one way: …", "likely …") so
-the developer knows where they have latitude.
+Separate hard requirements from suggested implementation. Explain why each
+requirement matters and leave room on the **how**. Prescribe an exact
+mechanism only where it is genuinely the constraint. Introduce suggestions
+with phrases like "one way: …" so the developer knows where they have latitude.
 
 ## Tests
 
@@ -383,28 +381,18 @@ academic, rewrite it plainer. The rules below all serve that goal.
   Write so a competent engineer who is new to this codebase gets it on
   the first read, without a dictionary. Swap any decorative or unusual
   word for the common one that means the same thing:
-  - "key" / "most important" — not "load-bearing"
-  - "unchanged" / "the same" — not "byte-identical"
-  - "left out" / "dropped" — not "elided" / "elision"
-  - "covers" — not "spans its footprint"
-  - "points to a real X" — not "resolves"
-  - "stop early" / "skip the rest" — not "short-circuit"
-  - "falls back to the next level" — not "falls through" / "fall-through"
-  - "approach" / "stance" / "rule" — not "posture" / "tenet"
-  - "splits by kind" — not "kind-dispatch"
-  - "always true, so it can never fail" — not "vacuous"
-  - "true by definition" — not "tautological"
-  - "nothing could prove it wrong" — not "unfalsifiable"
-  - "by the way it is built" — not "by construction"
-  - "independent" / "unrelated" — not "orthogonal"
-  - "level of detail" — not "altitude"
-  - "one call that runs several checks" — not "fan-out"
+${plain_words_swaps}
 
   Rule of thumb: if you wouldn't say the word aloud explaining the step
   to a teammate, replace it. Keep the exact technical identifiers a
   reader needs — type, field, flag, and library names, plus named
   project concepts like "leaf module" — only swap out decorative
-  wording, never the precise terms.
+  wording. Keep precise terms such as `byte-identical` for a byte
+  comparison and `short-circuit` for that control-flow behavior.
+- **Explain project abbreviations on first use.** Use a small concrete
+  example when it explains a rule more clearly than an abstract paragraph.
+  Preserve file paths, symbols, identifiers, examples, test references,
+  acceptance criteria, and required ordering and compatibility constraints.
 - **Default to bulleted lists** for options, conditions, behaviors,
   gotchas, or steps. Prose blocks longer than ~5 lines are a smell.
 - **Lead each bullet with the rule or fact**, then the explanation
@@ -424,6 +412,6 @@ academic, rewrite it plainer. The rules below all serve that goal.
   Drop sentences starting with "previously", "used to", "the previous
   version", "this was changed because", and parenthetical asides like
   "(was: X)". Git history captures what changed.
-- **Strip filler.** Cut "it is worth noting that…", "in this case…",
-  "this means that…". Get to the substance.
+- **Say each thing once.** Cut repeated context and filler such as
+  "it is worth noting that…", "in this case…", and "this means that…".
 ${purity_self_check_block}

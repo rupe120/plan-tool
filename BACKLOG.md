@@ -423,8 +423,8 @@ triaged (`docs/TRACKING.md` § "Labels every entry carries").
 - **T5 — export leg / UX / hygiene / cosmetic, and P4:** the P4 `plan`
   entries **#230** (`--time-budget` at durable batch boundaries) and **#89**
   (`--commit` for `reconcile-code`/`reconcile-plan` — observed orphaning gap,
-  see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entries
-  **#497**, **#486**; the P5 `plan` entry **#149** (compact detail
+  see its entry's "Evidence it recurs"); the P5 `direct` + `ready` entry
+  **#497**; the P5 `plan` entry **#149** (compact detail
   schema; its plan is on the board's Blocked lane despite the `ready` label);
   **#56**; and the Bucket D consolidation pair
   **#79**–**#80** — where **#79 carries a warning**: four of its five original
@@ -8318,32 +8318,6 @@ working straight down the tiers.
   close with "no action".
 - **Status:** not started.
 - **Origin:** tracking-process review, 2026-10-10.
-
-**#486 — Say in `detail`'s description and console output that it runs a completeness audit and saves a report**
-
-- **Labels:** Route `direct` · Readiness `ready` · Tier `beginner` · Principle `write-for-the-human`
-- **What:** `detail` runs a completeness audit after authoring and writes a
-  report under `plan-details/<plan>/reports/`. `detail --help` states this
-  only under `--no-completeness`. The run's console output already names the
-  audit (`cli/authoring.py:2269`) and the saved report path
-  (`cli/completeness_phases.py:4029`); the `detail` subparser has no
-  description. Integration operators found the reports only by listing the reports folder during the
-  2026-10-10 roadmap-to-plan run.
-- **Effort:** small; the argparse description and the directive.
-- **Risks / fallout:** none beyond help-text golden tests.
-- **Dependencies:** none.
-- **Outcome:** `detail --help`'s description and the run's console output
-  both name the audit and the saved report path.
-- **In scope:** `detail`'s argparse description, its post-authoring console
-  output, `docs/cli/` regeneration, and `integrations/shared/DIRECTIVES.md`.
-- **Out of scope / Non-goals:** changing whether `detail` runs the audit.
-- **Allowed behavior changes:** the added text only.
-- **Allowed reorganization:** none.
-- **Verification:** a help test and a console-output test assert the text.
-- **Stop / defer:** file anything else found as a separate entry.
-- **Approach:** direct.
-- **Status:** not started.
-- **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
 **#488 — Route a failed `run` step's stated reason to roadmap feedback**
 

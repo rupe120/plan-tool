@@ -172,7 +172,7 @@ from plan_tool.project_profile import (
     render_project_context_block,
 )
 from plan_tool.telemetry import record_prompt_budget
-from plan_tool.renderer import prompts_dir
+from plan_tool.renderer import prompts_dir, read_plain_words_swaps
 from plan_tool.scenario_capture import (
     CATEGORY_FAILURE,
     CATEGORY_FOUNDATIONAL,
@@ -955,6 +955,7 @@ def render_detail_prompt(
             )
 
     return template.safe_substitute(
+        plain_words_swaps=read_plain_words_swaps(),
         output_path_block=_format_output_path_block(
             _repo_relative(output_path, repo_root) if output_path else ""
         ),

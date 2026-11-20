@@ -481,25 +481,15 @@ each one against `(a)pply / (s)kip` from the prose alone — keep them tight
   Write so a competent engineer new to this codebase gets it on the
   first read, without a dictionary. Swap any decorative or unusual word
   for the common one that means the same thing:
-  - "always true, so it can never fail" / "proves nothing" — not
-    "vacuous" / "vacuously"
-  - "true by definition" — not "tautological" / "a tautology"
-  - "nothing could prove it wrong" — not "unfalsifiable"
-  - "by the way it is built" — not "by construction"
-  - "independent" / "unrelated" — not "orthogonal"
-  - "level of detail" — not "altitude"
-  - "one call that runs several checks" — not "fan-out"
-  - "key" / "most important" — not "load-bearing"
-  - "unchanged" / "the same" — not "byte-identical"
-  - "left out" / "dropped" — not "elided" / "elision"
-  - "stop early" / "skip the rest" — not "short-circuit"
-  - "set of files" — not "footprint"
-  - "approach" / "rule" — not "posture" / "tenet"
+${plain_words_swaps}
+
   The test is whether you would say the word aloud to a teammate. If
   not, use the plain one. This applies to your *descriptive* prose
   only — never change an exact technical identifier (a type, field,
   flag, function, or named project term), and never drop a path, symbol,
-  or example to make a sentence shorter.
+  or example to make a sentence shorter. Keep precise terms such as
+  `byte-identical` for a byte comparison and `short-circuit` for that
+  control-flow behavior.
 - **Lead with the concrete subject.** Open with the thing the operator
   would act on — the command, step, concept, criterion, or section the
   gap concerns — so the first clause names it. The tool clips your first

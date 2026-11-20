@@ -541,6 +541,27 @@ class TestRenderDeclaredRiskContext:
 
 
 class TestRenderDetailPrompt:
+    def test_detail_and_plan_audit_render_the_same_plain_words_swaps(
+        self, tmp_path: Path
+    ) -> None:
+        from plan_tool.renderer import prompts_dir
+        from plan_tool.review import render_plan_audit_prompt
+
+        plan_path = _write_detail_plan_with_sections(tmp_path)
+        plan = parse_plan(plan_path)
+        swaps_path = prompts_dir() / "plain-words-swaps.md"
+        swaps = swaps_path.read_text(encoding="utf-8").rstrip()
+        assert swaps
+        assert '"byte-identical"' not in swaps
+        assert '"short-circuit"' not in swaps
+
+        detail = render_detail_prompt(plan, plan.step_by_id(1), repo_root=tmp_path)
+        audit = render_plan_audit_prompt(plan, plan_path, repo_root=tmp_path)
+        assert audit is not None
+        for prompt in (detail, audit):
+            assert prompt.count(swaps) == 1
+            assert "${plain_words_swaps}" not in prompt
+
     def test_detail_prompt_renders_supplied_risk_context_block(
         self, tmp_path: Path
     ) -> None:
@@ -9462,6 +9483,30 @@ def _seed_step1_detail_file(tmp_path: Path) -> Path:
 
 class TestRenderDetailQualityPrompt:
     """``render_detail_quality_prompt`` substitutes plan/step/body context."""
+
+    def test_run_grade_writing_rubric_appears_once_in_author_and_review_prompts(
+        self, tmp_path: Path
+    ) -> None:
+        plan = parse_plan(_write_orchestrator_plan(tmp_path))
+        step = plan.step_by_id(1)
+        author = render_detail_prompt(plan, step, repo_root=tmp_path)
+        reviewer = render_detail_quality_prompt(
+            plan, step, repo_root=tmp_path, detail_body=_GOOD_BODY
+        )
+        rubric = (
+            "lead with the step's observable outcome",
+            "say each thing once",
+            "explain project abbreviations on first use",
+            "separate hard requirements from suggested implementation",
+            "use a small concrete example",
+            "preserve file paths, symbols, identifiers, examples, test references, "
+            "acceptance criteria, and required ordering and compatibility constraints",
+        )
+        for prompt in (author, reviewer):
+            wording = " ".join(prompt.lower().split())
+            for rule in rubric:
+                assert wording.count(rule) == 1, rule
+        assert "Review clarity at **NIT** (advisory)." in reviewer
 
     def test_detail_quality_prompt_renders_supplied_risk_context_block(
         self, tmp_path: Path
