@@ -1,5 +1,6 @@
 ---
 title: Lessons Reuse Instrumentation
+intent: Measure which lessons reach prompts and which the model reports using before changing lesson selection.
 status: planning
 priority: medium
 enforce_step_tests: true
@@ -7,6 +8,7 @@ steps:
 - id: 1
   title: Expose which lesson bullets survive selection, without changing the rendered
     block
+  intent: Identify the lessons retained for a prompt while preserving the rendered text.
   files:
   - plan_tool/lessons.py
   - tests/test_lessons.py
@@ -15,6 +17,7 @@ steps:
   status: current
 - id: 2
   title: Add the lessons-events.jsonl writer and reader, modeled on lessons-warnings.jsonl
+  intent: Retain reuse evidence in a bounded log whose failures do not interrupt the command.
   files:
   - plan_tool/lessons.py
   - .gitignore
@@ -23,6 +26,7 @@ steps:
   change_type: feature
 - id: 3
   title: Record Tier 1 exposure events in detail's authoring and critique prompts
+  intent: Identify which lessons each detail prompt presents to the model.
   files:
   - plan_tool/detail.py
   - tests/test_detail.py
@@ -33,6 +37,7 @@ steps:
   - 2
 - id: 4
   title: Record Tier 1 exposure events in create's and review's lessons prompts
+  intent: Identify which lessons create and review prompts present to the model.
   files:
   - plan_tool/create.py
   - plan_tool/review.py
@@ -45,6 +50,7 @@ steps:
   - 2
 - id: 5
   title: Let parse_lessons_extract_response read an optional applied rule_hash list
+  intent: Read model-reported lesson use while preserving compatibility with existing extraction responses.
   files:
   - plan_tool/lessons.py
   - tests/test_lessons.py
@@ -53,6 +59,7 @@ steps:
 - id: 6
   title: Add a hash-indexed citation block and update both extraction prompts to solicit
     applied rule_hashes
+  intent: Let the existing extraction calls identify which injected lessons the model reports using.
   files:
   - plan_tool/lessons.py
   - plan_tool/detail.py
@@ -70,6 +77,7 @@ steps:
 - id: 7
   title: Record Tier 2 applied events with the surface-scope guard, dropping out-of-scope
     hashes
+  intent: Record model-reported use only for lessons that reached the prompt being evaluated.
   files:
   - plan_tool/detail.py
   - plan_tool/review.py
@@ -87,6 +95,7 @@ steps:
 - id: 8
   title: Add an end-to-end test that a detail/review run emits exposed and applied
     events
+  intent: Verify that detail and review record exposure and reported use through their normal command paths.
   files:
   - tests/test_detail.py
   - tests/test_review.py
@@ -97,6 +106,7 @@ steps:
 - id: 9
   title: Point salience_select.py at real reuse counts instead of citation-creation
     counts
+  intent: Let the experiment compare reuse-based ranking with recency using observed reuse events.
   files:
   - experiments/lessons-utility/salience_select.py
   - experiments/lessons-utility/LESSONS.md

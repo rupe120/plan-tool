@@ -373,16 +373,16 @@ competes for the next session?"
 |---|---|---|
 | **Now — drain candidates (unpicked)** | *(none)* | The board lists unpicked `direct` + `ready` P1 and P2 entries. The remaining matches are routed by an arc (#66 and #488) or are experiments (#534). The ordinary bug drain has no `direct` + `ready` entry. |
 | **Roadmap — Integration** *(owner-tracked; not re-checked 2026-11-16)* | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
-| **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
+| **Next (idle plans)** | `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** *(listed seeds judged 2026-09-16; twelve on-disk seeds are not judged ready or blocked: `connectivity-pause-and-poll`, `convergence-handoff-guide`, `convergence-policy-channel-ownership`, `create-detail-phase-decomposition`, `disable-jira-grade-detail-authoring`, `immutable-lifecycle-journal-recovery`, `reconcile-plan-unattended-apply`, `reconcile-recommended-scoring`, `reseed-advisor`, `risk-profile-3-advisory-effectiveness`, `seed-extraction-alias-prefill`, `verify-plan-doc-links`)* | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Deferred without the label: `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
+| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #185, #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), #391, #523, #524 · Parked plans: `lessons-reuse-instrumentation` (9 steps; see the disposition below) and `security-check-command` (10 steps, open design issues in-plan) · Deferred without the label: the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`; the manifest's two roadmap-owned planning plans, `roadmap-source-baseline-recovery` and `roadmap-candidate-vocabulary-retry`, and its three completed plans are not listed):
 
 | Plan | Steps | Disposition |
 |---|---|---|
-| `lessons-reuse-instrumentation` | 9 | Next — pairs with lessons integrity work |
+| `lessons-reuse-instrumentation` | 9 | **Parked** — reopen for a specific decision that requires prompt-exposure data. See [lesson influence](docs/history/backlog-decisions.md#196--infer-lesson-influence-and-evict-inert-lessons). |
 | `jira-sweep-deterministic` | 9 | Next — export-leg hygiene; `jira-sweep-verify-code-truth` waits on it |
 | `detail-verbosity-compact-summary` | 6 | Blocked — re-baseline on run-grade-owned schema authority |
 | `deferred-scan-digest` | 11 | Next — deferred-work triage surface |
@@ -2387,9 +2387,9 @@ working straight down the tiers.
   unconditional, that contradiction risk is live on every `detail` call. Gating
   the injection removes the surface for runs that did not ask for it, which is
   why this outranks building a detector (the discarded #197).
-- **Measurement before ranking:** use the authored
-  `lessons-reuse-instrumentation` plan to measure whether injected lessons help
-  at all. Relevance-ranked top-k selection (anchor overlap with
+- **Measurement before ranking:** compare the same tasks with and without
+  lesson injection to measure whether lessons improve the output.
+  Relevance-ranked top-k selection (anchor overlap with
   `step.files`/`creates`, `change_type` match, recency, citation count, with a
   floor below which nothing is injected) is built only if that measurement
   shows lessons help and the wholesale set is the problem; stay deterministic
@@ -3704,7 +3704,7 @@ working straight down the tiers.
   write behavior changes in this item.
 - **Approach:** `direct` investigation; propose a scoped implementation only
   if the measured result warrants one.
-- **Status:** parked 2026-11-14; no false drop observed, and lesson reuse is unconfirmed (`lessons-reuse-instrumentation` is idle).
+- **Status:** parked 2026-11-14; no false drop observed, and lesson reuse is unconfirmed.
 
 **#380 — Decide what the scope guard emits instead of an `out-of-scope-findings` plan stub**
 
