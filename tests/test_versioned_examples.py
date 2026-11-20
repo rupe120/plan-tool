@@ -47,6 +47,11 @@ from plan_tool.review_persistence import (
     AuditInputSnapshot,
     load_review,
 )
+from plan_tool.roadmap_decision_settlement_receipt import (
+    DECISION_SETTLEMENT_RECEIPT_SCHEMA_VERSION,
+    DecisionSettlementReceiptError,
+    parse_decision_settlement_receipt,
+)
 from plan_tool.roadmap_versions import (
     ROADMAP_VERSION_SCHEMA_VERSION,
     load_stored_version,
@@ -105,6 +110,14 @@ ROADMAP_VERSION_EXAMPLES = {
     ROADMAP_ROOT_VERSION_ID: (1, "root", None),
     "7907f8cab455e8f9d91e0648f4aa117fce2ceaf79a9cf556e4e7d67bc6ac9d70": (
         1, "candidate", ROADMAP_ROOT_VERSION_ID
+    ),
+}
+DECISION_SETTLEMENT_EXAMPLES = {
+    "decision-settlement/v1.8.0/34acc5455b7d7a1f9c2d154b26259a87fdcae0b143fa972866e67ab88c317796": (
+        1, "enrolled"
+    ),
+    "decision-settlement/8b76b5409/30ad5cc309399fabfe473132323ae3906095f4eb6a9bd9bc5594d04baf5750d5": (
+        1, "unenrolled"
     ),
 }
 NAME_RE = re.compile(
@@ -420,10 +433,32 @@ def test_the_current_roadmap_version_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("path", "expected"), DECISION_SETTLEMENT_EXAMPLES.items())
+def test_a_captured_decision_settlement_receipt_preserves_its_bindings(
+    path: str, expected: tuple[int, str]
+) -> None:
+    fixture = FIXTURES / path
+    data = fixture.read_bytes()
+    receipt = parse_decision_settlement_receipt(data, expected_final_name=fixture.name)
+    assert (receipt.schema_version, receipt.lineage) == expected
+    assert receipt.model_dump(mode="json") == json.loads(data)
+
+    with pytest.raises(DecisionSettlementReceiptError, match="final name"):
+        parse_decision_settlement_receipt(data, expected_final_name="0" * 64)
+
+
+def test_the_current_decision_settlement_receipt_schema_has_a_captured_example() -> None:
+    versions = {version for version, _ in DECISION_SETTLEMENT_EXAMPLES.values()}
+    assert DECISION_SETTLEMENT_RECEIPT_SCHEMA_VERSION in versions, (
+        "no example of decision settlement receipt schema version "
+        f"{DECISION_SETTLEMENT_RECEIPT_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
-    rows = set(re.findall(r"^\| `([^`]+\.(?:json|md))` \|", text, flags=re.M))
+    rows = set(re.findall(r"^\| `([^`]+)` \|", text, flags=re.M))
     authored = {
         f"authored/{source}/{path}"
         for source in AUTHORED_VERSIONS
@@ -480,7 +515,13 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         .relative_to(FIXTURES).as_posix()
         for version_id in ROADMAP_VERSION_EXAMPLES
     }
+    receipts = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "decision-settlement").rglob("*")
+        if path.is_file()
+    }
+    assert receipts == DECISION_SETTLEMENT_EXAMPLES.keys()
     assert rows == (
         {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
-        | concepts | purity_caches | profiles | roadmap_versions
+        | concepts | purity_caches | profiles | roadmap_versions | receipts
     )

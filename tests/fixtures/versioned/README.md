@@ -156,6 +156,20 @@ and the recorded member digests.
 | `roadmap-version/v1.8.0/roadmaps/storefront/.roadmap-versions/5c14e9ab88513c2f4c8cc5b36aa3d7d01018d9b755aaa5ef2bfc0d8b0d57667c/version.json` | v1.8.0 | 1 |
 | `roadmap-version/v1.8.0/roadmaps/storefront/.roadmap-versions/7907f8cab455e8f9d91e0648f4aa117fce2ceaf79a9cf556e4e7d67bc6ac9d70/version.json` | v1.8.0 | 1 |
 
+## Decision-settlement receipts
+
+The test `test_fresh_receipt_is_committed_before_created` in
+`tests/test_roadmap_decision_settlement_receipt.py` publishes both receipts.
+The `v1.8.0` writer records the enrolled predecessor and resulting versions.
+The pre-publication writer at `8b76b5409` records explicit null bindings for
+unenrolled lineage. Each capture keeps the hash that the writer uses as its
+filename, which the current reader checks against the receipt.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `decision-settlement/v1.8.0/34acc5455b7d7a1f9c2d154b26259a87fdcae0b143fa972866e67ab88c317796` | v1.8.0 | 1 |
+| `decision-settlement/8b76b5409/30ad5cc309399fabfe473132323ae3906095f4eb6a9bd9bc5594d04baf5750d5` | `8b76b5409` | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -163,8 +177,6 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- the decision-settlement receipt. It needs a capture from the release that
-  wrote it (BACKLOG #543).
 
 ## When a version changes
 
