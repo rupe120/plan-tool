@@ -38,10 +38,11 @@ Do not push automatically; push only when the user explicitly requests it.
    - **Export-state clarity:** `jira-sweep-deterministic` is parked under
      #142 until an active Jira export workflow needs its standalone status
      report. Evaluate `jira-sweep-verify-code-truth` once that report ships.
-   - **Deferred-work triage:** execute `deferred-scan-digest`, then
-     `deferred-select-promote`. The scan produces the normalized,
-     deduplicated inventory that the selector consumes; do not author another
-     selection surface first.
+   - **Deferred-work triage:** reopen `deferred-scan-digest` when an actionable
+     deferral is missed by the current filing workflow. Start with the
+     read-only scan. Revisit `deferred-select-promote` when the scan shows a
+     need for a separate promotion step. See the
+     [backlog evidence](../../../BACKLOG.md#now--next--blocked--parked-working-set).
    - **Lesson-selection evidence:** if lesson selection is the question,
      compare matched tasks with and without injection before considering
      `lessons-store-restructure`. The
