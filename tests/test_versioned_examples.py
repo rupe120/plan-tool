@@ -128,6 +128,7 @@ SHAPE_KIND = {
     "completeness-final": "completeness",
     "completeness-checkpoint": "completeness",
     "completeness-legacy": "completeness",
+    "completeness-legacy-revision": "completeness",
     "completeness-advisory": "completeness",
     "completeness-checkpoint-no-revision": "completeness",
     "review": "review",
@@ -151,6 +152,8 @@ def _raw_revision(raw: dict, shape: str) -> dict | None:
         return raw["qualified_result"]["audit_revision"]
     if shape == "completeness-checkpoint":
         return raw["checkpoint_audit_revision"]
+    if shape == "completeness-legacy-revision":
+        return raw["audit_revision"]
     return None
 
 
@@ -194,7 +197,8 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
         assert saved.audit_revision is None and saved.qualified_result is None
         return
 
-    assert raw_revision is not None and raw_revision["version"] == int(parts["revision"])
+    version = int(parts["revision"])
+    assert raw_revision is not None and raw_revision["version"] == version
     current = _current_revision_version(tmp_path)
     loaded = saved.audit_revision
     assert loaded is not None, "the reader dropped a revision an older release wrote"
@@ -202,12 +206,21 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
     # revision loads unchanged, and an older one gains only its version and the digests it
     # lacked, read as None (a report of a plan without siblings stays current after upgrade).
     expected = dict(raw_revision)
-    if int(parts["revision"]) < 4:  # v4 introduced sibling_paths_digest
-        assert "sibling_paths_digest" not in raw_revision
-        expected.update(version=current, sibling_paths_digest=None)
+    expected["version"] = current
+    for introduced, digest in (
+        (2, "source_seed_digest"),
+        (3, "project_context_digest"),
+        (4, "sibling_paths_digest"),
+    ):
+        if version < introduced:
+            assert digest not in raw_revision
+            expected[digest] = None
     assert loaded == expected
     if parts["shape"] == "completeness-checkpoint":
         assert saved.is_pre_apply_checkpoint is True
+        assert saved.qualified_result is None
+    elif parts["shape"] == "completeness-legacy-revision":
+        assert saved.is_pre_apply_checkpoint is False
         assert saved.qualified_result is None
     else:
         assert saved.is_pre_apply_checkpoint is False
@@ -226,15 +239,13 @@ def test_every_supported_sidecar_version_has_a_captured_example() -> None:
     assert sidecars <= supported, "an example claims a version the reader no longer supports"
 
 
-def test_the_current_and_an_older_audit_revision_version_have_captured_examples(
+def test_every_audit_revision_version_has_a_captured_example(
     tmp_path: Path,
 ) -> None:
-    """The current revision version, and at least one older one, so the upgrade branch of the
-    normalizer stays covered when the current version moves."""
     revisions = {int(parts["revision"]) for parts in PARTS.values() if parts["revision"]}
     current = _current_revision_version(tmp_path)
-    assert current in revisions, "no example of the current audit-revision version"
-    assert any(version < current for version in revisions), "no example of an older revision"
+    missing = set(range(1, current + 1)) - revisions
+    assert not missing, f"no example of audit-revision version(s) {sorted(missing)}"
 
 
 @pytest.mark.parametrize("source", AUTHORED_VERSIONS)

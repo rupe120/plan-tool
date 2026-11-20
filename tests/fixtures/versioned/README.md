@@ -20,7 +20,13 @@ because `/tmp` resolves there:
 
 - `completeness-final.*`: the end-to-end `plan-tool completeness-audit` run in
   `tests/cli/test_completeness_cmd.py::test_completeness_audit_persists_run_grade_report_and_qualified_sidecar`
-  (the model call stubbed), which writes `qualified_result.audit_revision`.
+  (the model call stubbed), which writes `qualified_result.audit_revision`,
+  for revisions 3 and 4.
+- `completeness-legacy-revision.*` (revision 1) and `completeness-final.*`
+  (revision 2): `tests/test_completeness_report.py::test_report_writer_keeps_the_audit_time_revision`
+  at pre-publication commits `7ba09d2a3` and `44ca13a9b`, respectively.
+  The first writes the revision at the top level. The second writes it inside
+  `qualified_result`.
 - `completeness-checkpoint.*`, `run-reconcile.*`, `detail-reconcile.*`:
   `_save_completeness_sidecar` in `tests/test_completeness_report.py`, which calls
   the release's own `save_review` (`kind=` and `is_pre_apply_checkpoint=`).
@@ -46,6 +52,8 @@ it, so a reader that starts resolving them must cope with files that do not exis
 | `detail-reconcile.sidecar-v1.v1.6.0.json` | v1.6.0 | 1 | none |
 | `completeness-advisory.sidecar-v2.v1.6.0.json` | v1.6.0 | 2 | none |
 | `completeness-checkpoint-no-revision.sidecar-v3.v1.6.0.json` | v1.6.0 | 3 | none |
+| `completeness-legacy-revision.sidecar-v4.revision-v1.7ba09d2a3.json` | `7ba09d2a3` | 4 | 1 (top-level `audit_revision`) |
+| `completeness-final.sidecar-v4.revision-v2.44ca13a9b.json` | `44ca13a9b` | 4 | 2 (in `qualified_result`) |
 | `completeness-final.sidecar-v4.revision-v3.v1.6.0.json` | v1.6.0 | 4 | 3 (in `qualified_result`) |
 | `completeness-checkpoint.sidecar-v4.revision-v3.v1.6.0.json` | v1.6.0 | 4 | 3 (`checkpoint_audit_revision`) |
 | `completeness-final.sidecar-v4.revision-v4.main-4226931b3.json` | `main` at `4226931b3` (revision v4, `sibling_paths_digest`, was introduced earlier in `6e873dd59`) | 4 | 4 |
@@ -169,14 +177,6 @@ filename, which the current reader checks against the receipt.
 | --- | --- | --- |
 | `decision-settlement/v1.8.0/34acc5455b7d7a1f9c2d154b26259a87fdcae0b143fa972866e67ab88c317796` | v1.8.0 | 1 |
 | `decision-settlement/8b76b5409/30ad5cc309399fabfe473132323ae3906095f4eb6a9bd9bc5594d04baf5750d5` | `8b76b5409` | 1 |
-
-## Pending
-
-Every sidecar version the reader supports (1 to 4) has an example, and so does the
-current audit-revision version. Not covered, and not filled with a synthetic file:
-
-- audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
-  writer of these can be retrieved;
 
 ## When a version changes
 
