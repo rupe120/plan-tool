@@ -135,8 +135,9 @@ over a tier doc whenever your session is already committed to its theme:
   — what an installed Claude Code/Codex/Cursor skill gives a driving session
   before it has to find the answer itself: the thin router/shared-reference
   split, skill trigger fields, seed authoring, and out-of-scope/stale-entry
-  backlog capture. Public onboarding additions #508/#509/#511/#512 also route
-  here. Tracker discovery and entry disposition shipped as #378, including
+  backlog capture. Portable guidance, Git host selection, skill refresh, and
+  model guidance shipped as #508/#509/#511/#512. Tracker discovery and entry
+  disposition shipped as #378, including
   the former #379. Seed authoring (#377) shipped with the
   [Installed Seed Authoring plan](docs/implementation-plans/2-installed-seed-authoring.md).
   #371 (skill frontmatter trigger fields) also shipped
@@ -8146,118 +8147,6 @@ working straight down the tiers.
 These candidates retain clone plus editable `uv` installation. Existing arcs own
 their lanes; `backlog-arc-public-release` coordinates the release sequence.
 
-**#508 — Separate portable skill guidance from repository team policy**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `architect`
-  · Principle `write-for-the-human`
-- **Arc assignment:** `backlog-arc-installed-skill`.
-- **Effort:** small–medium.
-- **Outcome:** Installed guidance works in a consuming repository without assuming this
-  project’s organization, Jira keys, reviewer roles, or publication policy.
-- **In scope:** Shared directives and all three skill routers; preserve this
-  repository’s applicable policy in repository-owned developer guidance.
-- **Out of scope / Non-goals:** New workflow rules, tracker configuration, automatic
-  publication, or changing the shipped tracker discovery and closure rules.
-- **Allowed behavior changes:** Relocate local policy and generalize examples without
-  weakening this repository’s approval requirements.
-- **Allowed reorganization:** only the smallest relocation needed for this outcome; no
-  unrelated restructuring.
-- **Verification:** Review the installed guidance from an unrelated consuming repository
-  and verify local policy remains reachable. Changes to CLAUDE.md require architect-tier
-  review.
-- **Stop / defer:** file adjacent work separately; resolve missing owner decisions
-  before dependent implementation.
-
-**#509 — Have the skill router detect the Git hosting provider from the remote and confirm it with the user**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **Arc assignment:** `backlog-arc-installed-skill`.
-- **Effort:** small.
-- **Outcome:** The skill router tells a driving session to detect GitHub or
-  Bitbucket from the selected remote's URL and confirm the provider and PR target
-  with the user before using `gh` or `bkt`.
-- **In scope:** Router guidance text only: read the remote (origin by default, or
-  the one the user names), infer the provider from its host, confirm with the user
-  when the host is custom or ambiguous, and check CLI help before backend
-  lifecycle commands.
-- **Out of scope / Non-goals:** A configuration reader, a repository
-  configuration key, or code-side provider verification (deliberately not taken,
-  cut 2026-11-14: the driving session already uses `gh`/`bkt` and can confirm
-  with the user; a reader plus verification is a plan for work the session does
-  anyway); a hosting plugin framework, automatic publishing, history rewriting,
-  or coupling provider choice to Jira/team policy.
-- **Allowed behavior changes:** Router guidance text only; preserve explicit
-  publication authorization. No runtime change.
-- **Allowed reorganization:** only the smallest relocation needed for this outcome; no
-  unrelated restructuring.
-- **Verification:** The router text names the detect-then-confirm steps for GitHub
-  and Bitbucket SSH and HTTPS remotes, custom hosts and alternate remotes; the
-  existing router guards pass.
-- **Stop / defer:** file adjacent work separately; resolve missing owner decisions
-  before dependent implementation.
-
-**#511 — Explain skill installation, refresh and the next action**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **Arc assignment:** `backlog-arc-installed-skill`.
-- **Effort:** small.
-- **Outcome:** Users understand where the skill is installed, how it updates, and what
-  to do after installation.
-- **In scope:** Destination, user/project scope, copy/symlink behavior, refresh command,
-  and next action in setup guidance and installer success output; distinguish driving
-  assistant from execution backend.
-- **Out of scope / Non-goals:** Automatic updates, new installation modes, dependency
-  provisioning, or redesigning the installer.
-- **Allowed behavior changes:** Bounded installer success messaging and setup
-  documentation; preserve existing destination and overwrite semantics.
-- **Allowed reorganization:** only the smallest relocation needed for this outcome; no
-  unrelated restructuring.
-- **Verification:** Check success output for Claude, Codex and Cursor installations and
-  copy/symlink variants using existing installer tests; verify refresh examples against
-  command help.
-- **Stop / defer:** file adjacent work separately; resolve missing owner decisions
-  before dependent implementation.
-
-**#512 — Explain backend, model, precedence and effort choice**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `write-for-the-human`
-- **Arc assignment:** `backlog-arc-installed-skill`.
-- **Effort:** small–medium.
-- **Outcome:** Users can choose a backend/model and understand recommendations,
-  configuration precedence, reasoning effort and where to find current prices.
-- **In scope:** One authoritative explanation, linked from onboarding and routers:
-  driving assistant versus subprocess backend versus model; Sol for Codex stages and
-  Opus creation/Sonnet subsequent Claude work; explicit flags versus inherited defaults;
-  reasoning-effort/token consumption and API versus subscription billing; links to
-  the providers' pricing pages for current prices.
-- **Out of scope / Non-goals:** Automatic model routing, a pricing service, a benchmark
-  framework, or claims of equal quality/task cost from equal token prices; dated
-  price comparisons (deliberately not taken, cut 2026-11-14: they go stale and
-  need re-verification on every release, so the doc links the pricing pages
-  instead).
-- **Allowed behavior changes:** Documentation only; reconcile stale Terra
-  recommendations without changing runtime defaults. Explain why creation errors
-  compound and distinguish measured evidence from owner-selected recommendations.
-- **Allowed reorganization:** only the smallest relocation needed for this outcome; no
-  unrelated restructuring.
-- **Verification:** Check claims against backend resolution and current official
-  provider documentation. Pricing pages linked: https://developers.openai.com/api/docs/models/gpt-6.1-sol and
-  https://platform.claude.com/docs/en/models/sonnet-5-5/overview ; the explanation
-  states no price figure.
-- **Stop / defer:** file adjacent work separately; resolve missing owner decisions
-  before dependent implementation.
-
 **#514 — Set the public distribution, license and history boundary**
 
 - **Labels:** Route `direct`
@@ -8322,9 +8211,9 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Record environment, commands, assistant/backend/model, observations
-  and limitations. Require #508–#514 to be resolved or explicitly dispositioned
-  before public onboarding sign-off. Seed-authoring support (#377) and recipe
-  consistency (skill-router repair) are complete. Missing credentials remain
+  and limitations. Require #514 to be resolved or explicitly dispositioned
+  before public onboarding sign-off. The other preparation items #508–#513,
+  seed-authoring support (#377), and recipe consistency are complete. Missing credentials remain
   an explicit coverage gap.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.

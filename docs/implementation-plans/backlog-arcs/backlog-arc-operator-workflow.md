@@ -86,9 +86,9 @@ underlying plan/detail data model.
 
 The skill-first README and first-task walkthrough (#510) reach detail review
 in a consuming repository. #515 verifies that path with a fresh reader.
-Keep clone plus editable `uv` installation as the supported method. The
-installed-skill arc routes
-#508/#509/#511/#512. The installed skill supplies the seed-authoring guidance
-shipped as #377. #513 (private-content sanitization) and #514 (license,
+Keep clone plus editable `uv` installation as the supported method.
+The installed-skill arc records the shipped onboarding guidance
+(#508/#509/#511/#512). The installed skill supplies the seed-authoring
+guidance shipped as #377. #513 (private-content sanitization) and #514 (license,
 distribution and history boundary) are separate public-release prerequisites.
 [Walkthrough evidence](../../demos/getting-started/RUNBOOK.md#live-first-plan-walkthrough)

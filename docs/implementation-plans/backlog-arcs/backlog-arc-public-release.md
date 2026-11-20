@@ -3,8 +3,8 @@
 ## File intent
 
 Use this route to prepare public onboarding and select a safe publication
-boundary. `BACKLOG.md` owns the open scope contracts in #508–#515. This file
-coordinates their order alongside the installed-skill and operator-workflow
+boundary. `BACKLOG.md` owns the open scope contracts for #514 and #515. This
+file coordinates their order alongside the installed-skill and operator-workflow
 arcs.
 
 ## Choose this arc when
@@ -18,11 +18,11 @@ publication, remote changes, history rewriting, or independent team-policy chang
 | --- | --- | --- |
 | 1 | Content preparation — complete (#513) | PR #123 is merged; its selected bytes match the independently verified 2,588-path prose candidate. Preserve the selection and verification evidence when preparing a release. |
 | 2 | #514 distribution, license and history decisions | Apache-2.0, the GitHub source and a shared sanitized root for both hosts define the release route. Review install/update and synchronization guidance, then verify the final candidate and destinations. |
-| 3 | #508; recipe consistency satisfied (skill-router repair) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
-| 4 | #509, #511, #512 | Hosting selection, skill installation and refresh, and model guidance support the consuming repository. Seed-authoring support is complete (#377). |
+| 3 | Portable guidance and recipe consistency — complete (#508) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
+| 4 | Installed onboarding guidance — complete (#509, #511, #512) | Hosting selection, skill installation and refresh, and model guidance support the consuming repository. Seed-authoring support is complete (#377). |
 | 5 | #515 | A fresh reader verifies the #510 walkthrough, with prerequisites resolved or explicitly dispositioned. |
 
-The installed-skill arc owns #508/#509/#511/#512. The operator-workflow arc
+The installed-skill arc records delivery of #508/#509/#511/#512. The operator-workflow arc
 owns #515 and the completed #510 walkthrough. This coordination arc routes
 the separate release prerequisite #514 and consults the other arcs for their lanes.
 The installed skill's shared filing guidance ships in PR #292.
