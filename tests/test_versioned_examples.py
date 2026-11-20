@@ -47,6 +47,11 @@ from plan_tool.review_persistence import (
     AuditInputSnapshot,
     load_review,
 )
+from plan_tool.roadmap_versions import (
+    ROADMAP_VERSION_SCHEMA_VERSION,
+    load_stored_version,
+    stored_version_record_path,
+)
 from plan_tool.schema import SUPPORTED_PLAN_FORMAT_VERSIONS
 
 FIXTURES = Path(__file__).parent / "fixtures" / "versioned"
@@ -92,6 +97,14 @@ PROJECT_PROFILE_EXAMPLES = {
         intent="Keep delivery planning grounded in the current product.",
         non_goals=("Do not infer unstated priorities.", "Do not change create yet."),
         decisions=("Do not execute a plan without a demonstrated problem.",),
+    ),
+}
+ROADMAP_VERSION_PLANS_DIR = FIXTURES / "roadmap-version" / "v1.8.0"
+ROADMAP_ROOT_VERSION_ID = "5c14e9ab88513c2f4c8cc5b36aa3d7d01018d9b755aaa5ef2bfc0d8b0d57667c"
+ROADMAP_VERSION_EXAMPLES = {
+    ROADMAP_ROOT_VERSION_ID: (1, "root", None),
+    "7907f8cab455e8f9d91e0648f4aa117fce2ceaf79a9cf556e4e7d67bc6ac9d70": (
+        1, "candidate", ROADMAP_ROOT_VERSION_ID
     ),
 }
 NAME_RE = re.compile(
@@ -387,6 +400,26 @@ def test_the_current_project_profile_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("version_id", "expected"), ROADMAP_VERSION_EXAMPLES.items())
+def test_a_captured_roadmap_version_preserves_lineage_and_member_digests(
+    version_id: str, expected: tuple[int, str, str | None]
+) -> None:
+    path = stored_version_record_path(ROADMAP_VERSION_PLANS_DIR, "storefront", version_id)
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    record = load_stored_version(
+        plans_dir=ROADMAP_VERSION_PLANS_DIR, slug="storefront", version_id=version_id
+    )
+    assert (record.schema_version, record.version_kind, record.predecessor_version_id) == expected
+    assert record.model_dump(mode="json") == raw
+
+
+def test_the_current_roadmap_version_schema_has_a_captured_example() -> None:
+    versions = {version for version, _, _ in ROADMAP_VERSION_EXAMPLES.values()}
+    assert ROADMAP_VERSION_SCHEMA_VERSION in versions, (
+        f"no example of roadmap version schema version {ROADMAP_VERSION_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -438,7 +471,16 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         project_profile_path(FIXTURES / directory).relative_to(FIXTURES).as_posix()
         for directory in PROJECT_PROFILE_EXAMPLES
     }
+    roadmap_versions = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in ROADMAP_VERSION_PLANS_DIR.rglob("version.json")
+    }
+    assert roadmap_versions == {
+        stored_version_record_path(ROADMAP_VERSION_PLANS_DIR, "storefront", version_id)
+        .relative_to(FIXTURES).as_posix()
+        for version_id in ROADMAP_VERSION_EXAMPLES
+    }
     assert rows == (
         {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
-        | concepts | purity_caches | profiles
+        | concepts | purity_caches | profiles | roadmap_versions
     )

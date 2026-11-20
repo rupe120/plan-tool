@@ -143,6 +143,19 @@ and settled decisions.
 | --- | --- | --- |
 | `project-profile/v1.8.0/.plan-tool/project.json` | v1.8.0 | 1 |
 
+## Roadmap version records
+
+The `v1.8.0` test `test_load_explicit_stored_version_returns_complete_candidate_bundle`
+in `tests/test_roadmap_versions.py` writes the root and candidate records. The
+capture preserves their version directories. The compatibility test loads
+`version.json` through the metadata reader and checks the predecessor binding
+and the recorded member digests.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `roadmap-version/v1.8.0/roadmaps/storefront/.roadmap-versions/5c14e9ab88513c2f4c8cc5b36aa3d7d01018d9b755aaa5ef2bfc0d8b0d57667c/version.json` | v1.8.0 | 1 |
+| `roadmap-version/v1.8.0/roadmaps/storefront/.roadmap-versions/7907f8cab455e8f9d91e0648f4aa117fce2ceaf79a9cf556e4e7d67bc6ac9d70/version.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -150,8 +163,8 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- roadmap version records and the decision-settlement receipt. Each needs
-  a capture from the release that wrote it (BACKLOG #543).
+- the decision-settlement receipt. It needs a capture from the release that
+  wrote it (BACKLOG #543).
 
 ## When a version changes
 
