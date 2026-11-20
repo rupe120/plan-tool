@@ -262,8 +262,9 @@ evidence is cheap to collect is right then.
      The detector had inputs and was wrong, *or* was answering a different
      question than the one that mattered. Note which.
    - **(c) It never ran, or ran with no inputs** — an instrumentation gap.
-3. **Record the case in `BACKLOG.md`** with the plan slug, the conclusion, and
-   which of (a)/(b)/(c) it was. A decision that leaves no trace
+3. **Record the case** with the plan slug, the conclusion, and which of
+   (a)/(b)/(c) it was. Follow [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry)
+   to find the tracker that owns it. A decision that leaves no trace
    teaches the tool nothing; the instruments cannot learn from a decision they
    do not record.
 
@@ -523,9 +524,8 @@ fix does not absorb a broader abstraction, adjacent workflow, or future
 capability merely because it would be useful. Before adding it, name the
 current outcome, acceptance property, authority boundary, safety invariant, or
 ordering rule that cannot hold without it. If none exists, retain the fence and
-defer the concern rather than enlarging the arc. The bar is the smallest proof
-that satisfies that named property today, not the eventual, more general
-capability the mechanism could someday support.
+follow [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry) for the deferred concern.
+Use the smallest proof that satisfies the named property today.
 
 **Every correction is true and proportional to the intent at its current
 altitude.** At bare-plan altitude, state and prove the smallest plan-level
@@ -805,7 +805,8 @@ with these columns:
 - **Keep non-plan output separate.** Do not force deterministic diagnostics,
   detail-only implementation mechanics, out-of-scope suggestions, or audit
   telemetry into the plan-gap map. Present them separately when they matter,
-  with the context needed to understand them.
+  with the context needed to understand them. For discoveries outside the
+  agreed scope, follow [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry).
 - **Group by responsibility, not phrasing.** Findings with different anchors or
   sources can still describe one shared result contract; conversely, repeated
   wording can name independent responsibilities. State that connection plainly.
@@ -919,10 +920,10 @@ runs *before* you edit; 1–4 before you call the gap closed.**
    sentence, then run two searches and record what they return: **by identifier**
    (the symbol, id, path, flag, predicate the finding names) and **by
    vocabulary** (the concept's *words*, in other phrasings). Apply at every site
-   returned, or state per site why it stays. An enumeration you didn't write
-   down is one you didn't do. Doing this up front is what makes the edit itself
-   class-wide, and it is markedly cheaper than re-deriving the class after a
-   partial sweep shipped.
+   returned, or state per site why it stays. Use
+   [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry) for any
+   out-of-scope sibling. Doing the enumeration up front makes the edit
+   class-wide and saves rechecking after a partial sweep ships.
 1. **Read `suggested_action`, not just the body.** The auditor already computes
    the remedy's scope and renders it as a `- Fix:` sub-bullet.
 2. **Restatement: grep the changed *phrase*, not the changed identifier.** The
@@ -999,6 +1000,65 @@ Fixing one plan per round re-seeds the finding in its sibling.
 
 ## Filing a backlog or bug entry
 
+Record actionable discoveries outside the plan's intent or agreed scope
+where the responsible team can pick them up. This applies to
+`[out-of-scope-deferred]` findings, broader fixes you defer, out-of-scope
+sibling sites, reverted scope-guard work, and separate work exposed by a
+stalled review.
+Keep in-scope advisory findings in their saved report. Ask the user before
+deferring material work that may belong inside the plan. A scope expansion
+that already landed needs review.
+
+### Find the tracker and file the discovery
+
+1. **Find the owner.** For host-project work, check its instructions or
+   contributing and tracking docs for the stated convention. If none is
+   stated, use an existing tracker pair such as `BACKLOG.md` for future
+   work and `BUG_BACKLOG.md` for defects. A plan's own `## Deferred` section
+   can hold a later step or a decision that belongs to that plan. File
+   defects in plan-tool itself in plan-tool's tracker. If its checkout is
+   unavailable or unwritable, report the evidence to the user.
+2. **Ask once if the destination is unclear.** A similarly named file may
+   serve another purpose. Create a tracker only with the user's approval.
+   External tracker writes require authorization. If there is no answer,
+   list the pending item and its evidence under **Not filed — no tracker
+   identified** in the final report. If the tracker is known but a write
+   is unavailable or unauthorized, name the destination and the blocker.
+3. **Search for the existing record.** Search by identifier and by the
+   words people use for the behavior. Add new evidence to a matching entry.
+   Use the host's entry format when filing a new one. A standalone
+   `steps: []` findings stub falls outside plan discovery.
+4. **Keep the tracker update reviewable.** Commit local tracker edits on
+   their own before the next plan-tool invocation, separate from any plan
+   correction. Report each entry with its location. When a write is
+   blocked, use scratch notes or chat to preserve evidence until filing.
+
+### Update an entry you find already addressed
+
+Apply these rules to entries encountered during the assigned work or its
+searches. The plan's own source entry follows its delivery instructions.
+
+1. **Verify the entry against HEAD.** Check the stated outcome and its
+   verification, or check whether the reported bug still occurs. Cite the
+   satisfying commit, test, or code location. If closure requires a new
+   run, measurement, or model call, add a dated evidence note.
+2. **Check whether you can update the entry.** Surface parked entries,
+   items awaiting a decision, and settled decisions with a reopening
+   condition the evidence does not meet. External closures require
+   separate authorization. A more specific rule in the entry or its plan
+   takes precedence. Close a verified, fully addressed
+   item using the host's convention. Narrow a partly addressed item to what
+   remains and cite what shipped. Close a superseded or refuted item with
+   the date and reason. Add a dated evidence note when the outcome or
+   convention is unclear.
+3. **Check references and report the change.** Before closing, find
+   references by ID and title wording in the board, guides, arcs, seeds,
+   and plans. Update stale references to avoid leaving an active route to
+   a closed item. Keep the tracker change in its own local commit and
+   report each disposition with its supporting evidence.
+
+### Write the entry
+
 **Write every entry, ticket, and heading for a person who has not seen the
 code.** Plain words and full detail go together: keep the precision in the body
 and say it simply.
@@ -1061,8 +1121,9 @@ is not one of them.**
    applying; finish the application completely, then go execute, where a
    mismatch becomes a failing test instead of a finding.
 3. **Non-converging** — the same finding or region resurfaces across rounds, or
-   a fix needs structural rework you cannot land inline. Stop and surface it to
-   the user, or file it in the repo's `BACKLOG.md` / `BUG_BACKLOG.md`.
+   a fix needs structural rework you cannot land inline. Stop. Surface it to
+   the user or file a separate issue through
+   [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry).
 
 Distinguishing 2 from 3 is **per finding, not per round**: classify each new
 finding as plan-defect or self-seeded before reading the round. A round that is
@@ -1281,8 +1342,10 @@ Green steps are not the finish line. Drive two more loops:
    callers, and regression coverage are true in the shipped code — not whether
    a reviewer has exhausted wording or future-maintenance suggestions. Triage
    each finding against code and tests; keep documentation accuracy and
-   speculative refactors separate from a logic verdict. Against the latest
-   logic-changing commit, require two independent consecutive clean or
+   speculative refactors separate from a logic verdict. Use
+   [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry) for
+   discoveries outside the plan's scope. Against the latest logic-changing
+   commit, require two independent consecutive clean or
    explicitly low-yield passes that record their reviewed range, method, and
    finding verdicts. A documentation-only correction must be tested and
    reviewed for accuracy, but does not reset that logic-convergence window.
@@ -1329,8 +1392,8 @@ Continue with a focused action when the triage proves one of these cases:
   discover adjacent coverage ideas.
 - The outstanding item depends on an unavailable external runtime,
   configuration, credential, or capability contract. Preserve the fail-closed
-  behavior, record the evidence required to unblock it, and defer it rather
-  than weakening an invariant or recasting it as an implementation defect.
+  behavior and record what evidence would unblock it. Follow
+  [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry) for the deferred item.
 
 A further **full** `reconcile-code --all` sweep is warranted only after a
 verified class-wide implementation correction, a newly reproduced
@@ -1350,7 +1413,9 @@ direct edit is the same unconverged hazard `--no-iterate` is. Close the finding
 with the smallest change that makes it true, not the most general, complete, or
 reusable version of the fix — a fixed check over a rule engine, one direct call
 over a pluggable interface, a literal over a config knob. Broaden it only when
-the finding itself cannot be closed without the broader change.
+the finding itself cannot be closed without the broader change. Use
+[Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry) for a
+broader correction that falls outside the agreed scope.
 
 ---
 
@@ -1662,9 +1727,8 @@ normalized plan is already registered and the command prints
 `plan-tool completeness-audit <slug> --iterate` and the shared headless and
 model-selection rules.
 
-**Route out-of-scope findings to the backlog files**, not standalone findings
-docs. A `steps: []` findings stub falls outside plan discovery, never converges,
-and rots; a backlog entry is triaged and removed when fixed.
+Route out-of-scope findings through [Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry).
+That section owns tracker discovery and disposition.
 
 ---
 
@@ -1691,5 +1755,5 @@ still arguing for the thing you removed.
 
 Applies to every loop above: if it won't converge — the same finding or region
 keeps resurfacing across rounds, or a fix needs structural rework you can't land
-inline — **stop looping and surface the issue to the user**, or file it in the
-repo's backlog / issue tracker, rather than iterating indefinitely.
+inline, stop looping. Surface the issue to the user or file it through
+[Filing a backlog or bug entry](#filing-a-backlog-or-bug-entry).
