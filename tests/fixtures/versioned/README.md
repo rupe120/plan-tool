@@ -94,6 +94,44 @@ the stored payload and requires the original input hash.
 | --- | --- | --- |
 | `checkpoint/v1.8.0/cp.json` | v1.8.0 | 1 |
 
+## Grounding
+
+The `v1.8.0` release's
+`tests/test_grounding.py::TestWriteGroundingPreservesStepFingerprints::test_omitted_kwarg_preserves_existing_step_map`
+writes the record twice. The capture is the second write, which carries
+forward the step fingerprints while updating the plan and code fingerprints.
+The fixture keeps the sidecar path that the reader derives from `2-foo.md`.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `grounding/v1.8.0/plan-details/foo/grounding.json` | v1.8.0 | 1 |
+
+## Concept records
+
+The `v1.8.0` tests `test_save_and_load_round_trip_exact_record` and
+`test_flat_decision_record_round_trips` in `tests/test_concept_tree.py` write
+these two records. The full tree requires the original plan fingerprint. The
+flat decision record preserves that fingerprint as provenance and still loads
+after the plan changes.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `concepts/v1.8.0/full-tree/plan-details/sample/concepts.json` | v1.8.0 | 1 |
+| `concepts/v1.8.0/decision-record/plan-details/sample/concepts.json` | v1.8.0 | 1 |
+
+## Purity cache
+
+The `v1.8.0` tests `test_empty_findings_distinct_from_absent_entry` and
+`test_load_prunes_entries_for_absent_steps` in `tests/test_purity_cache.py`
+write these files. The first stores a completed check with no findings. The
+second stores findings for two steps, one of which a plan-aware read omits
+because that step is no longer in the plan.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `purity-cache/v1.8.0/checked-pure/x.json` | v1.8.0 | 1 |
+| `purity-cache/v1.8.0/pruned-steps/x.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -101,10 +139,9 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- every other versioned format: roadmap version records, grounding,
-  concept tree, purity cache, project profile, and the decision-settlement
-  receipt. Each needs its own capture from the release that
-  wrote it (BACKLOG #543).
+- every other versioned format: roadmap version records, project profile,
+  and the decision-settlement receipt. Each needs its own
+  capture from the release that wrote it (BACKLOG #543).
 
 ## When a version changes
 

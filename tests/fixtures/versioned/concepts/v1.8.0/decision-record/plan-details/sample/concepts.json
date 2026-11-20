@@ -1,0 +1,20 @@
+{
+  "plan_slug": "sample",
+  "plan_fingerprint": "fingerprint",
+  "concepts": [
+    {
+      "id": "dff3f69619e7dc040b35260cf1c1941c77aa8483c89e457891ab910dfaa86fc7",
+      "title": "Deferred concept",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "later",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "Section"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

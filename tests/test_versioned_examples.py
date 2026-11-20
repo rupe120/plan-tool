@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+from dataclasses import asdict
 from pathlib import Path
 
 import pytest
@@ -18,9 +19,22 @@ import yaml
 
 from plan_tool.checkpoint import CHECKPOINT_SCHEMA_VERSION, Checkpoint, load_if_valid
 from plan_tool.cli.data_contract_cmd import _filter_candidates, _load_payloads
+from plan_tool.concept_tree import (
+    CONCEPTS_SCHEMA_VERSION,
+    StaleConceptTreeError,
+    concepts_path,
+    load_concepts,
+)
 from plan_tool.detail import parse_acceptance_bullets
 from plan_tool.detail_artifacts import SUPPORTED_DETAIL_FORMAT_VERSIONS
+from plan_tool.grounding import (
+    GROUNDING_SCHEMA_VERSION,
+    Grounding,
+    grounding_path,
+    read_grounding,
+)
 from plan_tool.parser import parse_plan, split_plan_document
+from plan_tool.purity_cache import PURITY_CACHE_SCHEMA_VERSION, load_purity_cache
 from plan_tool.renderer import _load_detail
 from plan_tool.review_persistence import (
     _SUPPORTED_SCHEMA_VERSIONS,
@@ -47,6 +61,24 @@ CHECKPOINT_EXAMPLES = {
         created_at="2026-11-20T04:10:32+00:00",
         schema_version=1,
     ),
+}
+GROUNDING_EXAMPLES = {
+    "grounding/v1.8.0/2-foo.md": Grounding(
+        plan_slug="foo",
+        grounded_at="2026-11-20T13:27:04Z",
+        plan_fingerprint="b",
+        code_fingerprint={"x": "y"},
+        step_authoring_fingerprints={"1": "fp1", "2": "fp2"},
+        schema_version=1,
+    ),
+}
+CONCEPT_EXAMPLES = {
+    "concepts/v1.8.0/full-tree/1-sample.md": (1, "full-tree"),
+    "concepts/v1.8.0/decision-record/1-sample.md": (1, "decision-record"),
+}
+PURITY_CACHE_EXAMPLES = {
+    "purity-cache/v1.8.0/checked-pure/x.json": 1,
+    "purity-cache/v1.8.0/pruned-steps/x.json": 1,
 }
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
@@ -255,6 +287,75 @@ def test_the_current_checkpoint_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("plan", "expected"), GROUNDING_EXAMPLES.items())
+def test_a_captured_grounding_record_preserves_all_fingerprints(
+    plan: str, expected: Grounding
+) -> None:
+    plan_path = FIXTURES / plan
+    raw = json.loads(grounding_path(plan_path).read_text(encoding="utf-8"))
+    assert raw["schema_version"] == expected.schema_version
+    assert read_grounding(plan_path) == expected
+
+
+def test_the_current_grounding_schema_has_a_captured_example() -> None:
+    versions = {example.schema_version for example in GROUNDING_EXAMPLES.values()}
+    assert GROUNDING_SCHEMA_VERSION in versions, (
+        f"no example of grounding schema version {GROUNDING_SCHEMA_VERSION}"
+    )
+
+
+@pytest.mark.parametrize(("plan", "expected"), CONCEPT_EXAMPLES.items())
+def test_a_captured_concept_record_retains_its_fingerprint_policy(
+    plan: str, expected: tuple[int, str]
+) -> None:
+    _, record_kind = expected
+    plan_path = FIXTURES / plan
+    raw = json.loads(concepts_path(plan_path).read_text(encoding="utf-8"))
+    assert (raw["schema_version"], raw["record_kind"]) == expected
+
+    loaded = load_concepts(plan_path, "fingerprint")
+    assert loaded is not None
+    assert asdict(loaded) == raw
+
+    if record_kind == "full-tree":
+        with pytest.raises(StaleConceptTreeError):
+            load_concepts(plan_path, "changed-fingerprint")
+    else:
+        assert load_concepts(plan_path, "changed-fingerprint") == loaded
+
+
+def test_the_current_concept_schema_has_a_captured_example() -> None:
+    versions = {version for version, _ in CONCEPT_EXAMPLES.values()}
+    assert CONCEPTS_SCHEMA_VERSION in versions, (
+        f"no example of concept schema version {CONCEPTS_SCHEMA_VERSION}"
+    )
+
+
+@pytest.mark.parametrize(("path", "version"), PURITY_CACHE_EXAMPLES.items())
+def test_a_captured_purity_cache_preserves_verdicts_and_prunes_removed_steps(
+    path: str, version: int
+) -> None:
+    fixture = FIXTURES / path
+    raw = json.loads(fixture.read_text(encoding="utf-8"))
+    cache = load_purity_cache(fixture)
+    assert raw["version"] == version
+    assert cache.plan_slug == "x"
+    assert {str(step_id): asdict(entry) for step_id, entry in cache.entries.items()} == {
+        step_id: {**entry, "step_id": int(step_id)}
+        for step_id, entry in raw["entries"].items()
+    }
+
+    # Step 3 is in the plan but has no saved verdict. Step 9 is no longer in the plan.
+    pruned = load_purity_cache(fixture, valid_step_ids={2, 3})
+    assert pruned.entries == {2: cache.entries[2]}
+
+
+def test_the_current_purity_cache_schema_has_a_captured_example() -> None:
+    assert PURITY_CACHE_SCHEMA_VERSION in PURITY_CACHE_EXAMPLES.values(), (
+        f"no example of purity cache schema version {PURITY_CACHE_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -277,4 +378,28 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         for path in (FIXTURES / "checkpoint").rglob("*.json")
     }
     assert checkpoints == CHECKPOINT_EXAMPLES.keys()
-    assert rows == {path.name for path in EXAMPLES} | authored | data_contract | checkpoints
+    grounding = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "grounding").rglob("*.json")
+    }
+    assert grounding == {
+        grounding_path(FIXTURES / plan).relative_to(FIXTURES).as_posix()
+        for plan in GROUNDING_EXAMPLES
+    }
+    concepts = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "concepts").rglob("*.json")
+    }
+    assert concepts == {
+        concepts_path(FIXTURES / plan).relative_to(FIXTURES).as_posix()
+        for plan in CONCEPT_EXAMPLES
+    }
+    purity_caches = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "purity-cache").rglob("*.json")
+    }
+    assert purity_caches == PURITY_CACHE_EXAMPLES.keys()
+    assert rows == (
+        {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
+        | concepts | purity_caches
+    )

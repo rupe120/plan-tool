@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "plan_slug": "x",
+  "entries": {
+    "2": {
+      "cache_key": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "detail_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "all_files_fingerprint": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "change_type": "feature",
+      "depends_on": [
+        1
+      ],
+      "purity_verdict_logic_version": 1,
+      "detail_relpath": "docs/implementation-plans/plan-details/x/02-foo.md",
+      "findings": [],
+      "impl_tests_text": "## Implementation\nbody\n## Tests\ncases\n",
+      "checked_at": "2026-07-18T12:34:56Z",
+      "risk_context_rendered": false
+    }
+  }
+}
