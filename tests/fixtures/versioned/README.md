@@ -106,6 +106,19 @@ The fixture keeps the sidecar path that the reader derives from `2-foo.md`.
 | --- | --- | --- |
 | `grounding/v1.8.0/plan-details/foo/grounding.json` | v1.8.0 | 1 |
 
+## Concept records
+
+The `v1.8.0` tests `test_save_and_load_round_trip_exact_record` and
+`test_flat_decision_record_round_trips` in `tests/test_concept_tree.py` write
+these two records. The full tree requires the original plan fingerprint. The
+flat decision record preserves that fingerprint as provenance and still loads
+after the plan changes.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `concepts/v1.8.0/full-tree/plan-details/sample/concepts.json` | v1.8.0 | 1 |
+| `concepts/v1.8.0/decision-record/plan-details/sample/concepts.json` | v1.8.0 | 1 |
+
 ## Pending
 
 Every sidecar version the reader supports (1 to 4) has an example, and so does the
@@ -113,10 +126,9 @@ current audit-revision version. Not covered, and not filled with a synthetic fil
 
 - audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
   writer of these can be retrieved;
-- every other versioned format: roadmap version records, concept tree,
-  purity cache, project profile, and the decision-settlement
-  receipt. Each needs its own capture from the release that
-  wrote it (BACKLOG #543).
+- every other versioned format: roadmap version records, purity cache,
+  project profile, and the decision-settlement receipt. Each needs its own
+  capture from the release that wrote it (BACKLOG #543).
 
 ## When a version changes
 

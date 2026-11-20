@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+from dataclasses import asdict
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,12 @@ import yaml
 
 from plan_tool.checkpoint import CHECKPOINT_SCHEMA_VERSION, Checkpoint, load_if_valid
 from plan_tool.cli.data_contract_cmd import _filter_candidates, _load_payloads
+from plan_tool.concept_tree import (
+    CONCEPTS_SCHEMA_VERSION,
+    StaleConceptTreeError,
+    concepts_path,
+    load_concepts,
+)
 from plan_tool.detail import parse_acceptance_bullets
 from plan_tool.detail_artifacts import SUPPORTED_DETAIL_FORMAT_VERSIONS
 from plan_tool.grounding import (
@@ -63,6 +70,10 @@ GROUNDING_EXAMPLES = {
         step_authoring_fingerprints={"1": "fp1", "2": "fp2"},
         schema_version=1,
     ),
+}
+CONCEPT_EXAMPLES = {
+    "concepts/v1.8.0/full-tree/1-sample.md": (1, "full-tree"),
+    "concepts/v1.8.0/decision-record/1-sample.md": (1, "decision-record"),
 }
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
@@ -288,6 +299,33 @@ def test_the_current_grounding_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("plan", "expected"), CONCEPT_EXAMPLES.items())
+def test_a_captured_concept_record_retains_its_fingerprint_policy(
+    plan: str, expected: tuple[int, str]
+) -> None:
+    _, record_kind = expected
+    plan_path = FIXTURES / plan
+    raw = json.loads(concepts_path(plan_path).read_text(encoding="utf-8"))
+    assert (raw["schema_version"], raw["record_kind"]) == expected
+
+    loaded = load_concepts(plan_path, "fingerprint")
+    assert loaded is not None
+    assert asdict(loaded) == raw
+
+    if record_kind == "full-tree":
+        with pytest.raises(StaleConceptTreeError):
+            load_concepts(plan_path, "changed-fingerprint")
+    else:
+        assert load_concepts(plan_path, "changed-fingerprint") == loaded
+
+
+def test_the_current_concept_schema_has_a_captured_example() -> None:
+    versions = {version for version, _ in CONCEPT_EXAMPLES.values()}
+    assert CONCEPTS_SCHEMA_VERSION in versions, (
+        f"no example of concept schema version {CONCEPTS_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
@@ -318,6 +356,15 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         grounding_path(FIXTURES / plan).relative_to(FIXTURES).as_posix()
         for plan in GROUNDING_EXAMPLES
     }
+    concepts = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "concepts").rglob("*.json")
+    }
+    assert concepts == {
+        concepts_path(FIXTURES / plan).relative_to(FIXTURES).as_posix()
+        for plan in CONCEPT_EXAMPLES
+    }
     assert rows == (
         {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
+        | concepts
     )

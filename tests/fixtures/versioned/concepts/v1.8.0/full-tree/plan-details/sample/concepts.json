@@ -1,0 +1,36 @@
+{
+  "plan_slug": "sample",
+  "plan_fingerprint": "fingerprint",
+  "concepts": [
+    {
+      "id": "5b420c5aeca4c7b55c3a85d273809b83c888cd2bc70ede0d059b4f60cffc6520",
+      "title": "Root",
+      "parent_path": [],
+      "order": 1,
+      "source": "overview",
+      "decision": "",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "line": "4"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "c4b24b0892040ecf2b3c54b0f9bae238c378920b4ac7d41da88a2b58c035f9af",
+      "title": "Child",
+      "parent_path": [
+        "Root"
+      ],
+      "order": 2,
+      "source": "",
+      "decision": "Keep it",
+      "rationale": "Required",
+      "review_state": "approved",
+      "source_metadata": {},
+      "bucket": ""
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "full-tree"
+}
