@@ -33,6 +33,7 @@ authored-artifact version work were renumbered: former roadmap #362 → #383
 | #334 | [Mechanism-reach authoring plan](../implementation-plans/archive/2-mechanism-reach-01-authoring.md); #336 consumes its shipped rule; #335 is since discarded. |
 | #337 | [Roadmap stage lifecycle output plan](../implementation-plans/archive/2-roadmap-stage-lifecycle-output.md). |
 | #351 | [Seed References fallback plan](../implementation-plans/archive/2-seed-source-references-fallback.md). |
+| #378 | [Shared filing guidance](../../integrations/shared/DIRECTIVES.md#filing-a-backlog-or-bug-entry) shipped in PR #292. It owns tracker discovery and verified updates to existing entries, including the former #379. |
 
 ### #331 and #333 — Seed-to-create source boundary
 
