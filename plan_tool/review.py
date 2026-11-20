@@ -81,7 +81,7 @@ from plan_tool.shell import (
     claude_invoke_outcome,
     suppress_prompt_budget_backstop,
 )
-from plan_tool.renderer import prompts_dir
+from plan_tool.renderer import prompts_dir, read_plain_words_swaps
 from plan_tool.response_contract import (
     FINDINGS_RESPONSE_CONTRACT,
     MarkdownSectionsContract,
@@ -7764,6 +7764,7 @@ def render_plan_audit_prompt(
     return template.safe_substitute(
         plan_title=plan.title,
         plan_body_block=body,
+        plain_words_swaps=read_plain_words_swaps(),
         detail_bundle_framing_block=_format_bundle_framing_block(),
         detail_bundle_status_block=detail_bundle_status_rendered,
         detail_files_block=detail_files_rendered,
