@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "intent": "Keep delivery planning grounded in the current product.",
+  "non_goals": [
+    "Do not infer unstated priorities.",
+    "Do not change create yet."
+  ],
+  "decisions": [
+    "Do not execute a plan without a demonstrated problem."
+  ]
+}

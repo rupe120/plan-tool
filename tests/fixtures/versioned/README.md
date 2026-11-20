@@ -20,7 +20,13 @@ because `/tmp` resolves there:
 
 - `completeness-final.*`: the end-to-end `plan-tool completeness-audit` run in
   `tests/cli/test_completeness_cmd.py::test_completeness_audit_persists_run_grade_report_and_qualified_sidecar`
-  (the model call stubbed), which writes `qualified_result.audit_revision`.
+  (the model call stubbed), which writes `qualified_result.audit_revision`,
+  for revisions 3 and 4.
+- `completeness-legacy-revision.*` (revision 1) and `completeness-final.*`
+  (revision 2): `tests/test_completeness_report.py::test_report_writer_keeps_the_audit_time_revision`
+  at pre-publication commits `7ba09d2a3` and `44ca13a9b`, respectively.
+  The first writes the revision at the top level. The second writes it inside
+  `qualified_result`.
 - `completeness-checkpoint.*`, `run-reconcile.*`, `detail-reconcile.*`:
   `_save_completeness_sidecar` in `tests/test_completeness_report.py`, which calls
   the release's own `save_review` (`kind=` and `is_pre_apply_checkpoint=`).
@@ -46,6 +52,8 @@ it, so a reader that starts resolving them must cope with files that do not exis
 | `detail-reconcile.sidecar-v1.v1.6.0.json` | v1.6.0 | 1 | none |
 | `completeness-advisory.sidecar-v2.v1.6.0.json` | v1.6.0 | 2 | none |
 | `completeness-checkpoint-no-revision.sidecar-v3.v1.6.0.json` | v1.6.0 | 3 | none |
+| `completeness-legacy-revision.sidecar-v4.revision-v1.7ba09d2a3.json` | `7ba09d2a3` | 4 | 1 (top-level `audit_revision`) |
+| `completeness-final.sidecar-v4.revision-v2.44ca13a9b.json` | `44ca13a9b` | 4 | 2 (in `qualified_result`) |
 | `completeness-final.sidecar-v4.revision-v3.v1.6.0.json` | v1.6.0 | 4 | 3 (in `qualified_result`) |
 | `completeness-checkpoint.sidecar-v4.revision-v3.v1.6.0.json` | v1.6.0 | 4 | 3 (`checkpoint_audit_revision`) |
 | `completeness-final.sidecar-v4.revision-v4.main-4226931b3.json` | `main` at `4226931b3` (revision v4, `sibling_paths_digest`, was introduced earlier in `6e873dd59`) | 4 | 4 |
@@ -132,16 +140,43 @@ because that step is no longer in the plan.
 | `purity-cache/v1.8.0/checked-pure/x.json` | v1.8.0 | 1 |
 | `purity-cache/v1.8.0/pruned-steps/x.json` | v1.8.0 | 1 |
 
-## Pending
+## Project profile
 
-Every sidecar version the reader supports (1 to 4) has an example, and so does the
-current audit-revision version. Not covered, and not filled with a synthetic file:
+The `v1.8.0` test `test_initialize_writes_the_v1_profile_and_reader_roundtrips`
+in `tests/test_project_profile.py` writes this profile. The capture keeps its
+project-relative path, and the current reader preserves the intent, non-goals,
+and settled decisions.
 
-- audit-revision versions 1 and 2: every tag back to v0.2.0 writes revision 3, so no
-  writer of these can be retrieved;
-- every other versioned format: roadmap version records, project profile,
-  and the decision-settlement receipt. Each needs its own
-  capture from the release that wrote it (BACKLOG #543).
+| File | Source | Schema version |
+| --- | --- | --- |
+| `project-profile/v1.8.0/.plan-tool/project.json` | v1.8.0 | 1 |
+
+## Roadmap version records
+
+The `v1.8.0` test `test_load_explicit_stored_version_returns_complete_candidate_bundle`
+in `tests/test_roadmap_versions.py` writes the root and candidate records. The
+capture preserves their version directories. The compatibility test loads
+`version.json` through the metadata reader and checks the predecessor binding
+and the recorded member digests.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `roadmap-version/v1.8.0/roadmaps/storefront/.roadmap-versions/5c14e9ab88513c2f4c8cc5b36aa3d7d01018d9b755aaa5ef2bfc0d8b0d57667c/version.json` | v1.8.0 | 1 |
+| `roadmap-version/v1.8.0/roadmaps/storefront/.roadmap-versions/7907f8cab455e8f9d91e0648f4aa117fce2ceaf79a9cf556e4e7d67bc6ac9d70/version.json` | v1.8.0 | 1 |
+
+## Decision-settlement receipts
+
+The test `test_fresh_receipt_is_committed_before_created` in
+`tests/test_roadmap_decision_settlement_receipt.py` publishes both receipts.
+The `v1.8.0` writer records the enrolled predecessor and resulting versions.
+The pre-publication writer at `8b76b5409` records explicit null bindings for
+unenrolled lineage. Each capture keeps the hash that the writer uses as its
+filename, which the current reader checks against the receipt.
+
+| File | Source | Schema version |
+| --- | --- | --- |
+| `decision-settlement/v1.8.0/34acc5455b7d7a1f9c2d154b26259a87fdcae0b143fa972866e67ab88c317796` | v1.8.0 | 1 |
+| `decision-settlement/8b76b5409/30ad5cc309399fabfe473132323ae3906095f4eb6a9bd9bc5594d04baf5750d5` | `8b76b5409` | 1 |
 
 ## When a version changes
 

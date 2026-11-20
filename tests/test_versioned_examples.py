@@ -34,12 +34,28 @@ from plan_tool.grounding import (
     read_grounding,
 )
 from plan_tool.parser import parse_plan, split_plan_document
+from plan_tool.project_profile import (
+    PROJECT_PROFILE_SCHEMA_VERSION,
+    ProjectProfile,
+    project_profile_path,
+    read_project_profile,
+)
 from plan_tool.purity_cache import PURITY_CACHE_SCHEMA_VERSION, load_purity_cache
 from plan_tool.renderer import _load_detail
 from plan_tool.review_persistence import (
     _SUPPORTED_SCHEMA_VERSIONS,
     AuditInputSnapshot,
     load_review,
+)
+from plan_tool.roadmap_decision_settlement_receipt import (
+    DECISION_SETTLEMENT_RECEIPT_SCHEMA_VERSION,
+    DecisionSettlementReceiptError,
+    parse_decision_settlement_receipt,
+)
+from plan_tool.roadmap_versions import (
+    ROADMAP_VERSION_SCHEMA_VERSION,
+    load_stored_version,
+    stored_version_record_path,
 )
 from plan_tool.schema import SUPPORTED_PLAN_FORMAT_VERSIONS
 
@@ -80,6 +96,30 @@ PURITY_CACHE_EXAMPLES = {
     "purity-cache/v1.8.0/checked-pure/x.json": 1,
     "purity-cache/v1.8.0/pruned-steps/x.json": 1,
 }
+PROJECT_PROFILE_EXAMPLES = {
+    "project-profile/v1.8.0": ProjectProfile(
+        schema_version=1,
+        intent="Keep delivery planning grounded in the current product.",
+        non_goals=("Do not infer unstated priorities.", "Do not change create yet."),
+        decisions=("Do not execute a plan without a demonstrated problem.",),
+    ),
+}
+ROADMAP_VERSION_PLANS_DIR = FIXTURES / "roadmap-version" / "v1.8.0"
+ROADMAP_ROOT_VERSION_ID = "5c14e9ab88513c2f4c8cc5b36aa3d7d01018d9b755aaa5ef2bfc0d8b0d57667c"
+ROADMAP_VERSION_EXAMPLES = {
+    ROADMAP_ROOT_VERSION_ID: (1, "root", None),
+    "7907f8cab455e8f9d91e0648f4aa117fce2ceaf79a9cf556e4e7d67bc6ac9d70": (
+        1, "candidate", ROADMAP_ROOT_VERSION_ID
+    ),
+}
+DECISION_SETTLEMENT_EXAMPLES = {
+    "decision-settlement/v1.8.0/34acc5455b7d7a1f9c2d154b26259a87fdcae0b143fa972866e67ab88c317796": (
+        1, "enrolled"
+    ),
+    "decision-settlement/8b76b5409/30ad5cc309399fabfe473132323ae3906095f4eb6a9bd9bc5594d04baf5750d5": (
+        1, "unenrolled"
+    ),
+}
 NAME_RE = re.compile(
     r"^(?P<shape>[a-z-]+)\.sidecar-v(?P<sidecar>\d+)"
     r"(?:\.revision-v(?P<revision>\d+))?\.(?P<source>.+)\.json$"
@@ -88,6 +128,7 @@ SHAPE_KIND = {
     "completeness-final": "completeness",
     "completeness-checkpoint": "completeness",
     "completeness-legacy": "completeness",
+    "completeness-legacy-revision": "completeness",
     "completeness-advisory": "completeness",
     "completeness-checkpoint-no-revision": "completeness",
     "review": "review",
@@ -111,6 +152,8 @@ def _raw_revision(raw: dict, shape: str) -> dict | None:
         return raw["qualified_result"]["audit_revision"]
     if shape == "completeness-checkpoint":
         return raw["checkpoint_audit_revision"]
+    if shape == "completeness-legacy-revision":
+        return raw["audit_revision"]
     return None
 
 
@@ -154,7 +197,8 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
         assert saved.audit_revision is None and saved.qualified_result is None
         return
 
-    assert raw_revision is not None and raw_revision["version"] == int(parts["revision"])
+    version = int(parts["revision"])
+    assert raw_revision is not None and raw_revision["version"] == version
     current = _current_revision_version(tmp_path)
     loaded = saved.audit_revision
     assert loaded is not None, "the reader dropped a revision an older release wrote"
@@ -162,12 +206,21 @@ def test_a_captured_example_loads_through_the_current_reader(path: Path, tmp_pat
     # revision loads unchanged, and an older one gains only its version and the digests it
     # lacked, read as None (a report of a plan without siblings stays current after upgrade).
     expected = dict(raw_revision)
-    if int(parts["revision"]) < 4:  # v4 introduced sibling_paths_digest
-        assert "sibling_paths_digest" not in raw_revision
-        expected.update(version=current, sibling_paths_digest=None)
+    expected["version"] = current
+    for introduced, digest in (
+        (2, "source_seed_digest"),
+        (3, "project_context_digest"),
+        (4, "sibling_paths_digest"),
+    ):
+        if version < introduced:
+            assert digest not in raw_revision
+            expected[digest] = None
     assert loaded == expected
     if parts["shape"] == "completeness-checkpoint":
         assert saved.is_pre_apply_checkpoint is True
+        assert saved.qualified_result is None
+    elif parts["shape"] == "completeness-legacy-revision":
+        assert saved.is_pre_apply_checkpoint is False
         assert saved.qualified_result is None
     else:
         assert saved.is_pre_apply_checkpoint is False
@@ -186,15 +239,13 @@ def test_every_supported_sidecar_version_has_a_captured_example() -> None:
     assert sidecars <= supported, "an example claims a version the reader no longer supports"
 
 
-def test_the_current_and_an_older_audit_revision_version_have_captured_examples(
+def test_every_audit_revision_version_has_a_captured_example(
     tmp_path: Path,
 ) -> None:
-    """The current revision version, and at least one older one, so the upgrade branch of the
-    normalizer stays covered when the current version moves."""
     revisions = {int(parts["revision"]) for parts in PARTS.values() if parts["revision"]}
     current = _current_revision_version(tmp_path)
-    assert current in revisions, "no example of the current audit-revision version"
-    assert any(version < current for version in revisions), "no example of an older revision"
+    missing = set(range(1, current + 1)) - revisions
+    assert not missing, f"no example of audit-revision version(s) {sorted(missing)}"
 
 
 @pytest.mark.parametrize("source", AUTHORED_VERSIONS)
@@ -356,10 +407,69 @@ def test_the_current_purity_cache_schema_has_a_captured_example() -> None:
     )
 
 
+@pytest.mark.parametrize(("directory", "expected"), PROJECT_PROFILE_EXAMPLES.items())
+def test_a_captured_project_profile_preserves_confirmed_settings(
+    directory: str, expected: ProjectProfile
+) -> None:
+    root = FIXTURES / directory
+    raw = json.loads(project_profile_path(root).read_text(encoding="utf-8"))
+    assert raw["schema_version"] == expected.schema_version
+    assert read_project_profile(root) == expected
+
+
+def test_the_current_project_profile_schema_has_a_captured_example() -> None:
+    versions = {profile.schema_version for profile in PROJECT_PROFILE_EXAMPLES.values()}
+    assert PROJECT_PROFILE_SCHEMA_VERSION in versions, (
+        f"no example of project profile schema version {PROJECT_PROFILE_SCHEMA_VERSION}"
+    )
+
+
+@pytest.mark.parametrize(("version_id", "expected"), ROADMAP_VERSION_EXAMPLES.items())
+def test_a_captured_roadmap_version_preserves_lineage_and_member_digests(
+    version_id: str, expected: tuple[int, str, str | None]
+) -> None:
+    path = stored_version_record_path(ROADMAP_VERSION_PLANS_DIR, "storefront", version_id)
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    record = load_stored_version(
+        plans_dir=ROADMAP_VERSION_PLANS_DIR, slug="storefront", version_id=version_id
+    )
+    assert (record.schema_version, record.version_kind, record.predecessor_version_id) == expected
+    assert record.model_dump(mode="json") == raw
+
+
+def test_the_current_roadmap_version_schema_has_a_captured_example() -> None:
+    versions = {version for version, _, _ in ROADMAP_VERSION_EXAMPLES.values()}
+    assert ROADMAP_VERSION_SCHEMA_VERSION in versions, (
+        f"no example of roadmap version schema version {ROADMAP_VERSION_SCHEMA_VERSION}"
+    )
+
+
+@pytest.mark.parametrize(("path", "expected"), DECISION_SETTLEMENT_EXAMPLES.items())
+def test_a_captured_decision_settlement_receipt_preserves_its_bindings(
+    path: str, expected: tuple[int, str]
+) -> None:
+    fixture = FIXTURES / path
+    data = fixture.read_bytes()
+    receipt = parse_decision_settlement_receipt(data, expected_final_name=fixture.name)
+    assert (receipt.schema_version, receipt.lineage) == expected
+    assert receipt.model_dump(mode="json") == json.loads(data)
+
+    with pytest.raises(DecisionSettlementReceiptError, match="final name"):
+        parse_decision_settlement_receipt(data, expected_final_name="0" * 64)
+
+
+def test_the_current_decision_settlement_receipt_schema_has_a_captured_example() -> None:
+    versions = {version for version, _ in DECISION_SETTLEMENT_EXAMPLES.values()}
+    assert DECISION_SETTLEMENT_RECEIPT_SCHEMA_VERSION in versions, (
+        "no example of decision settlement receipt schema version "
+        f"{DECISION_SETTLEMENT_RECEIPT_SCHEMA_VERSION}"
+    )
+
+
 def test_the_readme_table_lists_exactly_the_examples() -> None:
     """One row per example, matched on the file name; a row for a deleted or renamed file fails."""
     text = (FIXTURES / "README.md").read_text(encoding="utf-8")
-    rows = set(re.findall(r"^\| `([^`]+\.(?:json|md))` \|", text, flags=re.M))
+    rows = set(re.findall(r"^\| `([^`]+)` \|", text, flags=re.M))
     authored = {
         f"authored/{source}/{path}"
         for source in AUTHORED_VERSIONS
@@ -399,7 +509,30 @@ def test_the_readme_table_lists_exactly_the_examples() -> None:
         for path in (FIXTURES / "purity-cache").rglob("*.json")
     }
     assert purity_caches == PURITY_CACHE_EXAMPLES.keys()
+    profiles = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "project-profile").rglob("*.json")
+    }
+    assert profiles == {
+        project_profile_path(FIXTURES / directory).relative_to(FIXTURES).as_posix()
+        for directory in PROJECT_PROFILE_EXAMPLES
+    }
+    roadmap_versions = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in ROADMAP_VERSION_PLANS_DIR.rglob("version.json")
+    }
+    assert roadmap_versions == {
+        stored_version_record_path(ROADMAP_VERSION_PLANS_DIR, "storefront", version_id)
+        .relative_to(FIXTURES).as_posix()
+        for version_id in ROADMAP_VERSION_EXAMPLES
+    }
+    receipts = {
+        path.relative_to(FIXTURES).as_posix()
+        for path in (FIXTURES / "decision-settlement").rglob("*")
+        if path.is_file()
+    }
+    assert receipts == DECISION_SETTLEMENT_EXAMPLES.keys()
     assert rows == (
         {path.name for path in EXAMPLES} | authored | data_contract | checkpoints | grounding
-        | concepts | purity_caches
+        | concepts | purity_caches | profiles | roadmap_versions | receipts
     )

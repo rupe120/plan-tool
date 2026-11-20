@@ -1,0 +1,41 @@
+{
+  "version": 4,
+  "plan_slug": "demo",
+  "plan_path": "plans/1-demo.md",
+  "created_at": "2026-11-20T14:07:12Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "",
+  "code_fingerprint": {},
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "# report\n",
+  "recommendations": [],
+  "annotations": {},
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 2,
+      "detail_grade": "run",
+      "plan_digest": "fabfd04423dc708376d6e9e3c636d1e91a62a73877a8607305dce71e7d8a5921",
+      "detail_bundle_digest": "449bbafaa45c2ddd5ec48123fae6e9f6934533dffcf7a69871630ab7e916e723",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-543-audit-44ca13a9b.hCXR7Y/captured/test_report_writer_keeps_the_a0/plans/plan-details/demo/01-stub.md",
+          "state": "present",
+          "digest": "db26270a37a034f1ebb3bbeb9a5438258974ecebf354da2be06844da7f002b84"
+        }
+      ],
+      "source_seed_digest": null
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "audit_stage": "detail"
+}
