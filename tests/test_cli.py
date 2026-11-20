@@ -50,6 +50,14 @@ class TestNoResumeFlagParsesForDetailAndCreate:
 class TestDetailAutoCompleteness:
     """``detail`` runs the completeness tail after a clean authoring run."""
 
+    def test_help_names_the_default_audit_and_its_report_directory(self) -> None:
+        detail = _find_subparser(build_parser(), "detail")
+        assert detail is not None
+        help_text = " ".join(detail.format_help().split())
+        assert "By default, after a successful authoring run" in help_text
+        assert "runs a completeness audit and saves its report under" in help_text
+        assert "plan-details/<plan>/reports/" in help_text
+
     def test_no_completeness_flag_parses(self) -> None:
         parser = build_parser()
         detail = _find_subparser(parser, "detail")
@@ -128,12 +136,13 @@ class TestDetailAutoCompleteness:
         assert calls == []
 
     def test_no_iterate_downgrades_tail_to_audit_only(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str],
     ) -> None:
         rc, calls = self._run(monkeypatch, tmp_path, iterate=False)
         assert rc == 0
         assert len(calls) == 1
         assert calls[0].iterate is False
+        assert "running conceptual completeness audit" in capsys.readouterr().err
 
 
 @pytest.mark.integration
