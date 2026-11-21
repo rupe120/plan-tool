@@ -44,7 +44,9 @@ def checkouts(tmp_path, monkeypatch):
     return checkout, target
 
 
-@pytest.mark.parametrize("selector", ["flag", "env", "pinned", "manifest", "cwd"])
+@pytest.mark.parametrize(
+    "selector", ["flag", "env", "pinned", "pinned-non-git", "manifest", "cwd"],
+)
 def test_run_holds_locks_for_the_checkouts_it_resolves(
     checkouts, monkeypatch, capsys, selector,
 ):
@@ -57,7 +59,9 @@ def test_run_holds_locks_for_the_checkouts_it_resolves(
     if selector == "env":
         monkeypatch.setenv("PLAN_TOOL_PLANS_DIR", str(plans_dir))
         options = []
-    elif selector == "pinned":
+    elif selector in ("pinned", "pinned-non-git"):
+        if selector == "pinned-non-git":
+            (target / ".git").rmdir()
         options += ["--repo-root", str(checkout)]
         expected_roots.add(checkout)
         handler_root = checkout
@@ -99,12 +103,17 @@ def test_run_holds_locks_for_the_checkouts_it_resolves(
     assert all(not mutation_lock_path(root).exists() for root in expected_roots)
 
 
+@pytest.mark.parametrize("git_target", [True, False], ids=["git", "non-git"])
 def test_run_rejects_busy_destination_before_reaching_the_plan(
-    checkouts, monkeypatch, capsys,
+    checkouts, monkeypatch, capsys, git_target,
 ):
     checkout, target = checkouts
-    plans_dir = target / "plans"
-    plans_dir.mkdir()
+    if git_target:
+        plans_dir = target / "plans"
+    else:
+        (target / ".git").rmdir()
+        plans_dir = target / "docs" / "implementation-plans"
+    plans_dir.mkdir(parents=True)
 
     def unexpected_prefs(root: Path) -> dict:
         pytest.fail(f"run reached plan lookup while {root} was locked")
@@ -134,12 +143,17 @@ def test_fresh_create_locks_the_seed_selected_checkout(
         assert not mutation_lock_path(checkout).exists()
 
 
+@pytest.mark.parametrize("git_target", [True, False], ids=["git", "non-git"])
 def test_roadmap_locks_its_external_plans_checkout(
-    checkouts, monkeypatch, capsys,
+    checkouts, monkeypatch, capsys, git_target,
 ):
     checkout, target = checkouts
-    plans_dir = target / "plans"
-    plans_dir.mkdir()
+    if git_target:
+        plans_dir = target / "plans"
+    else:
+        (target / ".git").rmdir()
+        plans_dir = target / "docs" / "implementation-plans"
+    plans_dir.mkdir(parents=True)
 
     def unexpected_roadmap_apply(*args, **kwargs):
         pytest.fail("roadmap reached apply while the target was locked")

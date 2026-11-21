@@ -92,7 +92,7 @@ from plan_tool.cli.context import _lock_command_repo, _resolve_cmd_repo_root
 from plan_tool.cli.parser import Handler
 from plan_tool.create import resolve_output_dir
 from plan_tool.fileio import atomic_write_text
-from plan_tool.locator import collect_project_root_ancestors, resolve_explicit_plans_dir
+from plan_tool.locator import find_explicit_plans_checkout, resolve_explicit_plans_dir
 from plan_tool.repo_lock import RepoMutationLockError
 from plan_tool.roadmap import (
     stage_resume_directory,
@@ -566,9 +566,9 @@ def _resolve_roadmap_paths(args: argparse.Namespace) -> tuple[Path, Path]:
     plans_dir = resolve_explicit_plans_dir(args.plans_dir)
     if plans_dir is None:
         return repo_root, resolve_output_dir(repo_root)
-    plan_checkout = collect_project_root_ancestors(plans_dir)
-    if plan_checkout:
-        _lock_command_repo(args, plan_checkout[0])
+    plan_checkout = find_explicit_plans_checkout(plans_dir)
+    if plan_checkout is not None:
+        _lock_command_repo(args, plan_checkout)
     return repo_root, plans_dir
 
 
