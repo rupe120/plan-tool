@@ -51,6 +51,10 @@ class ManifestError(Exception):
     """Raised when the plans manifest is malformed or has bad entries."""
 
 
+class PlansCheckoutError(Exception):
+    """An explicit plans directory has no identifiable mutation lock root."""
+
+
 def default_manifest_path(repo_root: Optional[Path] = None) -> Path:
     """Path to the host project's plan manifest.
 
@@ -132,14 +136,24 @@ def collect_project_root_ancestors(start: Path) -> list[Path]:
         cursor = parent
 
 
-def find_explicit_plans_checkout(plans_dir: Path) -> Optional[Path]:
-    """Find the checkout to guard when a command uses an explicit plans directory."""
+def require_explicit_plans_checkout(plans_dir: Path, repo_root: Optional[Path]) -> Path:
+    """Resolve a lock root for the destination using the existing checkout rules."""
     candidates = collect_project_root_ancestors(plans_dir)
     if candidates:
         return candidates[0]
     if plans_dir.parts[-len(PLANS_SUBPATH.parts):] == PLANS_SUBPATH.parts:
         return plans_dir.parent.parent
-    return None
+    if repo_root is None:
+        try:
+            repo_root = find_repo_root_from_cwd()
+        except FileNotFoundError:
+            repo_root = Path.cwd().resolve()
+    if plans_dir.is_relative_to(repo_root):
+        return repo_root
+    raise PlansCheckoutError(
+        f"cannot determine a mutation lock root for plans directory {plans_dir}; "
+        "run from its checkout or pass --repo-root for the checkout containing it"
+    )
 
 
 def find_repo_root_from_cwd(start: Optional[Path] = None) -> Path:
@@ -573,10 +587,11 @@ def build_plan_tool_context(
     if explicit is not None:
         repo_root = explicit_root or find_repo_root(explicit)
         if lock_repo_root is not None:
+            plan_checkout = require_explicit_plans_checkout(explicit, explicit_root)
+            if explicit_root is None and not is_project_root(repo_root):
+                repo_root = plan_checkout
             lock_repo_root(repo_root)
-            plan_checkout = find_explicit_plans_checkout(explicit)
-            if plan_checkout is not None:
-                lock_repo_root(plan_checkout)
+            lock_repo_root(plan_checkout)
         entries = list_plans(explicit)
         return PlanToolContext(repo_root=repo_root, plans_dir=explicit, entries=entries)
     if explicit_root is not None:
