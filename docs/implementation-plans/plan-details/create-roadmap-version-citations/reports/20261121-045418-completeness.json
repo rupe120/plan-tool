@@ -1,0 +1,110 @@
+{
+  "version": 4,
+  "plan_slug": "create-roadmap-version-citations",
+  "plan_path": "docs/implementation-plans/2-create-roadmap-version-citations.md",
+  "created_at": "2026-11-21T04:54:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9fe7f5eafeccb40cc0f05ff11f8837dc6d27503ddf45e31c1b27151349de9dca",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "6885340fbb45d9b94fef325c87010354eb42d0d546abbf7d8c817e7f68c5bd7d",
+    "plan_tool/create.py": "7f9e370be975f10e686da7f6f666816ba00d403563e85e89a8b0a10a4b6fadc3",
+    "plan_tool/foundational_logic.py": "a8b0acee9a12c90c9b4a21266abf3ae8701ed3366f9ee8f7b30162ccbee3c1f1",
+    "plan_tool/prompts/distill-seed.md": "7dfbf1f50fdbeed3dd27099bec73c707ca826400b986430af752b6f55afde1db",
+    "plan_tool/prompts/synthesize-body.md": "bb576acbbc1a93e9914446ee2f547dffe2c0e7307b0c03ab3165bcca35c808e1",
+    "tests/test_create.py": "2e8bc2a1b0f266f4a3a3c42794801ccf7ca2d222ae9a667c8a68ee1a90a490cf",
+    "tests/test_distill.py": "085f45c5f850fe89c3ef9803a0dedff1cd8f2d8bb9c0d38184bb8509063c73ec"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md": "e5b4b07d13c6485cfd792714da77872807b5e69c8fe030362e472ca0afa11866",
+    "docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md": "b67c6f487d2aca500dfe3510672446c7fbc0b86ec640ab12071e189be4c8c793"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Roadmap Version Citations\n\n`create-roadmap-version-citations` \u00b7 generated 2026-11-21T04:54:18Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring.\n\n    plan-tool reconcile-plan-walk create-roadmap-version-citations  # optional interactive review of the saved findings\n\n- HIGH `[citation-evidence-resume]` [confidence: limited]: Resumed `create --from-existing` can publish prose generated for a different roadmap version. Architecture and step 1 (Apply the Architecture citation contract to preparation, fallback body synthesis, and step proposal) require the originally selected source to govern citations even when normalization drops them. In `plan_tool/create.py`, `_prepare_create_plan` can produce identical normalized text from two sources that differ only in a dropped citation. `_initial_steps_input_hash` and `_body_sections_input_hash` key reuse on the downstream text, so `propose_steps_from_claude` and `propose_body_sections` can replay the first source\u2019s prose without sending the second source\u2019s evidence to the writer. Preparation already checks raw source and prompt identity through `_distill_seed_input_hash`, and convergence re-proposals explicitly disable replay. Testing and step 2\u2019s fresh run exercise live calls and leave this resume case unverified. Architecture states:\n\n  ```\n  Preserve the full path tied to the claim, including its version identifier.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): A resumed creation can publish a citation to the wrong roadmap version when normalization drops the evidence that distinguishes the selected source from an earlier one.\n  - Fix: Require reused step and fallback body proposals to match the selected source\u2019s citation evidence, and verify that changing only a dropped version path prevents reuse of the earlier prose.\n- MEDIUM `[citation-proof-outcome]` [confidence: limited]: The fresh-run proof requires a writer to be blamed even when the run never exercises the citation rule. Architecture makes preservation conditional on a usable citation tied to the claim, while Testing and Acceptance criteria require observed citations in both generated surfaces. A run that publishes an exact citation in the model-written Overview but makes no roadmap citation in any generated step misses the acceptance criterion without showing a step-writer defect. Step 2 (Run a fresh file-backed creation from a representative normalized roadmap-derived seed and verify both generated surfaces named in Acceptance criteria) gives that outcome the same disposition as an observed wrong path:\n\n  ```\n  Retain it with the failing writer identified if the proof fails.\n  ```\n  - Fix: Keep the backlog entry open when either surface lacks a qualifying citation, record that run as inconclusive, and identify a failing writer only when the evidence shows which writer shortened or substituted a source path.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit create-roadmap-version-citations --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Roadmap Version Citations\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit create-roadmap-version-citations --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-c0c6b159",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Resumed `create --from-existing` can publish prose generated for a different roadmap version. Architecture and step 1 (A",
+      "body": "Resumed `create --from-existing` can publish prose generated for a different roadmap version. Architecture and step 1 (Apply the Architecture citation contract to preparation, fallback body synthesis, and step proposal) require the originally selected source to govern citations even when normalization drops them. In `plan_tool/create.py`, `_prepare_create_plan` can produce identical normalized text from two sources that differ only in a dropped citation. `_initial_steps_input_hash` and `_body_sections_input_hash` key reuse on the downstream text, so `propose_steps_from_claude` and `propose_body_sections` can replay the first source\u2019s prose without sending the second source\u2019s evidence to the writer. Preparation already checks raw source and prompt identity through `_distill_seed_input_hash`, and convergence re-proposals explicitly disable replay. Testing and step 2\u2019s fresh run exercise live calls and leave this resume case unverified. Architecture states:\n\n  ```\n  Preserve the full path tied to the claim, including its version identifier.\n  ```",
+      "suggested_action": "Require reused step and fallback body proposals to match the selected source\u2019s citation evidence, and verify that changing only a dropped version path prevents reuse of the earlier prose.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "citation-evidence-resume",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "A resumed creation can publish a citation to the wrong roadmap version when normalization drops the evidence that distinguishes the selected source from an earlier one."
+    },
+    {
+      "id": "plan-plan-correctness-19c2258b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The fresh-run proof requires a writer to be blamed even when the run never exercises the citation rule. Architecture mak",
+      "body": "The fresh-run proof requires a writer to be blamed even when the run never exercises the citation rule. Architecture makes preservation conditional on a usable citation tied to the claim, while Testing and Acceptance criteria require observed citations in both generated surfaces. A run that publishes an exact citation in the model-written Overview but makes no roadmap citation in any generated step misses the acceptance criterion without showing a step-writer defect. Step 2 (Run a fresh file-backed creation from a representative normalized roadmap-derived seed and verify both generated surfaces named in Acceptance criteria) gives that outcome the same disposition as an observed wrong path:\n\n  ```\n  Retain it with the failing writer identified if the proof fails.\n  ```",
+      "suggested_action": "Keep the backlog entry open when either surface lacks a qualifying citation, record that run as inconclusive, and identify a failing writer only when the evidence shows which writer shortened or substituted a source path.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "citation-proof-outcome",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 4,
+    "detail_grade": "run",
+    "plan_digest": "9fe7f5eafeccb40cc0f05ff11f8837dc6d27503ddf45e31c1b27151349de9dca",
+    "detail_bundle_digest": "5ad2bcf6317f85075eed98b06640f23129bf4b0aa7979d76bce5480d0587466f",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "7144a9225ed0db988ab6b68ca3e3b5805c60ddcf05dfc73a46985d2b1b8b1d25",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e",
+    "sibling_paths_digest": null
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}
