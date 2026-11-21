@@ -111,6 +111,6 @@ guidance (#511), and model guidance (#512) have shipped. See the
 The recipe-consistency prerequisite and seed-authoring support (#377) are
 complete.
 
-Public-content sanitization (#513) and distribution/history decisions (#514)
-remain separate release prerequisites. The verified README walkthrough (#510)
+Public-content sanitization (#513) and distribution/history verification
+(#514) are complete. The verified README walkthrough (#510)
 and fresh-reader verification (#515) belong to the operator-workflow arc.

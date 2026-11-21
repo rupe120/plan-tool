@@ -86,7 +86,8 @@ for content decisions, reference ownership and retained conclusions. Use the
 for exact candidate identity, environment and measured results.
 [`docs/RELEASING.md`](../docs/RELEASING.md) owns the release procedure; the
 [public-release arc](../docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md)
-with `BACKLOG.md` #514, #515 and #523 owns the remaining distribution work and the next action.
+records #514's verified public synchronization. `BACKLOG.md` tracks #515
+for independent onboarding and #523 for the parked PyPI work.
 Keep decisions and finding explanations in their maintained owners when
 compressing or retiring a handoff.
 

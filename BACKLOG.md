@@ -159,9 +159,9 @@ over a tier doc whenever your session is already committed to its theme:
 ownership:
 
 - [`backlog-arc-public-release.md`](docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md)
-  — distribution, update and sync guidance (#514),
-  then portable skill guidance, setup and fresh-user onboarding through the
-  installed-skill and operator-workflow arcs.
+  — shipped distribution, update and sync guidance (#514), plus portable
+  skill guidance, setup and fresh-user onboarding through the installed-skill
+  and operator-workflow arcs.
 
 **Priority-band baseline arcs** — the fallback when no feature-breakout arc
 or the Now/Next/Blocked/Parked board (below) is your session's constraint.
@@ -8147,49 +8147,6 @@ working straight down the tiers.
 These candidates retain clone plus editable `uv` installation. Existing arcs own
 their lanes; `backlog-arc-public-release` coordinates the release sequence.
 
-**#514 — Set the public distribution, license and history boundary**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `architect`
-  · Principle `write-for-the-human`
-- **Arc assignment:** `backlog-arc-public-release` (release prerequisite).
-- **Effort:** small–medium.
-- **Settled decisions:** Apache-2.0 (owner choice, 2026-10-19); public GitHub
-  repository with ongoing internal Bitbucket sync; clone plus editable uv
-  installation. Owner decision, 2026-10-20: use
-  `https://github.com/rupe120/plan-tool` (currently private, owner-reported),
-  possibly transferring to the Protagona organization later. Start public history
-  with one fresh sanitized root shared by Bitbucket and GitHub. Maintain the same
-  ancestry on both hosts and reconcile changes locally in one designated clone.
-  License file and package declaration are present. Owner decision, 2026-11-06:
-  the user installation is `uv tool install git+https://github.com/rupe120/plan-tool`
-  (verified to install, upgrade with `uv tool upgrade` and pin a tag); the clone
-  plus editable install remains the contributor route. PyPI stays out of scope
-  here and is #523. Publication, transfer and remote changes remain
-  separate actions. Future sync uses the shared sanitized base; do not merge
-  pre-snapshot branches into it.
-- **Outcome:** A reviewed release decision names the license, accessible source URL,
-  supported installation/update path and public Git-history boundary.
-- **In scope:** Retain the Git install for users and clone plus uv editable install for contributors; retain Apache-2.0, choose the exact public HTTPS
-  source and release-tag/main guidance; explain keeping the clone, dependency refresh
-  and copied-skill refresh; prepare the selected fresh sanitized snapshot and
-  inspect it for client material and credentials. Define shared-base synchronization
-  from either host through a designated integration clone. Draft guidance lives in
-  `docs/how-to/install-and-update.md` and `docs/RELEASING.md`; final candidate and
-  destination verification remain open.
-- **Out of scope / Non-goals:** PyPI publishing, automatic updates, publication, remote
-  changes, credential rotation or history rewriting without separate authorization.
-- **Allowed behavior changes:** Decision and documentation/package metadata only;
-  the publication/history boundary requires an explicit owner decision.
-- **Allowed reorganization:** only the smallest relocation needed for this outcome; no
-  unrelated restructuring.
-- **Verification:** Check clean install and upgrade instructions against the chosen
-  source strategy; record history-scan scope and unresolved findings. Working-tree
-  sanitization alone cannot certify existing history.
-- **Stop / defer:** file adjacent work separately; resolve missing owner decisions
-  before dependent implementation.
-
 **#515 — Verify public onboarding in a fresh consuming repository**
 
 - **Labels:** Route `direct`
@@ -8211,9 +8168,8 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Record environment, commands, assistant/backend/model, observations
-  and limitations. Require #514 to be resolved or explicitly dispositioned
-  before public onboarding sign-off. The other preparation items #508–#513,
-  seed-authoring support (#377), and recipe consistency are complete. Missing credentials remain
+  and limitations. Public-release preparation (#508–#514), seed-authoring
+  support (#377), and recipe consistency are complete. Missing credentials remain
   an explicit coverage gap.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
@@ -8238,7 +8194,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no unrelated restructuring.
 - **Verification:** `uv build` produces a small sdist and the wheel; the wheel installs in a fresh environment and runs `--version`, `install-skill --copy` and the start screen; a TestPyPI publish from the workflow succeeds before the real one.
 - **Stop / defer:** file adjacent work separately; the first real publish needs the owner's explicit go-ahead.
-- **Dependencies:** #514 (distribution decisions).
+- **Dependencies:** the distribution decisions shipped under #514.
 - **Origin:** 2026-11-06, an assessment of whether to publish at public launch.
 
 **#524 — plan-tool drives only three CLIs as backends, so Gemini, Kiro, Copilot and OpenCode users cannot run it**
@@ -8285,7 +8241,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** none.
 - **Verification:** the owner's decision is recorded here; if deleted, `git ls-remote` on both hosts shows none of the four branch names and the private recovery bundles still verify.
 - **Stop / defer:** stop if a recovery bundle is missing or fails verification; if the owner keeps the branches, file the refresh as its own entry rather than expanding this one.
-- **Dependencies:** none; independent of #514 and #515.
+- **Dependencies:** none.
 - **Approach:** direct; ref updates are a reviewed operational action, not a code change.
 - **Origin:** 2026-10-21 public-release preparation; the refresh was deferred when the checkpoints were marked as needing update.
 

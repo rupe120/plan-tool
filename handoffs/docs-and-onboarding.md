@@ -157,8 +157,8 @@ exit before returning to the prepared branches.
    paths. Record where the reader guesses or backtracks. The pilot's local
    checks cover 71 legacy README anchors, 76 local links, six skill commands,
    the two prepared audit checkpoints, and CLI validation of the demo plan.
-   #515 owns independent fresh-reader evidence. Public sign-off also
-   requires disposition of #514.
+   #515 owns independent fresh-reader evidence. #514's public distribution
+   verification is complete.
    [Install guide](../docs/how-to/install-and-update.md) · [Backlog](../BACKLOG.md)
 3. **Use #530 for observed stumbles.** If reading the final audit result is
    the friction, start the audit guide with the pilot's paired bare and
