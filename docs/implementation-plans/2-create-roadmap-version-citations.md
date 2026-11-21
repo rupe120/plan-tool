@@ -20,7 +20,6 @@ steps:
   - plan_tool/create.py
   - plan_tool/prompts/distill-seed.md
   - plan_tool/prompts/synthesize-body.md
-  - plan_tool/foundational_logic.py
   - tests/test_create.py
   - tests/test_distill.py
   complexity: medium

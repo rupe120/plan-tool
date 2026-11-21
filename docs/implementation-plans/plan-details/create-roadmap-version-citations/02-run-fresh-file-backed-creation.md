@@ -43,7 +43,7 @@ A version-store path in the published plan can come from copied References or a 
 
 ## Implementation
 
-- **Run one fresh creation.** Use `plan-tool create <proof-slug> --from-existing <seed-path> --iterate --no-resume` with the real backend, a clean committed baseline containing step 1, and an unused slug. Use a disposable checkout containing the seed and its cited roadmap members so normal publication and source archival can proceed there.
+- **Run one fresh creation.** Use `plan-tool create <proof-slug> --from-existing <seed-path> --iterate --no-resume` with the real backend, a clean committed baseline containing step 1, and an unused slug. Use a disposable checkout containing the seed and its cited roadmap members so normal publication and source archival can proceed there. Invoke plan-tool through an environment tied to the checkout that contains the committed step 1 implementation. Record its import path and revision with the proof.
 - **Capture the writer outputs before convergence.** On the ordinary combined route, inspect the accepted outputs from `plan_tool/create.py:propose_distilled_seed_from_claude` or, when it supplies the body passage, `plan_tool/create.py:propose_body_sections`, and from `plan_tool/create.py:propose_steps_from_claude` for the step text. One way is to capture the relevant successful responses from the existing create checkpoints during the run. Clean normalized finalization discards those checkpoints. Keep the accepted passage and identify its writer and attempt so a rejected response, a copied source block, or a later edit cannot supply the proof.
 - **Trace each citation into the final plan.** Compare the full path in a generated body passage outside `## References` and in generated step text with the path tied to each claim in the source. In the published plan, inspect the corresponding body passage and the step field in `steps` frontmatter. A path found only in References does not count.
 - **Apply the plan’s proof outcomes.** A shortened or substituted citation is a mismatch. With no demonstrated mismatch, an omitted citation on either surface or missing writer evidence leaves the proof inconclusive. For either outcome, keep the bug open and record what the run establishes. Attribute a mismatch to a specific writer only when its output establishes responsibility. Remove the entry only when both surfaces pass and the fix ships.
@@ -54,14 +54,14 @@ A version-store path in the published plan can come from copied References or a 
 
 `plan_tool/launcher.py:_step_requires_test_authoring` exempts this `non-code` step from the plan’s test-authoring gate. Use the live proof and existing regression coverage.
 
-1. Fresh normalized route — Confirm the route and published plan path from the same live run, with no replay of the proof responses.
+1. Fresh normalized route — Confirm the implementation revision and imported package path, then verify the route and published plan path from the same live run with no replay of proof responses.
 2. Body and step citations — Compare each accepted writer excerpt and its corresponding published passage with the exact source path and claim.
 3. Direct-source regression — Run `tests/test_create.py::TestFileBackedSourceIntake::test_direct_single_preserves_source_references_without_generic_authoring` and `tests/cli/test_authoring_cmds.py::TestCmdCreateRouteArtifacts::test_cmd_create_direct_archives_raw_source_only_after_clean_completion`.
 4. Backlog disposition — Check that the entry’s retention or removal agrees with the proof and shipment status.
 
 ## Acceptance criteria
 
-- One fresh normalized run supplies an exact source version-store citation in covered body output outside References and another in covered step output. Both appear in their corresponding locations in the published plan.
+- One fresh normalized run against the verified step 1 build supplies an exact source version-store citation in covered body output outside References and another in covered step output. Both appear in their corresponding locations in the published plan.
 - Existing direct-source body, References, and publication regression checks pass.
 - `BUG_BACKLOG.md` keeps the entry open for an inconclusive proof or a mismatch, keeps it plan-authored while execution is pending, and removes it only when the proof passes and the fix ships.
 
