@@ -10910,21 +10910,19 @@ class TestFileBackedSourceIntake:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _patch_direct_route_metadata(monkeypatch)
-        raw_source = _direct_ready_file_source()
-        proposed_from: list[str] = []
+        claim = f"Preserve the delivery route in `{_ROADMAP_CITATION}`."
+        raw_source = _direct_ready_file_source().replace("Overview body.", claim)
+        prompts: list[str] = []
         monkeypatch.setattr(
             create_module,
             "assess_direct_source_split_from_claude",
             lambda *_args, **_kwargs: DirectSplitAssessment(),
         )
-        monkeypatch.setattr(
-            create_module,
-            "propose_steps_from_claude",
-            lambda source, *_args, **_kwargs: (
-                proposed_from.append(source)
-                or [Step(id=1, title="Proposed direct step")]
-            ),
-        )
+
+        def invoke(prompt):
+            assert prompt.startswith("Propose an initial plan step-list")
+            prompts.append(prompt)
+            return _STEP_JSON
 
         result = create_plan(
             "direct-proposed-step",
@@ -10936,11 +10934,15 @@ class TestFileBackedSourceIntake:
             yes=True,
             resume=False,
             offer_intents=False,
-            claude_invoker=lambda _prompt: pytest.fail("unexpected model call"),
+            claude_invoker=invoke,
         )
 
         assert result.plan_path is not None
-        assert proposed_from == [raw_source]
+        (prompt,) = prompts
+        _assert_claim_specific_roadmap_citation_rule(prompt)
+        assert raw_source in prompt
+        assert prompt.count(_ROADMAP_CITATION) == 1
+        assert f"## Overview\n\n{claim}" in result.plan_path.read_text()
 
     def test_direct_split_returns_shared_proposal_without_publication(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -24687,6 +24689,451 @@ def test_normalized_create_refreshes_research_and_finalizes_with_source_context(
     assert "Testing source proof." in body
     assert "Acceptance criteria source proof." in body
     assert "https://updated.example.com" in body
+
+
+_ROADMAP_CITATION = f"docs/plans/roadmaps/sample/.roadmap-versions/{'a' * 64}/04-roadmap.md"
+_OTHER_ROADMAP_CITATION = _ROADMAP_CITATION.replace("a" * 64, "b" * 64)
+
+
+@pytest.fixture
+def roadmap_citation_create(normalized_reference_create):
+    source, _, create = normalized_reference_create
+    source.write_text(
+        source.read_text()
+        + f"\n## Design evidence\n\nThe delivery route is described in `{_ROADMAP_CITATION}`.\n"
+    )
+    prompts = {phase: [] for phase in ("preparation", "steps", "synthesis", "sweep", "references")}
+
+    def run(
+        *, repair=(), split=False,
+        consolidation_rationale="Keep route handling together", **overrides,
+    ):
+        def reply(phase, prompt, response):
+            prompts[phase].append(prompt)
+            return "invalid response" if phase in repair and len(prompts[phase]) == 1 else response
+
+        def invoker(prompt):
+            if prompt.startswith("Assess whether this file-backed plan source"):
+                assert "## Roadmap citation evidence" not in prompt
+                return '{"outcome":"single"}'
+            if "Distill a free-form seed" in prompt:
+                response = json.loads(_valid_preparation_response(prompt))
+                response["sections"]["Deferred"] = None
+                response["evidence_spans"]["Deferred"] = None
+                return reply("preparation", prompt, json.dumps(response))
+            if "developer and API reference documentation" in prompt:
+                return reply("references", prompt, _REF_JSON)
+            if prompt.startswith("# Synthesize plan body"):
+                return reply("synthesis", prompt, _full_body_json())
+            assert prompt.startswith("Propose an initial plan step-list")
+            return reply("steps", prompt, _STEP_JSON)
+
+        def sweep(prompt):
+            return reply("sweep", prompt, json.dumps({
+                "consolidation": {
+                    "title": "Consolidate route handling",
+                    "rationale": consolidation_rationale,
+                    "after_step_id": 1,
+                },
+            }))
+
+        return create(
+            claude_invoker=invoker, foundational_invoker=sweep if split else None,
+            **overrides,
+        )
+
+    return source, prompts, run
+
+
+def _assert_claim_specific_roadmap_citation_rule(prompt):
+    assert "exact full repository-relative version-store path" in prompt
+    assert "ties to the claim" in prompt
+    assert (
+        "no usable path or does not establish which cited version supports the claim, "
+        "omit the file citation" in prompt
+    )
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("split", [False, True])
+def test_normalized_step_proposal_and_repair_keep_selected_citation_evidence(
+    roadmap_citation_create, split,
+):
+    source, prompts, run = roadmap_citation_create
+    selected = source.read_text()
+    result = run(
+        split=split, repair=("steps",), seed_body=selected,
+        from_description=selected.replace(_ROADMAP_CITATION, _OTHER_ROADMAP_CITATION),
+    )
+    assert result.file_backed_route is FileBackedSourceRoute.NORMALIZED
+    initial, repair = prompts["steps"]
+    assert repair.startswith(initial)
+    for prompt in (initial, repair):
+        working, evidence = prompt.split("## Roadmap citation evidence", 1)
+        _assert_claim_specific_roadmap_citation_rule(evidence)
+        assert _ROADMAP_CITATION not in working
+        assert f"The delivery route is described in `{_ROADMAP_CITATION}`." in evidence
+        assert _OTHER_ROADMAP_CITATION not in prompt
+    assert prompts["references"]
+    assert all(_ROADMAP_CITATION not in prompt for prompt in prompts["references"])
+
+
+@pytest.mark.integration
+def test_normalized_fallback_synthesis_and_repair_keep_dropped_citation_evidence(
+    roadmap_citation_create,
+):
+    _, prompts, run = roadmap_citation_create
+    result = run(repair=("synthesis",))
+
+    initial, repair = prompts["synthesis"]
+    assert "## Repair retry" not in initial and "## Repair retry" in repair
+    for prompt in (initial, repair):
+        working, evidence = prompt.split("## Roadmap citation evidence", 1)
+        _assert_claim_specific_roadmap_citation_rule(evidence)
+        assert _ROADMAP_CITATION not in working
+        assert f"The delivery route is described in `{_ROADMAP_CITATION}`." in evidence
+        assert "as evidence for citations only" in evidence
+    plan = result.plan_path.read_text()
+    assert "## Testing\n\nTesting source proof." in plan
+    assert "## Deferred\n\nbody for Deferred" in plan
+    assert "body for Testing" not in plan
+
+
+@pytest.mark.integration
+def test_normalized_citation_evidence_keeps_context_without_replaying_unrelated_source(
+    roadmap_citation_create,
+):
+    source, prompts, run = roadmap_citation_create
+    unrelated = "unrelated background " * 5000
+    distant_prefix = "Distant material. " + "padding " * 1000
+    source.write_text(
+        source.read_text()
+        + f"\nThis path supports the earlier constraint.\n`{_OTHER_ROADMAP_CITATION}`\n"
+        + f"\n## Other background\n\n{unrelated}\n"
+        + f"\n{distant_prefix}The delivery route is in `{_ROADMAP_CITATION}`.\n"
+    )
+
+    run(split=True, repair=("steps", "synthesis", "sweep"))
+
+    for phase in ("steps", "synthesis", "sweep"):
+        for prompt in prompts[phase]:
+            evidence = prompt.split("## Roadmap citation evidence", 1)[1]
+            assert len(evidence) < len(unrelated) // 2
+            assert "Distant material." not in evidence
+            assert "The delivery route is in" in evidence
+            assert _ROADMAP_CITATION in evidence
+            assert "This path supports the earlier constraint." in evidence
+            assert _OTHER_ROADMAP_CITATION in evidence
+
+
+def test_synthesis_citation_instruction_precedes_seed_fence():
+    prompt = create_module._render_synthesis_prompt(
+        "A seed with an example:\n\n```python\npass\n```",
+        roadmap_citation_block="\n\n## Roadmap citation evidence\n\nUse the selected path.",
+    )
+
+    assert prompt.index("## Roadmap citation evidence") < prompt.index("## Source seed")
+    assert "Use the selected path.\n\n## Source seed" in prompt
+
+
+@pytest.mark.integration
+def test_split_sweep_and_repair_keep_citation_evidence_for_consolidation(
+    roadmap_citation_create,
+):
+    _, prompts, run = roadmap_citation_create
+    rationale = f"Preserve the route from `{_ROADMAP_CITATION}`."
+    result = run(split=True, repair=("sweep",), consolidation_rationale=rationale)
+
+    initial, repair = prompts["sweep"]
+    assert repair.startswith(initial)
+    for prompt in (initial, repair):
+        _assert_claim_specific_roadmap_citation_rule(prompt)
+        assert "consolidation title, intent, and rationale" in prompt
+        assert f"The delivery route is described in `{_ROADMAP_CITATION}`." in prompt
+    assert parse_plan(result.plan_path).steps[-1].intent == rationale
+
+
+@pytest.mark.integration
+def test_iteration_step_reproposal_keeps_original_citation_evidence(
+    roadmap_citation_create, monkeypatch,
+):
+    _, prompts, run = roadmap_citation_create
+    findings = iter([[_rec("rework-plan")], []])
+    monkeypatch.setattr(
+        create_module, "collect_deterministic_findings", lambda *_a, **_kw: next(findings, [])
+    )
+    monkeypatch.setattr(create_module, "apply_finding", lambda *_a, **_kw: _stub_apply_result())
+
+    result = run(
+        split=True,
+        budget=_IterativeBudget(enabled=True, max_iterations=3),
+        skip_prose_reproposal=False,
+    )
+
+    assert result.iteration_stage_failure is None
+    for phase in ("steps", "sweep"):
+        _, reproposal = prompts[phase]
+        working, evidence = reproposal.split("## Roadmap citation evidence", 1)
+        _assert_claim_specific_roadmap_citation_rule(evidence)
+        assert _ROADMAP_CITATION not in working
+        assert f"The delivery route is described in `{_ROADMAP_CITATION}`." in evidence
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("legacy", [False, True])
+def test_resume_reuses_only_proposals_for_matching_selected_citation_evidence(
+    roadmap_citation_create, monkeypatch, legacy,
+):
+    source, prompts, run = roadmap_citation_create
+
+    def interrupt(*_args, **_kwargs):
+        raise CreateError("interrupted before publication")
+
+    monkeypatch.setattr(create_module, "_publish_create_plan", interrupt)
+    if legacy:
+        source.write_text(source.read_text().replace(_ROADMAP_CITATION, "a roadmap"))
+    with monkeypatch.context() as first_run:
+        if legacy:
+            def legacy_key(hasher):
+                def hash_without_citations(*args, roadmap_citation_block="", **kwargs):
+                    return hasher(*args, **kwargs)
+                return hash_without_citations
+
+            for name in ("_initial_steps_input_hash", "_body_sections_input_hash"):
+                first_run.setattr(create_module, name, legacy_key(getattr(create_module, name)))
+        with pytest.raises(CreateError, match="interrupted before publication"):
+            run(split=True)
+    with pytest.raises(CreateError, match="interrupted before publication"):
+        run(split=True)
+
+    for phase in ("steps", "synthesis", "sweep"):
+        assert len(prompts[phase]) == (2 if legacy else 1)
+    if legacy:
+        for phase in ("steps", "synthesis", "sweep"):
+            assert "The original source supplies no version-store paths." in prompts[phase][-1]
+        for hasher, source_key in (
+            (_initial_steps_input_hash, "description"),
+            (_body_sections_input_hash, "source_text"),
+        ):
+            repo = source.parent
+            assert hasher("demo", "same prose", repo / "plans", repo) == (
+                create_module.compute_input_hash({
+                    "slug": "demo", source_key: "same prose", "output_dir": "plans",
+                })
+            )
+        return
+    source.write_text(source.read_text().replace(_ROADMAP_CITATION, _OTHER_ROADMAP_CITATION))
+    with pytest.raises(CreateError, match="interrupted before publication"):
+        run(split=True)
+    for phase in ("steps", "synthesis", "sweep"):
+        old, new = prompts[phase]
+        assert new == old.replace(_ROADMAP_CITATION, _OTHER_ROADMAP_CITATION)
+
+
+@pytest.mark.integration
+def test_citation_heading_change_invalidates_normalized_proposal_checkpoints(
+    roadmap_citation_create, monkeypatch,
+):
+    source, prompts, run = roadmap_citation_create
+    current = f"[`Version`]({_ROADMAP_CITATION})"
+    previous = f"[`Version`]({_OTHER_ROADMAP_CITATION})"
+    seed = (
+        source.read_text().split("## Design evidence", 1)[0]
+        + f"## Delivery contract\n\n### Current route\n\n```text\n### Fake heading\n```\n\n{current}\n"
+        + f"\n## Earlier contract\n\n### Prior route\n\n{previous}\n"
+    )
+    source.write_text(seed)
+
+    def interrupt(*_args, **_kwargs):
+        raise CreateError("interrupted before publication")
+
+    monkeypatch.setattr(create_module, "_publish_create_plan", interrupt)
+    with pytest.raises(CreateError, match="interrupted before publication"):
+        run(split=True)
+
+    source.write_text(seed.replace("### Current route", "### Staged route"))
+    with pytest.raises(CreateError, match="interrupted before publication"):
+        run(split=True)
+
+    for phase in ("steps", "synthesis", "sweep"):
+        initial, resumed = prompts[phase]
+        assert resumed == initial.replace("### Current route", "### Staged route")
+        for prompt, heading in ((initial, "### Current route"), (resumed, "### Staged route")):
+            evidence = prompt.split("## Roadmap citation evidence", 1)[1]
+            assert "### Fake heading" not in evidence
+            assert evidence.index("## Delivery contract") < evidence.index(heading)
+            assert evidence.index(heading) < evidence.index(current)
+            assert evidence.index("## Earlier contract") < evidence.index("### Prior route")
+            assert evidence.index("### Prior route") < evidence.index(previous)
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("reference_style", [False, True])
+def test_citation_claim_change_invalidates_normalized_proposal_checkpoints(
+    roadmap_citation_create, monkeypatch, reference_style,
+):
+    source, prompts, run = roadmap_citation_create
+    seed = source.read_text().split("## Design evidence", 1)[0] + "## Delivery contract\n\n"
+    if reference_style:
+        seed += (
+            "The staged route follows [this version][staged-route].\n\n"
+            "The prior route follows [this version][prior-route].\n\n"
+            "## Source links\n\n"
+            f"[staged-route]: {_ROADMAP_CITATION}\n"
+            f"[prior-route]: {_OTHER_ROADMAP_CITATION}\n"
+        )
+        old_claim = "[this version][staged-route]"
+        new_claim = "[this version][prior-route]"
+    else:
+        seed += (
+            f"The staged route uses this archive.\n\n[Version]({_ROADMAP_CITATION})\n\n"
+            f"The prior route uses this archive.\n\n[Version]({_OTHER_ROADMAP_CITATION})\n"
+        )
+        old_claim = "The staged route"
+        new_claim = "The published route"
+    source.write_text(seed)
+
+    def interrupt(*_args, **_kwargs):
+        raise CreateError("interrupted before publication")
+
+    monkeypatch.setattr(create_module, "_publish_create_plan", interrupt)
+    with pytest.raises(CreateError, match="interrupted before publication"):
+        run(split=True)
+
+    source.write_text(seed.replace(old_claim, new_claim, 1))
+    with pytest.raises(CreateError, match="interrupted before publication"):
+        run(split=True)
+
+    for phase in ("steps", "synthesis", "sweep"):
+        initial, resumed = prompts[phase]
+        assert resumed == initial.replace(old_claim, new_claim, 1)
+        for prompt in (initial, resumed):
+            evidence = prompt.split("## Roadmap citation evidence", 1)[1]
+            assert "The prior route" in evidence
+            assert _ROADMAP_CITATION in evidence
+            assert _OTHER_ROADMAP_CITATION in evidence
+
+
+def test_roadmap_reference_excerpt_preserves_raw_usages_and_competing_definitions():
+    claim = "Apply the instructions in [route][ops] and compare the [route] reference."
+    first_definition = '[ops]: guide.md "The title mentions ' + _ROADMAP_CITATION + '"'
+    duplicate_definition = f"[ops]: {_OTHER_ROADMAP_CITATION}"
+    roadmap_definition = f"[route]: {_ROADMAP_CITATION}"
+    source = (
+        f"## Claims\n\n{claim}\n\n"
+        "## Example\n\n```text\n" + "[" * 20000 + "\n```\n\n"
+        f"## Source links\n\n{first_definition}\n{duplicate_definition}\n{roadmap_definition}\n"
+    )
+
+    evidence = create_module._render_roadmap_citation_excerpt(source)
+
+    assert claim in evidence
+    assert evidence.index(first_definition) < evidence.index(duplicate_definition)
+    assert roadmap_definition in evidence
+    assert "[" * 100 not in evidence
+
+
+def test_roadmap_reference_excerpt_keeps_wrapped_escaped_label_without_unrelated_links():
+    label = r"route\[old"
+    claim = f"Follow [{label}]."
+    unrelated = "".join(f"| row {index} | [guide](guide.md) | array[0] |\n" for index in range(1000))
+    source = (
+        f"## Unrelated\n\n{unrelated}\n"
+        f"## Claims\n\n{claim}\n\n"
+        f"## Definitions\n\n[guide]: guide.md\n[{label}]:\n  {_ROADMAP_CITATION}\n"
+    )
+
+    excerpt = create_module._render_roadmap_citation_excerpt(source)
+
+    assert claim in excerpt
+    assert f"[{label}]:" in excerpt
+    assert _ROADMAP_CITATION in excerpt
+    assert "## Unrelated" not in excerpt
+    assert "array[0]" not in excerpt
+
+
+@pytest.mark.parametrize(
+    ("claim", "label"),
+    [
+        ("Follow [the delivery design][delivery\nroute].", "delivery route"),
+        (r"Follow [release\-notes].", r"release\-notes"),
+        ("Follow [route](used for fallback).", "route"),
+    ],
+)
+def test_roadmap_reference_excerpt_retains_raw_claim_context(claim, label):
+    source = (
+        f"## Claims\n\n{claim}\n\n"
+        "## Other context\n\nDo not carry this unrelated paragraph.\n\n"
+        f"## Source links\n\n[{label}]: {_ROADMAP_CITATION}\n"
+    )
+    excerpt = create_module._render_roadmap_citation_excerpt(source)
+
+    for line in claim.splitlines():
+        assert line in excerpt
+    assert _ROADMAP_CITATION in excerpt
+    assert "Do not carry this unrelated paragraph." not in excerpt
+
+
+def test_roadmap_reference_excerpt_does_not_treat_escaped_openers_as_usages():
+    literal = r"Show a literal \[route] in the syntax example."
+    escaped_openers = (r"\[" * 1000 + "\n") * 3
+    active = "Follow [route] from its definition."
+    source = (
+        f"## Literal\n\n{literal}\n{escaped_openers}\n"
+        f"## Claim\n\n{active}\n\n"
+        f"## References\n\n[route]: {_ROADMAP_CITATION}\n"
+    )
+    excerpt = create_module._render_roadmap_citation_excerpt(source)
+
+    assert literal not in excerpt
+    assert escaped_openers not in excerpt
+    assert active in excerpt
+    assert _ROADMAP_CITATION in excerpt
+
+
+def test_roadmap_reference_excerpt_does_not_match_across_code_fences():
+    claim = "][route] describes the applicable version."
+    source = (
+        "## Claims\n\n```text\nUnmatched opener: [\n```\n"
+        f"{claim}\n\n## Definitions\n\n[route]: {_ROADMAP_CITATION}\n"
+    )
+    excerpt = create_module._render_roadmap_citation_excerpt(source)
+
+    assert claim in excerpt
+    assert "Unmatched opener" not in excerpt
+    assert _ROADMAP_CITATION in excerpt
+
+
+def test_roadmap_citation_excerpt_does_not_repeat_overlapping_source_text():
+    line = " ".join(f"Claim {index} `{_ROADMAP_CITATION}`." for index in range(40))
+
+    assert create_module._render_roadmap_citation_excerpt(line) == f"1\t{line}"
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("file_backed", [True, False])
+def test_covered_prompts_require_claim_specific_paths_and_allow_omission(
+    roadmap_citation_create, file_backed,
+):
+    source, prompts, run = roadmap_citation_create
+    source.write_text(
+        source.read_text()
+        + f"\nThe earlier constraints are described in `{_OTHER_ROADMAP_CITATION}`.\n"
+    )
+
+    result = run(split=True, **({} if file_backed else {"from_existing_path": None, "distill": True}))
+
+    for phase in ("preparation", "steps", "synthesis", "sweep"):
+        (prompt,) = prompts[phase]
+        if file_backed:
+            _assert_claim_specific_roadmap_citation_rule(prompt)
+            assert f"The delivery route is described in `{_ROADMAP_CITATION}`." in prompt
+            assert f"The earlier constraints are described in `{_OTHER_ROADMAP_CITATION}`." in prompt
+        else:
+            assert "exact full repository-relative version-store path" not in prompt
+    if file_backed:
+        assert "as evidence for citations only" in prompts["synthesis"][0]
+        assert "## Testing\n\nTesting source proof." in result.plan_path.read_text()
 
 
 class TestProposalDescriptionAlias:

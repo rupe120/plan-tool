@@ -84,6 +84,31 @@ def _split_json(entries: list[dict]) -> str:
     return json.dumps({"outcome": "split", "plans": entries})
 
 
+def test_preparation_and_repair_receive_selected_source_citation_rule() -> None:
+    path = f"docs/implementation-plans/roadmaps/example/.roadmap-versions/{'a' * 64}/04-roadmap.md"
+    claim = f"The delivery route is described in `{path}`."
+    source = f"Keep the delivery route.\n\n{claim}\n\n## References\n\n- `src/app.py`"
+    prompts = []
+
+    def invoke(prompt: str) -> str:
+        prompts.append(prompt)
+        return "invalid response" if len(prompts) == 1 else _single_json()
+
+    outcome = propose_distilled_seed_from_claude(source, invoke, file_backed=True)
+
+    assert outcome.is_normalized
+    assert path not in outcome.distilled
+    assert outcome.sections["Testing"] == "Keep the delivery route."
+    initial, repair = prompts
+    assert "## Repair retry" not in initial and "## Repair retry" in repair
+    for prompt in (initial, repair):
+        assert f"3\t{claim}" in prompt
+        assert prompt.count(path) == 1
+        assert "exact full repository-relative version-store path" in prompt
+        assert "omission rule takes precedence over the general verbatim-path rule" in prompt
+        assert "Keep protected source material verbatim" in prompt
+
+
 _TWO_PLANS = [
     {
         "title": "OAuth login",

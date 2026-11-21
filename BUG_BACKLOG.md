@@ -212,31 +212,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-09-28, `/code-review high` on the
   `roadmap-candidate-row-prose-amendments` run branch (commit `1af9d8c5`).
 
-### Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head
-
-- **Files:** the `create` plan-generation prompts under `plan_tool/prompts/`,
-  which carry no rule about how a plan names a roadmap artifact in prose the
-  model writes rather than copies from the seed.
-- **Symptom:** a roadmap draft seed cites each roadmap file by its
-  `<roadmap folder>/.roadmap-versions/<version-id>/0N-*.md` path, and `create --from-existing`
-  copies that text into the plan. Prose the model writes while synthesizing
-  the plan (step text, acceptance criteria, risks it restates) can still name
-  `04-roadmap.md` bare. A reader or audit that opens that name reaches the
-  inert top-level copy, not the accepted version. Nothing deterministic
-  writes that prose, so no seed gate sees it.
-- **Fix options:** a `create` prompt rule that roadmap files are named by the
-  seed's version-store path, or a post-synthesis check that flags a bare member
-  filename in the written plan. Either is new `create` behavior.
-- **Deliberately not:** making promotion rewrite the top-level `0N-*.md`
-  files, which restores the two-copy design the versioned-from-birth plan
-  removed.
-- **Workaround:** hand-edit the plan's roadmap citations to the accepted
-  version's repo-relative paths, then re-audit.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10;
-  split out of the seed-citation entry, deferred 2026-10-29.
-- **Status:** plan-authored. See [Create Roadmap Version Citations](docs/implementation-plans/2-create-roadmap-version-citations.md).
-
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 
 - **Files:** the `create` plan-generation prompts under `plan_tool/prompts/`,
