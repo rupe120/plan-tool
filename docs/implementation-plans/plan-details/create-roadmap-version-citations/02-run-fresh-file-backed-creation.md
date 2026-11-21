@@ -15,6 +15,7 @@ One fresh `create --from-existing` run on the normalized route demonstrates whet
 - [Files (creates vs edits)](#files-creates-vs-edits) — The tracked backlog edit.
 - [Implementation](#implementation) — How to collect the proof and act on each outcome.
 - [Tests](#tests) — Manual verification and existing regression coverage.
+- [Verification result](#verification-result) — Evidence for the completed step.
 - [Acceptance criteria](#acceptance-criteria) — What a reviewer can verify from the run.
 - [References](#references) — The citation, intake, and recovery contracts.
 - [Applicable guardrails](#applicable-guardrails) — The limits on the proof and backlog edit.
@@ -39,7 +40,7 @@ A version-store path in the published plan can come from copied References or a 
 
 **Existing files (edits only)**
 
-- `BUG_BACKLOG.md` — Reconcile the entry headed “Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head.” Preserve the current plan-authored status while execution or shipment remains pending.
+- `BUG_BACKLOG.md` — The implementation change removes the originating bare roadmap citation entry on a passing proof.
 
 ## Implementation
 
@@ -59,6 +60,16 @@ A version-store path in the published plan can come from copied References or a 
 3. Direct-source regression — Run `tests/test_create.py::TestFileBackedSourceIntake::test_direct_single_preserves_source_references_without_generic_authoring` and `tests/cli/test_authoring_cmds.py::TestCmdCreateRouteArtifacts::test_cmd_create_direct_archives_raw_source_only_after_clean_completion`.
 4. Backlog disposition — Check that the entry’s retention or removal agrees with the proof and shipment status.
 
+### Verification result
+
+On 2026-11-21, build `cf9d1b93f` completed a fresh `citation-proof-final` creation from a seed with a wrapped reference-style roadmap citation with route `normalized` and run outcome `ok` (run `2026-11-21T06-32-48+00-00-dfddf9c1c6c94da8`). The accepted preparation response's Architecture and the accepted initial step description used the exact path below. Both fields match the published plan and neither attempt used a checkpoint or repair.
+
+```text
+custom-plans/roadmaps/demo/.roadmap-versions/2cca42229557bee5e11b133988608ad6d49e38a1f5b3f957c83bb38d6b706e5e/04-roadmap.md
+```
+
+The two direct-source regressions passed. The final implementation at `dbbc87547` passes 15,437 tests with 66 skipped. Focused regressions cover the later corrections for escaped opening brackets and fenced-code boundaries.
+
 ## Acceptance criteria
 
 - One fresh normalized run against the verified step 1 build completes cleanly and supplies an exact source version-store citation in covered body output outside References and another in covered step output. Both appear in their corresponding locations in the published plan, and neither verified surface contains a shortened or substituted citation.
@@ -70,7 +81,6 @@ A version-store path in the published plan can come from copied References or a 
 - [Roadmap path convention](ROADMAP_FORMAT.md#path-convention) — Locate the immutable artifact identified by a citation.
 - [File-backed create workflow](docs/how-to/pipeline/create-from-existing.md#preparation-and-normalized-publication) — Check preparation and normalized publication.
 - [Raw backend stream log](docs/how-to/pipeline/run.md#raw-backend-stream-log) — Locate retained writer responses.
-- [Originating bug](BUG_BACKLOG.md#bare-roadmap-file-names-in-prose-creates-model-writes-during-synthesis-resolve-to-inert-top-level-copies-beside-an-accepted-head) — Locate the entry for disposition.
 
 ## Applicable guardrails
 

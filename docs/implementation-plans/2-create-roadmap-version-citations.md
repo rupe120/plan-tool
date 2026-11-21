@@ -4,7 +4,7 @@ title: Create Roadmap Version Citations
 intent: When `create --from-existing` generates prose that cites a roadmap artifact
   already cited by the source, it carries the source's full repository-relative version-store
   path into the plan.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -25,7 +25,7 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md
-  status: current
+  status: done
   description: Apply the Architecture citation contract to preparation, fallback body
     synthesis, and step proposal, including split-mode consolidation. Keep the originally
     selected source's citation evidence available when normalization drops it, through
@@ -42,6 +42,7 @@ steps:
   depends_on:
   - 1
   detail: docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md
+  status: done
   description: Run a fresh file-backed creation from a representative normalized roadmap-derived
     seed and verify both generated surfaces named in Acceptance criteria. Follow the
     documented proof outcomes when updating the backlog.
@@ -76,7 +77,7 @@ Existing `create` authoring prompts and their focused prompt or workflow coverag
 
 ## References
 
-- [BUG_BACKLOG.md](BUG_BACKLOG.md) — originating bare roadmap citation bug.
+- [Live citation verification](plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md#verification-result) — Records the exact-path comparison and backlog disposition.
 - [ROADMAP_FORMAT.md](ROADMAP_FORMAT.md#path-convention) — immutable version-store path convention.
 - [File-backed create workflow](docs/how-to/pipeline/create-from-existing.md) — source authority, preparation, and step proposal.
 - [Create orchestrator](plan_tool/create.py) — authoring phases and the conditions under which each writes plan prose.
@@ -104,7 +105,7 @@ A shortened or substituted citation anywhere on either verified surface fails th
 
 - In one fresh normalized creation that completes cleanly, a covered body writer produces an exact source version-store citation outside References and a covered step writer produces one in a step. Check the generated fields selected for initial publication and their counterparts in the published plan, so later convergence edits cannot substitute for the proof.
 - Existing direct-source copy and publication behavior is preserved.
-- Reconcile the entry titled “Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head” in `BUG_BACKLOG.md`. Mark it plan-authored while execution is pending and remove it when the change ships.
+- Record the live proof and its disposition for the originating bare roadmap citation bug. A passing proof permits the implementation change to remove the entry.
 
 ## Deferred
 

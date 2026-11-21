@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "plan_slug": "create-roadmap-version-citations",
+  "plan_path": "docs/implementation-plans/2-create-roadmap-version-citations.md",
+  "created_at": "2026-11-21T06:17:36Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "d7613f14279d819c0a9d75b9004e154fb1041ba61d9b8f4faa4f3ac1f249a53e",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "7cefe8b6fb6ad5bfba11f9c988ec3a9c77423b1c5fbe70c5ab3cd3a8852fc6b7",
+    "plan_tool/create.py": "e77d850f7f1a44ba0881ff63838822aeb21b83f4b3793c9a6e6883490ce2b1aa",
+    "plan_tool/prompts/distill-seed.md": "b27268cc17873c5fc44e6e19b6e26f4bfdc9f8ffad639ab891a00936078fa264",
+    "plan_tool/prompts/synthesize-body.md": "8f8b37dff8fdd5f9b8a239bd24180c4e5737e15632376a30d6352ef8efac445a",
+    "tests/test_create.py": "855cc3290c8249665f2883fafb3df240c704461935bbf0856173adbd66fed36c",
+    "tests/test_distill.py": "03beddfcb5c8e69b310188ebbd38b2b74b07592a918fa8769af5ab73e76ae9fd"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 1 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 1 of 1 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step1-run-reconcile-0e544a28",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 1,
+      "title": "`plan_tool/create.py:_render_roadmap_citation_excerpt()` (step 1, \u201cPreserve selected roadmap citations in generated crea",
+      "body": "`plan_tool/create.py:_render_roadmap_citation_excerpt()` (step 1, \u201cPreserve selected roadmap citations in generated create prose\u201d) drops claim headings across Markdown blank lines, leaving fallback synthesis, step proposals and re-proposals, and split consolidation without the claim-to-version mapping. `_initial_steps_input_hash()` and `_body_sections_input_hash()` then permit replay when that mapping changes.",
+      "suggested_action": "retain enclosing claim headings in `plan_tool/create.py:_render_roadmap_citation_excerpt()` and extend `tests/test_create.py::test_covered_prompts_require_claim_specific_paths_and_allow_omission` and `tests/test_create.py::test_resume_reuses_only_proposals_for_matching_selected_citation_evidence` to cover identical link labels under distinct headings and a heading swap",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

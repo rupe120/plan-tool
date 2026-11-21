@@ -82,7 +82,7 @@ Keep the existing direct-source copy, strict-step lift, normalized References re
 
 ## References
 
-- [Originating bug](BUG_BACKLOG.md#bare-roadmap-file-names-in-prose-creates-model-writes-during-synthesis-resolve-to-inert-top-level-copies-beside-an-accepted-head) — Describes how a shortened citation can send readers to an inert copy.
+- [Live citation verification](02-run-fresh-file-backed-creation.md#verification-result) — Compares the accepted model responses with the published plan.
 - [Roadmap path convention](ROADMAP_FORMAT.md#path-convention) — Defines the immutable version store. See also “Citing roadmap files” in the same document.
 - [File-backed create workflow](docs/how-to/pipeline/create-from-existing.md#file-backed-decision-flow) — Describes direct, normalized, split, and refused outcomes and who owns their prose.
 - [Create recovery](docs/how-to/recovery/create.md#what-resumes-on-a-re-run) — Lists the proposal checkpoints and their replay rules.
