@@ -91,6 +91,7 @@ from plan_tool.cli.console import (
 )
 from plan_tool.cli.context import (
     _load_context,
+    _lock_command_repo,
     _resolve_cmd_repo_root,
     _resolve_iterative_budget,
 )
@@ -938,6 +939,8 @@ def cmd_create(args: argparse.Namespace) -> int:
             )
             return 2
         repo_root = chosen
+
+    _lock_command_repo(args, repo_root)
 
     # Branch-awareness preflight: when the new plan's derived branch already
     # exists with no local owner, strong-warn and (on consent) move the plan

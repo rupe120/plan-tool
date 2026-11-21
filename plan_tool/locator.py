@@ -27,7 +27,7 @@ import json
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Mapping, Optional, Sequence
+from typing import Callable, Mapping, Optional, Sequence
 
 from plan_tool.parser import (
     ParseError,
@@ -526,8 +526,12 @@ def build_plan_tool_context(
     environ: Optional[Mapping[str, str]] = None,
     manifest_path: Optional[Path] = None,
     repo_root_override: Optional[Path] = None,
+    lock_repo_root: Optional[Callable[[Path], None]] = None,
 ) -> PlanToolContext:
     """Resolve the plans dir, repo root, and plan entries for one CLI run.
+
+    When supplied, ``lock_repo_root`` guards the selected root before its
+    plans are loaded for dispatch.
 
     Repo-root precedence: ``repo_root_override`` (CLI ``--repo-root``) →
     ``PLAN_TOOL_REPO_ROOT`` env var → candidate auto-discovery. In
@@ -558,10 +562,17 @@ def build_plan_tool_context(
     explicit = resolve_explicit_plans_dir(plans_dir_override, environ=environ)
     if explicit is not None:
         repo_root = explicit_root or find_repo_root(explicit)
+        if lock_repo_root is not None:
+            lock_repo_root(repo_root)
+            plan_checkout = collect_project_root_ancestors(explicit)
+            if plan_checkout:
+                lock_repo_root(plan_checkout[0])
         entries = list_plans(explicit)
         return PlanToolContext(repo_root=repo_root, plans_dir=explicit, entries=entries)
     if explicit_root is not None:
         repo_root = explicit_root
+        if lock_repo_root is not None:
+            lock_repo_root(repo_root)
         declared = load_manifest_plan_paths(repo_root, manifest_path=manifest_path)
         entries = collect_plan_entries(declared)
         missing = [p for p in declared if not p.is_file()]
@@ -595,6 +606,11 @@ def build_plan_tool_context(
             best_declared = declared
             best_missing = missing
     assert best_root is not None  # candidates was non-empty above
+    if lock_repo_root is not None:
+        lock_repo_root(best_root)
+        # Candidate scoring may have raced with the previous lock holder.
+        best_score, resolved, best_missing = _score_candidate(best_root, manifest_path)
+        best_declared = resolved + best_missing
     if best_declared and best_score == 0:
         tried = "\n  - ".join(str(c) for c in candidates)
         raise ManifestError(

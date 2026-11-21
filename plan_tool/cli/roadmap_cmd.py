@@ -88,11 +88,12 @@ from typing import Literal, Optional
 
 from plan_tool.seed_paths import default_seeds_dir
 from plan_tool.cli.console import _short_path, render_roadmap_view
-from plan_tool.cli.context import _resolve_cmd_repo_root
+from plan_tool.cli.context import _lock_command_repo, _resolve_cmd_repo_root
 from plan_tool.cli.parser import Handler
 from plan_tool.create import resolve_output_dir
 from plan_tool.fileio import atomic_write_text
-from plan_tool.locator import resolve_explicit_plans_dir
+from plan_tool.locator import collect_project_root_ancestors, resolve_explicit_plans_dir
+from plan_tool.repo_lock import RepoMutationLockError
 from plan_tool.roadmap import (
     stage_resume_directory,
     ACCEPT_OUTCOME_ACCEPTED,
@@ -406,10 +407,7 @@ def cmd_roadmap(args: argparse.Namespace, *, invoker: Optional[StageInvoker] = N
         if _roadmap_comparison_has_conflict(args):
             error("--compare accepts no companion roadmap options")
             return _RC_USAGE
-        repo_root = _resolve_cmd_repo_root(args)
-        plans_dir = resolve_explicit_plans_dir(args.plans_dir)
-        if plans_dir is None:
-            plans_dir = resolve_output_dir(repo_root)
+        _, plans_dir = _resolve_roadmap_paths(args)
         try:
             return _cmd_roadmap_comparison(args, plans_dir=plans_dir)
         except KeyboardInterrupt:
@@ -419,10 +417,7 @@ def cmd_roadmap(args: argparse.Namespace, *, invoker: Optional[StageInvoker] = N
         if _candidate_lifecycle_has_conflict(args):
             error("candidate lifecycle actions accept exactly one action with no companion roadmap options")
             return _RC_USAGE
-        repo_root = _resolve_cmd_repo_root(args)
-        plans_dir = resolve_explicit_plans_dir(args.plans_dir)
-        if plans_dir is None:
-            plans_dir = resolve_output_dir(repo_root)
+        repo_root, plans_dir = _resolve_roadmap_paths(args)
         try:
             roadmap_dir(plans_dir, args.slug)
         except (TypeError, ValueError) as exc:
@@ -439,10 +434,7 @@ def cmd_roadmap(args: argparse.Namespace, *, invoker: Optional[StageInvoker] = N
             error("interrupted")
             return 130
     if has_decision_settlement:
-        repo_root = _resolve_cmd_repo_root(args)
-        plans_dir = resolve_explicit_plans_dir(args.plans_dir)
-        if plans_dir is None:
-            plans_dir = resolve_output_dir(repo_root)
+        _, plans_dir = _resolve_roadmap_paths(args)
         try:
             return _cmd_roadmap_decision_settlement(args, plans_dir=plans_dir)
         except KeyboardInterrupt:
@@ -569,14 +561,23 @@ def _emit_roadmap_terminal_disposition(slug: object, disposition: str) -> None:
     emit_roadmap_terminal_status(note, slug=slug, disposition=disposition)
 
 
+def _resolve_roadmap_paths(args: argparse.Namespace) -> tuple[Path, Path]:
+    repo_root = _resolve_cmd_repo_root(args)
+    plans_dir = resolve_explicit_plans_dir(args.plans_dir)
+    if plans_dir is None:
+        return repo_root, resolve_output_dir(repo_root)
+    plan_checkout = collect_project_root_ancestors(plans_dir)
+    if plan_checkout:
+        _lock_command_repo(args, plan_checkout[0])
+    return repo_root, plans_dir
+
+
 def _resolve_roadmap_execution_paths(args: argparse.Namespace) -> tuple[Path, Path]:
     """Resolve execution paths while preserving an unexpected terminal fact."""
     try:
-        repo_root = _resolve_cmd_repo_root(args)
-        plans_dir = resolve_explicit_plans_dir(args.plans_dir)
-        if plans_dir is None:
-            plans_dir = resolve_output_dir(repo_root)
-        return repo_root, plans_dir
+        return _resolve_roadmap_paths(args)
+    except RepoMutationLockError:
+        raise
     except Exception:
         _emit_roadmap_terminal_disposition(args.slug, "unexpected-error")
         raise
