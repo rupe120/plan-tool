@@ -1,0 +1,124 @@
+{
+  "version": 4,
+  "plan_slug": "create-roadmap-version-citations",
+  "plan_path": "docs/implementation-plans/2-create-roadmap-version-citations.md",
+  "created_at": "2026-11-21T04:58:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "05366706e29b47b61504a37dc15062c46faa745fa82b7963fa034a9f6f1f38f4",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "6885340fbb45d9b94fef325c87010354eb42d0d546abbf7d8c817e7f68c5bd7d",
+    "plan_tool/create.py": "7f9e370be975f10e686da7f6f666816ba00d403563e85e89a8b0a10a4b6fadc3",
+    "plan_tool/foundational_logic.py": "a8b0acee9a12c90c9b4a21266abf3ae8701ed3366f9ee8f7b30162ccbee3c1f1",
+    "plan_tool/prompts/distill-seed.md": "7dfbf1f50fdbeed3dd27099bec73c707ca826400b986430af752b6f55afde1db",
+    "plan_tool/prompts/synthesize-body.md": "bb576acbbc1a93e9914446ee2f547dffe2c0e7307b0c03ab3165bcca35c808e1",
+    "tests/test_create.py": "2e8bc2a1b0f266f4a3a3c42794801ccf7ca2d222ae9a667c8a68ee1a90a490cf",
+    "tests/test_distill.py": "085f45c5f850fe89c3ef9803a0dedff1cd8f2d8bb9c0d38184bb8509063c73ec"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md": "e5b4b07d13c6485cfd792714da77872807b5e69c8fe030362e472ca0afa11866",
+    "docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md": "b67c6f487d2aca500dfe3510672446c7fbc0b86ec640ab12071e189be4c8c793"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Roadmap Version Citations\n\n`create-roadmap-version-citations` \u00b7 generated 2026-11-21T04:58:25Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `05366706e29b47b61504a37dc15062c46faa745fa82b7963fa034a9f6f1f38f4`\n- **Detail bundle digest:** `5ad2bcf6317f85075eed98b06640f23129bf4b0aa7979d76bce5480d0587466f`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.00\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring.\n\n    plan-tool reconcile-plan-walk create-roadmap-version-citations  # optional interactive review of the saved findings\n\n- MEDIUM `[fresh-citation-proof]` [confidence: limited]: Step 2 (`Run a fresh file-backed creation from a representative normalized roadmap-derived seed and verify both generated surfaces named in Acceptance criteria`) can pass even if a covered writer shortens a citation. Normalized `create` iterates by default, and `plan_tool/create.py:_converge_create_plan` lets `apply_finding` edit the body or step after initial publication. Finding application is outside scope, but Testing requires writer attribution only for a mismatch, so a later repair can satisfy the first Acceptance criterion and close the backlog entry without demonstrating the prompt change. The first Acceptance criterion states:\n\n  ```\n  One fresh normalized creation shows an exact source version-store citation in each of two places, a model-written body section outside References and a model-written step.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): The fresh run can close the bug even when the writers under test failed to preserve the citations and a later edit repaired them.\n  - Fix: Require step 2, Testing, and Acceptance criteria to count a passing citation on each surface only when the run shows that a covered writer produced it with the exact source path.\n- MEDIUM `[same-member-version-selection]` [confidence: limited]: The fallback for an ambiguous version leaves step 1 (`Apply the Architecture citation contract to preparation, fallback body synthesis, and step proposal, including split-mode consolidation`) open to two materially different outputs. If the source cites two stored versions of `04-roadmap.md` and ties neither to the generated claim, a writer can read \u201cleave the path unspecified\u201d as permission to write `04-roadmap.md` as the citation, or as a direction to omit the file citation. The first reading recreates the Problem statement\u2019s broken pointer and conflicts with Testing\u2019s treatment of a shortened citation as a mismatch. Architecture states:\n\n  ```\n  Leave the path unspecified when the source lacks a usable citation or does not establish which cited version supports the claim.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): When the source cannot identify which version supports a claim, the plan leaves open whether the writer may still direct readers to a bare filename.\n  - Fix: Define the Architecture fallback as omitting the file citation while allowing supported prose, and carry that rule through step 1 and Testing.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files (design gaps; not auto-applied under #85).\n- 1 conceptual gap(s) are listed in the report as advisory (outside the blocking set).\n- `plan-tool completeness-audit create-roadmap-version-citations --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Roadmap Version Citations\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `05366706e29b47b61504a37dc15062c46faa745fa82b7963fa034a9f6f1f38f4`\n- **Detail bundle digest:** `5ad2bcf6317f85075eed98b06640f23129bf4b0aa7979d76bce5480d0587466f`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Suggested next steps\n\n- Close the 1 conceptual-correctness gap(s) above through a session-directed edit to the plan body.\n- `plan-tool completeness-audit create-roadmap-version-citations --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b4e95611",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Run a fresh file-backed creation from a representative normalized roadmap-derived seed and verify both generate",
+      "body": "Step 2 (`Run a fresh file-backed creation from a representative normalized roadmap-derived seed and verify both generated surfaces named in Acceptance criteria`) can pass even if a covered writer shortens a citation. Normalized `create` iterates by default, and `plan_tool/create.py:_converge_create_plan` lets `apply_finding` edit the body or step after initial publication. Finding application is outside scope, but Testing requires writer attribution only for a mismatch, so a later repair can satisfy the first Acceptance criterion and close the backlog entry without demonstrating the prompt change. The first Acceptance criterion states:\n\n  ```\n  One fresh normalized creation shows an exact source version-store citation in each of two places, a model-written body section outside References and a model-written step.\n  ```",
+      "suggested_action": "Require step 2, Testing, and Acceptance criteria to count a passing citation on each surface only when the run shows that a covered writer produced it with the exact source path.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "fresh-citation-proof",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "The fresh run can close the bug even when the writers under test failed to preserve the citations and a later edit repaired them."
+    },
+    {
+      "id": "plan-plan-correctness-7897a4ae",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The fallback for an ambiguous version leaves step 1 (`Apply the Architecture citation contract to preparation, fallback ",
+      "body": "The fallback for an ambiguous version leaves step 1 (`Apply the Architecture citation contract to preparation, fallback body synthesis, and step proposal, including split-mode consolidation`) open to two materially different outputs. If the source cites two stored versions of `04-roadmap.md` and ties neither to the generated claim, a writer can read \u201cleave the path unspecified\u201d as permission to write `04-roadmap.md` as the citation, or as a direction to omit the file citation. The first reading recreates the Problem statement\u2019s broken pointer and conflicts with Testing\u2019s treatment of a shortened citation as a mismatch. Architecture states:\n\n  ```\n  Leave the path unspecified when the source lacks a usable citation or does not establish which cited version supports the claim.\n  ```",
+      "suggested_action": "Define the Architecture fallback as omitting the file citation while allowing supported prose, and carry that rule through step 1 and Testing.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "same-member-version-selection",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "When the source cannot identify which version supports a claim, the plan leaves open whether the writer may still direct readers to a bare filename."
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 4,
+      "detail_grade": "run",
+      "plan_digest": "05366706e29b47b61504a37dc15062c46faa745fa82b7963fa034a9f6f1f38f4",
+      "detail_bundle_digest": "5ad2bcf6317f85075eed98b06640f23129bf4b0aa7979d76bce5480d0587466f",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "7144a9225ed0db988ab6b68ca3e3b5805c60ddcf05dfc73a46985d2b1b8b1d25",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e",
+      "sibling_paths_digest": null
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.0,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}
