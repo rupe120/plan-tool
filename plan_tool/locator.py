@@ -132,6 +132,16 @@ def collect_project_root_ancestors(start: Path) -> list[Path]:
         cursor = parent
 
 
+def find_explicit_plans_checkout(plans_dir: Path) -> Optional[Path]:
+    """Find the checkout to guard when a command uses an explicit plans directory."""
+    candidates = collect_project_root_ancestors(plans_dir)
+    if candidates:
+        return candidates[0]
+    if plans_dir.parts[-len(PLANS_SUBPATH.parts):] == PLANS_SUBPATH.parts:
+        return plans_dir.parent.parent
+    return None
+
+
 def find_repo_root_from_cwd(start: Optional[Path] = None) -> Path:
     """Walk upward from ``start`` (default cwd) to the nearest project root.
 
@@ -564,9 +574,9 @@ def build_plan_tool_context(
         repo_root = explicit_root or find_repo_root(explicit)
         if lock_repo_root is not None:
             lock_repo_root(repo_root)
-            plan_checkout = collect_project_root_ancestors(explicit)
-            if plan_checkout:
-                lock_repo_root(plan_checkout[0])
+            plan_checkout = find_explicit_plans_checkout(explicit)
+            if plan_checkout is not None:
+                lock_repo_root(plan_checkout)
         entries = list_plans(explicit)
         return PlanToolContext(repo_root=repo_root, plans_dir=explicit, entries=entries)
     if explicit_root is not None:
