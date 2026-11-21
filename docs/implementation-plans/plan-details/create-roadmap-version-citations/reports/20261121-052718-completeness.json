@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "create-roadmap-version-citations",
+  "plan_path": "docs/implementation-plans/2-create-roadmap-version-citations.md",
+  "created_at": "2026-11-21T05:27:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c55ab4e70a4b0b242e159a9d0347fd687f36b4efdfbd849b6b5d6321d80f803b",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "6885340fbb45d9b94fef325c87010354eb42d0d546abbf7d8c817e7f68c5bd7d",
+    "plan_tool/create.py": "7f9e370be975f10e686da7f6f666816ba00d403563e85e89a8b0a10a4b6fadc3",
+    "plan_tool/prompts/distill-seed.md": "7dfbf1f50fdbeed3dd27099bec73c707ca826400b986430af752b6f55afde1db",
+    "plan_tool/prompts/synthesize-body.md": "bb576acbbc1a93e9914446ee2f547dffe2c0e7307b0c03ab3165bcca35c808e1",
+    "tests/test_create.py": "2e8bc2a1b0f266f4a3a3c42794801ccf7ca2d222ae9a667c8a68ee1a90a490cf",
+    "tests/test_distill.py": "085f45c5f850fe89c3ef9803a0dedff1cd8f2d8bb9c0d38184bb8509063c73ec"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md": "2957b53e64b3327850006657cc621be7018d84a7435b30ad2b3deb81622ee556",
+    "docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md": "dd59e3368400d57ad7438b6932bda27004009b2e43dedfae593edf0899a9e8c4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Roadmap Version Citations\n\n`create-roadmap-version-citations` \u00b7 generated 2026-11-21T05:27:17Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `78cbd46e5b9b5cf5a62135f7761ecc616be3eedee82b5612b43eaf5da191b978`\n- **Detail bundle digest:** `5af6dea9c014cc64ecc3589022573d28797ec7f56fc0713dbbb8bf9036d0c77c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 22614 bytes (+22614 vs. first audit)\n- **Keystone fan-out:** 0.00\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[citation-proof-mixed-results]` [confidence: limited]: The live proof can find an exact citation and a broken citation on the same surface. The plan\u2019s **Testing** section says \u201cA shortened or substituted citation demonstrates a mismatch,\u201d but **Acceptance criteria** asks for one exact citation per surface. Step 2 (**Verify roadmap citations in a fresh file-backed creation**) repeats that one-per-surface check in **Trace each citation into the final plan**, **Tests**, and **Acceptance criteria**. Its **Apply the plan\u2019s proof outcomes** rule leaves the reviewer to decide whether to inspect beyond the two matching passages, so a run could close the bug while still sending a reader to the wrong roadmap version.\n  - Fix: Make an observed shortened or substituted citation on either covered surface override any matching examples, and carry that rule through the writer-output checks, published-plan checks, and backlog disposition.\n- MEDIUM `[preparation-citation-precedence]` [confidence: limited]: Step 1 (**Preserve selected roadmap citations in generated create prose**) adds the citation rule alongside the existing rule in `plan_tool/prompts/distill-seed.md` without defining which rule wins. With two exact paths for the same roadmap member and no link between either version and the claim, preparation can read the existing rule as requiring both paths in generated prose while Architecture requires omitting the citation. Step 1\u2019s preparation and repair tests and prompt acceptance criterion check that the omission instruction is present, so they can pass with both directives still in force.\n\n  Architecture\n\n  ```\n  Omit the file citation when the source lacks a usable path or does not establish which cited version supports the claim.\n  ```\n\n  `plan_tool/prompts/distill-seed.md`, Field rules\n\n  ```\n  Preserve every concrete file path, symbol, identifier, command, and config\n    key verbatim.\n  ```\n  - Fix: Make Architecture\u2019s claim-specific omission rule an explicit exception to the preparation prompt\u2019s verbatim-path rule for generated prose, and check that precedence on both sends while preserving source materialization.\n- MEDIUM `[usable-roadmap-citation]` [confidence: limited]: A correctly shaped path to a missing roadmap version can count as usable under Step 1 (**Preserve selected roadmap citations in generated create prose**). Its **Input** cites the version-store form, and **Implementation** and `test_covered_prompts_require_claim_specific_paths_and_allow_omission` cover absent and ambiguous paths without saying how to treat an explicit path that points to no stored member. `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed` checks that citations resolve for tracked roadmap seeds and returns immediately for untracked inputs. Step 1 applies the prompt rule to all file-backed inputs, so a hand-authored seed can reach every covered writer with a plausible-looking path that sends readers to a missing file. **Architecture** says:\n  ```\n  Omit the file citation when the source lacks a usable path or does not establish which cited version supports the claim.\n  ```\n  - Fix: Define a usable citation for all covered writers as a claim-specific repository-relative path to a stored roadmap member, and cover an explicit missing-member path in the existing omission prompt check without changing seed admission.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[citation-proof-response-capture]` [confidence: limited]: Step 2 (**Verify roadmap citations in a fresh file-backed creation**) needs evidence of the accepted writer attempts, but **Capture the writer outputs before convergence** gives only an in-flight checkpoint capture example. Clean finalization sweeps those files, and `plan_tool/create.py:propose_steps_from_claude` can keep the first response after calling a repair, so the last response alone cannot establish which text was accepted. `plan_tool/shell.py:claude_invoke_outcome` and `plan_tool/backend_runner.py:run_streaming_once` already retain per-call output in the run\u2019s stream logs. Step 2\u2019s **Tests** and **Acceptance criteria** need a repeatable way to identify the accepted passages from that evidence.\n  - Fix: Use the existing stream logs and create run events as the default evidence for the single proof run, confirm which preparation and step responses create accepted, and keep missing or ambiguous attribution inconclusive.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files first (design gaps; not auto-applied under #85), then 1 conceptual-completeness gap(s).\n- 1 conceptual gap(s) are listed in the report as advisory (outside the blocking set).\n- `plan-tool completeness-audit create-roadmap-version-citations --iterate` \u2014 3 blocking gap(s) open \u2014 re-auditing unchanged text reproduces this result \u2014 triage the saved report's findings, correct them in a session-directed edit, commit, then re-audit the changed snapshot; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Roadmap Version Citations\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `78cbd46e5b9b5cf5a62135f7761ecc616be3eedee82b5612b43eaf5da191b978`\n- **Detail bundle digest:** `5af6dea9c014cc64ecc3589022573d28797ec7f56fc0713dbbb8bf9036d0c77c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[citation-proof-response-capture]` [confidence: limited]: Step 2 (**Verify roadmap citations in a fresh file-backed creation**) needs evidence of the accepted writer attempts, but **Capture the writer outputs before convergence** gives only an in-flight checkpoint capture example. Clean finalization sweeps those files, and `plan_tool/create.py:propose_steps_from_claude` can keep the first response after calling a repair, so the last response alone cannot establish which text was accepted. `plan_tool/shell.py:claude_invoke_outcome` and `plan_tool/backend_runner.py:run_streaming_once` already retain per-call output in the run\u2019s stream logs. Step 2\u2019s **Tests** and **Acceptance criteria** need a repeatable way to identify the accepted passages from that evidence.\n\n### Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit by the human or orchestrating session to the plan or detail files first (design gaps; not auto-applied under #85), then 1 conceptual-completeness gap(s).\n- `plan-tool completeness-audit create-roadmap-version-citations --iterate` \u2014 3 blocking gap(s) open \u2014 re-auditing unchanged text reproduces this result \u2014 triage the saved report's findings, correct them in a session-directed edit, commit, then re-audit the changed snapshot; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-93c74ef5",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The live proof can find an exact citation and a broken citation on the same surface. The plan\u2019s **Testing** section says",
+      "body": "The live proof can find an exact citation and a broken citation on the same surface. The plan\u2019s **Testing** section says \u201cA shortened or substituted citation demonstrates a mismatch,\u201d but **Acceptance criteria** asks for one exact citation per surface. Step 2 (**Verify roadmap citations in a fresh file-backed creation**) repeats that one-per-surface check in **Trace each citation into the final plan**, **Tests**, and **Acceptance criteria**. Its **Apply the plan\u2019s proof outcomes** rule leaves the reviewer to decide whether to inspect beyond the two matching passages, so a run could close the bug while still sending a reader to the wrong roadmap version.",
+      "suggested_action": "Make an observed shortened or substituted citation on either covered surface override any matching examples, and carry that rule through the writer-output checks, published-plan checks, and backlog disposition.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "citation-proof-mixed-results",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-596b6188",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (**Preserve selected roadmap citations in generated create prose**) adds the citation rule alongside the existing",
+      "body": "Step 1 (**Preserve selected roadmap citations in generated create prose**) adds the citation rule alongside the existing rule in `plan_tool/prompts/distill-seed.md` without defining which rule wins. With two exact paths for the same roadmap member and no link between either version and the claim, preparation can read the existing rule as requiring both paths in generated prose while Architecture requires omitting the citation. Step 1\u2019s preparation and repair tests and prompt acceptance criterion check that the omission instruction is present, so they can pass with both directives still in force.\n\n  Architecture\n\n  ```\n  Omit the file citation when the source lacks a usable path or does not establish which cited version supports the claim.\n  ```\n\n  `plan_tool/prompts/distill-seed.md`, Field rules\n\n  ```\n  Preserve every concrete file path, symbol, identifier, command, and config\n    key verbatim.\n  ```",
+      "suggested_action": "Make Architecture\u2019s claim-specific omission rule an explicit exception to the preparation prompt\u2019s verbatim-path rule for generated prose, and check that precedence on both sends while preserving source materialization.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "preparation-citation-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-cd365ac3",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "A correctly shaped path to a missing roadmap version can count as usable under Step 1 (**Preserve selected roadmap citat",
+      "body": "A correctly shaped path to a missing roadmap version can count as usable under Step 1 (**Preserve selected roadmap citations in generated create prose**). Its **Input** cites the version-store form, and **Implementation** and `test_covered_prompts_require_claim_specific_paths_and_allow_omission` cover absent and ambiguous paths without saying how to treat an explicit path that points to no stored member. `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed` checks that citations resolve for tracked roadmap seeds and returns immediately for untracked inputs. Step 1 applies the prompt rule to all file-backed inputs, so a hand-authored seed can reach every covered writer with a plausible-looking path that sends readers to a missing file. **Architecture** says:\n  ```\n  Omit the file citation when the source lacks a usable path or does not establish which cited version supports the claim.\n  ```",
+      "suggested_action": "Define a usable citation for all covered writers as a claim-specific repository-relative path to a stored roadmap member, and cover an explicit missing-member path in the existing omission prompt check without changing seed admission.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "usable-roadmap-citation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-b9fe21b5",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (**Verify roadmap citations in a fresh file-backed creation**) needs evidence of the accepted writer attempts, bu",
+      "body": "Step 2 (**Verify roadmap citations in a fresh file-backed creation**) needs evidence of the accepted writer attempts, but **Capture the writer outputs before convergence** gives only an in-flight checkpoint capture example. Clean finalization sweeps those files, and `plan_tool/create.py:propose_steps_from_claude` can keep the first response after calling a repair, so the last response alone cannot establish which text was accepted. `plan_tool/shell.py:claude_invoke_outcome` and `plan_tool/backend_runner.py:run_streaming_once` already retain per-call output in the run\u2019s stream logs. Step 2\u2019s **Tests** and **Acceptance criteria** need a repeatable way to identify the accepted passages from that evidence.",
+      "suggested_action": "Use the existing stream logs and create run events as the default evidence for the single proof run, confirm which preparation and step responses create accepted, and keep missing or ambiguous attribution inconclusive.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "citation-proof-response-capture",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 4,
+      "detail_grade": "run",
+      "plan_digest": "78cbd46e5b9b5cf5a62135f7761ecc616be3eedee82b5612b43eaf5da191b978",
+      "detail_bundle_digest": "5af6dea9c014cc64ecc3589022573d28797ec7f56fc0713dbbb8bf9036d0c77c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md",
+          "state": "present",
+          "digest": "2957b53e64b3327850006657cc621be7018d84a7435b30ad2b3deb81622ee556"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md",
+          "state": "present",
+          "digest": "dd59e3368400d57ad7438b6932bda27004009b2e43dedfae593edf0899a9e8c4"
+        }
+      ],
+      "source_seed_digest": "7144a9225ed0db988ab6b68ca3e3b5805c60ddcf05dfc73a46985d2b1b8b1d25",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e",
+      "sibling_paths_digest": null
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 22614,
+    "keystone_fan_out": 0.0,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}
