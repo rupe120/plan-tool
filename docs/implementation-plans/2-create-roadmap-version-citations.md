@@ -19,17 +19,18 @@ steps:
   - plan_tool/create.py
   - plan_tool/prompts/distill-seed.md
   - plan_tool/prompts/synthesize-body.md
+  - plan_tool/foundational_logic.py
   - tests/test_create.py
   - tests/test_distill.py
   complexity: medium
   change_type: feature
   status: current
-  description: Instruct existing preparation, step proposal, and fallback synthesis
-    calls to preserve the full version-store path when citing a roadmap file named
-    by the selected source. Carry the source evidence into applicable repair and step
-    re-proposal calls. Use the seed's own path, including its recorded version. Preserve
-    source-body copying, References, and publication. Verify the applicable prompts carry
-    both the instruction and the source path.
+  description: Apply the Architecture citation contract to preparation, fallback
+    body synthesis, and step proposal, including split-mode consolidation. Keep
+    the originally selected source's citation evidence available when normalization
+    drops it, through applicable repairs and step re-proposals. Preserve source
+    copying, References research, and publication. Verify the covered writers have
+    the instruction and source evidence.
 - id: 2
   intent: One fresh creation demonstrates citation preservation before the bug is closed.
   files:
@@ -38,11 +39,10 @@ steps:
   change_type: non-code
   depends_on:
   - 1
-  description: Run a fresh file-backed creation from a representative roadmap-derived
-    seed and inspect the citations in model-written prose and steps. Compare them with
-    the source path. A matching copied References entry alone is insufficient. Close the
-    originating backlog entry after verification. Retain it with the failing writer
-    identified if the proof fails.
+  description: Run a fresh file-backed creation from a representative normalized
+    roadmap-derived seed and verify both generated surfaces named in Acceptance
+    criteria. Close the originating backlog entry after verification. Retain it
+    with the failing writer identified if the proof fails.
 ---
 # Create Roadmap Version Citations
 
@@ -56,7 +56,7 @@ The seed contract already supplies version-store paths. Generated prose can shor
 
 ## Architecture
 
-Use the source citation in the prompts that prepare or synthesize body sections and propose steps for file-backed creation. Preserve a cited path verbatim, including its version identifier. If the source supplies no usable path for an artifact, leave the artifact path unspecified. A later change to the accepted head does not change a citation to the source version.
+Preparation, fallback synthesis, and both step proposal modes use citations from the originally selected source, including citations outside References that normalization omits. Preserve the full path tied to the claim, including its version identifier. Leave the path unspecified when the source lacks a usable citation or does not establish which cited version supports the claim. The recorded citation continues to identify the source version after an accepted-head change.
 
 ## Scope guardrails
 
@@ -84,7 +84,7 @@ See the `steps:` block in the frontmatter.
 
 ## Out of scope
 
-Roadmap seed generation and admission, version selection, promotion, top-level copies, rewriting existing plans, and changes to audit rules or publication behavior. Intent drafting, operator-triggered step splits, and finding application remain separate from this authoring scope. Any deterministic output gate needs separate evidence that the prompt rule is insufficient.
+Roadmap seed generation and admission, version selection, promotion, top-level copies, rewriting existing plans, and changes to audit rules or publication behavior. The separate References research call, intent drafting, operator-triggered step splits, and finding application remain outside this authoring scope. Any deterministic output gate needs separate evidence that the prompt rule is insufficient.
 
 ## Risks
 
@@ -92,11 +92,11 @@ One prompt can be correct while a sibling writer still shortens the same citatio
 
 ## Testing
 
-Check that the relevant model calls receive the rule and the source path. Run one fresh representative file-backed creation and inspect the resulting plan for the complete citation in generated prose. Keep the retained source body and References coverage for the direct route.
+Check the covered prompts for the instruction and citation evidence, including a path that normalization omits. Inspect one fresh normalized creation against the acceptance criteria. Keep the retained source body and References coverage for the direct route.
 
 ## Acceptance criteria
 
-- The representative generated plan cites the source's immutable version-store path wherever its generated prose names that roadmap artifact as a file.
+- One fresh normalized creation shows an exact source version-store citation in each of two places, a model-written body section outside References and a model-written step. Each citation of the artifact in those surfaces preserves its claim's source path.
 - Existing direct-source copy and publication behavior is preserved.
 - Reconcile the entry titled “Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head” in `BUG_BACKLOG.md`. Mark it plan-authored while execution is pending and remove it when the change ships.
 
