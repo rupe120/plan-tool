@@ -98,11 +98,11 @@ One prompt can be correct while a sibling writer still shortens the same citatio
 
 Check the covered prompts for the instruction, including when to omit a file citation, and for the citation evidence, including a path that normalization omits. Verify that changing only the omitted path prevents reuse of prose generated with the earlier version. Use one fresh normalized creation and its writer evidence to verify the acceptance criteria. Keep the retained source body and References coverage for the direct route.
 
-A shortened or substituted citation anywhere on either verified surface fails the proof even when both surfaces contain matching examples. Otherwise, a missing citation on either surface leaves the proof inconclusive. Keep the bug open in both cases and identify the writer only when the run evidence establishes its responsibility.
+A shortened or substituted citation anywhere on either verified surface fails the proof even when both surfaces contain matching examples. Otherwise, a missing citation on either surface or an incomplete creation leaves the proof inconclusive. Keep the bug open in both cases and identify the writer only when the run evidence establishes its responsibility.
 
 ## Acceptance criteria
 
-- In one fresh normalized creation, a covered body writer produces an exact source version-store citation outside References and a covered step writer produces one in a step. Check the citations at those writers' outputs as well as in the published plan, so later convergence edits cannot substitute for the proof.
+- In one fresh normalized creation that completes cleanly, a covered body writer produces an exact source version-store citation outside References and a covered step writer produces one in a step. Check the generated fields selected for initial publication and their counterparts in the published plan, so later convergence edits cannot substitute for the proof.
 - Existing direct-source copy and publication behavior is preserved.
 - Reconcile the entry titled “Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head” in `BUG_BACKLOG.md`. Mark it plan-authored while execution is pending and remove it when the change ships.
 
