@@ -34,7 +34,14 @@ def _load_context(args: argparse.Namespace) -> PlanToolContext:
         args.plans_dir,
         manifest_path=args.manifest,
         repo_root_override=args.repo_root,
+        lock_repo_root=getattr(args, "_lock_repo_root", None),
     )
+
+
+def _lock_command_repo(args: argparse.Namespace, repo_root: Path) -> None:
+    lock_repo_root = getattr(args, "_lock_repo_root", None)
+    if lock_repo_root is not None:
+        lock_repo_root(repo_root)
 
 
 def _resolve_cmd_repo_root(args: argparse.Namespace) -> Path:

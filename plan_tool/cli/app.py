@@ -14,6 +14,7 @@ import shutil
 import sys
 import time
 import traceback
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Optional
 
@@ -715,11 +716,20 @@ def main(argv: Optional[list[str]] = None) -> int:
         set_console_verbosity(_CONSOLE_VERBOSITY_QUIET)
 
     try:
-        with repo_mutation_lock(
-            repo_root,
-            command=args.command,
-            enabled=_requires_repo_mutation_lock(args),
-        ):
+        with ExitStack() as locks:
+            if _requires_repo_mutation_lock(args):
+                locked_roots: set[Path] = set()
+
+                def lock_repo_root(root: Path) -> None:
+                    if root not in locked_roots:
+                        locks.enter_context(repo_mutation_lock(root, command=args.command))
+                        locked_roots.add(root)
+
+                args._lock_repo_root = lock_repo_root
+                if args.command in {"init", "roadmap"} or (
+                    args.command == "jira" and (args.name == "config" or args.lint)
+                ):
+                    lock_repo_root(repo_root)
             return dispatch[args.command](args)
     except RepoMutationLockError as exc:
         error(str(exc))
