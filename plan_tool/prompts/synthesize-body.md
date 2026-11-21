@@ -8,7 +8,7 @@ round-trip that maps `### N.` headings to the frontmatter `steps:` list) and
 `References` (covered by a separate web-research round-trip). Do not emit
 those two keys; they are owned elsewhere.
 
-${project_context_block}## Source seed
+${project_context_block}${roadmap_citation_block}## Source seed
 
 ```
 ${source_text}
@@ -207,7 +207,7 @@ the rule.
   lift the in-scope claim and drop the conflicting deferral rather than
   emitting both — a body that simultaneously commits to and defers a fact is
   an internal contradiction the downstream conceptual audit flags.
-- Draw content from the seed above, the fetched reference documentation, and
+- Draw plan claims from the seed above, the fetched reference documentation, and
   the local repository-code excerpts only. Live web search and unstated outside
   knowledge are still off-limits — the `References` round-trip already chose
   the external sources, and local code is limited to Architecture anchors the

@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import hashlib
 import re
+from bisect import bisect_right
 import select
 import shutil
 import sys
@@ -45,6 +46,7 @@ from plan_tool.roadmap_seed_manifest import (
     no_published_version_message,
 )
 from plan_tool.roadmap_versions import (
+    ROADMAP_VERSION_NAMESPACE_DIRNAME,
     VERSION_ARTIFACT_KEYS,
     RoadmapVersionError,
     load_accepted_version,
@@ -605,6 +607,135 @@ def select_file_backed_source(
     return from_description if from_description is not None else ""
 
 
+_ROADMAP_CITATION_RULE = (
+    "In generated prose, cite a roadmap member only with the exact full "
+    "repository-relative version-store path that the originally selected source "
+    "ties to the claim. Preserve the roadmap folder and version identifier in "
+    f"`<roadmap folder>/{ROADMAP_VERSION_NAMESPACE_DIRNAME}/<version-id>/<member>`. "
+    "If the source gives no usable path or does not establish which cited version "
+    "supports the claim, omit the file citation. You may still state the supported claim. "
+    "Do not substitute a bare filename, a top-level copy, the current accepted "
+    "head, or a version found during repository inspection. Keep protected "
+    "source material verbatim."
+)
+
+
+_ROADMAP_LINK_LABEL_CHARACTER = r"(?:\\[^\r\n]|[^\[\]\\\r\n])"
+_ROADMAP_LINK_DEFINITION = re.compile(
+    rf"^ {{0,3}}\[({_ROADMAP_LINK_LABEL_CHARACTER}+)\]:"
+)
+_ROADMAP_USE_LABEL_CHARACTER = rf"(?:{_ROADMAP_LINK_LABEL_CHARACTER}|\r?\n(?![ \t]*\r?\n))"
+_ROADMAP_LINK_USE = re.compile(
+    rf"\\[^\r\n]|\[({_ROADMAP_USE_LABEL_CHARACTER}+)\]"
+    rf"(?:\[({_ROADMAP_USE_LABEL_CHARACTER}*)\])?"
+)
+
+
+def _roadmap_link_label(label: str) -> str:
+    return " ".join(label.casefold().split())
+
+
+def _clip_roadmap_citation_line(line: str, mentions: list[tuple[int, int]]) -> str:
+    ranges: list[tuple[int, int]] = []
+    for mention_start, mention_end in sorted(mentions):
+        # Leave room for the full path prefix and the nearby claim.
+        start = max(0, mention_start - 4096)
+        end = mention_end + 512
+        if ranges and start <= ranges[-1][1]:
+            ranges[-1] = (ranges[-1][0], max(ranges[-1][1], end))
+        else:
+            ranges.append((start, end))
+    return " … ".join(line[start:end] for start, end in ranges)
+
+
+def _render_roadmap_citation_excerpt(source_text: str) -> str:
+    """Retain version-store citations and the source context that attaches them to claims."""
+    body = _strip_frontmatter(source_text)
+    version_store = f"{ROADMAP_VERSION_NAMESPACE_DIRNAME}/"
+    if version_store not in body:
+        return ""
+    marker = re.escape(version_store)
+    raw_lines = body.splitlines(keepends=True)
+    lines = [line.rstrip("\r\n") for line in raw_lines]
+    fences = _fenced_code_spans(body).spans
+    definitions: dict[int, re.Match[str]] = {}
+    fenced_rows: set[int] = set()
+    line_offsets: list[int] = []
+    offset = 0
+    fence_index = 0
+    for index, (raw_line, line) in enumerate(zip(raw_lines, lines, strict=True)):
+        line_offsets.append(offset)
+        while fence_index < len(fences) and offset >= fences[fence_index][1]:
+            fence_index += 1
+        if fence_index < len(fences) and offset >= fences[fence_index][0]:
+            fenced_rows.add(index)
+        elif definition := _ROADMAP_LINK_DEFINITION.match(line):
+            definitions[index] = definition
+        offset += len(raw_line)
+
+    # A candidate label keeps every original definition in order. The writer
+    # can distinguish competing destinations from titles using that context.
+    candidate_labels = {
+        _roadmap_link_label(definition[1])
+        for index, definition in definitions.items()
+        if version_store in lines[index][definition.end():] or (
+            not lines[index][definition.end():].strip()
+            and index + 1 < len(lines)
+            and version_store in lines[index + 1]
+        )
+    }
+    reference_spans: dict[int, list[tuple[int, int]]] = {}
+    if candidate_labels:
+        starts = (0, *(end for _, end in fences))
+        ends = (*(start for start, _ in fences), len(body))
+        matches = (
+            match
+            for start, end in zip(starts, ends, strict=True)
+            for match in _ROADMAP_LINK_USE.finditer(body, start, end)
+        )
+        for match in matches:
+            if match[1] is None or _roadmap_link_label(match[2] or match[1]) not in candidate_labels:
+                continue
+            first = bisect_right(line_offsets, match.start()) - 1
+            last = bisect_right(line_offsets, match.end() - 1) - 1
+            if first in definitions:
+                continue
+            for row in range(first, last + 1):
+                offset = line_offsets[row]
+                span = (max(0, match.start() - offset), min(len(lines[row]), match.end() - offset))
+                reference_spans.setdefault(row, []).append(span)
+
+    headings: dict[int, int] = {}
+    excerpts: dict[int, str] = {}
+    previous_text: int | None = None
+    for index, line in enumerate(lines):
+        in_fence = index in fenced_rows
+        heading = re.match(r" {0,3}(#{1,6})[ \t]+\S", line)
+        if heading and not in_fence:
+            depth = len(heading[1])
+            headings = {level: row for level, row in headings.items() if level < depth}
+            headings[depth] = index
+            previous_text = None
+
+        mentions = [match.span() for match in re.finditer(marker, line)]
+        mentions.extend(reference_spans.get(index, ()))
+        definition = definitions.get(index)
+        if definition is not None and _roadmap_link_label(definition[1]) in candidate_labels:
+            mentions.append(definition.span())
+        if mentions:
+            for row in headings.values():
+                excerpts.setdefault(row, lines[row][:320])
+            if previous_text is not None:
+                excerpts.setdefault(previous_text, lines[previous_text][-320:])
+            excerpts[index] = _clip_roadmap_citation_line(line, mentions)
+            if index + 1 < len(lines) and lines[index + 1].strip():
+                excerpts.setdefault(index + 1, lines[index + 1][:320])
+        if line.strip():
+            previous_text = index
+
+    return "\n".join(f"{index + 1}\t{line}" for index, line in sorted(excerpts.items()))
+
+
 def classify_file_backed_source(
     source_text: str, *, source: Path | str = "--from-existing seed"
 ) -> FileBackedSourceIntake:
@@ -782,6 +913,7 @@ class _CreatePlanContinuation:
     distilled_seed: Optional[str]
     dropped_references: list[DroppedReference]
     misspellings: list[Misspelling]
+    roadmap_citation_block: str = ""
     uncarried_distilled_guardrails: list[str] = field(default_factory=list)
     uncarried_synthesis_guardrails: list[str] = field(default_factory=list)
 
@@ -859,6 +991,7 @@ class _CreatePlanConvergence:
     run_logger: Optional[RunLoggerLike]
     plan_fingerprint: str
     preserve_selected_roadmap_references: bool
+    roadmap_citation_block: str = ""
 
 
 @dataclass(frozen=True)
@@ -2063,6 +2196,7 @@ def propose_steps_from_claude(
     foundational_invoker: Optional[ClaudeInvoker] = None,
     capture_scenarios: bool = False,
     arm: Optional[str] = None,
+    roadmap_citation_block: str = "",
 ) -> Optional[list[Step]]:
     """Ask claude for initial steps.
 
@@ -2105,6 +2239,7 @@ def propose_steps_from_claude(
         lessons_block=lessons_block,
         project_context=project_context,
         omit_foundational_item=foundational_invoker is not None,
+        roadmap_citation_block=roadmap_citation_block,
     )
 
     # Checkpoint lookup. Three-way gate: requires slug + output_dir +
@@ -2121,6 +2256,7 @@ def propose_steps_from_claude(
             repo_root,
             project_context=project_context,
             iteration=iteration,
+            roadmap_citation_block=roadmap_citation_block,
         )
         # Iteration > 0 shards under a per-round filename so a later
         # round's save doesn't clobber an earlier round's evidence on
@@ -2509,8 +2645,15 @@ def propose_steps_from_claude(
         and cached is None
     ):
         try:
+            sweep_context = _render_sweep_context(steps, description)
+            if roadmap_citation_block:
+                sweep_context += (
+                    "\n\nApply the roadmap citation rule to the consolidation "
+                    "title, intent, and rationale."
+                    + roadmap_citation_block
+                )
             sweep = run_foundational_logic_sweep(
-                _render_sweep_context(steps, description),
+                sweep_context,
                 foundational_invoker,
                 run_logger=run_logger,
             )
@@ -2786,6 +2929,7 @@ def _render_from_prompt(
     lessons_block: str = "",
     project_context: str = "",
     omit_foundational_item: bool = False,
+    roadmap_citation_block: str = "",
 ) -> str:
     """Render the step-proposal prompt.
 
@@ -2948,6 +3092,7 @@ def _render_from_prompt(
         f"{lessons_section}"
         f"{project_context_section}"
         f"\n\nPlan description:\n{description}\n"
+        f"{roadmap_citation_block}"
     )
 
 
@@ -4344,6 +4489,7 @@ def _render_synthesis_prompt(
     local_code_anchors: tuple[str, ...] = (),
     dependency_cohesion_block: str = "",
     project_context: str = "",
+    roadmap_citation_block: str = "",
     repair_error: Optional[str] = None,
     prior_response: Optional[str] = None,
 ) -> str:
@@ -4389,6 +4535,7 @@ def _render_synthesis_prompt(
         repair_block = ""
     return template.safe_substitute(
         source_text=source_text,
+        roadmap_citation_block=f"{roadmap_citation_block.strip()}\n\n" if roadmap_citation_block else "",
         reference_docs_block=_render_reference_docs_section(reference_docs),
         dependency_cohesion_block=(
             dependency_cohesion_block
@@ -4511,6 +4658,7 @@ def propose_body_sections(
     local_code_anchors: tuple[str, ...] = (),
     dependency_cohesion_block: str = "",
     project_context: str = "",
+    roadmap_citation_block: str = "",
     reporter: Optional[ProgressReporter] = None,
     slug: Optional[str] = None,
     output_dir: Optional[Path] = None,
@@ -4566,6 +4714,7 @@ def propose_body_sections(
         local_code_anchors=local_code_anchors,
         dependency_cohesion_block=dependency_cohesion_block,
         project_context=project_context,
+        roadmap_citation_block=roadmap_citation_block,
     )
 
     ckpt_path: Optional[Path] = None
@@ -4581,6 +4730,7 @@ def propose_body_sections(
             dependency_cohesion_block=dependency_cohesion_block,
             project_context=project_context,
             iteration=iteration,
+            roadmap_citation_block=roadmap_citation_block,
         )
         ckpt_name = (
             _BODY_SECTIONS_CHECKPOINT_NAME
@@ -4698,6 +4848,7 @@ def propose_body_sections(
             local_code_anchors=local_code_anchors,
             dependency_cohesion_block=dependency_cohesion_block,
             project_context=project_context,
+            roadmap_citation_block=roadmap_citation_block,
             repair_error=error,
             prior_response=raw,
         )
@@ -4790,6 +4941,7 @@ def _render_numbered_source(source_text: str) -> str:
 def _render_distill_prompt(
     source_text: str,
     *,
+    file_backed: bool = False,
     repair_error: Optional[str] = None,
     prior_response: Optional[str] = None,
 ) -> str:
@@ -4821,6 +4973,14 @@ def _render_distill_prompt(
         repair_block = ""
     return template.safe_substitute(
         numbered_source=_render_numbered_source(source_text),
+        roadmap_citation_block=(
+            f"\n- **Roadmap citations.** {_ROADMAP_CITATION_RULE} "
+            "Use the line-numbered source as citation evidence. The omission "
+            "rule takes precedence over the general verbatim-path rule for "
+            "generated roadmap citations."
+            if file_backed
+            else ""
+        ),
         repair_block=repair_block,
         section_shapes_block=_render_section_shapes_block(),
     )
@@ -5425,6 +5585,7 @@ def propose_distilled_seed_from_claude(
     source_text: str,
     invoker: ClaudeInvoker,
     *,
+    file_backed: bool = False,
     reporter: Optional[ProgressReporter] = None,
     slug: Optional[str] = None,
     output_dir: Optional[Path] = None,
@@ -5448,7 +5609,7 @@ def propose_distilled_seed_from_claude(
     if reporter is None:
         reporter = StderrReporter(run_log=run_logger)
     total_lines = len(source_text.splitlines())
-    prompt = _render_distill_prompt(source_text)
+    prompt = _render_distill_prompt(source_text, file_backed=file_backed)
 
     ckpt_path: Optional[Path] = None
     input_hash: Optional[str] = None
@@ -5544,7 +5705,7 @@ def propose_distilled_seed_from_claude(
             cached = None
         tool(f"seed distillation: first attempt failed ({error}); retrying once")
         repair_prompt = _render_distill_prompt(
-            source_text, repair_error=error, prior_response=raw
+            source_text, file_backed=file_backed, repair_error=error, prior_response=raw
         )
         if run_logger is not None:
             run_logger.claude_call_start(
@@ -9302,12 +9463,29 @@ def _prepare_create_plan(
         source=from_existing_path if from_existing_path is not None else "create seed",
     )
     validate_slug(slug)
+    raw_seed = seed_body if seed_body is not None else from_description
     file_backed_intake: Optional[FileBackedSourceIntake] = None
+    roadmap_citation_block = ""
     if from_existing_path is not None:
+        raw_seed = select_file_backed_source(seed_body, from_description)
         file_backed_intake = validate_from_existing_seed(
-            select_file_backed_source(seed_body, from_description),
+            raw_seed,
             source=from_existing_path,
         )
+        roadmap_citation_block = (
+            f"\n\n## Roadmap citation evidence\n\n{_ROADMAP_CITATION_RULE}"
+        )
+        if file_backed_intake.direct_ready:
+            roadmap_citation_block += "\nUse the plan description as citation evidence."
+        else:
+            citation_excerpt = _render_roadmap_citation_excerpt(raw_seed)
+            if citation_excerpt:
+                roadmap_citation_block += (
+                    "\nUse the original source excerpts below as evidence for citations only.\n\n"
+                    + citation_excerpt
+                )
+            else:
+                roadmap_citation_block += "\nThe original source supplies no version-store paths."
 
     if yes and input_fn is input:
         # Default-accepting stand-in. Only swap in when the caller hasn't
@@ -9407,7 +9585,6 @@ def _prepare_create_plan(
     ] = None
     uncarried_distilled_guardrails: list[str] = []
     dropped_refs: list[DroppedReference] = []
-    raw_seed = seed_body if seed_body is not None else from_description
     direct_source_authority: Optional[_DirectSourceAuthority] = None
     selected_file_backed_route: Optional[FileBackedSourceRoute] = None
     selected_route_checkpoint: Optional[str] = None
@@ -9530,6 +9707,7 @@ def _prepare_create_plan(
                 distilled = propose_distilled_seed_from_claude(
                     raw_seed,
                     claude_invoker,
+                    file_backed=file_preparation_required,
                     slug=slug,
                     output_dir=output_dir,
                     repo_root=repo_root,
@@ -9719,6 +9897,7 @@ def _prepare_create_plan(
                 proposed = propose_steps_from_claude(
                     step_source,
                     claude_invoker,
+                    roadmap_citation_block=roadmap_citation_block,
                     repo_root=repo_root,
                     slug=slug,
                     output_dir=output_dir,
@@ -9773,6 +9952,7 @@ def _prepare_create_plan(
                 proposed = propose_steps_from_claude(
                     step_source,
                     claude_invoker,
+                    roadmap_citation_block=roadmap_citation_block,
                     repo_root=repo_root,
                     slug=slug,
                     output_dir=output_dir,
@@ -10177,6 +10357,7 @@ def _prepare_create_plan(
                 synthesized = propose_body_sections(
                     body_source,
                     claude_invoker,
+                    roadmap_citation_block=roadmap_citation_block,
                     reference_docs=reference_docs_block,
                     local_code_context=local_code_context,
                     local_code_anchors=local_code_anchors,
@@ -10370,6 +10551,7 @@ def _prepare_create_plan(
         risk_profile_proposal=risk_profile_proposal,
         continuation=_CreatePlanContinuation(
             from_description=from_description,
+            roadmap_citation_block=roadmap_citation_block,
             input_fn=input_fn,
             distilled_seed=distilled_seed_text,
             uncarried_distilled_guardrails=uncarried_distilled_guardrails,
@@ -11111,6 +11293,7 @@ def _converge_create_plan(
                     steps_proposal = propose_steps_from_claude(
                         edited_description,
                         claude_invoker,
+                        roadmap_citation_block=convergence.roadmap_citation_block,
                         repo_root=repo_root,
                         slug=slug,
                         output_dir=output_dir,
@@ -11716,6 +11899,7 @@ def create_plan(
                     slug=slug,
                     output_dir=prepared.output_dir,
                     from_description=prepared.continuation.from_description,
+                    roadmap_citation_block=prepared.continuation.roadmap_citation_block,
                     input_fn=prepared.continuation.input_fn,
                     claude_invoker=claude_invoker,
                     foundational_invoker=foundational_invoker,
@@ -11804,13 +11988,14 @@ def _initial_steps_input_hash(
     *,
     project_context: str = "",
     iteration: int = 0,
+    roadmap_citation_block: str = "",
 ) -> str:
     """SHA-256 hex of the inputs that invalidate a cached steps proposal.
 
     Keyed by slug + description + output dir (repo-relative), plus confirmed
-    project context when it exists. Lessons content is *not* hashed — hashing
-    accumulating files defeats the resume scenario (every new lesson would
-    invalidate the cache).
+    project context and the file-backed citation block when present.
+    Lessons content is *not* hashed because every new lesson would
+    invalidate the cache.
     Reporter and invoker callable identity are obviously not hashed;
     they're not prompt inputs.
 
@@ -11830,6 +12015,8 @@ def _initial_steps_input_hash(
         payload["iteration"] = iteration
     if project_context:
         payload["project_context"] = project_context
+    if roadmap_citation_block:
+        payload["roadmap_citation_block"] = roadmap_citation_block
     return compute_input_hash(payload)
 
 
@@ -11943,6 +12130,7 @@ def _body_sections_input_hash(
     dependency_cohesion_block: str = "",
     project_context: str = "",
     iteration: int = 0,
+    roadmap_citation_block: str = "",
 ) -> str:
     """SHA-256 hex of the inputs that invalidate a cached synthesis response.
 
@@ -11958,7 +12146,8 @@ def _body_sections_input_hash(
     documentation, local source evidence, the plan's bridging ``depends_on``
     edges (BACKLOG #252), or its scope boundary invalidate the cache. Each is
     folded in only when non-empty so historical no-evidence hashes stay
-    byte-identical and existing checkpoints keep matching.
+    byte-identical and existing checkpoints keep matching. File-backed calls
+    also hash the citation block, including when it contains only instructions.
 
     ``iteration`` mirrors :func:`_initial_steps_input_hash` and
     :func:`_references_input_hash` — only folded in when ``> 0`` so the
@@ -11977,6 +12166,8 @@ def _body_sections_input_hash(
         payload["dependency_cohesion_block"] = dependency_cohesion_block
     if project_context:
         payload["project_context"] = project_context
+    if roadmap_citation_block:
+        payload["roadmap_citation_block"] = roadmap_citation_block
     if iteration > 0:
         payload["iteration"] = iteration
     return compute_input_hash(payload)

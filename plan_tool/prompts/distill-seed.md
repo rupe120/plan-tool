@@ -141,7 +141,7 @@ ${section_shapes_block}
 - **Preserve every concrete file path, symbol, identifier, command, and config
   key verbatim.** Downstream steps verify these against the real codebase, so a
   paraphrased or invented path breaks them. Copy them exactly as the seed wrote
-  them.
+  them.${roadmap_citation_block}
 - **Compress prose, never invent facts** — honor each section's policy tag:
   - `[derive from intent]` (Overview, Problem statement, Architecture):
     structure these from the seed's stated goal even when it carries no
