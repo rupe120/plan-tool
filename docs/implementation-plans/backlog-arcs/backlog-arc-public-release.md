@@ -27,9 +27,10 @@ owns #515 and the completed #510 walkthrough. This coordination arc routes
 the separate release prerequisite #514 and consults the other arcs for their lanes.
 The installed skill's shared filing guidance ships in PR #292.
 
-Next bounded action: review #514's [install/update instructions](../../how-to/install-and-update.md)
-and [shared-root sync procedure](../../RELEASING.md#keep-bitbucket-and-github-synchronized),
-then verify the final candidate and both destinations.
+The candidate verification below covers the pinned Bitbucket commit. For
+synchronization, follow the
+[shared-root sync procedure](../../RELEASING.md#keep-bitbucket-and-github-synchronized).
+After an approved sync, read both destination heads back.
 
 ### Destination verification
 
@@ -41,9 +42,7 @@ environments. `uv tool upgrade plan-tool` found the Git install current.
 
 GitHub `main` and Bitbucket `main` at `bd0ea279e` shared the reviewed root
 `9c10d74ca`. The GitHub head was an ancestor of the Bitbucket head, 111
-commits behind. This checks
-the public installation route at its published revision. #514 retains
-verification of the exact candidate selected for the next synchronization.
+commits behind. This checks the public installation route at that revision.
 
 Gitleaks 8.30.1 scanned the history reachable from GitHub `main` and the
 range `b1ccba9ca..bd0ea279e`, including first-parent merge diffs. The public
@@ -51,8 +50,24 @@ scan's 68 generic matches all correspond to 64-character file digests in
 archived reports' `detail_bundle_fingerprint` maps. The Bitbucket range
 produced no matches. The scan covers those commit ranges and the enabled
 credential patterns.
-Keep distribution, updates and fresh-consumer verification
-with their separate work items.
+
+#### Candidate checked 2026-11-20
+
+| Check | Result |
+| --- | --- |
+| Source and ancestry | Anonymous GitHub `main` and tag `v1.8.0` resolve to `a87270388b92d35c3efc77326d14c6a454e3219b`. Bitbucket candidate `c132a1a6a7ab0598e7d29eaf27150d1e284ce9d3` is 43 commits ahead, with no GitHub-only commits. Both share the reviewed root `9c10d74ca`. |
+| Incoming history | Gitleaks 8.30.1 reported zero matches in `a87270388..c132a1a6a`, covering 28 ordinary commits and 15 first-parent merge diffs with allowlist suppressions disabled. Targeted checks found no newly added local home paths, AWS account IDs in ARNs, private IPv4 addresses, Atlassian Cloud URLs, or email-address patterns in those merge diffs. The range contains no added or changed binary files. |
+| Candidate tree | The full-tree scan reported 75 matches. All match byte-identical public files: 68 archived detail-bundle fingerprints and seven test fixtures. |
+| Installation and upgrade | In isolated Python 3.14.7 tool environments, anonymous GitHub installs from `main` and `v1.8.0`, a fresh editable clone, and an upgrade check on public `main` passed. A local replica advanced from the public tip to the candidate and `uv tool upgrade` installed the candidate, verified by commit in package metadata. An editable candidate install and a copied Codex skill refresh also passed. The candidate package includes the Apache-2.0 license, LICENSE, and NOTICE. |
+| Bitbucket CI | [Pipeline #63](https://bitbucket.org/protagona/plan-tool/pipelines/results/63) passed on the exact candidate commit. |
+
+The scan covers the pinned commit range and candidate tree. Its results
+are limited to the enabled patterns and reviewed matches. The candidate
+still declares version 1.8.0, so the upgrade check uses the installed Git
+commit to distinguish builds. The checks run without model authentication.
+#515 owns independent fresh-reader verification. This receipt is recorded
+after the verified candidate. Recheck any newer tip before synchronization
+and compare both destination heads after it.
 
 ## Decision gates
 

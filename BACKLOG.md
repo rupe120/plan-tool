@@ -8158,8 +8158,8 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Settled decisions:** Apache-2.0 (owner choice, 2026-10-19); public GitHub
   repository with ongoing internal Bitbucket sync; clone plus editable uv
   installation. Owner decision, 2026-10-20: use
-  `https://github.com/rupe120/plan-tool` (currently private, owner-reported),
-  possibly transferring to the Protagona organization later. Start public history
+  `https://github.com/rupe120/plan-tool` (anonymous access verified
+  2026-11-20), with a possible transfer to the Protagona organization later. Start public history
   with one fresh sanitized root shared by Bitbucket and GitHub. Maintain the same
   ancestry on both hosts and reconcile changes locally in one designated clone.
   License file and package declaration are present. Owner decision, 2026-11-06:
@@ -8176,8 +8176,10 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
   and copied-skill refresh; prepare the selected fresh sanitized snapshot and
   inspect it for client material and credentials. Define shared-base synchronization
   from either host through a designated integration clone. Draft guidance lives in
-  `docs/how-to/install-and-update.md` and `docs/RELEASING.md`; final candidate and
-  destination verification remain open.
+  `docs/how-to/install-and-update.md` and `docs/RELEASING.md`. The
+  [candidate verification](docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md#destination-verification)
+  covers Bitbucket `c132a1a6a`. Synchronization and confirming both destination
+  heads afterward remain open.
 - **Out of scope / Non-goals:** PyPI publishing, automatic updates, publication, remote
   changes, credential rotation or history rewriting without separate authorization.
 - **Allowed behavior changes:** Decision and documentation/package metadata only;
