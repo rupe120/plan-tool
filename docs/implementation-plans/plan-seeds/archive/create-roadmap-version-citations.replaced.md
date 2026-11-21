@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-create-roadmap-version-citations.md`.
+> Preserved here for history; do not edit.
+
 # Preserve versioned roadmap citations in create output
 
 ## Outcome

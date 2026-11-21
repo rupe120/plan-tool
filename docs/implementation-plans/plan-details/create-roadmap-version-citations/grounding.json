@@ -1,0 +1,15 @@
+{
+  "plan_slug": "create-roadmap-version-citations",
+  "grounded_at": "2026-11-21T04:44:36Z",
+  "plan_fingerprint": "63592eea9c3a59b6c3a9161b09c39a7ab3e660bc3421d7357fc5a3dce7d8445c",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "401de09a769a89c3d02f85e44d80efe4897c4c24f0532706eb63f1d040d9fb02",
+    "plan_tool/create.py": "7f9e370be975f10e686da7f6f666816ba00d403563e85e89a8b0a10a4b6fadc3",
+    "plan_tool/prompts/distill-seed.md": "7dfbf1f50fdbeed3dd27099bec73c707ca826400b986430af752b6f55afde1db",
+    "plan_tool/prompts/synthesize-body.md": "bb576acbbc1a93e9914446ee2f547dffe2c0e7307b0c03ab3165bcca35c808e1",
+    "tests/test_create.py": "2e8bc2a1b0f266f4a3a3c42794801ccf7ca2d222ae9a667c8a68ee1a90a490cf",
+    "tests/test_distill.py": "085f45c5f850fe89c3ef9803a0dedff1cd8f2d8bb9c0d38184bb8509063c73ec"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

@@ -235,6 +235,7 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10;
   split out of the seed-citation entry, deferred 2026-10-29.
+- **Status:** plan-authored. See [Create Roadmap Version Citations](docs/implementation-plans/2-create-roadmap-version-citations.md).
 
 ### `create` writes a single "record unbuilt upstreams and stop" step for a seed whose upstream plans are planned but unbuilt, and the bare audit rates that plan CRITICAL
 
