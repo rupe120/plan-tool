@@ -14,7 +14,8 @@ enforce_step_tests: true
 source_seed: docs/implementation-plans/plan-seeds/archive/create-roadmap-version-citations.replaced.md
 steps:
 - id: 1
-  intent: Generated plan body and steps preserve the roadmap paths that informed the selected seed.
+  intent: Generated plan body and steps preserve the roadmap paths that informed the
+    selected seed.
   files:
   - plan_tool/create.py
   - plan_tool/prompts/distill-seed.md
@@ -24,24 +25,26 @@ steps:
   - tests/test_distill.py
   complexity: medium
   change_type: feature
+  detail: docs/implementation-plans/plan-details/create-roadmap-version-citations/01-apply-architecture-citation-contract.md
   status: current
-  description: Apply the Architecture citation contract to preparation, fallback
-    body synthesis, and step proposal, including split-mode consolidation. Keep
-    the originally selected source's citation evidence available when normalization
-    drops it, through applicable repairs, step re-proposals, and resume. Preserve
-    source copying, References research, and publication. Verify the covered writers
-    have the instruction and source evidence.
+  description: Apply the Architecture citation contract to preparation, fallback body
+    synthesis, and step proposal, including split-mode consolidation. Keep the originally
+    selected source's citation evidence available when normalization drops it, through
+    applicable repairs, step re-proposals, and resume. Preserve source copying, References
+    research, and publication. Verify the covered writers have the instruction and
+    source evidence.
 - id: 2
-  intent: One fresh creation demonstrates citation preservation before the bug is closed.
+  intent: One fresh creation demonstrates citation preservation before the bug is
+    closed.
   files:
   - BUG_BACKLOG.md
   complexity: low
   change_type: non-code
   depends_on:
   - 1
-  description: Run a fresh file-backed creation from a representative normalized
-    roadmap-derived seed and verify both generated surfaces named in Acceptance
-    criteria. Follow the documented proof outcomes when updating the backlog.
+  description: Run a fresh file-backed creation from a representative normalized roadmap-derived
+    seed and verify both generated surfaces named in Acceptance criteria. Follow the
+    documented proof outcomes when updating the backlog.
 ---
 # Create Roadmap Version Citations
 
