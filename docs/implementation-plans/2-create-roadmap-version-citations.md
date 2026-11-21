@@ -55,7 +55,7 @@ The seed contract already supplies version-store paths. Generated prose can shor
 
 ## Architecture
 
-Preparation, fallback synthesis, and both step proposal modes use citations from the originally selected source, including citations outside References that normalization omits. Preserve the full path tied to the claim, including its version identifier. Leave the path unspecified when the source lacks a usable citation or does not establish which cited version supports the claim. The recorded citation continues to identify the source version after an accepted-head change.
+Preparation, fallback synthesis, and both step proposal modes use citations from the originally selected source, including citations outside References that normalization omits. Preserve the full path tied to the claim, including its version identifier. Omit the file citation when the source lacks a usable path or does not establish which cited version supports the claim. Supported prose can still describe the claim. The recorded citation continues to identify the source version after an accepted-head change.
 
 Resume reuses a step or synthesized body proposal only when the selected citation evidence matches the evidence used to generate it. A version change that leaves normalized prose unchanged still invalidates the affected saved proposal.
 
@@ -93,13 +93,13 @@ One prompt can be correct while a sibling writer still shortens the same citatio
 
 ## Testing
 
-Check the covered prompts for the instruction and citation evidence, including a path that normalization omits. Verify that changing only the omitted path prevents reuse of prose generated with the earlier version. Inspect one fresh normalized creation against the acceptance criteria. Keep the retained source body and References coverage for the direct route.
+Check the covered prompts for the instruction, including when to omit a file citation, and for the citation evidence, including a path that normalization omits. Verify that changing only the omitted path prevents reuse of prose generated with the earlier version. Use one fresh normalized creation and its writer evidence to verify the acceptance criteria. Keep the retained source body and References coverage for the direct route.
 
 An omitted citation on either generated surface leaves the proof inconclusive. A shortened or substituted citation demonstrates a mismatch. Keep the bug open in both cases and identify the writer only when the run evidence establishes its responsibility.
 
 ## Acceptance criteria
 
-- One fresh normalized creation shows an exact source version-store citation in each of two places, a model-written body section outside References and a model-written step. Each citation of the artifact in those surfaces preserves its claim's source path.
+- In one fresh normalized creation, a covered body writer produces an exact source version-store citation outside References and a covered step writer produces one in a step. Check the citations at those writers' outputs as well as in the published plan, so later convergence edits cannot substitute for the proof.
 - Existing direct-source copy and publication behavior is preserved.
 - Reconcile the entry titled “Bare roadmap file names in prose `create`'s model writes during synthesis resolve to inert top-level copies beside an accepted head” in `BUG_BACKLOG.md`. Mark it plan-authored while execution is pending and remove it when the change ships.
 
