@@ -42,6 +42,7 @@ steps:
   change_type: non-code
   depends_on:
   - 1
+  detail: docs/implementation-plans/plan-details/create-roadmap-version-citations/02-run-fresh-file-backed-creation.md
   description: Run a fresh file-backed creation from a representative normalized roadmap-derived
     seed and verify both generated surfaces named in Acceptance criteria. Follow the
     documented proof outcomes when updating the backlog.
