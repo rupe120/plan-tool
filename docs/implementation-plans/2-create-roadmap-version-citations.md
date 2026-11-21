@@ -58,7 +58,7 @@ The seed contract already supplies version-store paths. Generated prose can shor
 
 ## Architecture
 
-Preparation, fallback synthesis, and both step proposal modes use citations from the originally selected source, including citations outside References that normalization omits. Preserve the full path tied to the claim, including its version identifier. Omit the file citation when the source lacks a usable path or does not establish which cited version supports the claim. Supported prose can still describe the claim. The recorded citation continues to identify the source version after an accepted-head change.
+Preparation, fallback synthesis, and both step proposal modes use citations from the originally selected source, including citations outside References that normalization omits. Preserve the full path tied to the claim, including its version identifier. Omit the file citation when the source supplies no claim-specific repository-relative version-store path or does not establish which cited version supports the claim. Supported prose can still describe the claim. The recorded citation continues to identify the source version after an accepted-head change.
 
 Resume reuses a step or synthesized body proposal only when the selected citation evidence matches the evidence used to generate it. A version change that leaves normalized prose unchanged still invalidates the affected saved proposal.
 
@@ -88,7 +88,7 @@ See the `steps:` block in the frontmatter.
 
 ## Out of scope
 
-Roadmap seed generation and admission, version selection, promotion, top-level copies, rewriting existing plans, and changes to audit rules or publication behavior. The separate References research call, intent drafting, operator-triggered step splits, and finding application remain outside this authoring scope. Any deterministic output gate needs separate evidence that the prompt rule is insufficient.
+Roadmap seed generation and admission, version selection, promotion, top-level copies, rewriting existing plans, and changes to audit rules or publication behavior. Filesystem validation of untracked seed citations, the separate References research call, intent drafting, operator-triggered step splits, and finding application remain outside this authoring scope. Any deterministic output gate needs separate evidence that the prompt rule is insufficient.
 
 ## Risks
 
@@ -98,7 +98,7 @@ One prompt can be correct while a sibling writer still shortens the same citatio
 
 Check the covered prompts for the instruction, including when to omit a file citation, and for the citation evidence, including a path that normalization omits. Verify that changing only the omitted path prevents reuse of prose generated with the earlier version. Use one fresh normalized creation and its writer evidence to verify the acceptance criteria. Keep the retained source body and References coverage for the direct route.
 
-An omitted citation on either generated surface leaves the proof inconclusive. A shortened or substituted citation demonstrates a mismatch. Keep the bug open in both cases and identify the writer only when the run evidence establishes its responsibility.
+A shortened or substituted citation anywhere on either verified surface fails the proof even when both surfaces contain matching examples. Otherwise, a missing citation on either surface leaves the proof inconclusive. Keep the bug open in both cases and identify the writer only when the run evidence establishes its responsibility.
 
 ## Acceptance criteria
 
