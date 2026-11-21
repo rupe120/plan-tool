@@ -290,6 +290,7 @@ host can be merged locally and pushed back to both.
    branch would reintroduce its ancestry. Keep subsequent commits eligible for
    both hosts.
 
-Preparing and verifying the candidate does not replace remote branches or make
-repositories public. Keep unresolved destination and verification work in #514
-until the reviewed release candidate and operating procedure are complete.
+Candidate preparation and verification are local. Replace remote branches
+or change repository visibility only after the owner's separate approval.
+The [public synchronization record](implementation-plans/backlog-arcs/backlog-arc-public-release.md#destination-verification)
+records the completed #514 verification.

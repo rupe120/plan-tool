@@ -3,8 +3,8 @@
 ## File intent
 
 Use this route to prepare public onboarding and select a safe publication
-boundary. `BACKLOG.md` owns the open scope contracts for #514 and #515. This
-file coordinates their order alongside the installed-skill and operator-workflow
+boundary. `BACKLOG.md` owns the remaining scope for #515. This file
+coordinates release preparation alongside the installed-skill and operator-workflow
 arcs.
 
 ## Choose this arc when
@@ -17,17 +17,17 @@ publication, remote changes, history rewriting, or independent team-policy chang
 | Position | Work | Result needed for the next position |
 | --- | --- | --- |
 | 1 | Content preparation — complete (#513) | PR #123 is merged; its selected bytes match the independently verified 2,588-path prose candidate. Preserve the selection and verification evidence when preparing a release. |
-| 2 | #514 distribution, license and history decisions | Apache-2.0, the GitHub source and a shared sanitized root for both hosts define the release route. Review install/update and synchronization guidance, then verify the final candidate and destinations. |
+| 2 | Distribution, license, and history — complete (#514) | Apache-2.0, the public GitHub source, and the shared sanitized root define the release route. The destination record below verifies the synchronized commit. |
 | 3 | Portable guidance and recipe consistency — complete (#508) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
 | 4 | Installed onboarding guidance — complete (#509, #511, #512) | Hosting selection, skill installation and refresh, and model guidance support the consuming repository. Seed-authoring support is complete (#377). |
 | 5 | #515 | A fresh reader verifies the #510 walkthrough, with prerequisites resolved or explicitly dispositioned. |
 
 The installed-skill arc records delivery of #508/#509/#511/#512. The operator-workflow arc
-owns #515 and the completed #510 walkthrough. This coordination arc routes
-the separate release prerequisite #514 and consults the other arcs for their lanes.
+owns #515 and the completed #510 walkthrough. This arc records the #514
+synchronization evidence.
 The installed skill's shared filing guidance ships in PR #292.
 
-The candidate verification below covers the pinned Bitbucket commit. For
+The verification below covers the synchronized commit. For
 synchronization, follow the
 [shared-root sync procedure](../../RELEASING.md#keep-bitbucket-and-github-synchronized).
 After an approved sync, read both destination heads back.
@@ -55,7 +55,7 @@ credential patterns.
 
 | Check | Result |
 | --- | --- |
-| Source and ancestry | Anonymous GitHub `main` and tag `v1.8.0` resolve to `a87270388b92d35c3efc77326d14c6a454e3219b`. Bitbucket candidate `c132a1a6a7ab0598e7d29eaf27150d1e284ce9d3` is 43 commits ahead, with no GitHub-only commits. Both share the reviewed root `9c10d74ca`. |
+| Source and ancestry before synchronization | Anonymous GitHub `main` and tag `v1.8.0` resolved to `a87270388b92d35c3efc77326d14c6a454e3219b`. Bitbucket candidate `c132a1a6a7ab0598e7d29eaf27150d1e284ce9d3` is 43 commits ahead, with no GitHub-only commits. Both share the reviewed root `9c10d74ca`. |
 | Incoming history | Gitleaks 8.30.1 reported zero matches in `a87270388..c132a1a6a`, covering 28 ordinary commits and 15 first-parent merge diffs with allowlist suppressions disabled. Targeted checks found no newly added local home paths, AWS account IDs in ARNs, private IPv4 addresses, Atlassian Cloud URLs, or email-address patterns in those merge diffs. The range contains no added or changed binary files. |
 | Candidate tree | The full-tree scan reported 75 matches. All match byte-identical public files: 68 archived detail-bundle fingerprints and seven test fixtures. |
 | Installation and upgrade | In isolated Python 3.14.7 tool environments, anonymous GitHub installs from `main` and `v1.8.0`, a fresh editable clone, and an upgrade check on public `main` passed. A local replica advanced from the public tip to the candidate and `uv tool upgrade` installed the candidate, verified by commit in package metadata. An editable candidate install and a copied Codex skill refresh also passed. The candidate package includes the Apache-2.0 license, LICENSE, and NOTICE. |
@@ -65,9 +65,20 @@ The scan covers the pinned commit range and candidate tree. Its results
 are limited to the enabled patterns and reviewed matches. The candidate
 still declares version 1.8.0, so the upgrade check uses the installed Git
 commit to distinguish builds. The checks run without model authentication.
-#515 owns independent fresh-reader verification. This receipt is recorded
-after the verified candidate. Recheck any newer tip before synchronization
-and compare both destination heads after it.
+#515 owns independent fresh-reader verification.
+
+#### Synchronization verified 2026-11-20
+
+The authorized fast-forward moved public GitHub `main` from `a87270388` to
+`c132a1a6a`. Read-back confirmed that GitHub and Bitbucket `main` both
+resolved to `c132a1a6a7ab0598e7d29eaf27150d1e284ce9d3`. Both hosts still
+resolve tag `v1.8.0` to `a87270388`. A fresh anonymous Git URL install
+resolved to the synchronized commit and reported Apache-2.0 in its
+package metadata. [GitHub Actions](https://github.com/rupe120/plan-tool/actions/runs/44857827912)
+passed on Python 3.13 and 3.14.
+
+This receipt is recorded after the verified commit. Repeat the candidate
+and destination checks for subsequent synchronization.
 
 ## Decision gates
 
@@ -78,8 +89,8 @@ and compare both destination heads after it.
 - Classify owner-controlled projects, clients and legitimate third-party names
   before removing references. Inventory paths and structured content as well as
   prose. A search hit is a review candidate, not proof of private ownership.
-- Current-tree cleanup does not certify Git history. #514 needs an explicit
-  owner decision before a history rewrite, public remote or publication action.
+- Review Git history separately from the current tree. Obtain owner approval
+  for history rewrites, public remote changes, and publication.
 - Provider selection is router guidance (detect from the remote, confirm with the
   user), not a configuration reader (#509). Git hosting does not imply Jira or
   team approval policy.
@@ -95,8 +106,9 @@ CLAUDE.md retain architect-tier review.
 
 ## Exit and handoff
 
-Content preparation is accepted through PR #123. #514 retains distribution/update
-guidance, destination checks and sync procedures; #515 retains consumer evidence.
+Content preparation is accepted through PR #123. Distribution and
+synchronization verification are complete for #514. Independent consumer
+evidence belongs to #515.
 Use the exact candidate identity and results in the
 [prose verification record](../../evidence/public-release-prose-verification-20261020.json).
 A new selection requires its own verification. Publication remains a separate

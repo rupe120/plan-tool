@@ -89,6 +89,6 @@ in a consuming repository. #515 verifies that path with a fresh reader.
 Keep clone plus editable `uv` installation as the supported method.
 The installed-skill arc records the shipped onboarding guidance
 (#508/#509/#511/#512). The installed skill supplies the seed-authoring
-guidance shipped as #377. #513 (private-content sanitization) and #514 (license,
-distribution and history boundary) are separate public-release prerequisites.
+guidance shipped as #377. Public-content sanitization (#513) and
+distribution verification (#514) are complete.
 [Walkthrough evidence](../../demos/getting-started/RUNBOOK.md#live-first-plan-walkthrough)

@@ -721,8 +721,19 @@ profile"), which asks for the intent, confirms the exact text and runs `init`.
 An `init --install-skill` flag was built and withdrawn unshipped: once setup
 runs through the skill, the skill is already installed, and the flag's Claude
 and Cursor installs were project symlinks that work only on the machine that
-made them. Do not reintroduce it for the skill route. PyPI or `uvx`
-distribution remains #514's decision.
+made them. Do not reintroduce it for the skill route. #514 settles Git
+distribution. #523 holds the PyPI follow-up.
+
+### #514 — Public distribution and shared history
+
+Verified 2026-11-20. The project is Apache-2.0 and uses
+[public GitHub](https://github.com/rupe120/plan-tool) for user installs from
+Git and tagged releases. Contributors can clone and install in editable mode.
+Bitbucket stays the internal review host. Both hosts share the reviewed
+sanitized root. The
+[synchronization record](../implementation-plans/backlog-arcs/backlog-arc-public-release.md#synchronization-verified-2026-11-20)
+records candidate checks and matching destination heads. Future updates follow
+the [synchronization procedure](../RELEASING.md#keep-bitbucket-and-github-synchronized).
 
 ### #423 — Structural roadmap feedback goes through one revision approval gate
 
