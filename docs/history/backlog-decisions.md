@@ -34,6 +34,10 @@ authored-artifact version work were renumbered: former roadmap #362 → #383
 | #337 | [Roadmap stage lifecycle output plan](../implementation-plans/archive/2-roadmap-stage-lifecycle-output.md). |
 | #351 | [Seed References fallback plan](../implementation-plans/archive/2-seed-source-references-fallback.md). |
 | #378 | [Shared filing guidance](../../integrations/shared/DIRECTIVES.md#filing-a-backlog-or-bug-entry) shipped in PR #292. It owns tracker discovery and verified updates to existing entries, including the former #379. |
+| #508 | Portable skill guidance ships in `2d171af1b`. [Contributor guidance](../../CONTRIBUTING.md#bitbucket-pull-requests-for-this-repository) owns this repository's review and publication rules. |
+| #509 | [Git host and PR target selection](../../integrations/shared/DIRECTIVES.md#select-the-pull-request-system-before-use) ships in `4f89c78bb`, `92f14f890`, and `2eb03f241`. |
+| #511 | [Install and refresh guidance](../how-to/install-and-update.md#install-the-assistant-skill) and installer output ship in `7062666cd` and `8330eacd0`. |
+| #512 | [Backend, model, effort, and billing guidance](../../integrations/shared/DIRECTIVES.md#which-model-to-run-a-subcommand-with) ships in `cb7dc6543` with the current Codex recommendation from `4f7cb6c8b`. |
 
 ### #331 and #333 — Seed-to-create source boundary
 

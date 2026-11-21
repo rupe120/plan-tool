@@ -13,7 +13,7 @@
 | --- | --- |
 | Outcome | Give readers a short example they can act on, then link directly to the guide that owns exact behavior, exceptions, or recovery. |
 | Shipped | [PR #271](https://bitbucket.org/protagona/plan-tool/pull-requests/271) covers the README slice of #510. [PR #273](https://bitbucket.org/protagona/plan-tool/pull-requests/273) preserves `#start-here` and lands the #377 plan. [PR #275](https://bitbucket.org/protagona/plan-tool/pull-requests/275) ships the installed seed guidance and the corrected due-dates demo. [PR #276](https://bitbucket.org/protagona/plan-tool/pull-requests/276) closes #377. [PR #277](https://bitbucket.org/protagona/plan-tool/pull-requests/277) closes #510 at `b2081217a`. |
-| Local follow-up | `docs/portable-onboarding-followups` holds #508, #509, #511, and #512 plus the public installation evidence. |
+| Shipped follow-up | #508, #509, #511, and #512 are on `main`. The release and independent fresh-reader evidence remain tracked separately. |
 | Next | Run #515's independent fresh-reader verification. Use its observations to select the next documentation slice under #530. |
 
 ### What to carry forward
@@ -157,8 +157,8 @@ exit before returning to the prepared branches.
    paths. Record where the reader guesses or backtracks. The pilot's local
    checks cover 71 legacy README anchors, 76 local links, six skill commands,
    the two prepared audit checkpoints, and CLI validation of the demo plan.
-   #515 owns independent fresh-reader evidence and disposition of #508–#514
-   for public sign-off.
+   #515 owns independent fresh-reader evidence. Public sign-off also
+   requires disposition of #514.
    [Install guide](../docs/how-to/install-and-update.md) · [Backlog](../BACKLOG.md)
 3. **Use #530 for observed stumbles.** If reading the final audit result is
    the friction, start the audit guide with the pilot's paired bare and
@@ -172,10 +172,10 @@ exit before returning to the prepared branches.
 
 [PR #277](https://bitbucket.org/protagona/plan-tool/pull-requests/277) passed
 [pipeline #24](https://bitbucket.org/protagona/plan-tool/pipelines/results/24)
-at `585ca01d8` and merged at `b2081217a`. The local follow-up branch is based
-on that merge.
+at `585ca01d8` and merged at `b2081217a`. The portable guidance, host
+selection, install and refresh, and model guidance now ship on `main`.
 
-| Item | Local change and evidence |
+| Item | Shipped change or verification evidence |
 | --- | --- |
 | #508 | The installed guide uses the consuming repo's workflow. `CONTRIBUTING.md` retains this repo's protected branch, Bitbucket, approval, and tracking rules. An unrelated `trunk` checkout contains a matching installed Codex pair. |
 | #509 | All routers select the tool from the named remote, including SSH hosts. The shared GitHub commands pin the verified repository, and custom targets require confirmation. |

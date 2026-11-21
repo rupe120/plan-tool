@@ -100,18 +100,16 @@ The arc covers guidance content and installer plumbing. The shipped #377
 plan excludes a seed-generating command. #378 excludes a lint or gate on
 unrecorded discoveries, an automated stale-entry sweep, and a
 `.plan-tool/project.json` tracker-location key absent evidence that its
-ask-once fallback falls short. #509 covers router guidance. The installed
+ask-once fallback falls short. The installed
 skill uses the single shared reference established by #370.
 
 ## Public onboarding extension
 
-Choose #508 for portable guidance versus local team policy, #509 for consuming
-repository hosting-provider guidance in the router, #511 for installation/refresh clarity, and
-#512 for model choice and rationale. The recipe-consistency prerequisite is
-satisfied (skill-router repair). Seed-authoring support (#377) is complete.
-#509 is router guidance telling the installed session to
-detect the hosting provider from the remote and confirm it with the user; it adds
-no configuration surface and does not authorize a hosting framework.
+Portable guidance (#508), Git host selection (#509), install and refresh
+guidance (#511), and model guidance (#512) have shipped. See the
+[delivery records](../../history/backlog-decisions.md#queue-cleanup-2026-09-16).
+The recipe-consistency prerequisite and seed-authoring support (#377) are
+complete.
 
 Public-content sanitization (#513) and distribution/history decisions (#514)
 remain separate release prerequisites. The verified README walkthrough (#510)
