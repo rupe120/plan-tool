@@ -28,9 +28,9 @@ steps:
   description: Apply the Architecture citation contract to preparation, fallback
     body synthesis, and step proposal, including split-mode consolidation. Keep
     the originally selected source's citation evidence available when normalization
-    drops it, through applicable repairs and step re-proposals. Preserve source
-    copying, References research, and publication. Verify the covered writers have
-    the instruction and source evidence.
+    drops it, through applicable repairs, step re-proposals, and resume. Preserve
+    source copying, References research, and publication. Verify the covered writers
+    have the instruction and source evidence.
 - id: 2
   intent: One fresh creation demonstrates citation preservation before the bug is closed.
   files:
@@ -41,8 +41,7 @@ steps:
   - 1
   description: Run a fresh file-backed creation from a representative normalized
     roadmap-derived seed and verify both generated surfaces named in Acceptance
-    criteria. Close the originating backlog entry after verification. Retain it
-    with the failing writer identified if the proof fails.
+    criteria. Follow the documented proof outcomes when updating the backlog.
 ---
 # Create Roadmap Version Citations
 
@@ -57,6 +56,8 @@ The seed contract already supplies version-store paths. Generated prose can shor
 ## Architecture
 
 Preparation, fallback synthesis, and both step proposal modes use citations from the originally selected source, including citations outside References that normalization omits. Preserve the full path tied to the claim, including its version identifier. Leave the path unspecified when the source lacks a usable citation or does not establish which cited version supports the claim. The recorded citation continues to identify the source version after an accepted-head change.
+
+Resume reuses a step or synthesized body proposal only when the selected citation evidence matches the evidence used to generate it. A version change that leaves normalized prose unchanged still invalidates the affected saved proposal.
 
 ## Scope guardrails
 
@@ -92,7 +93,9 @@ One prompt can be correct while a sibling writer still shortens the same citatio
 
 ## Testing
 
-Check the covered prompts for the instruction and citation evidence, including a path that normalization omits. Inspect one fresh normalized creation against the acceptance criteria. Keep the retained source body and References coverage for the direct route.
+Check the covered prompts for the instruction and citation evidence, including a path that normalization omits. Verify that changing only the omitted path prevents reuse of prose generated with the earlier version. Inspect one fresh normalized creation against the acceptance criteria. Keep the retained source body and References coverage for the direct route.
+
+An omitted citation on either generated surface leaves the proof inconclusive. A shortened or substituted citation demonstrates a mismatch. Keep the bug open in both cases and identify the writer only when the run evidence establishes its responsibility.
 
 ## Acceptance criteria
 
