@@ -76,6 +76,7 @@ from plan_tool.launcher import (
     verify_plan,
 )
 from plan_tool.locator import (
+    PlansCheckoutError,
     ManifestError,
     PlanToolContext,
     build_plan_tool_context,
@@ -731,7 +732,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                 ):
                     lock_repo_root(repo_root)
             return dispatch[args.command](args)
-    except RepoMutationLockError as exc:
+    except (RepoMutationLockError, PlansCheckoutError) as exc:
         error(str(exc))
         return 2
     except FileNotFoundError as exc:

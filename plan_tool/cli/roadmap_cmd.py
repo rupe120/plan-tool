@@ -92,7 +92,11 @@ from plan_tool.cli.context import _lock_command_repo, _resolve_cmd_repo_root
 from plan_tool.cli.parser import Handler
 from plan_tool.create import resolve_output_dir
 from plan_tool.fileio import atomic_write_text
-from plan_tool.locator import find_explicit_plans_checkout, resolve_explicit_plans_dir
+from plan_tool.locator import (
+    PlansCheckoutError,
+    require_explicit_plans_checkout,
+    resolve_explicit_plans_dir,
+)
 from plan_tool.repo_lock import RepoMutationLockError
 from plan_tool.roadmap import (
     stage_resume_directory,
@@ -566,9 +570,8 @@ def _resolve_roadmap_paths(args: argparse.Namespace) -> tuple[Path, Path]:
     plans_dir = resolve_explicit_plans_dir(args.plans_dir)
     if plans_dir is None:
         return repo_root, resolve_output_dir(repo_root)
-    plan_checkout = find_explicit_plans_checkout(plans_dir)
-    if plan_checkout is not None:
-        _lock_command_repo(args, plan_checkout)
+    if getattr(args, "_lock_repo_root", None) is not None:
+        _lock_command_repo(args, require_explicit_plans_checkout(plans_dir, repo_root))
     return repo_root, plans_dir
 
 
@@ -576,7 +579,7 @@ def _resolve_roadmap_execution_paths(args: argparse.Namespace) -> tuple[Path, Pa
     """Resolve execution paths while preserving an unexpected terminal fact."""
     try:
         return _resolve_roadmap_paths(args)
-    except RepoMutationLockError:
+    except (RepoMutationLockError, PlansCheckoutError):
         raise
     except Exception:
         _emit_roadmap_terminal_disposition(args.slug, "unexpected-error")

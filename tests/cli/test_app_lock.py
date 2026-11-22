@@ -163,3 +163,66 @@ def test_roadmap_locks_its_external_plans_checkout(
         assert main(["--plans-dir", str(plans_dir), "roadmap", "demo", "--apply"]) == 2
         assert "another mutating plan-tool command is active" in capsys.readouterr().err
         assert not mutation_lock_path(checkout).exists()
+
+
+@pytest.mark.parametrize("command", ["run", "roadmap"])
+@pytest.mark.parametrize("pin_root", [False, True], ids=["cwd", "pinned"])
+def test_mutating_commands_refuse_an_unidentified_external_plans_checkout(
+    checkouts, monkeypatch, capsys, command, pin_root,
+):
+    checkout, target = checkouts
+    (target / ".git").rmdir()
+    plans_dir = target / "custom"
+    plans_dir.mkdir()
+
+    def unexpected_dispatch(*args, **kwargs):
+        pytest.fail("the command reached plan lookup or apply for an unguarded destination")
+
+    monkeypatch.setattr(run_cmd, "_load_run_prefs", unexpected_dispatch)
+    monkeypatch.setattr(roadmap_cmd, "_cmd_roadmap_apply", unexpected_dispatch)
+    action = ["run", "missing"] if command == "run" else ["roadmap", "demo", "--apply"]
+    options = ["--repo-root", str(checkout)] if pin_root else []
+    args = [*options, "--plans-dir", str(plans_dir), *action]
+    assert main(args) == 2
+    err = capsys.readouterr().err
+    assert "cannot determine a mutation lock root" in err
+    assert str(plans_dir) in err
+    assert not (target / ".plan-tool").exists()
+    assert not mutation_lock_path(checkout).exists()
+
+
+@pytest.mark.parametrize("pin_root", [False, True], ids=["cwd", "pinned"])
+def test_run_guards_a_known_non_git_checkout_for_a_custom_plans_directory(
+    checkouts, monkeypatch, capsys, pin_root,
+):
+    checkout, target = checkouts
+    (target / ".git").rmdir()
+    plans_dir = target / "custom"
+    plans_dir.mkdir()
+    observed = []
+
+    def load_prefs(root: Path) -> dict:
+        assert mutation_lock_path(target).is_file()
+        observed.append(root)
+        return {}
+
+    monkeypatch.setattr(run_cmd, "_load_run_prefs", load_prefs)
+    if not pin_root:
+        monkeypatch.chdir(target)
+    options = ["--repo-root", str(target)] if pin_root else []
+    args = [*options, "--plans-dir", str(plans_dir), "run", "missing"]
+    assert main(args) == 2
+    assert "no plan matching" in capsys.readouterr().err
+    assert observed == [target]
+    assert not mutation_lock_path(target).exists()
+    assert not mutation_lock_path(checkout).exists()
+
+
+def test_list_can_read_an_unidentified_external_plans_checkout(checkouts):
+    checkout, target = checkouts
+    (target / ".git").rmdir()
+    plans_dir = target / "custom"
+    plans_dir.mkdir()
+
+    assert main(["--repo-root", str(checkout), "--plans-dir", str(plans_dir), "list"]) == 0
+    assert not (target / ".plan-tool").exists()
