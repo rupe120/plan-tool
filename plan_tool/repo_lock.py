@@ -12,7 +12,7 @@ from typing import Iterator, Optional
 
 
 class RepoMutationLockError(Exception):
-    """Raised when another plan-tool mutation appears to be active."""
+    """Raised when an existing marker blocks repository mutation."""
 
 
 @dataclass(frozen=True)
@@ -21,18 +21,6 @@ class RepoMutationLock:
     path: Path
     command: str
     pid: int
-
-
-def _pid_is_running(pid: int) -> bool:
-    if pid <= 0:
-        return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    return True
 
 
 def _read_lock(path: Path) -> dict:
@@ -70,50 +58,32 @@ def acquire_repo_mutation_lock(
     """Acquire the repo mutation lock or raise clearly."""
     lock_path = mutation_lock_path(repo_root)
     lock_path.parent.mkdir(parents=True, exist_ok=True)
+    pid = os.getpid()
     payload = {
-        "pid": os.getpid(),
+        "pid": pid,
         "command": command,
         "started_at": time.time(),
     }
 
-    for attempt in range(2):
-        try:
-            fd = os.open(
-                lock_path,
-                os.O_CREAT | os.O_EXCL | os.O_WRONLY,
-                0o644,
-            )
-        except FileExistsError:
-            current = _read_lock(lock_path)
-            pid = current.get("pid")
-            if isinstance(pid, int) and not _pid_is_running(pid):
-                try:
-                    lock_path.unlink()
-                except FileNotFoundError:
-                    pass
-                if attempt == 0:
-                    continue
-            owner = f"pid {pid}" if isinstance(pid, int) else "unknown pid"
-            owner_cmd = current.get("command")
-            if isinstance(owner_cmd, str) and owner_cmd:
-                owner += f" running {owner_cmd!r}"
-            raise RepoMutationLockError(
-                f"another mutating plan-tool command is active ({owner}); "
-                f"refusing to run {command!r}. Retry after it exits, or "
-                f"remove {lock_path} if that process is gone."
-            )
-        else:
-            with os.fdopen(fd, "w", encoding="utf-8") as fh:
-                json.dump(payload, fh)
-                fh.write("\n")
-            return RepoMutationLock(
-                repo_root=repo_root,
-                path=lock_path,
-                command=command,
-                pid=os.getpid(),
-            )
+    try:
+        fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    except FileExistsError:
+        raise RepoMutationLockError(
+            f"repository mutation lock already exists at {lock_path}; "
+            f"refusing to run {command!r}. Retry after the holder exits. "
+            "If the marker remains, confirm all writers have stopped before "
+            "inspecting or removing it."
+        ) from None
 
-    raise RepoMutationLockError(f"could not acquire mutation lock at {lock_path}")
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh)
+        fh.write("\n")
+    return RepoMutationLock(
+        repo_root=repo_root,
+        path=lock_path,
+        command=command,
+        pid=pid,
+    )
 
 
 def release_repo_mutation_lock(lock: RepoMutationLock) -> None:

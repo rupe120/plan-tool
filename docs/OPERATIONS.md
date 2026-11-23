@@ -177,12 +177,12 @@ plan-tool detail my-plan --no-resume # force fresh Claude calls
 
 #### Caveats
 
-- **Concurrent runs against the same plan are undefined.** Each
-  on-disk write is atomic per file, but two `plan-tool detail`
-  invocations running at once against the same plan and step turn
-  into a last-writer-wins race for the checkpoint, the detail file,
-  *and* the plan frontmatter. There's no lockfile, so don't overlap
-  them.
+- **Repository mutation lock.** Concurrent mutating CLI commands for the same
+  checkout, including `detail`, contend for one lock marker. An existing
+  marker blocks the command. Retry after the holder exits. If a crash leaves
+  the marker behind, stop all writers for that checkout and inspect the
+  interrupted work before removing the marker at the path in the diagnostic.
+  Older versions can still reclaim markers automatically.
 - **`--force` bypasses both the file-exists skip and the cache.**
   Reach for it when you want a fresh body without deleting any state.
 - **The hash is intentionally narrow.** Editing source files, sibling
