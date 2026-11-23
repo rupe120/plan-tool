@@ -6,6 +6,51 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.9.0'></a>
+## 1.9.0 — 2026-11-23
+
+### Added
+
+- Use `plan-tool sweep <name>` to preview or archive one completed registered
+  plan. A bare sweep continues to cover the whole manifest (#542).
+
+### Changed
+
+- `plan-tool detail --help` explains the default completeness audit and where
+  to find its saved report (#486).
+
+- Plan detail prompts ask for outcome-first instructions that explain project
+  abbreviations and distinguish requirements from suggestions (#167).
+
+- The installed skill follows the host repository's tracker rules for
+  out-of-scope discoveries and verifies the evidence before updating
+  already-addressed entries (#378).
+
+- Detail authoring and plan audits use the same plain-language examples and
+  preserve exact technical wording (#497).
+
+### Fixed
+
+- Mutating commands lock the checkout they operate on, including when
+  `--plans-dir` points to another checkout. If the destination is already
+  locked, the command stops before changing it.
+
+- When `create --from-existing` generates body or step text for a roadmap-derived plan, its authoring prompts carry the source's full version-store citations through normalization, including when a proposal resumes from checkpoints.
+
+- Roadmap writes through a default plans-directory alias respect the destination checkout's mutation lock.
+
+- Mutating commands preserve existing repository lock markers. If a crash leaves a marker behind, stop every writer for the checkout and inspect the interrupted work before removing the marker at the reported path.
+
+- Mutating commands respect the lock on a separate non-Git checkout selected
+  through its `docs/implementation-plans` directory, even when the command
+  uses a different repository root.
+
+- When `create` proposes multiple plans, it saves the split worksheet in the output directory selected during plan preparation.
+
+- Commands that require a mutation lock reject a custom external
+  `--plans-dir` when its checkout cannot be determined. Run from the
+  destination checkout or select it with `--repo-root`.
+
 <a id='changelog-1.8.0'></a>
 ## 1.8.0 — 2026-11-19
 
