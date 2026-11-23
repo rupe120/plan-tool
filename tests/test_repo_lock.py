@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
@@ -24,25 +23,30 @@ def test_repo_mutation_lock_creates_and_releases(tmp_path: Path) -> None:
 def test_repo_mutation_lock_refuses_active_lock(tmp_path: Path) -> None:
     first = acquire_repo_mutation_lock(tmp_path, command="create")
     try:
-        with pytest.raises(RepoMutationLockError, match="another mutating"):
+        with pytest.raises(RepoMutationLockError, match="mutation lock already exists"):
             acquire_repo_mutation_lock(tmp_path, command="jira")
     finally:
         release_repo_mutation_lock(first)
 
 
-def test_repo_mutation_lock_reclaims_dead_pid(tmp_path: Path) -> None:
-    lock_path = tmp_path / ".plan-tool" / "mutation.lock"
+@pytest.mark.parametrize(
+    "marker", [b'{"pid": 0, "command": "create"}', b"", b"incomplete JSON"]
+)
+def test_repo_mutation_lock_preserves_existing_markers(
+    tmp_path: Path, marker: bytes,
+) -> None:
+    lock_path = mutation_lock_path(tmp_path)
     lock_path.parent.mkdir()
-    lock_path.write_text(
-        json.dumps({"pid": 999999999, "command": "create"}) + "\n",
-        encoding="utf-8",
-    )
+    lock_path.write_bytes(marker)
 
-    lock = acquire_repo_mutation_lock(tmp_path, command="jira")
-    try:
-        assert lock.path == lock_path
-    finally:
-        release_repo_mutation_lock(lock)
+    with pytest.raises(RepoMutationLockError, match="confirm all writers have stopped") as exc:
+        acquire_repo_mutation_lock(tmp_path, command="jira")
+
+    assert str(lock_path) in str(exc.value)
+    assert lock_path.read_bytes() == marker
+    lock_path.unlink()
+    with repo_mutation_lock(tmp_path, command="jira"):
+        assert lock_path.is_file()
 
 
 def test_repo_mutation_lock_uses_git_dir_when_present(tmp_path: Path) -> None:

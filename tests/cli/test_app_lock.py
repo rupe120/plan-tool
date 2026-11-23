@@ -122,7 +122,7 @@ def test_run_rejects_busy_destination_before_reaching_the_plan(
     argv = ["--repo-root", str(checkout), "--plans-dir", str(plans_dir), "run", "missing"]
     with repo_mutation_lock(target, command="detail"):
         assert main(argv) == 2
-        assert "another mutating plan-tool command is active" in capsys.readouterr().err
+        assert "repository mutation lock already exists" in capsys.readouterr().err
         assert mutation_lock_path(target).is_file()
         assert not mutation_lock_path(checkout).exists()
 
@@ -139,7 +139,7 @@ def test_fresh_create_locks_the_seed_selected_checkout(
     monkeypatch.setattr(authoring, "_create_branch_collision_gate", unexpected_collision_gate)
     with repo_mutation_lock(target, command="detail"):
         assert main(["create", "demo", "--from", "Update `src/feature.py`.", "-y"]) == 2
-        assert "another mutating plan-tool command is active" in capsys.readouterr().err
+        assert "repository mutation lock already exists" in capsys.readouterr().err
         assert not mutation_lock_path(checkout).exists()
 
 
@@ -161,7 +161,7 @@ def test_roadmap_locks_its_external_plans_checkout(
     monkeypatch.setattr(roadmap_cmd, "_cmd_roadmap_apply", unexpected_roadmap_apply)
     with repo_mutation_lock(target, command="detail"):
         assert main(["--plans-dir", str(plans_dir), "roadmap", "demo", "--apply"]) == 2
-        assert "another mutating plan-tool command is active" in capsys.readouterr().err
+        assert "repository mutation lock already exists" in capsys.readouterr().err
         assert not mutation_lock_path(checkout).exists()
 
 
@@ -185,7 +185,7 @@ def test_roadmap_default_alias_respects_the_destination_checkout_lock(
     argv = ["--repo-root", str(checkout), "roadmap", "demo", "--apply"]
     with repo_mutation_lock(target, command="detail"):
         assert main(argv) == 2
-        assert "another mutating plan-tool command is active" in capsys.readouterr().err
+        assert "repository mutation lock already exists" in capsys.readouterr().err
         assert observed == []
 
     assert main(argv) == 0
