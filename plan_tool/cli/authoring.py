@@ -1570,12 +1570,14 @@ def _emit_split_proposal(
 
     markdown = _render_split_proposal_markdown(slug, entries, seed_display)
 
-    try:
-        output_dir = resolve_output_dir(
-            repo_root, output_dir_override or DEFAULT_OUTPUT_DIR
-        )
-    except Exception:
-        output_dir = repo_root
+    output_dir = proposal.output_dir
+    if output_dir is None:
+        try:
+            output_dir = resolve_output_dir(
+                repo_root, output_dir_override or DEFAULT_OUTPUT_DIR
+            )
+        except Exception:
+            output_dir = repo_root
     save_path = output_dir / f"{slug}-split-proposal.md"
 
     do_save = yes or not sys.stdin.isatty()

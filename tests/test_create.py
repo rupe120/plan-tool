@@ -1114,6 +1114,7 @@ class TestRiskProfileClassification:
         assert isinstance(result, CreateResult)
         assert result.plan_path is None
         assert result.split_proposal is not None
+        assert result.split_proposal.output_dir == (tmp_path / "plans").resolve()
 
     def test_no_source_create_uses_standard_without_classifier_call(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -10978,6 +10979,7 @@ class TestFileBackedSourceIntake:
 
         assert result.plan_path is None
         assert result.split_proposal is not None
+        assert result.split_proposal.output_dir == (tmp_path / "plans").resolve()
         assert result.file_backed_route is FileBackedSourceRoute.SPLIT
         assert not (tmp_path / "plans").exists()
         assert not (tmp_path / "manifest.json").exists()

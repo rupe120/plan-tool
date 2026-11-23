@@ -204,6 +204,29 @@ class TestEmitSplitProposal:
         assert saved.is_file()
         assert "# Split proposal for `seed`" in saved.read_text(encoding="utf-8")
 
+    def test_save_uses_checked_directory_instead_of_default_alias(
+        self, tmp_path: Path,
+    ) -> None:
+        repo_root = tmp_path / "checkout"
+        external = tmp_path / "other-checkout"
+        external.mkdir()
+        default = repo_root / "docs" / "implementation-plans"
+        default.parent.mkdir(parents=True)
+        default.symlink_to(external, target_is_directory=True)
+        checked = repo_root / "selected"
+
+        _emit_split_proposal(
+            SplitProposal(entries=_proposal().entries, output_dir=checked),
+            slug="seed",
+            source_path=None,
+            output_dir_override=None,
+            repo_root=repo_root,
+            yes=True,
+        )
+
+        assert (checked / "seed-split-proposal.md").is_file()
+        assert not (external / "seed-split-proposal.md").exists()
+
     def test_split_proposal_has_no_audit_follow_up(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
