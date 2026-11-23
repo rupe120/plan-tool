@@ -569,7 +569,7 @@ def _resolve_roadmap_paths(args: argparse.Namespace) -> tuple[Path, Path]:
     repo_root = _resolve_cmd_repo_root(args)
     plans_dir = resolve_explicit_plans_dir(args.plans_dir)
     if plans_dir is None:
-        return repo_root, resolve_output_dir(repo_root)
+        plans_dir = resolve_output_dir(repo_root)
     if getattr(args, "_lock_repo_root", None) is not None:
         _lock_command_repo(args, require_explicit_plans_checkout(plans_dir, repo_root))
     return repo_root, plans_dir
