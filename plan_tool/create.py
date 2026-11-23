@@ -1021,6 +1021,7 @@ class SplitProposal:
 
     entries: list[SplitProposalEntry]
     saved_to: Optional[Path] = None
+    output_dir: Optional[Path] = None
 
 
 @dataclass(frozen=True)
@@ -9639,7 +9640,9 @@ def _prepare_create_plan(
                     plan_path=None,
                     manifest_path=mf,
                     manifest_updated=False,
-                    split_proposal=SplitProposal(entries=direct_assessment.split),
+                    split_proposal=SplitProposal(
+                        entries=direct_assessment.split, output_dir=output_dir,
+                    ),
                     file_backed_route=FileBackedSourceRoute.SPLIT,
                     route_checkpoint_name=_DIRECT_ASSESSMENT_CHECKPOINT_NAME,
                 )
@@ -9732,7 +9735,9 @@ def _prepare_create_plan(
                         plan_path=None,
                         manifest_path=mf,
                         manifest_updated=False,
-                        split_proposal=SplitProposal(entries=distilled.split),
+                        split_proposal=SplitProposal(
+                            entries=distilled.split, output_dir=output_dir,
+                        ),
                         file_backed_route=(
                             FileBackedSourceRoute.SPLIT
                             if file_preparation_required
