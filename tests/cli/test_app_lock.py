@@ -165,6 +165,33 @@ def test_roadmap_locks_its_external_plans_checkout(
         assert not mutation_lock_path(checkout).exists()
 
 
+def test_roadmap_default_alias_respects_the_destination_checkout_lock(
+    checkouts, monkeypatch, capsys,
+):
+    checkout, target = checkouts
+    plans_dir = target / "docs" / "implementation-plans"
+    plans_dir.mkdir(parents=True)
+    default = checkout / "docs" / "implementation-plans"
+    default.parent.mkdir()
+    default.symlink_to(plans_dir, target_is_directory=True)
+    observed = []
+
+    def apply(args, *, repo_root, plans_dir):
+        observed.append((repo_root, plans_dir))
+        assert mutation_lock_path(target).is_file()
+        return 0
+
+    monkeypatch.setattr(roadmap_cmd, "_cmd_roadmap_apply", apply)
+    argv = ["--repo-root", str(checkout), "roadmap", "demo", "--apply"]
+    with repo_mutation_lock(target, command="detail"):
+        assert main(argv) == 2
+        assert "another mutating plan-tool command is active" in capsys.readouterr().err
+        assert observed == []
+
+    assert main(argv) == 0
+    assert observed == [(checkout, plans_dir)]
+
+
 @pytest.mark.parametrize("command", ["run", "roadmap"])
 @pytest.mark.parametrize("pin_root", [False, True], ids=["cwd", "pinned"])
 def test_mutating_commands_refuse_an_unidentified_external_plans_checkout(
